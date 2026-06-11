@@ -1,0 +1,24 @@
+<header id="menu-flex" class="menu-flex">
+  <nav class="menu">
+    <div class="logo-menu">
+      <a [routerLink]="['couchsurfing/guests']" title="CouchSurfing">
+        <span class="title-logo-menu"> CouchSurfing </span>
+      </a>
+      <a href="javascript:void(0);" id="btn-menu" class="btn-menu">
+        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="menu"></mat-icon>
+      </a>
+    </div>
+
+    <div id="links" class="links">
+      <a [routerLink]="['couchsurfing/guests']" routerLinkActive="links-menu-active" class="links-menu">
+        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="diversity_1"></mat-icon>
+        Guests
+      </a>
+
+      <a href="javascript:void(0);" routerLinkActive="links-menu-active" class="links-menu">
+        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="diamond"></mat-icon>
+        Soon
+      </a>
+    </div>
+  </nav>
+</header>

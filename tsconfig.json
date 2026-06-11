@@ -28,7 +28,7 @@
       "@guards/*": ["src/app/guards/*"],
       "@components/*": ["src/app/components/*"],
       "@shared/*": ["src/app/shared/*"],
-      "@helpers/*": ["src/app/helpers/utils/*"],
+      "@helpers/*": ["src/app/utils/helper*"],
       "@pages/*": ["src/app/pages/*"],
       "@interfaces/*": ["src/app/interfaces/*"]
     }
