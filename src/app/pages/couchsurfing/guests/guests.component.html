@@ -1,1 +1,22 @@
-<h1>Guests</h1>
+<ng-container *ngIf="vm$ | async as vm">
+  <!-- LOADING -->
+  <h1 *ngIf="vm.status === 'loading'">Loading...</h1>
+
+  <!-- ERROR -->
+  <h1 *ngIf="vm.status === 'error'">{{ vm?.error?.message }}</h1>
+
+  <!-- SUCCESS -->
+  <div class="ctn-guests" *ngIf="vm.status === 'success'">
+    <section *ngFor="let guest of vm.data">
+      {{ guest.country }}
+      {{ guest.birthyear }}
+      {{ guest.occupation[0] }}
+      {{ guest.livingIn }}
+      {{ guest.birthplace }}
+      {{ guest.didWeHangOut }}
+      {{ guest.nights }}
+      {{ guest.gender }}
+      {{ guest.rating }}
+    </section>
+  </div>
+</ng-container>
