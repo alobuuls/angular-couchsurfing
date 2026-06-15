@@ -29,13 +29,13 @@ export class AlertsService {
     });
   }
 
-  showAlert({ title, html, icon, allowClose = true, confirmText = 'Guardar', cancelText = 'Cerrar', opts }: IAlert) {
+  showAlert({ title, html, icon, allowClose = true, confirmText = 'Guardar', cancelText = 'Cerrar', showCancelButton = true, opts }: IAlert) {
     return Swal.fire({
       title,
       html,
       icon,
       showConfirmButton: true,
-      showCancelButton: true,
+      showCancelButton,
       confirmButtonText: confirmText,
       cancelButtonText: cancelText,
       allowEscapeKey: allowClose,
@@ -45,4 +45,3 @@ export class AlertsService {
     });
   }
 }
-

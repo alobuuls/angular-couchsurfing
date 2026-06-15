@@ -20,7 +20,7 @@
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
-  src: url('/assets/fonts/icons/material-icons.woff2') format('woff2');
+  src: url('/assets/fonts/icons/material-icons/material-icons.woff2') format('woff2');
 }
 
 .material-icons {
@@ -82,4 +82,12 @@ body {
 body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+.success {
+  color: limegreen;
+}
+
+.danger {
+  color: #950e0e;
 }
