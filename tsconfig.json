@@ -22,15 +22,18 @@
     "lib": ["ES2022", "dom"],
     "paths": {
       "@env/*": ["src/environments/*"],
+      "@config/*": ["src/app/config/*"],
       "@services/*": ["src/app/services/*"],
       "@interceptors/*": ["src/app/interceptors/*"],
       "@core/*": ["src/app/core/*"],
       "@guards/*": ["src/app/guards/*"],
       "@components/*": ["src/app/components/*"],
       "@shared/*": ["src/app/shared/*"],
-      "@helpers/*": ["src/app/utils/helper/*"],
+      "@const/*": ["src/app/shared/constants/*"],
+      "@helpers/*": ["src/app/utils/helpers/*"],
       "@pages/*": ["src/app/pages/*"],
-      "@interfaces/*": ["src/app/interfaces/*"]
+      "@interfaces/*": ["src/app/interfaces/*"],
+      "@type/*": ["src/app/types/*"]
     }
   },
   "angularCompilerOptions": {
