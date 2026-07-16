@@ -1,0 +1,53 @@
+<h1>trip form</h1>
+
+<div class="ctn-form">
+  <form [formGroup]="formTrip">
+    <!-- VISITED DATE -->
+    <mat-form-field appearance="outline">
+      <mat-label>Visited Date</mat-label>
+
+      <mat-icon matPrefix>calendar_month</mat-icon>
+
+      <!-- Success Icon -->
+      <mat-icon
+        class="icon-success"
+        matSuffix
+        *ngIf="f['visitedDate'].valid && f['visitedDate'].touched && f['visitedDate'].value"
+      >
+        check_circle
+      </mat-icon>
+
+      <!--Error Icon -->
+      <mat-icon class="icon-warning" matSuffix *ngIf="f['visitedDate'].invalid && f['visitedDate'].touched">
+        error
+      </mat-icon>
+
+      <input matInput [matDatepicker]="picker" formControlName="visitedDate" />
+
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+
+      <mat-datepicker #picker></mat-datepicker>
+
+      <mat-error *ngIf="f['visitedDate'].hasError('required')"> Visited Date is required </mat-error>
+    </mat-form-field>
+
+    <!-- Today Button -->
+    <button mat-stroked-button type="button" (click)="btnSetToday()">Today</button>
+
+    <!-- CHECKBOXES -->
+    <!-- STAYED -->
+    <mat-checkbox formControlName="stayed"> Stayed </mat-checkbox>
+
+    <!-- NIGHTS -->
+    <mat-form-field appearance="outline" *ngIf="f['stayed'].value">
+      <mat-label>Nights</mat-label>
+
+      <mat-select formControlName="nights">
+        <mat-option *ngFor="let night of nights" [value]="night">
+          {{ night }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </form>
+</div>

@@ -3,11 +3,16 @@ import { RouterModule, Routes } from '@angular/router';
 
 // Components
 import { GuestsComponent } from '@pages/couchsurfing/guests/guests.component';
+import { GuestsCreateComponent } from '@pages/couchsurfing/guests/create/guests-create.component';
 
 const guestsRoutes: Routes = [
   {
     path: 'guests',
     component: GuestsComponent,
+  },
+  {
+    path: 'guests/add',
+    component: GuestsCreateComponent,
   },
   {
     path: '**',
