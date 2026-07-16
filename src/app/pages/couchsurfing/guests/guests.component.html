@@ -1,5 +1,5 @@
 <ng-container *ngIf="vm$ | async as vm">
-  <div class="txt-center" *ngIf="vm.status === 'success' && vm.data.length">
+  <div class="ctn–btn" *ngIf="vm.status === 'success' && vm.data.length">
     <button [routerLink]="['/couchsurfing/guests/add']" class="btn-add" mat-icon-button matTooltip="Create Guest">
       <mat-icon fontIcon="add" />
     </button>
@@ -29,6 +29,11 @@
     [data]="vm.data"
     [pagination]="vm.pagination"
     [offset]="vm.offset"
+    (detail)="openDetail($event)"
+    (edit)="editGuest($event)"
+    (remove)="removeGuestConfirmation($event)"
+    (whatsapp)="openWhatsapp($event)"
+    (couchsurfing)="openCouchsurfing($event)"
     (sort)="onSortChange($event)"
     (page)="onPageChange($event)"
   >
