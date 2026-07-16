@@ -17,14 +17,15 @@
 }
 
 @font-face {
-  font-family: 'Material Icons';
+  font-family: 'Material Symbols Outlined';
   font-style: normal;
   font-weight: 400;
-  src: url('/assets/fonts/icons/material-icons/material-icons.woff2') format('woff2');
+  src: url('/assets/fonts/icons/material-icons/material-icons-outlined.woff2') format('woff2');
 }
 
-.material-icons {
-  font-family: 'Material Icons';
+mat-icon,
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
   font-weight: normal;
   font-style: normal;
   font-size: 24px;
@@ -61,10 +62,12 @@
 }
 
 html {
+  background-color: #f9f9f9;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 :root {
+  --mat-table-background-color: #000000;
 }
 
 a {
@@ -89,5 +92,16 @@ body {
 }
 
 .danger {
-  color: #950e0e;
+  color: #d42626;
+}
+
+.loading-animation {
+  animation: spinner 1s infinite linear;
+  display: inline-block;
+}
+
+@keyframes spinner {
+  to {
+    rotate: 1turn;
+  }
 }
