@@ -6,12 +6,10 @@ import { GuestsRoutingModule } from '@pages/couchsurfing/guests/guests.routing.m
 
 // Components
 import { GuestsComponent } from '@pages/couchsurfing/guests/guests.component';
-import { GuestsCreateComponent } from '@pages/couchsurfing/guests/create/guests-create.component';
-import { GuestsEditComponent } from '@pages/couchsurfing/guests/edit/guests-edit.component';
-import { GuestsDetailComponent } from '@pages/couchsurfing/guests/detail/guests-detail.component';
+import { GuestsTableComponent } from './components/guests-table/guests-table.component';
 
 @NgModule({
-  declarations: [GuestsComponent, GuestsCreateComponent, GuestsEditComponent, GuestsDetailComponent],
+  declarations: [GuestsComponent, GuestsTableComponent],
   imports: [SharedModule, GuestsRoutingModule],
 })
 export class GuestsModule {}

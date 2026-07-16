@@ -14,6 +14,13 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 // Pipes
 import { FlagPipe } from '@shared/pipes/three-code-letters-flag.pipe';
@@ -30,6 +37,13 @@ const MATERIAL_MODULES = [
   MatSortModule,
   MatTableModule,
   MatTooltipModule,
+  MatRadioModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
+  MatCheckboxModule,
+  MatSelectModule,
+  MatChipsModule,
+  MatAutocompleteModule,
 ];
 
 const PIPES = [FlagPipe];

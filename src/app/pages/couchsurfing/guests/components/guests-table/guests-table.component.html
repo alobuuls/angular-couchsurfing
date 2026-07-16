@@ -1,0 +1,169 @@
+<!-- TABLE -->
+<div class="ctn-guests">
+  <table mat-table [dataSource]="data" matSort (matSortChange)="sort.emit($event)">
+    <!-- NO -->
+    <ng-container matColumnDef="no">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>No</th>
+      <td mat-cell *matCellDef="let guest; let i = index">
+        <span [matBadge]="offset + i + 1" matBadgeColor="warn"></span>
+      </td>
+    </ng-container>
+
+    <!-- HANG OUT -->
+    <ng-container matColumnDef="hangOut">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Hang</th>
+      <td mat-cell *matCellDef="let guest">
+        <mat-icon
+          [class.success]="guest.hangOut"
+          [class.danger]="!guest.hangOut"
+          [fontIcon]="guest.hangOut ? 'check' : 'close'"
+        />
+      </td>
+    </ng-container>
+
+    <!-- NIGHTS -->
+    <ng-container matColumnDef="nights">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nights</th>
+      <td mat-cell *matCellDef="let guest">
+        <span [matBadge]="guest.nights" matBadgeColor="primary"></span>
+      </td>
+    </ng-container>
+
+    <!-- GENDER (members) -->
+    <ng-container matColumnDef="gender">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Gender</th>
+      <td mat-cell *matCellDef="let guest">
+        <div *ngFor="let g of guest.genders">
+          <mat-icon
+            [class.male]="g === 'male'"
+            [class.female]="g === 'female'"
+            [fontIcon]="g === 'female' ? 'woman' : 'man'"
+          />
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- AGE (members + solo) -->
+    <ng-container matColumnDef="birth_date">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Age</th>
+
+      <td mat-cell *matCellDef="let guest">
+        <div *ngFor="let age of guest.ages; trackBy: trackByIndex">
+          {{ age }}
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- FULL NAME -->
+    <ng-container matColumnDef="fullName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Full Name</th>
+      <td mat-cell *matCellDef="let guest">
+        <div class="ctn-first" *ngFor="let name of guest.fullNames">
+          <button matTooltip="Send message" class="btn-whatsapp" mat-icon-button (click)="whatsapp.emit(guest)">
+            <i class="fa fa-whatsapp" aria-hidden="true"></i>
+          </button>
+          <span>{{ name }}</span>
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- CONTINENT -->
+    <ng-container matColumnDef="continent">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Continent</th>
+      <td mat-cell *matCellDef="let guest">
+        <div *ngFor="let c of guest.continents">
+          {{ c }}
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- HOMETOWN -->
+    <ng-container matColumnDef="hometownCode">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Hometown</th>
+
+      <td mat-cell *matCellDef="let guest">
+        <!-- 🔥 UNIQUE -->
+        <div *ngIf="guest.isHometownUnique; else hometownList">
+          <span class="badge-single">
+            <span [class]="guest.hometowns[0]?.code | flag"></span>
+            {{ guest.hometowns[0]?.city }}
+          </span>
+        </div>
+
+        <!-- 🔁 MULTIPLE -->
+        <ng-template #hometownList>
+          <div *ngFor="let h of guest.hometowns">
+            <span [class]="h.code | flag"></span>
+            <span>{{ h.city }}</span>
+          </div>
+        </ng-template>
+      </td>
+    </ng-container>
+
+    <!-- LIVING IN -->
+    <ng-container matColumnDef="livingInCode">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Living In</th>
+
+      <td mat-cell *matCellDef="let guest">
+        <!-- 🔥 UNIQUE -->
+        <div *ngIf="guest.isLivingInUnique; else livingList">
+          <span class="badge-single">
+            <span [class]="guest.livingIns[0]?.code | flag"></span>
+            {{ guest.livingIns[0]?.city }}
+          </span>
+        </div>
+
+        <!-- 🔁 MULTIPLE -->
+        <ng-template #livingList>
+          <div *ngFor="let l of guest.livingIns">
+            <span [class]="l.code | flag"></span>
+            <span>{{ l.city }}</span>
+          </div>
+        </ng-template>
+      </td>
+    </ng-container>
+
+    <!-- VISITED DATE -->
+    <ng-container matColumnDef="visitedDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Visited</th>
+      <td mat-cell *matCellDef="let guest">
+        {{ guest.visitedDate | date }}
+      </td>
+    </ng-container>
+
+    <!-- RATING -->
+    <ng-container matColumnDef="rating">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Rating</th>
+
+      <td mat-cell *matCellDef="let guest">
+        <div *ngIf="guest.isRatingUnique; else multiRating">
+          <div class="ctn-stars">
+            <mat-icon
+              *ngFor="let s of [1, 2, 3, 4, 5]; let i = index"
+              [class.filled]="i < guest.ratings[0]"
+              fontIcon="star"
+            />
+          </div>
+        </div>
+
+        <ng-template #multiRating>
+          <div class="ctn-stars" *ngFor="let r of guest.ratings">
+            <mat-icon *ngFor="let s of [1, 2, 3, 4, 5]; let i = index" [class.filled]="i < r" fontIcon="star" />
+          </div>
+        </ng-template>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <mat-paginator
+    [length]="pagination?.total ?? 0"
+    [pageSize]="pagination?.limit ?? 10"
+    [pageIndex]="(pagination?.page ?? 1) - 1"
+    [pageSizeOptions]="[10, 25, 50, 75, 100, 200]"
+    (page)="page.emit($event)"
+    [showFirstLastButtons]="true"
+  />
+</div>

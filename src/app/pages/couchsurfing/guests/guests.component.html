@@ -1,22 +1,36 @@
 <ng-container *ngIf="vm$ | async as vm">
+  <div class="txt-center" *ngIf="vm.status === 'success' && vm.data.length">
+    <button [routerLink]="['/couchsurfing/guests/add']" class="btn-add" mat-icon-button matTooltip="Create Guest">
+      <mat-icon fontIcon="add" />
+    </button>
+  </div>
+
+  <!-- ERROR -->
+  <h1 *ngIf="vm.status === 'error'">
+    {{ vm?.error?.message }}
+  </h1>
+
   <!-- LOADING -->
   <h1 *ngIf="vm.status === 'loading'">Loading...</h1>
 
-  <!-- ERROR -->
-  <h1 *ngIf="vm.status === 'error'">{{ vm?.error?.message }}</h1>
+  <!-- EMPTY -->
+  <div *ngIf="vm.status === 'success' && !vm.data.length">
+    <h1>
+      There are no guests yet, Create a new guest here
 
-  <!-- SUCCESS -->
-  <div class="ctn-guests" *ngIf="vm.status === 'success'">
-    <section *ngFor="let guest of vm.data">
-      {{ guest.country }}
-      {{ guest.birthyear }}
-      {{ guest.occupation[0] }}
-      {{ guest.livingIn }}
-      {{ guest.birthplace }}
-      {{ guest.didWeHangOut }}
-      {{ guest.nights }}
-      {{ guest.gender }}
-      {{ guest.rating }}
-    </section>
+      <button [routerLink]="['/couchsurfing/guests/add']" class="btn-add" mat-icon-button>
+        <mat-icon fontIcon="add" />
+      </button>
+    </h1>
   </div>
+
+  <guests-table
+    *ngIf="vm.status === 'success'"
+    [data]="vm.data"
+    [pagination]="vm.pagination"
+    [offset]="vm.offset"
+    (sort)="onSortChange($event)"
+    (page)="onPageChange($event)"
+  >
+  </guests-table>
 </ng-container>
