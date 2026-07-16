@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { combineLatestWith, map, switchMap } from 'rxjs/operators';
 
@@ -8,17 +9,25 @@ import { Sort } from '@angular/material/sort';
 
 // Services
 import { GuestsService } from '@services/guests.service';
+import { GroupsService } from '@services/groups.service';
+import { AlertsService } from '@services/alerts.service';
 import { ErrorHandlerService } from '@services/err-handler.service';
 
 // Helpers
 import { withReqState } from 'src/app/utils/operators/with-state-operator';
 import { mapGuestTable } from 'src/app/utils/mappers/guest-table.mapper';
+import { isGroup } from 'src/app/utils/helpers/guests-table.utils';
+import { compare } from 'src/app/utils/helpers/sort.utils';
 
 // Interfaces
+import { IGuest, IGuestListItem } from '@interfaces/couchsurfing.interface';
 import { IGuestsTableVM, IGuestTableRow } from '@interfaces/data-structure-api';
 
+// Const
+import { ALERT_MESSAGES } from '@const/alerts';
+
 // Libraries
-import { compare } from 'src/app/utils/helpers/sort.utils';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'guests',
@@ -37,6 +46,9 @@ export class GuestsComponent implements OnInit {
 
   constructor(
     private _guests: GuestsService,
+    private _groups: GroupsService,
+    private _alerts: AlertsService,
+    private _router: Router,
     private _errH: ErrorHandlerService
   ) {}
 
@@ -148,5 +160,90 @@ export class GuestsComponent implements OnInit {
   private getOffset(): number {
     const { page, size } = this.page$.value;
     return (page - 1) * size;
+  }
+
+  openDetail(guest: IGuestListItem): void {
+    const group = isGroup(guest);
+    if (group) {
+      this._router.navigate(['/couchsurfing/groups', guest.groupId]);
+      return;
+    }
+    this._router.navigate(['/couchsurfing/guests', guest.guestId]);
+  }
+
+  openCouchsurfing(guest: IGuestListItem): void {
+    const group = isGroup(guest);
+    const id = group ? guest.members[0].urlProfileCs : guest.urlProfileCs;
+    const urlCs = `https://www.couchsurfing.com/c/users/${id}`;
+    window.open(`${urlCs}`, '_blank');
+  }
+
+  openWhatsapp(guest: IGuest): void {
+    const phone = `${guest.prefixCode}${guest.whatsapp}`;
+    window.open(`https://wa.me/${phone}`, '_blank');
+  }
+
+  async removeGuestConfirmation(guest: IGuestListItem): Promise<void> {
+    const group = isGroup(guest);
+    const fullname = group ? guest.members[0].fullName : guest.fullName;
+
+    const alerts = ALERT_MESSAGES.deleteGuest;
+
+    const first = await this._alerts.showAlert({
+      icon: 'question',
+      title: '',
+      html: alerts.confirmation.message,
+      confirmText: alerts.confirmation.confirmButtonText,
+      showCancelButton: false,
+    });
+
+    if (!first.isConfirmed) return;
+
+    const second = await this._alerts.showAlert({
+      icon: 'warning',
+      title: alerts.warning.title,
+      html: alerts.warning.message(fullname),
+      confirmText: alerts.warning.confirmButtonText,
+      showCancelButton: false,
+    });
+
+    if (!second.isConfirmed) return;
+
+    const { isConfirmed } = await Swal.fire({
+      title: alerts.typeToConfirm.title(fullname),
+      input: 'text',
+      inputPlaceholder: fullname,
+      confirmButtonColor: '#ff0000',
+      showCancelButton: true,
+      preConfirm: (value: string) => {
+        if (value === fullname) return true;
+        Swal.showValidationMessage(`Must type "${fullname}" exactly`);
+        return false;
+      },
+    });
+
+    if (!isConfirmed) return;
+
+    const where = group ? this._groups.removeGroupById.bind(this._groups) : this._guests.removeGuestById.bind(this._guests);
+    const id = group ? guest.groupId : guest.guestId;
+
+    where(id).subscribe(() => {
+      this._alerts.showToast({
+        icon: 'success',
+        title: ALERT_MESSAGES.deleteGuest.success.message(fullname),
+        time: 6000,
+      });
+
+      this.page$.next(this.page$.value);
+    });
+  }
+
+  editGuest(item: IGuestListItem): void {
+    if (isGroup(item)) {
+      this._router.navigate(['/couchsurfing/groups/edit', item.groupId]);
+
+      return;
+    }
+    this._router.navigate(['/couchsurfing/guests/edit', item.guestId]);
   }
 }

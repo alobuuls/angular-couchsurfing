@@ -4,7 +4,6 @@
   padding: 1rem;
 }
 
-
 table {
   width: 100%;
 }
@@ -23,7 +22,6 @@ table {
   display: flex;
   gap: 0 5px;
 }
-
 
 .btn-edit {
   background-color: #0e6ca2;

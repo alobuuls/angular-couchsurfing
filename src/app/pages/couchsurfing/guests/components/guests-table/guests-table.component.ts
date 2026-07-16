@@ -5,7 +5,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 
 // Interfaces
-import { IGuest, IApiCsPag } from '@interfaces/couchsurfing.interface';
+import { IGuest, IGuestListItem, IApiCsPag } from '@interfaces/couchsurfing.interface';
 import { IGuestTableRow } from '@interfaces/data-structure-api';
 
 @Component({
@@ -14,25 +14,40 @@ import { IGuestTableRow } from '@interfaces/data-structure-api';
   styleUrls: ['./guests-table.component.css'],
 })
 export class GuestsTableComponent {
-  @Input()
-  pagination?: IApiCsPag;
+  @Input() pagination?: IApiCsPag;
 
-  @Input()
-  offset = 0;
+  @Input() offset = 0;
 
-  @Input()
-  data!: IGuestTableRow[];
+  @Input() data!: IGuestTableRow[];
 
-  @Output()
-  whatsapp = new EventEmitter<IGuest>();
+  @Output() detail = new EventEmitter<IGuestListItem>();
 
-  @Output()
-  page = new EventEmitter<PageEvent>();
+  @Output() edit = new EventEmitter<IGuestListItem>();
 
-  @Output()
-  sort = new EventEmitter<Sort>();
+  @Output() remove = new EventEmitter<IGuestListItem>();
 
-  readonly displayedColumns: string[] = ['no', 'hangOut', 'nights', 'gender', 'birth_date', 'fullName', 'continent', 'hometownCode', 'livingInCode', 'visitedDate', 'rating'];
+  @Output() whatsapp = new EventEmitter<IGuest>();
+
+  @Output() couchsurfing = new EventEmitter<IGuestListItem>();
+
+  @Output() page = new EventEmitter<PageEvent>();
+
+  @Output() sort = new EventEmitter<Sort>();
+
+  readonly displayedColumns: string[] = [
+    'no',
+    'hangOut',
+    'nights',
+    'gender',
+    'birth_date',
+    'fullName',
+    'continent',
+    'hometownCode',
+    'livingInCode',
+    'visitedDate',
+    'rating',
+    'actions',
+  ];
 
   trackByIndex(index: number): number {
     return index;

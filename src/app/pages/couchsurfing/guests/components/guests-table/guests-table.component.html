@@ -154,6 +154,30 @@
       </td>
     </ng-container>
 
+    <!-- ACTIONS -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let guest">
+        <div class="actions">
+          <button matTooltip="View guest" class="btn-detail" mat-icon-button (click)="detail.emit(guest)">
+            <mat-icon fontIcon="visibility" />
+          </button>
+
+          <button matTooltip="View couchsurfing" class="btn-cs" mat-icon-button (click)="couchsurfing.emit(guest)">
+            <mat-icon fontIcon="chair" />
+          </button>
+
+          <button matTooltip="Edit guest" class="btn-edit" mat-icon-button (click)="edit.emit(guest)">
+            <mat-icon fontIcon="edit" />
+          </button>
+
+          <button matTooltip="Delete guest" class="btn-delete" mat-icon-button (click)="remove.emit(guest)">
+            <mat-icon fontIcon="delete" />
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>

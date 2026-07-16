@@ -1,0 +1,24 @@
+.main {
+  margin-top: 9rem;
+  text-align: center;
+}
+
+.ctn-stars {
+  color: goldenrod;
+  display: flex;
+  justify-content: center;
+  gap: 0 0.25rem;
+
+  & > mat-icon {
+    color: transparent;
+    -webkit-text-stroke: 0.1mm #000000;
+    -webkit-text-fill-color: #000;
+    opacity: 0.2;
+    transition: -webkit-text-fill-color 0.3s ease-in-out;
+
+    &.filled {
+      opacity: 1;
+      -webkit-text-fill-color: #000;
+    }
+  }
+}
