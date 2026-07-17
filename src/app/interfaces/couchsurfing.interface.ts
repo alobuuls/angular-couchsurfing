@@ -57,6 +57,28 @@ export interface IGroupDetail extends ITripDetail {
   members: IBodyGuest[];
 }
 
+export interface IGuestTableMember {
+  fullName: string;
+  gender: 'female' | 'male' | 'trans';
+  age: string | null;
+  continent: string;
+
+  hometown: {
+    code?: string | null;
+    city?: string | null;
+  };
+
+  livingIn: {
+    code?: string | null;
+    city?: string | null;
+  };
+
+  rating: number;
+
+  whatsapp: string;
+  prefixCode: string;
+}
+
 export type IGroupMember = IGuestDetail & {
   groupId: string;
 };

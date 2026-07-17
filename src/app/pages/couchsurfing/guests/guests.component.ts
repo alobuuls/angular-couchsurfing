@@ -9,25 +9,18 @@ import { Sort } from '@angular/material/sort';
 
 // Services
 import { GuestsService } from '@services/guests.service';
-import { GroupsService } from '@services/groups.service';
-import { AlertsService } from '@services/alerts.service';
+import { GuestDeleteService } from '@services/guest-delete.service';
 import { ErrorHandlerService } from '@services/err-handler.service';
+import { GuestSortService } from '@services/guest-sort.service';
 
 // Helpers
 import { withReqState } from 'src/app/utils/operators/with-state-operator';
 import { mapGuestTable } from 'src/app/utils/mappers/guest-table.mapper';
 import { isGroup } from 'src/app/utils/helpers/guests-table.utils';
-import { compare } from 'src/app/utils/helpers/sort.utils';
 
 // Interfaces
-import { IGuest, IGuestListItem } from '@interfaces/couchsurfing.interface';
-import { IGuestsTableVM, IGuestTableRow } from '@interfaces/data-structure-api';
-
-// Const
-import { ALERT_MESSAGES } from '@const/alerts';
-
-// Libraries
-import Swal from 'sweetalert2';
+import { IGuestListItem } from '@interfaces/couchsurfing.interface';
+import { IGuestsTableVM, IGuestTableRow, IGuestTableRowWithIndex } from '@interfaces/data-structure-api';
 
 @Component({
   selector: 'guests',
@@ -45,23 +38,19 @@ export class GuestsComponent implements OnInit {
   private sort$ = new BehaviorSubject<Sort>({ active: '', direction: '' });
 
   constructor(
-    private _guests: GuestsService,
-    private _groups: GroupsService,
-    private _alerts: AlertsService,
     private _router: Router,
+    private _guests: GuestsService,
+    private _sortService: GuestSortService,
+    private _deleteService: GuestDeleteService,
     private _errH: ErrorHandlerService
   ) {}
 
   ngOnInit(): void {
-    this.buildVm();
+    this.initVm();
   }
 
-  private buildVm(): Observable<IGuestsTableVM> {
-    return (this.vm$ = this.page$.pipe(
-      map(value => {
-        return value;
-      }),
-
+  private initVm(): void {
+    this.vm$ = this.page$.pipe(
       switchMap(({ page, size }) => withReqState(this._guests.getAllGuests({ limit: size, page }), this._errH)),
 
       map(vm => {
@@ -87,17 +76,12 @@ export class GuestsComponent implements OnInit {
       map(([vm, sort]) => {
         if (vm.status !== 'success') return vm;
 
-        let data = [...vm.data].map((item, index) => ({
+        let data: IGuestTableRowWithIndex[] = vm.data.map((item, index) => ({
           ...item,
-          pageIndex: index,
+          pageIndex: this.getOffset() + index,
         }));
 
-        if (sort.active && sort.direction) {
-          const isAsc = sort.direction === 'asc';
-          const accessor = this.sortAccessors[sort.active] ?? ((g: any) => g?.[sort.active]);
-
-          data.sort((a, b) => compare(accessor(a), accessor(b), isAsc));
-        }
+        data = this._sortService.sort(data, sort);
 
         return {
           ...vm,
@@ -105,7 +89,7 @@ export class GuestsComponent implements OnInit {
           offset: this.getOffset(),
         };
       })
-    ));
+    );
   }
 
   // 🔥 SORT INTELIGENTE (respeta backend + alterna después)
@@ -141,22 +125,6 @@ export class GuestsComponent implements OnInit {
     });
   }
 
-  private sortAccessors: Record<string, (guest: any) => any> = {
-    fullName: g => (g.fullNames?.[0] ?? '').toLowerCase(),
-    rating: g => g.ratings?.[0] ?? 0,
-    nights: g => g.nights ?? 0,
-    gender: g => (g.genders?.[0] ?? '').toLowerCase(),
-    continent: g => (g.continents?.[0] ?? '').toLowerCase(),
-    // ✅ SOLO POR CODE (GRUPO -> primer miembro)
-    hometownCode: g => (g.hometowns?.[0]?.code ?? '').toLowerCase(),
-    livingInCode: g => (g.livingIns?.[0]?.code ?? '').toLowerCase(),
-    visitedDate: g => new Date(g.visitedDate ?? 0).getTime(),
-    birth_date: g => {
-      const age = g.ages?.[0];
-      return age === '?' || age == null ? -1 : Number(age);
-    },
-  };
-
   private getOffset(): number {
     const { page, size } = this.page$.value;
     return (page - 1) * size;
@@ -178,64 +146,14 @@ export class GuestsComponent implements OnInit {
     window.open(`${urlCs}`, '_blank');
   }
 
-  openWhatsapp(guest: IGuest): void {
-    const phone = `${guest.prefixCode}${guest.whatsapp}`;
-    window.open(`https://wa.me/${phone}`, '_blank');
+  openWhatsapp(whatsapp: string): void {
+    window.open(`https://wa.me/${whatsapp}`, '_blank');
   }
 
   async removeGuestConfirmation(guest: IGuestListItem): Promise<void> {
-    const group = isGroup(guest);
-    const fullname = group ? guest.members[0].fullName : guest.fullName;
-
-    const alerts = ALERT_MESSAGES.deleteGuest;
-
-    const first = await this._alerts.showAlert({
-      icon: 'question',
-      title: '',
-      html: alerts.confirmation.message,
-      confirmText: alerts.confirmation.confirmButtonText,
-      showCancelButton: false,
-    });
-
-    if (!first.isConfirmed) return;
-
-    const second = await this._alerts.showAlert({
-      icon: 'warning',
-      title: alerts.warning.title,
-      html: alerts.warning.message(fullname),
-      confirmText: alerts.warning.confirmButtonText,
-      showCancelButton: false,
-    });
-
-    if (!second.isConfirmed) return;
-
-    const { isConfirmed } = await Swal.fire({
-      title: alerts.typeToConfirm.title(fullname),
-      input: 'text',
-      inputPlaceholder: fullname,
-      confirmButtonColor: '#ff0000',
-      showCancelButton: true,
-      preConfirm: (value: string) => {
-        if (value === fullname) return true;
-        Swal.showValidationMessage(`Must type "${fullname}" exactly`);
-        return false;
-      },
-    });
-
-    if (!isConfirmed) return;
-
-    const where = group ? this._groups.removeGroupById.bind(this._groups) : this._guests.removeGuestById.bind(this._guests);
-    const id = group ? guest.groupId : guest.guestId;
-
-    where(id).subscribe(() => {
-      this._alerts.showToast({
-        icon: 'success',
-        title: ALERT_MESSAGES.deleteGuest.success.message(fullname),
-        time: 6000,
-      });
-
-      this.page$.next(this.page$.value);
-    });
+    const deleted = await this._deleteService.confirmAndDelete(guest);
+    if (!deleted) return;
+    this.page$.next({ ...this.page$.value });
   }
 
   editGuest(item: IGuestListItem): void {

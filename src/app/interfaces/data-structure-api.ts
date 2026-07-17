@@ -22,23 +22,61 @@ export interface GuestsVM {
   error?: IErrResp;
 }
 
+export interface IGuestTableMember {
+  fullName: string;
+  gender: string;
+  age: string | null;
+  continent: string;
+
+  hometown: {
+    code?: string | null;
+    city?: string | null;
+  };
+
+  livingIn: {
+    code?: string | null;
+    city?: string | null;
+  };
+
+  rating: number;
+
+  whatsapp: string;
+  prefixCode: string;
+}
 
 export type IGuestTableRow = IGuestListItem & {
-  fullNames: string[];
-  genders: string[];
-  ages: (string | null)[];
-  continents: string[];
+  people: {
+    fullName: string;
+    gender: string;
+    age: string | null;
+    continent: string;
+    whatsapp: string | null;
 
-  hometowns: { code?: string | null; city?: string | null }[];
-  livingIns: { code?: string | null; city?: string | null }[];
+    hometown: {
+      code?: string | null;
+      city?: string | null;
+    };
+
+    livingIn: {
+      code?: string | null;
+      city?: string | null;
+    };
+
+    hangOut: boolean;
+
+    rating: number;
+  }[];
 
   isHometownUnique: boolean;
+  isHangOutUnique: boolean;
   isLivingInUnique: boolean;
-
-  ratings: number[];
-  isRatingUnique: boolean;
+  isContinentUnique: boolean;
 
   pageIndex?: number;
+};
+
+export type IGuestTableRowWithIndex = IGuestTableRow & {
+  pageIndex: number;
 };
 
 export type IGuestsTableVM = Omit<GuestsVM, 'data'> & {

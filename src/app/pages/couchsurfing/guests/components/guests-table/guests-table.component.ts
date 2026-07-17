@@ -26,7 +26,7 @@ export class GuestsTableComponent {
 
   @Output() remove = new EventEmitter<IGuestListItem>();
 
-  @Output() whatsapp = new EventEmitter<IGuest>();
+  @Output() whatsapp = new EventEmitter<string>();
 
   @Output() couchsurfing = new EventEmitter<IGuestListItem>();
 
@@ -49,7 +49,11 @@ export class GuestsTableComponent {
     'actions',
   ];
 
-  trackByIndex(index: number): number {
+  trackByIndexPhone(index: number): number {
+    return index;
+  }
+
+  trackByIndexAge(index: number): number {
     return index;
   }
 }

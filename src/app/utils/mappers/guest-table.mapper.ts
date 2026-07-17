@@ -1,11 +1,12 @@
 import { IGuestListItem } from '@interfaces/couchsurfing.interface';
 import { IGuestTableRow } from '@interfaces/data-structure-api';
-import { collapseIfSame, getAge, isGroup } from '../helpers/guests-table.utils';
+import { getAge, isGroup } from '../helpers/guests-table.utils';
 
 export function mapGuestTable(guests: IGuestListItem[]): IGuestTableRow[] {
   return guests.map(guest => {
     if (isGroup(guest)) {
       const members = guest.members;
+
       const hometownObjects = members.map(m => ({
         code: m.hometownCode,
         city: m.hometown,
@@ -16,69 +17,73 @@ export function mapGuestTable(guests: IGuestListItem[]): IGuestTableRow[] {
         city: m.livingIn,
       }));
 
-      const isHometownUnique = new Set(hometownObjects.map(x => `${x.code}-${x.city}`)).size === 1;
-
-      const isLivingInUnique = new Set(livingObjects.map(x => `${x.code}-${x.city}`)).size === 1;
-
-      const isRatingUnique = members ? new Set(members.map(m => m.rating ?? 0)).size === 1 : true;
-
       return {
         ...guest,
 
         hometowns: hometownObjects,
         livingIns: livingObjects,
 
-        isHometownUnique,
-        isLivingInUnique,
+        continent: members.map(m => m.continent),
 
-        ratings: members.map(m => m.rating ?? 0),
+        people: members.map(m => ({
+          fullName: m.fullName,
+          gender: m.gender,
+          age: m.birthDate ? getAge(m.birthDate) : '?',
+          continent: m.continent,
+          whatsapp: m.prefixCode == null || m.whatsapp == null ? null : m.prefixCode + m.whatsapp,
 
-        isRatingUnique,
+          hometown: {
+            code: m.hometownCode,
+            city: m.hometown,
+          },
 
-        fullNames: collapseIfSame(members, m => m.fullName),
+          livingIn: {
+            code: m.livingInCode,
+            city: m.livingIn,
+          },
 
-        genders: collapseIfSame(members, m => m.gender),
+          hangOut: m.hangOut,
 
-        ages: members.map(m => (m.birthDate ? getAge(m.birthDate) : '?')),
+          rating: m.rating ?? 0,
+        })),
 
-        continents: collapseIfSame(members, m => m.continent),
+        isHangOutUnique: new Set(members.map(m => m.hangOut)).size === 1,
+        isHometownUnique: new Set(members.map(m => `${m.hometownCode}-${m.hometown}`)).size === 1,
+        isLivingInUnique: new Set(members.map(m => `${m.livingInCode}-${m.livingIn}`)).size === 1,
+        isContinentUnique: new Set(members.map(m => m.continent)).size === 1,
       } as IGuestTableRow;
     }
-
-    const hometownObjects = [
-      {
-        code: guest.hometownCode,
-        city: guest.hometown,
-      },
-    ];
-
-    const livingObjects = [
-      {
-        code: guest.livingInCode,
-        city: guest.livingIn,
-      },
-    ];
-
-    const isHometownUnique = true;
-    const isLivingInUnique = true;
-    const isRatingUnique = true;
 
     return {
       ...guest,
 
-      hometowns: hometownObjects,
-      livingIns: livingObjects,
+      people: [
+        {
+          fullName: guest.fullName,
+          gender: guest.gender,
+          age: getAge(guest.birthDate),
+          continent: guest.continent,
+          whatsapp: guest.prefixCode == null || guest.whatsapp == null ? null : guest.prefixCode + guest.whatsapp,
+          hometown: {
+            code: guest.hometownCode,
+            city: guest.hometown,
+          },
 
-      isHometownUnique,
-      isLivingInUnique,
+          livingIn: {
+            code: guest.livingInCode,
+            city: guest.livingIn,
+          },
 
-      ratings: [guest.rating],
-      isRatingUnique,
+          hangOut: guest.hangOut,
 
-      fullNames: [guest.fullName],
-      genders: [guest.gender],
-      ages: [getAge(guest.birthDate)],
-      continents: [guest.continent],
+          rating: guest.rating ?? 0,
+        },
+      ],
+
+      isHometownUnique: true,
+      isLivingInUnique: true,
+      isContinentUnique: true,
+      isHangOutUnique: true
     } as IGuestTableRow;
   });
 }

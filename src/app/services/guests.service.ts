@@ -14,8 +14,15 @@ export class GuestsService {
 
   constructor(private http: HttpClient) {}
 
-  getAllGuests({ limit = 10, page = 1 }: { limit?: number; page?: number } = {}): Observable<IGuestsResp> {
+  getAllGuests({
+    limit = 10,
+    page = 1,
+  }: {
+    limit?: number;
+    page?: number;
+  } = {}): Observable<IGuestsResp> {
     const params = new HttpParams().set('limit', String(limit)).set('page', String(page));
+
     return this.http.get<IGuestsResp>(`${this.urlBaseApi}/guests`, { params });
   }
 
