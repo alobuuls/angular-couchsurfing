@@ -8,21 +8,9 @@
 
       <mat-icon matPrefix>person</mat-icon>
 
-      <mat-icon
-        class="icon-success"
-        matSuffix
-        *ngIf="f['fullName'].valid && (f['fullName'].dirty || f['fullName'].touched)"
-      >
-        check_circle
-      </mat-icon>
+      <mat-icon class="icon-success" matSuffix *ngIf="isValid('fullName')"> check_circle </mat-icon>
 
-      <mat-icon
-        class="icon-warning"
-        matSuffix
-        *ngIf="f['fullName'].invalid && (f['fullName'].dirty || f['fullName'].touched)"
-      >
-        error
-      </mat-icon>
+      <mat-icon class="icon-warning" matSuffix *ngIf="isInvalid('fullName')"> error </mat-icon>
 
       <input matInput formControlName="fullName" #fullNameInput [errorStateMatcher]="instantErrorMatcher" />
 
@@ -44,21 +32,9 @@
 
       <mat-icon matPrefix>alternate_email</mat-icon>
 
-      <mat-icon
-        class="icon-success"
-        matSuffix
-        *ngIf="f['instagram'].valid && (f['instagram'].dirty || f['instagram'].touched)"
-      >
-        check_circle
-      </mat-icon>
+      <mat-icon class="icon-success" matSuffix *ngIf="isValid('instagram')"> check_circle </mat-icon>
 
-      <mat-icon
-        class="icon-warning"
-        matSuffix
-        *ngIf="f['instagram'].invalid && (f['instagram'].dirty || f['instagram'].touched)"
-      >
-        error
-      </mat-icon>
+      <mat-icon class="icon-warning" matSuffix *ngIf="isInvalid('instagram')"> error </mat-icon>
 
       <input matInput formControlName="instagram" #instagramInput />
 
@@ -78,17 +54,9 @@
 
       <mat-icon matPrefix>link</mat-icon>
 
-      <mat-icon
-        class="icon-success"
-        matSuffix
-        *ngIf="f['urlCsProfile'].valid && f['urlCsProfile'].touched && f['urlCsProfile'].value"
-      >
-        check_circle
-      </mat-icon>
+      <mat-icon class="icon-success" matSuffix *ngIf="isValid('urlCsProfile')"> check_circle </mat-icon>
 
-      <mat-icon class="icon-warning" matSuffix *ngIf="f['urlCsProfile'].invalid && f['urlCsProfile'].touched">
-        error
-      </mat-icon>
+      <mat-icon class="icon-warning" matSuffix *ngIf="isInvalid('urlCsProfile')"> error </mat-icon>
 
       <input matInput formControlName="urlCsProfile" #urlCsProfileInput [errorStateMatcher]="instantErrorMatcher" />
 
@@ -125,8 +93,8 @@
     </mat-form-field>
 
     <!-- GENDER -->
-    <section class="gender-section">
-      <label>Gender</label>
+    <section class="card-section">
+      <h3>Gender</h3>
 
       <mat-radio-group formControlName="gender">
         <mat-radio-button value="male">Male</mat-radio-button>
@@ -138,22 +106,16 @@
     </section>
 
     <!-- HOMETOWN COUNTRY -->
+
+    
     <mat-form-field appearance="outline">
       <mat-label>Hometown Country</mat-label>
 
       <mat-icon matPrefix>public</mat-icon>
 
-      <mat-icon
-        class="icon-success"
-        matSuffix
-        *ngIf="f['hometownCode'].valid && f['hometownCode'].touched && f['hometownCode'].value"
-      >
-        check_circle
-      </mat-icon>
+      <mat-icon class="icon-success" matSuffix *ngIf="isValid('hometownCode')"> check_circle </mat-icon>
 
-      <mat-icon class="icon-warning" matSuffix *ngIf="f['hometownCode'].invalid && f['hometownCode'].touched">
-        error
-      </mat-icon>
+      <mat-icon class="icon-warning" matSuffix *ngIf="isInvalid('hometownCode')"> error </mat-icon>
 
       <input
         matInput
@@ -172,15 +134,8 @@
       <mat-error *ngIf="f['hometownCode'].hasError('required')"> Country is required </mat-error>
     </mat-form-field>
 
-    <!-- COUNTRY INFO -->
-    <div *ngIf="f['hometownCode'].value">
-      <p>Continent: {{ f['continent'].value }}</p>
-      <p>Region: {{ f['region'].value }}</p>
-      <p>Prefix: {{ f['prefixCode'].value }}</p>
-    </div>
-
     <!-- HOMETOWN STATE -->
-    <mat-form-field appearance="outline" *ngIf="f['hometownCode'].value">
+    <mat-form-field appearance="outline" *ngIf="f['hometownCode'].value" class="select-field">
       <mat-label>Hometown State</mat-label>
 
       <mat-icon matPrefix>map</mat-icon>
@@ -193,7 +148,7 @@
     </mat-form-field>
 
     <!-- HOMETOWN CITY -->
-    <mat-form-field appearance="outline" *ngIf="f['hometownState'].value">
+    <mat-form-field appearance="outline" *ngIf="f['hometownState'].value" class="select-field">
       <mat-label>Hometown City</mat-label>
 
       <mat-icon matPrefix>location_city</mat-icon>
@@ -206,24 +161,14 @@
     </mat-form-field>
 
     <!-- LIVING COUNTRY -->
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" class="country-field">
       <mat-label>Living In Country</mat-label>
 
       <mat-icon matPrefix>public</mat-icon>
 
-      <!-- Success Icon -->
-      <mat-icon
-        class="icon-success"
-        matSuffix
-        *ngIf="f['livingInCode'].valid && f['livingInCode'].touched && f['livingInCode'].value"
-      >
-        check_circle
-      </mat-icon>
+      <mat-icon class="icon-success" matSuffix *ngIf="isValid('livingInCode')"> check_circle </mat-icon>
 
-      <!-- Error Icon -->
-      <mat-icon class="icon-warning" matSuffix *ngIf="f['livingInCode'].invalid && f['livingInCode'].touched">
-        error
-      </mat-icon>
+      <mat-icon class="icon-warning" matSuffix *ngIf="isInvalid('livingInCode')"> error </mat-icon>
 
       <input matInput formControlName="livingInCode" [matAutocomplete]="autoLiving" (input)="filterLiving($event)" />
 
@@ -238,7 +183,7 @@
     </mat-form-field>
 
     <!-- Living In Stated -->
-    <mat-form-field appearance="outline" *ngIf="f['livingInCode'].value">
+    <mat-form-field appearance="outline" *ngIf="f['livingInCode'].value" class="select-field">
       <mat-label>Living In State</mat-label>
 
       <mat-icon matPrefix>public</mat-icon>
@@ -251,7 +196,7 @@
     </mat-form-field>
 
     <!-- Living In city -->
-    <mat-form-field appearance="outline" *ngIf="f['livingInState'].value">
+    <mat-form-field appearance="outline" *ngIf="f['livingInState'].value" class="select-field">
       <mat-label>Living In City</mat-label>
 
       <mat-icon matPrefix>location_city</mat-icon>
@@ -264,77 +209,54 @@
     </mat-form-field>
 
     <!-- PREFIX -->
-    <mat-form-field appearance="outline">
-      <mat-label>Prefix Code</mat-label>
+    <div class="phone-row">
+      <!-- PREFIX -->
+      <mat-form-field appearance="outline" class="prefix-field select-field">
+        <mat-label>Prefix</mat-label>
 
-      <mat-icon matPrefix>dialpad</mat-icon>
+        <mat-icon matPrefix>dialpad</mat-icon>
 
-      <mat-icon
-        class="icon-success"
-        matSuffix
-        *ngIf="f['prefixCode'].valid && f['prefixCode'].touched && f['prefixCode'].value"
-      >
-        check_circle
-      </mat-icon>
+        <mat-select formControlName="prefixCode">
+          <mat-option *ngFor="let country of countries" [value]="country.prefix">
+            <span [class]="country.countryCode | flag"></span>
+            {{ country.prefix }}
+          </mat-option>
+        </mat-select>
 
-      <mat-icon class="icon-warning" matSuffix *ngIf="f['prefixCode'].invalid && f['prefixCode'].touched">
-        error
-      </mat-icon>
+        <mat-error *ngIf="f['prefixCode'].hasError('required')"> Prefix is required </mat-error>
+      </mat-form-field>
 
-      <mat-select formControlName="prefixCode">
-        <mat-option *ngFor="let country of countries" [value]="country.prefix">
-          <span [class]="country.countryCode | flag"></span>
-          {{ country.prefix }}
-        </mat-option>
-      </mat-select>
+      <!-- WHATSAPP -->
+      <mat-form-field appearance="outline" class="phone-field">
+        <mat-label>Whatsapp</mat-label>
 
-      <mat-error *ngIf="f['prefixCode'].hasError('required')"> Prefix Code is required </mat-error>
-    </mat-form-field>
+        <mat-icon matPrefix>phone</mat-icon>
 
-    <!-- WHATSAPP -->
-    <mat-form-field appearance="outline">
-      <mat-label>Whatsapp</mat-label>
+        <mat-icon class="icon-success" matSuffix *ngIf="isValid('whatsapp')"> check_circle </mat-icon>
 
-      <mat-icon matPrefix>phone</mat-icon>
+        <mat-icon class="icon-warning" matSuffix *ngIf="isInvalid('whatsapp')"> error </mat-icon>
 
-      <mat-icon
-        class="icon-success"
-        matSuffix
-        *ngIf="f['whatsapp'].valid && f['whatsapp'].touched && f['whatsapp'].value"
-      >
-        check_circle
-      </mat-icon>
+        <input type="tel" matInput formControlName="whatsapp" maxlength="16" />
 
-      <mat-icon class="icon-warning" matSuffix *ngIf="f['whatsapp'].invalid && f['whatsapp'].touched"> error </mat-icon>
+        <mat-error *ngIf="f['whatsapp'].hasError('required')"> Whatsapp is required </mat-error>
 
-      <input type="tel" matInput formControlName="whatsapp" maxlength="16" />
+        <mat-error *ngIf="f['whatsapp'].hasError('pattern')"> Invalid phone number </mat-error>
 
-      <mat-error *ngIf="f['whatsapp'].hasError('required')"> Whatsapp is required </mat-error>
-
-      <mat-error *ngIf="f['whatsapp'].hasError('pattern')"> Invalid phone number </mat-error>
-
-      <mat-error *ngIf="f['whatsapp'].hasError('maxlength')"> Maximum 16 characters </mat-error>
-    </mat-form-field>
+        <mat-error *ngIf="f['whatsapp'].hasError('maxlength')"> Maximum 16 characters </mat-error>
+      </mat-form-field>
+    </div>
 
     <!-- OCCUPATION AREA -->
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" class="select-field">
       <mat-label>Occupation Area</mat-label>
 
       <mat-icon matPrefix>work</mat-icon>
 
-      <!-- Success Icon-->
-      <mat-icon
-        class="icon-success"
-        matSuffix
-        *ngIf="f['occupationArea'].valid && f['occupationArea'].touched && f['occupationArea'].value?.length"
-      >
+      <mat-icon class="icon-success" matSuffix *ngIf="isValid('occupationArea') && f['occupationArea'].value?.length">
         check_circle
       </mat-icon>
 
-      <!--Error Icon -->
-      <mat-icon class="icon-warning" matSuffix *ngIf="f['occupationArea'].invalid && f['occupationArea'].touched">
-        error
-      </mat-icon>
+      <mat-icon class="icon-warning" matSuffix *ngIf="isInvalid('occupationArea')"> error </mat-icon>
 
       <mat-select formControlName="occupationArea" multiple>
         <mat-option *ngFor="let area of occupationAreas" [value]="area">
@@ -346,7 +268,7 @@
     </mat-form-field>
 
     <!-- OCCUPATION -->
-    <mat-form-field appearance="outline" *ngIf="occupations.length > 0">
+    <mat-form-field appearance="outline" *ngIf="occupations.length > 0" class="select-field">
       <mat-label>Occupation(s)</mat-label>
 
       <mat-icon matPrefix>badge</mat-icon>
@@ -359,17 +281,19 @@
     </mat-form-field>
 
     <!-- CHECKBOXES -->
-    <!-- FIRST TIME -->
-    <mat-checkbox formControlName="isFirstTime"> First Time </mat-checkbox>
+    <section class="card-section checkbox-group">
+      <!-- FIRST TIME -->
+      <mat-checkbox formControlName="isFirstTime"> First Time </mat-checkbox>
 
-    <!-- HANG OUT -->
-    <mat-checkbox formControlName="hangOut"> Hang Out </mat-checkbox>
+      <!-- HANG OUT -->
+      <mat-checkbox formControlName="hangOut"> Hang Out </mat-checkbox>
 
-    <!-- HANG OUT -->
-    <mat-checkbox formControlName="isGay"> isGay </mat-checkbox>
+      <!-- HANG OUT -->
+      <mat-checkbox formControlName="isGay"> isGay </mat-checkbox>
+    </section>
 
     <!-- RATING -->
-    <section class="rating">
+    <section class="rating rating full-row">
       <mat-icon
         *ngFor="let star of stars"
         class="star material-symbols-outlined"
@@ -387,43 +311,46 @@
     </section>
 
     <!-- GIFTS -->
-    <mat-form-field class="example-chip-list">
-      <mat-label>Gifts</mat-label>
+    <div class="gift-row full-row">
+      <mat-form-field class="example-chip-list full-row">
+        <mat-label>Gifts</mat-label>
 
-      <mat-chip-grid #chipGrid>
-        <mat-chip-row
-          *ngFor="let gift of gifts"
-          [editable]="true"
-          (removed)="removeGift(gift)"
-          (edited)="editGift(gift, $event)"
-        >
-          {{ gift.name }}
+        <mat-chip-grid #chipGrid>
+          <mat-chip-row
+            *ngFor="let gift of gifts"
+            [editable]="true"
+            (removed)="removeGift(gift)"
+            (edited)="editGift(gift, $event)"
+          >
+            {{ gift.name }}
 
-          <button matChipRemove>
-            <mat-icon>cancel</mat-icon>
-          </button>
-        </mat-chip-row>
+            <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
 
-        <input
-          #giftInput
-          [matChipInputFor]="chipGrid"
-          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-          [matChipInputAddOnBlur]="addOnBlur"
-          (matChipInputTokenEnd)="addGift($event)"
-        />
-      </mat-chip-grid>
+          <input
+            #giftInput
+            [matChipInputFor]="chipGrid"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="addGift($event)"
+          />
+        </mat-chip-grid>
 
-      <mat-hint align="end"> {{ gifts.length }}/15 gifts </mat-hint>
-    </mat-form-field>
-    <button type="button" (click)="clearGiftInput()">clean</button>
+        <mat-hint align="end"> {{ gifts.length }}/15 gifts </mat-hint>
+      </mat-form-field>
+      <button type="button" (click)="clearGiftInput()">clean</button>
+    </div>
 
     <!-- THEIR REFERENCE -->
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" class="full-row">
       <mat-label>Their Reference</mat-label>
 
       <mat-icon matPrefix>comment</mat-icon>
 
       <textarea
+        class="full-row"
         matInput
         formControlName="theirReference"
         #theirReferenceInput
@@ -442,12 +369,13 @@
     </mat-form-field>
 
     <!-- MY REFERENCE -->
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" class="full-row">
       <mat-label>my Reference</mat-label>
 
       <mat-icon matPrefix>comment</mat-icon>
 
       <textarea
+        class="full-row"
         matInput
         formControlName="myReference"
         #myReferenceInput
@@ -466,12 +394,18 @@
     </mat-form-field>
 
     <!-- COMMENTS -->
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" class="full-row">
       <mat-label>Leave a comment</mat-label>
 
       <mat-icon matPrefix>comment</mat-icon>
 
-      <textarea matInput formControlName="comments" #commentsInput [errorStateMatcher]="instantErrorMatcher">
+      <textarea
+        class="full-row"
+        matInput
+        formControlName="comments"
+        #commentsInput
+        [errorStateMatcher]="instantErrorMatcher"
+      >
       </textarea>
 
       <mat-hint align="end">

@@ -15,7 +15,7 @@ import { AlertsService } from '@services/alerts.service';
   templateUrl: './guests-form.component.html',
   styleUrls: ['./guests-form.component.css'],
 })
-export class GuestsFormComponent implements OnChanges{
+export class GuestsFormComponent implements OnChanges {
   @ViewChild(TripFormComponent)
   tripFormComponent!: TripFormComponent;
 
@@ -42,30 +42,29 @@ export class GuestsFormComponent implements OnChanges{
   // Form
   wasFormSubmitted = false;
 
-  // Add Members
+  // Add Form
   limitGroupMembers = 5;
-  counterGroupMembers = 2;
 
   constructor(private _alerts: AlertsService) {}
 
   ngOnChanges(): void {
-    if ( this.mode === 'edit' ) {
-      this.loadData()
+    if (this.mode === 'edit') {
+      this.loadData();
     }
   }
 
   private loadData(): void {
     // Solo
-    if ( this.guest ) {
+    if (this.guest) {
       this.selectGroupType('solo');
 
-      return
+      return;
     }
 
     // Group
-    if ( this.group ) {
+    if (this.group) {
       this.selectGroupType(this.group[0].groupType);
-      this.formsToShow = this.group.length
+      this.formsToShow = this.group.length;
     }
   }
 
@@ -84,9 +83,8 @@ export class GuestsFormComponent implements OnChanges{
   }
 
   submit(): void {
-
-    if ( !this.selectedGroupType ) {
-      return
+    if (!this.selectedGroupType) {
+      return;
     }
     const trip = this.tripFormComponent.getFormValue();
 
@@ -100,7 +98,7 @@ export class GuestsFormComponent implements OnChanges{
   }
 
   addGuestForm(): void {
-    if (this.counterGroupMembers >= this.limitGroupMembers) {
+    if (this.formsToShow >= this.limitGroupMembers) {
       this._alerts.showToast({
         icon: 'warning',
         title: 'You can add max 5 members',
@@ -109,7 +107,6 @@ export class GuestsFormComponent implements OnChanges{
       return;
     }
 
-    this.counterGroupMembers++;
     this.formsToShow++;
   }
 }

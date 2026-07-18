@@ -562,4 +562,26 @@ export class GuestFormComponent implements OnInit {
   getFormValue(): IBodyGuest {
     return this.buildGuestPayload();
   }
+
+  isValid(controlName: string): boolean {
+    const control = this.f[controlName];
+
+    if (!(control.dirty || control.touched) || !control.valid) {
+      return false;
+    }
+
+    const value = control.value;
+
+    if (Array.isArray(value)) {
+      return value.length > 0;
+    }
+
+    return value !== null && value !== undefined && value !== '';
+  }
+
+  isInvalid(controlName: string): boolean {
+    const control = this.f[controlName];
+
+    return !!(control.invalid && (control.dirty || control.touched));
+  }
 }
