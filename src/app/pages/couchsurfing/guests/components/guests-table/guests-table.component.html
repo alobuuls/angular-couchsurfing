@@ -177,9 +177,17 @@
             <mat-icon fontIcon="visibility" />
           </button>
 
-          <button matTooltip="View couchsurfing" class="btn-cs" mat-icon-button (click)="couchsurfing.emit(guest)">
-            <mat-icon fontIcon="chair" />
-          </button>
+          <div *ngFor="let person of guest.people">
+            <button
+              matTooltip="View Couchsurfing profile"
+              class="btn-cs"
+              mat-icon-button
+              [disabled]="!person.couchsurfing"
+              (click)="couchsurfing.emit(person.couchsurfing)"
+            >
+              <mat-icon fontIcon="chair"></mat-icon>
+            </button>
+          </div>
 
           <button matTooltip="Edit guest" class="btn-edit" mat-icon-button (click)="edit.emit(guest)">
             <mat-icon fontIcon="edit" />

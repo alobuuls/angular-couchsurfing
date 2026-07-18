@@ -28,9 +28,11 @@ export function mapGuestTable(guests: IGuestListItem[]): IGuestTableRow[] {
         people: members.map(m => ({
           fullName: m.fullName,
           gender: m.gender,
-          age: m.birthDate ? getAge(m.birthDate) : '?',
+          age: getAge(m.birthDate),
           continent: m.continent,
           whatsapp: m.prefixCode == null || m.whatsapp == null ? null : m.prefixCode + m.whatsapp,
+
+          couchsurfing: m.urlProfileCs ?? null,
 
           hometown: {
             code: m.hometownCode,
@@ -64,6 +66,7 @@ export function mapGuestTable(guests: IGuestListItem[]): IGuestTableRow[] {
           age: getAge(guest.birthDate),
           continent: guest.continent,
           whatsapp: guest.prefixCode == null || guest.whatsapp == null ? null : guest.prefixCode + guest.whatsapp,
+          couchsurfing: guest.urlProfileCs ?? null,
           hometown: {
             code: guest.hometownCode,
             city: guest.hometown,
@@ -83,7 +86,7 @@ export function mapGuestTable(guests: IGuestListItem[]): IGuestTableRow[] {
       isHometownUnique: true,
       isLivingInUnique: true,
       isContinentUnique: true,
-      isHangOutUnique: true
+      isHangOutUnique: true,
     } as IGuestTableRow;
   });
 }

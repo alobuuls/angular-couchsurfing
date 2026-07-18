@@ -18,8 +18,14 @@ export function collapseIfSame<T>(items: T[], getValue: (item: T) => any): any[]
 export function getAge(birthDate?: string): number | '?' {
   if (!birthDate) return '?';
 
-  const year = new Date(birthDate).getFullYear();
-  if (!year) return '?';
+  const birth = new Date(birthDate);
+  const today = new Date();
 
-  return new Date().getFullYear() - year;
+  let age = today.getFullYear() - birth.getFullYear();
+
+  if (today.getMonth() < birth.getMonth() || (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate())) {
+    age--;
+  }
+
+  return age;
 }

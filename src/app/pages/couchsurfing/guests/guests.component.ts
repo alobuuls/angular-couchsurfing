@@ -139,11 +139,8 @@ export class GuestsComponent implements OnInit {
     this._router.navigate(['/couchsurfing/guests', guest.guestId]);
   }
 
-  openCouchsurfing(guest: IGuestListItem): void {
-    const group = isGroup(guest);
-    const id = group ? guest.members[0].urlProfileCs : guest.urlProfileCs;
-    const urlCs = `https://www.couchsurfing.com/c/users/${id}`;
-    window.open(`${urlCs}`, '_blank');
+  openCouchsurfing(profileId: string): void {
+    window.open(`https://www.couchsurfing.com/c/users/${profileId}`, '_blank');
   }
 
   openWhatsapp(whatsapp: string): void {

@@ -28,7 +28,7 @@ export class GuestsTableComponent {
 
   @Output() whatsapp = new EventEmitter<string>();
 
-  @Output() couchsurfing = new EventEmitter<IGuestListItem>();
+  @Output() couchsurfing = new EventEmitter<string>();
 
   @Output() page = new EventEmitter<PageEvent>();
 

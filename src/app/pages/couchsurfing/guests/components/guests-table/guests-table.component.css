@@ -71,6 +71,13 @@ table {
 .btn-cs {
   background-color: #ff7043;
   color: white;
+
+  &[disabled] {
+    background-color: #8f8c8c;
+    color: #1c1c1c;
+    cursor: no-drop;
+    pointer-events: none;
+  }
 }
 
 .ctn-stars {

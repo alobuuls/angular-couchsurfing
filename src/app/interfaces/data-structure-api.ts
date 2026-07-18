@@ -25,8 +25,11 @@ export interface GuestsVM {
 export interface IGuestTableMember {
   fullName: string;
   gender: string;
-  age: string | null;
+  age: number | '?';
   continent: string;
+
+  whatsapp: string | null;
+  couchsurfing: string | null;
 
   hometown: {
     code?: string | null;
@@ -38,34 +41,13 @@ export interface IGuestTableMember {
     city?: string | null;
   };
 
-  rating: number;
+  hangOut: boolean;
 
-  whatsapp: string;
-  prefixCode: string;
+  rating: number;
 }
 
 export type IGuestTableRow = IGuestListItem & {
-  people: {
-    fullName: string;
-    gender: string;
-    age: string | null;
-    continent: string;
-    whatsapp: string | null;
-
-    hometown: {
-      code?: string | null;
-      city?: string | null;
-    };
-
-    livingIn: {
-      code?: string | null;
-      city?: string | null;
-    };
-
-    hangOut: boolean;
-
-    rating: number;
-  }[];
+  people: IGuestTableMember[];
 
   isHometownUnique: boolean;
   isHangOutUnique: boolean;
