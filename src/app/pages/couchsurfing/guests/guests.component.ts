@@ -28,6 +28,7 @@ import { Continents, CountriesCodes, ICountry } from '@type/word.types';
 
 // Constants
 import { WORLD } from '@config/world';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'guests',
@@ -81,6 +82,7 @@ export class GuestsComponent implements OnInit {
     this.loadDataCountries();
     this.initVm();
     this.listenCountryAutocomplete();
+    this.listenContinentFilter();
   }
 
   // FILTERS
@@ -340,12 +342,23 @@ export class GuestsComponent implements OnInit {
 
       const search = value.toLowerCase().trim();
 
+      const selectedContinent = this.filtersForm.get('continent')?.value;
+
+      // Start with all countries
+      let countries = this.countries;
+
+      if (selectedContinent) {
+        countries = countries.filter(country => country.continent === selectedContinent);
+      }
+
+      // If there is no search text, show countries from selected continent
       if (!search) {
         this.filteredCountries = [...this.countries];
         return;
       }
 
-      this.filteredCountries = this.countries.filter(country => country.name.toLowerCase().includes(search) || country.countryCode.toLowerCase().includes(search));
+      //filter by country name or country code
+      this.filteredCountries = countries.filter(country => country.name.toLowerCase().includes(search) || country.countryCode.toLowerCase().includes(search));
     });
   }
   displayCountryCode = (countryCode: string | null): string => {
@@ -355,4 +368,48 @@ export class GuestsComponent implements OnInit {
 
     return country?.name ?? '';
   };
+
+  // Fiter country by continent
+  private listenContinentFilter(): void {
+    const continentCtrl = this.filtersForm.get('continent');
+    const countryCtrl = this.filtersForm.get('country');
+
+    continentCtrl?.valueChanges.subscribe(continent => {
+      // No continent selected
+      if (!continent) {
+        this.filteredCountries = [...this.countries];
+
+        return;
+      }
+
+      // Filter countries by continent
+      this.filteredCountries = this.countries.filter(country => country.continent === continent);
+
+      // Check if current country belongs to selected continent
+      const currentCountry = countryCtrl?.value;
+
+      if (!currentCountry) {
+        return;
+      }
+
+      const countryExists = this.filteredCountries.some(country => country.countryCode === currentCountry);
+
+      // Clear country if it doesn't belong to selected continent
+      if (!countryExists) {
+        countryCtrl?.setValue('');
+      }
+    });
+  }
+
+  onCountrySelected(event: MatAutocompleteSelectedEvent): void {
+    const countryCode = event.option.value;
+
+    const selectedCountry = this.countries.find(country => country.countryCode === countryCode);
+
+    if (!selectedCountry) {
+      return;
+    }
+
+    this.filtersForm.get('continent')?.setValue(selectedCountry.continent);
+  }
 }

@@ -24,7 +24,7 @@
 
       <input matInput formControlName="country" [matAutocomplete]="autoCountry" />
 
-      <mat-autocomplete #autoCountry="matAutocomplete" [displayWith]="displayCountryCode">
+      <mat-autocomplete #autoCountry="matAutocomplete" [displayWith]="displayCountryCode" (optionSelected)="onCountrySelected($event)">
         <mat-option *ngFor="let country of filteredCountries" [value]="country.countryCode">
           <span [class]="country.countryCode | flag"></span>
           {{ country.name }}
