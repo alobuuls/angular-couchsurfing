@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { combineLatestWith, map, switchMap } from 'rxjs/operators';
 
 // Material
@@ -8,7 +9,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 
 // Services
-import { GuestsService } from '@services/guests.service';
+import { GuestsService, IQueryParamsGuests } from '@services/guests.service';
 import { GuestDeleteService } from '@services/guest-delete.service';
 import { ErrorHandlerService } from '@services/err-handler.service';
 import { GuestSortService } from '@services/guest-sort.service';
@@ -22,6 +23,12 @@ import { isGroup } from 'src/app/utils/helpers/guests-table.utils';
 import { IGuestListItem } from '@interfaces/couchsurfing.interface';
 import { IGuestsTableVM, IGuestTableRow, IGuestTableRowWithIndex } from '@interfaces/data-structure-api';
 
+// Types
+import { Continents, CountriesCodes, ICountry } from '@type/word.types';
+
+// Constants
+import { WORLD } from '@config/world';
+
 @Component({
   selector: 'guests',
   templateUrl: './guests.component.html',
@@ -30,14 +37,38 @@ import { IGuestsTableVM, IGuestTableRow, IGuestTableRowWithIndex } from '@interf
 export class GuestsComponent implements OnInit {
   vm$!: Observable<IGuestsTableVM>;
 
-  private page$ = new BehaviorSubject<{ page: number; size: number }>({
+  // Filters
+  filtersForm!: FormGroup;
+
+  // Countries
+  countries: Array<ICountry & { countryCode: CountriesCodes }> = [];
+
+  // Countries filtered by autocomplete search
+  filteredCountries: Array<ICountry & { countryCode: CountriesCodes }> = [];
+
+  // Continents
+  continents: Continents[] = ['africa', 'america', 'asia', 'europe', 'oceania'];
+
+  // Current Filters
+  private filters$ = new BehaviorSubject<IQueryParamsGuests>({});
+
+  // Pagination
+  private page$ = new BehaviorSubject<{
+    page: number;
+    size: number;
+  }>({
     page: 1,
     size: 10,
   });
 
-  private sort$ = new BehaviorSubject<Sort>({ active: '', direction: '' });
+  // Sort
+  private sort$ = new BehaviorSubject<Sort>({
+    active: '',
+    direction: '',
+  });
 
   constructor(
+    private fb: FormBuilder,
     private _router: Router,
     private _guests: GuestsService,
     private _sortService: GuestSortService,
@@ -46,12 +77,100 @@ export class GuestsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.initFiltersForm();
+    this.loadDataCountries();
     this.initVm();
+    this.listenCountryAutocomplete();
   }
 
+  // FILTERS
+  private initFiltersForm(): void {
+    this.filtersForm = this.fb.group({
+      country: [''],
+      continent: [''],
+      groupType: [''],
+      from: [''],
+      to: [''],
+      isFirstTime: [''],
+    });
+  }
+
+  onFiltersSubmit(): void {
+    const formValue = this.filtersForm.getRawValue();
+
+    const filters: IQueryParamsGuests = {
+      country: formValue.country || undefined,
+      continent: formValue.continent || undefined,
+      groupType: formValue.groupType || undefined,
+      from: this.formatDate(formValue.from),
+      to: this.formatDate(formValue.to),
+      isFirstTime: this.getBooleanFilter(formValue.isFirstTime),
+    };
+
+    // Update filters
+    this.filters$.next(filters);
+
+    // Reset pagination
+    this.page$.next({
+      page: 1,
+      size: this.page$.value.size,
+    });
+  }
+
+  clearFilters(): void {
+    this.filtersForm.reset({
+      country: '',
+      continent: '',
+      groupType: '',
+      from: '',
+      to: '',
+      isFirstTime: '',
+    });
+
+    // Show all countries again to autocomplete
+    this.filteredCountries = [...this.countries];
+
+    // Remove filters
+    this.filters$.next({});
+
+    // Reset pagination
+    this.page$.next({
+      page: 1,
+      size: this.page$.value.size,
+    });
+  }
+
+  private getBooleanFilter(value: boolean | string | null): boolean | undefined {
+    if (value === '' || value === null || value === undefined) {
+      return undefined;
+    }
+
+    return value === true || value === 'true';
+  }
+
+  private formatDate(dateValue: Date | string | null): string | undefined {
+    if (!dateValue) {
+      return undefined;
+    }
+
+    const date = new Date(dateValue);
+
+    return [date.getFullYear(), String(date.getMonth() + 1).padStart(2, '0'), String(date.getDate()).padStart(2, '0')].join('-');
+  }
+
+  // VIEW MODEL
   private initVm(): void {
-    this.vm$ = this.page$.pipe(
-      switchMap(({ page, size }) => withReqState(this._guests.getAllGuests({ limit: size, page }), this._errH)),
+    this.vm$ = combineLatest([this.page$, this.filters$]).pipe(
+      switchMap(([{ page, size }, filters]) =>
+        withReqState(
+          this._guests.getAllGuests({
+            limit: size,
+            page,
+            ...filters,
+          }),
+          this._errH
+        )
+      ),
 
       map(vm => {
         if (vm.status !== 'success') {
@@ -74,7 +193,9 @@ export class GuestsComponent implements OnInit {
       combineLatestWith(this.sort$),
 
       map(([vm, sort]) => {
-        if (vm.status !== 'success') return vm;
+        if (vm.status !== 'success') {
+          return vm;
+        }
 
         let data: IGuestTableRowWithIndex[] = vm.data.map((item, index) => ({
           ...item,
@@ -92,33 +213,51 @@ export class GuestsComponent implements OnInit {
     );
   }
 
-  // 🔥 SORT INTELIGENTE (respeta backend + alterna después)
-  onSortChange(sort: Sort) {
+  // SORT
+  onSortChange(sort: Sort): void {
     const current = this.sort$.value;
 
-    // 🔥 PRIMER CLICK tras carga backend → invertimos dirección sin romper UX
+    // First click
     if (!current.active) {
       this.sort$.next({
         active: sort.active,
-        direction: 'asc', // o 'desc' si quieres invertir por defecto
+        direction: 'asc',
       });
+
       return;
     }
 
+    // Same column
     if (current.active === sort.active) {
       if (current.direction === 'asc') {
-        this.sort$.next({ active: sort.active, direction: 'desc' });
+        this.sort$.next({
+          active: sort.active,
+          direction: 'desc',
+        });
       } else if (current.direction === 'desc') {
-        this.sort$.next({ active: '', direction: '' });
+        this.sort$.next({
+          active: '',
+          direction: '',
+        });
       } else {
-        this.sort$.next({ active: sort.active, direction: 'asc' });
+        this.sort$.next({
+          active: sort.active,
+          direction: 'asc',
+        });
       }
-    } else {
-      this.sort$.next({ active: sort.active, direction: 'asc' });
+
+      return;
     }
+
+    // New column
+    this.sort$.next({
+      active: sort.active,
+      direction: 'asc',
+    });
   }
 
-  onPageChange(event: PageEvent) {
+  // PAGINATION
+  onPageChange(event: PageEvent): void {
     this.page$.next({
       page: event.pageIndex + 1,
       size: event.pageSize,
@@ -127,15 +266,33 @@ export class GuestsComponent implements OnInit {
 
   private getOffset(): number {
     const { page, size } = this.page$.value;
+
     return (page - 1) * size;
   }
 
+  // COUNTRIES
+  private loadDataCountries(): void {
+    this.countries = (Object.entries(WORLD) as [CountriesCodes, ICountry][])
+      .map(([countryCode, country]) => ({
+        countryCode,
+        ...country,
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    // Initially show all countries to autocomplete
+    this.filteredCountries = [...this.countries];
+  }
+
+  // NAVIG
   openDetail(guest: IGuestListItem): void {
     const group = isGroup(guest);
+
     if (group) {
       this._router.navigate(['/couchsurfing/groups', guest.groupId]);
+
       return;
     }
+
     this._router.navigate(['/couchsurfing/guests', guest.guestId]);
   }
 
@@ -147,18 +304,55 @@ export class GuestsComponent implements OnInit {
     window.open(`https://wa.me/${whatsapp}`, '_blank');
   }
 
+  // DELETE
   async removeGuestConfirmation(guest: IGuestListItem): Promise<void> {
     const deleted = await this._deleteService.confirmAndDelete(guest);
-    if (!deleted) return;
-    this.page$.next({ ...this.page$.value });
-  }
 
+    if (!deleted) {
+      return;
+    }
+
+    this.page$.next({
+      ...this.page$.value,
+    });
+  }
+  // EDIT
   editGuest(item: IGuestListItem): void {
     if (isGroup(item)) {
       this._router.navigate(['/couchsurfing/groups/edit', item.groupId]);
 
       return;
     }
+
     this._router.navigate(['/couchsurfing/guests/edit', item.guestId]);
   }
+
+  //AUTOCOMPLETE
+  private listenCountryAutocomplete(): void {
+    const countryCtrl = this.filtersForm.get('country');
+
+    countryCtrl?.valueChanges.subscribe(value => {
+      // Si el valor es un código porque seleccionó una opción,
+      // no hacemos filtrado por texto
+      if (typeof value !== 'string') {
+        return;
+      }
+
+      const search = value.toLowerCase().trim();
+
+      if (!search) {
+        this.filteredCountries = [...this.countries];
+        return;
+      }
+
+      this.filteredCountries = this.countries.filter(country => country.name.toLowerCase().includes(search) || country.countryCode.toLowerCase().includes(search));
+    });
+  }
+  displayCountryCode = (countryCode: string | null): string => {
+    if (!countryCode) return '';
+
+    const country = this.countries.find(country => country.countryCode === countryCode);
+
+    return country?.name ?? '';
+  };
 }
