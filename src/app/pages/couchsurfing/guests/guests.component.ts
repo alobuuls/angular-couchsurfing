@@ -91,8 +91,8 @@ export class GuestsComponent implements OnInit {
       country: [''],
       continent: [''],
       groupType: [''],
-      from: [''],
-      to: [''],
+      from: [new Date(2023, 0, 1)],
+      to: [new Date()],
       isFirstTime: [''],
     });
   }
@@ -131,15 +131,6 @@ export class GuestsComponent implements OnInit {
 
     // Show all countries again to autocomplete
     this.filteredCountries = [...this.countries];
-
-    // Remove filters
-    this.filters$.next({});
-
-    // Reset pagination
-    this.page$.next({
-      page: 1,
-      size: this.page$.value.size,
-    });
   }
 
   private getBooleanFilter(value: boolean | string | null): boolean | undefined {

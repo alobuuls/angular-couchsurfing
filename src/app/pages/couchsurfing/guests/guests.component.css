@@ -1,5 +1,11 @@
+.filters-form {
+  margin-top: 2.5rem;
+  text-align: center;
+  padding: 1rem;
+}
+
 .ctn–btn {
-  margin-top: 9rem;
+  margin-top: 3rem;
   text-align: center;
   line-height: 1rem;
 }

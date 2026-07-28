@@ -28,7 +28,7 @@ table {
   color: white;
 }
 
-.ctn-fullname-wapp {
+.ctn-fullname-btns {
   display: flex;
   gap: 0.5rem;
 
@@ -37,25 +37,44 @@ table {
   }
 }
 
-.btn-whatsapp {
+.btn-whatsapp,
+.btn-cs {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
   width: 1.5rem;
   height: 1.5rem;
-  background-color: #16b751;
+
+  & > mat-icon {
+    line-height: 1.5rem;
+    font-size: 1rem;
+  }
 
   &[disabled] {
     background-color: #cdcdcd;
     color: #1c1c1c;
     cursor: no-drop;
     pointer-events: none;
+
+    & > i {
+      color: #1c1c1c;
+    }
   }
 
   &.btn-whatsapp {
     color: white;
     font-size: 1rem;
   }
+
+  &.btn-cs {
+    color: white;
+    font-size: 1rem;
+  }
+}
+
+.btn-whatsapp {
+  background-color: #16b751;
 }
 
 .btn-delete {

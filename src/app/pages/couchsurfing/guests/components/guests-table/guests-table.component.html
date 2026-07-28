@@ -72,7 +72,16 @@
     <ng-container matColumnDef="fullName">
       <th mat-header-cell *matHeaderCellDef mat-sort-header><mat-icon>badge</mat-icon> Full Name</th>
       <td mat-cell *matCellDef="let guest">
-        <div class="ctn-fullname-wapp" *ngFor="let person of guest.people">
+        <div class="ctn-fullname-btns" *ngFor="let person of guest.people">
+          <button
+            [disabled]="!person.couchsurfing"
+            matTooltip="View Couchsurfing profile"
+            class="btn-cs"
+            mat-icon-button
+            (click)="couchsurfing.emit(person.couchsurfing)"
+          >
+            <mat-icon fontIcon="chair"></mat-icon>
+          </button>
           <button
             [disabled]="!person.whatsapp"
             matTooltip="Send message"
@@ -176,18 +185,6 @@
           <button matTooltip="View guest" class="btn-detail" mat-icon-button (click)="detail.emit(guest)">
             <mat-icon fontIcon="visibility" />
           </button>
-
-          <div *ngFor="let person of guest.people">
-            <button
-              matTooltip="View Couchsurfing profile"
-              class="btn-cs"
-              mat-icon-button
-              [disabled]="!person.couchsurfing"
-              (click)="couchsurfing.emit(person.couchsurfing)"
-            >
-              <mat-icon fontIcon="chair"></mat-icon>
-            </button>
-          </div>
 
           <button matTooltip="Edit guest" class="btn-edit" mat-icon-button (click)="edit.emit(guest)">
             <mat-icon fontIcon="edit" />
