@@ -2,13 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 // Services
-import { GroupsService } from '@services/groups.service';
 import { GuestsService } from '@services/guests.service';
 import { AlertsService } from '@services/alerts.service';
 import { Router } from '@angular/router';
 
 // Interfaces
-import { IBodyGuest, IGroupDetail, IGroupEdit, IGuestDetail, IGuestsFormSubmit } from '@interfaces/couchsurfing.interface';
+import { IBodyGuest, IGroupDetail, IGroupEdit, IGuestDetail, IGuestsFormSubmit } from '@interfaces/guests.interface';
 
 @Component({
   selector: 'guests-edit',
@@ -21,7 +20,6 @@ export class GuestsEditComponent implements OnInit {
 
   constructor(
     private _guests: GuestsService,
-    private _groups: GroupsService,
     private _alerts: AlertsService,
     private router: Router,
     private route: ActivatedRoute
@@ -36,10 +34,9 @@ export class GuestsEditComponent implements OnInit {
     const groupId = this.route.snapshot.paramMap.get('groupId');
 
     if (groupId) {
-      this._groups.getGroupById(groupId).subscribe(resp => {
+      this._guests.getGroupById(groupId).subscribe(resp => {
         this.group = resp.data;
       });
-
       return;
     }
 
@@ -51,8 +48,6 @@ export class GuestsEditComponent implements OnInit {
   }
 
   update(data: IGuestsFormSubmit): void {
-    console.log(data);
-
     // Solo
     if (data.groupType === 'solo') {
       if (!this.guest) {
@@ -66,29 +61,16 @@ export class GuestsEditComponent implements OnInit {
 
       this._guests.updateGuestById(this.guest.guestId, payload).subscribe({
         next: () => {
-          this._alerts.showToast({
-            icon: 'success',
-            title: 'Guest updated successfully',
-          });
-          this.router.navigateByUrl('/couchsurfing/guests');
-          console.log('update');
+          this._alerts.showToast({ icon: 'success', title: 'Guest updated successfully' });
+          this.router.navigateByUrl('/guests');
         },
-        error: () => {
-          this._alerts.showToast({
-            icon: 'error',
-            title: 'Error updating guest',
-          });
-          console.log('error');
-        },
+        error: () => this._alerts.showToast({ icon: 'error', title: 'Error updating guest' }),
       });
       return;
     }
 
     // Group
-
-    if (!this.group) {
-      return;
-    }
+    if (!this.group) return;
 
     const payload: IGroupDetail = {
       groupId: this.group[0].groupId,
@@ -97,22 +79,12 @@ export class GuestsEditComponent implements OnInit {
       members: data.guests,
     };
 
-    this._groups.updateGroupById(this.group[0].guestId, payload).subscribe({
+    this._guests.updateGroupById(this.group[0].guestId, payload).subscribe({
       next: () => {
-        this._alerts.showToast({
-          icon: 'success',
-          title: 'Guest updated successfully',
-        });
-        this.router.navigateByUrl('/couchsurfing/guests');
-        console.log('update');
+        this._alerts.showToast({ icon: 'success', title: 'Guest updated successfully' });
+        this.router.navigateByUrl('/guests');
       },
-      error: () => {
-        this._alerts.showToast({
-          icon: 'error',
-          title: 'Error updating guest',
-        });
-        console.log('error');
-      },
+      error: () => this._alerts.showToast({ icon: 'error', title: 'Error updating guest' }),
     });
   }
 }

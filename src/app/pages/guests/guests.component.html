@@ -94,7 +94,7 @@
 
   <!-- ADD BUTTON -->
   <div class="ctn–btn" *ngIf="vm.status === 'success' && vm.data.length">
-    <button [routerLink]="['/couchsurfing/guests/add']" class="btn-add" mat-icon-button matTooltip="Create Guest">
+    <button [routerLink]="['/guests/add']" class="btn-add" mat-icon-button matTooltip="Create Guest">
       <mat-icon fontIcon="add"></mat-icon>
     </button>
   </div>
@@ -112,7 +112,7 @@
     <h1>
       There are no guests yet, Create a new guest here
 
-      <button [routerLink]="['/couchsurfing/guests/add']" class="btn-add" mat-icon-button>
+      <button [routerLink]="['/guests/add']" class="btn-add" mat-icon-button>
         <mat-icon fontIcon="add"></mat-icon>
       </button>
     </h1>

@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, Output, QueryList, ViewChild, ViewChildren, OnInit, OnChanges } from '@angular/core';
 
 // Interfaces
-import { IGroupEdit, IGuestDetail, IGuestsFormSubmit } from '@interfaces/couchsurfing.interface';
+import { IGroupEdit, IGuestDetail, IGuestsFormSubmit } from '@interfaces/guests.interface';
 
 // Components
-import { TripFormComponent } from '@pages/couchsurfing/guests/form/trip-form/trip-form.component';
-import { GuestFormComponent } from '@pages/couchsurfing/guests/form/guest-form/guest-form.component';
+import { TripFormComponent } from '@pages/guests/form/trip-form/trip-form.component';
+import { GuestFormComponent } from '@pages/guests/form/guest-form/guest-form.component';
 
 // Services
 import { AlertsService } from '@services/alerts.service';
@@ -16,23 +16,15 @@ import { AlertsService } from '@services/alerts.service';
   styleUrls: ['./guests-form.component.css'],
 })
 export class GuestsFormComponent implements OnChanges {
-  @ViewChild(TripFormComponent)
-  tripFormComponent!: TripFormComponent;
+  @ViewChild(TripFormComponent) tripFormComponent!: TripFormComponent;
+  @ViewChildren(GuestFormComponent) guestForms!: QueryList<GuestFormComponent>;
 
-  @ViewChildren(GuestFormComponent)
-  guestForms!: QueryList<GuestFormComponent>;
+  @Output() submitForm = new EventEmitter<IGuestsFormSubmit>();
 
-  @Output()
-  submitForm = new EventEmitter<IGuestsFormSubmit>();
+  @Input() guest?: IGuestDetail;
+  @Input() group?: IGroupEdit;
 
-  @Input()
-  guest?: IGuestDetail;
-
-  @Input()
-  group?: IGroupEdit;
-
-  @Input()
-  mode: 'create' | 'edit' = 'create';
+  @Input() mode: 'create' | 'edit' = 'create';
 
   // Group Type
   public selectedGroupType: 'solo' | 'couple' | 'friends' | 'family' | null = null;
@@ -48,16 +40,13 @@ export class GuestsFormComponent implements OnChanges {
   constructor(private _alerts: AlertsService) {}
 
   ngOnChanges(): void {
-    if (this.mode === 'edit') {
-      this.loadData();
-    }
+    if (this.mode === 'edit') this.loadData();
   }
 
   private loadData(): void {
     // Solo
     if (this.guest) {
       this.selectGroupType('solo');
-
       return;
     }
 
@@ -83,27 +72,17 @@ export class GuestsFormComponent implements OnChanges {
   }
 
   submit(): void {
-    if (!this.selectedGroupType) {
-      return;
-    }
-    const trip = this.tripFormComponent.getFormValue();
+    if (!this.selectedGroupType) return;
 
+    const trip = this.tripFormComponent.getFormValue();
     const guests = this.guestForms.toArray().map(form => form.getFormValue());
 
-    this.submitForm.emit({
-      groupType: this.selectedGroupType,
-      trip,
-      guests,
-    });
+    this.submitForm.emit({ groupType: this.selectedGroupType, trip, guests });
   }
 
   addGuestForm(): void {
     if (this.formsToShow >= this.limitGroupMembers) {
-      this._alerts.showToast({
-        icon: 'warning',
-        title: 'You can add max 5 members',
-      });
-
+      this._alerts.showToast({ icon: 'warning', title: 'You can add max 5 members' });
       return;
     }
 

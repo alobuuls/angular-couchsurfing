@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 
 // Services
 import { GuestsService } from '@services/guests.service';
-import { GroupsService } from '@services/groups.service';
 import { AlertsService } from '@services/alerts.service';
 
 @Component({
@@ -14,7 +13,6 @@ import { AlertsService } from '@services/alerts.service';
 export class GuestsCreateComponent {
   constructor(
     private _guests: GuestsService,
-    private _groups: GroupsService,
     private _alerts: AlertsService,
     private router: Router
   ) {}
@@ -35,7 +33,7 @@ export class GuestsCreateComponent {
             title: 'Guest created successfully',
           });
 
-          this.router.navigateByUrl('/couchsurfing/guests');
+          this.router.navigateByUrl('/guests');
         },
         error: () => {
           this._alerts.showToast({
@@ -54,21 +52,12 @@ export class GuestsCreateComponent {
       members: data.guests,
     };
 
-    this._groups.createNewGroup(payload).subscribe({
+    this._guests.createNewGroup(payload).subscribe({
       next: () => {
-        this._alerts.showToast({
-          icon: 'success',
-          title: 'Group created successfully',
-        });
-
-        this.router.navigateByUrl('/couchsurfing/groups');
+        this._alerts.showToast({ icon: 'success', title: 'Group created successfully' });
+        this.router.navigateByUrl('/guests'); // TODO
       },
-      error: () => {
-        this._alerts.showToast({
-          icon: 'error',
-          title: 'Error creating group',
-        });
-      },
+      error: () => this._alerts.showToast({ icon: 'error', title: 'Error creating group' }),
     });
   }
 }

@@ -1,4 +1,4 @@
-import { IApiCsPag, IGuest, IGuestListItem } from '@interfaces/couchsurfing.interface';
+import { IApiCsPag, IGuest, IGuestListItem } from '@interfaces/guests.interface';
 
 export interface IErrResp {
   message: string;

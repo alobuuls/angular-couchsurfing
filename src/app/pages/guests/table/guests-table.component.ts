@@ -5,7 +5,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 
 // Interfaces
-import { IGuest, IGuestListItem, IApiCsPag } from '@interfaces/couchsurfing.interface';
+import { IGuestListItem, IApiCsPag } from '@interfaces/guests.interface';
 import { IGuestTableRow } from '@interfaces/data-structure-api';
 
 @Component({
@@ -15,23 +15,16 @@ import { IGuestTableRow } from '@interfaces/data-structure-api';
 })
 export class GuestsTableComponent {
   @Input() pagination?: IApiCsPag;
-
   @Input() offset = 0;
-
   @Input() data!: IGuestTableRow[];
 
   @Output() detail = new EventEmitter<IGuestListItem>();
-
   @Output() edit = new EventEmitter<IGuestListItem>();
-
   @Output() remove = new EventEmitter<IGuestListItem>();
-
   @Output() whatsapp = new EventEmitter<string>();
-
   @Output() couchsurfing = new EventEmitter<string>();
 
   @Output() page = new EventEmitter<PageEvent>();
-
   @Output() sort = new EventEmitter<Sort>();
 
   readonly displayedColumns: string[] = [

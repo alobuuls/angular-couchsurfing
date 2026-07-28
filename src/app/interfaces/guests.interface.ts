@@ -1,6 +1,6 @@
 import { CountriesCodes } from '@type/word.types';
 import { Continents, Regions } from '@type/word.types';
-import { ICity, IState } from '../services/city.service';
+import { ICity, IState } from '@services/city.service';
 
 // Guest with all information
 export interface IGuestDetail extends ITripDetail {

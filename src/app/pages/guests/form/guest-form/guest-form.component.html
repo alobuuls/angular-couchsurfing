@@ -54,22 +54,22 @@
 
       <mat-icon matPrefix>link</mat-icon>
 
-      <mat-icon class="icon-success" matSuffix *ngIf="isValid('urlCsProfile')"> check_circle </mat-icon>
+      <mat-icon class="icon-success" matSuffix *ngIf="isValid('urlProfileCs')"> check_circle </mat-icon>
 
-      <mat-icon class="icon-warning" matSuffix *ngIf="isInvalid('urlCsProfile')"> error </mat-icon>
+      <mat-icon class="icon-warning" matSuffix *ngIf="isInvalid('urlProfileCs')"> error </mat-icon>
 
-      <input matInput formControlName="urlCsProfile" #urlCsProfileInput [errorStateMatcher]="instantErrorMatcher" />
+      <input matInput formControlName="urlProfileCs" #urlProfileCsInput [errorStateMatcher]="instantErrorMatcher" />
 
       <mat-hint align="end">
-        <span [class.danger]="f['urlCsProfile'].hasError('maxlength')">
-          {{ urlCsProfileInput.value.length || 0 }}
+        <span [class.danger]="f['urlProfileCs'].hasError('maxlength')">
+          {{ urlProfileCsInput.value.length || 0 }}
         </span>
-        / {{ getMaxLength('urlCsProfile') }}
+        / {{ getMaxLength('urlProfileCs') }}
       </mat-hint>
 
-      <mat-error *ngIf="f['urlCsProfile'].hasError('required')"> Url Cs Profile is required </mat-error>
+      <mat-error *ngIf="f['urlProfileCs'].hasError('required')"> Url Cs Profile is required </mat-error>
 
-      <mat-error *ngIf="f['urlCsProfile'].hasError('maxlength')"> Maximum 50 characters </mat-error>
+      <mat-error *ngIf="f['urlProfileCs'].hasError('maxlength')"> Maximum 50 characters </mat-error>
     </mat-form-field>
 
     <!-- BIRTH DATE -->
@@ -106,7 +106,6 @@
     </section>
 
     <!-- HOMETOWN COUNTRY -->
-
 
     <mat-form-field appearance="outline">
       <mat-label>Hometown Country</mat-label>

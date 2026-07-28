@@ -3,10 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 
 // Services
 import { GuestsService } from '@services/guests.service';
-import { GroupsService } from '@services/groups.service';
 
 // Interfaces
-import { IGroupMember, IGuestDetail } from '@interfaces/couchsurfing.interface';
+import { IGroupMember, IGuestDetail } from '@interfaces/guests.interface';
 import { IErrResp, ReqStatus } from '@interfaces/data-structure-api';
 
 @Component({
@@ -23,8 +22,7 @@ export class GuestsDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private _guests: GuestsService,
-    private _groups: GroupsService
+    private _guests: GuestsService
   ) {}
 
   ngOnInit(): void {
@@ -38,9 +36,8 @@ export class GuestsDetailComponent implements OnInit {
     this.status = 'loading';
 
     if (groupId) {
-      this._groups.getGroupById(groupId).subscribe({
+      this._guests.getGroupById(groupId).subscribe({
         next: resp => {
-          console.log('GROUP RESP', resp.data);
           this.group = resp.data;
           this.status = 'success';
         },

@@ -15,7 +15,7 @@ import { AlertsService } from '@services/alerts.service';
 import { CityService, ICity, IState } from '@services/city.service';
 
 // Interfaces
-import { IBodyGuest, IGuestDetail } from '@interfaces/couchsurfing.interface';
+import { IBodyGuest, IGuestDetail } from '@interfaces/guests.interface';
 
 //Types
 import { ICountry } from '@type/word.types';
@@ -31,19 +31,17 @@ import { OCCUPATIONS_BY_AREA } from '@config/occupations/occupations';
   styleUrls: ['./guest-form.component.css'],
 })
 export class GuestFormComponent implements OnInit {
-  //Group Form
-  @Input()
-  selectedGroupType: 'solo' | 'couple' | 'friends' | 'family' | null = null;
+  // Group Form
+  @Input() selectedGroupType: 'solo' | 'couple' | 'friends' | 'family' | null = null;
 
-  @Output()
-  save = new EventEmitter<IBodyGuest>();
+  @Output() save = new EventEmitter<IBodyGuest>();
 
-  //Edit Form
-  @Input()
-  guest?: IGuestDetail;
+  // Edit Form
+  @Input() guest?: IGuestDetail;
 
   // Create Form
   formCreateGuest!: FormGroup;
+
   instantErrorMatcher: ErrorStateMatcher = {
     isErrorState: control => !!(control && control.invalid && (control.dirty || control.touched)),
   };
@@ -60,7 +58,7 @@ export class GuestFormComponent implements OnInit {
     5: 'Excelent',
   };
 
-  //BirthDate Limit
+  // BirthDate Limit
   maxBirthDate: Date = new Date();
   minBirthDate: Date = new Date(new Date().getFullYear() - 130, new Date().getMonth(), new Date().getDay());
 
@@ -80,7 +78,7 @@ export class GuestFormComponent implements OnInit {
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   gifts: { name: string }[] = [];
 
-  //Autocomplete Countries
+  // Autocomplete Countries
   filteredCountries: typeof this.countries = [];
   filteredLiving: typeof this.countries = [];
 
@@ -134,9 +132,8 @@ export class GuestFormComponent implements OnInit {
       this.filteredLiving = this.countries;
     });
 
-    this.formCreateGuest.patchValue({
-      groupType: this.selectedGroupType,
-    });
+    this.formCreateGuest.patchValue({ groupType: this.selectedGroupType });
+
     this.onOccupation();
 
     this.listenHometownCountry();
@@ -144,19 +141,15 @@ export class GuestFormComponent implements OnInit {
 
     this.listenLivingCountry();
     this.listenLivingState();
-
-    if (this.guest) {
-      console.log(this.guest, 'guest form component ');
-    }
   }
 
   initForm(): void {
     this.formCreateGuest = this.fb.group({
-      fullName: ['Alondra', [Validators.required, Validators.maxLength(100)]],
-      instagram: ['alitobuuls', [Validators.maxLength(30)]],
-      urlCsProfile: ['cscs', [Validators.required, Validators.maxLength(50)]],
+      fullName: ['', [Validators.required, Validators.maxLength(100)]],
+      instagram: ['', [Validators.maxLength(30)]],
+      urlProfileCs: ['', [Validators.required, Validators.maxLength(50)]],
       birthDate: [''],
-      gender: ['male', [Validators.required]],
+      gender: ['', [Validators.required]],
       continent: [''],
       region: [''],
       hometownCode: ['', Validators.required],
@@ -166,7 +159,7 @@ export class GuestFormComponent implements OnInit {
       livingInState: [''],
       livingInCity: [''],
       prefixCode: ['', Validators.required],
-      whatsapp: ['7291541114', [Validators.required, Validators.maxLength(16), Validators.pattern(/^\+?[1-9]\d{7,14}$/)]],
+      whatsapp: ['', [Validators.required, Validators.maxLength(16), Validators.pattern(/^\+?[1-9]\d{7,14}$/)]],
       occupationArea: [[], Validators.required],
       occupation: [[]],
       rating: [''],
@@ -188,7 +181,7 @@ export class GuestFormComponent implements OnInit {
     this.formCreateGuest.patchValue({
       fullName: this.guest.fullName,
       instagram: this.guest.instagram,
-      urlCsProfile: this.guest.urlProfileCs,
+      urlProfileCs: this.guest.urlProfileCs,
       birthDate: this.guest.birthDate,
       gender: this.guest.gender,
       continent: this.guest.continent,
@@ -251,9 +244,7 @@ export class GuestFormComponent implements OnInit {
 
   displayCountryCode = (countryCode: string | null): string => {
     if (!countryCode) return '';
-
     const country = this.countries.find(country => country.countryCode === countryCode);
-
     return country?.name ?? '';
   };
 
@@ -264,21 +255,13 @@ export class GuestFormComponent implements OnInit {
       .subscribe((areas: string[]) => {
         if (!areas?.length) {
           this.occupations = [];
-
-          this.formCreateGuest.patchValue({
-            occupation: [],
-          });
-
+          this.formCreateGuest.patchValue({ occupation: [] });
           return;
         }
 
         const occupations = areas.flatMap(area => OCCUPATIONS_BY_AREA[area] || []);
-
         this.occupations = [...new Set(occupations)];
-
-        this.formCreateGuest.patchValue({
-          occupation: [],
-        });
+        this.formCreateGuest.patchValue({ occupation: [] });
       });
   }
 
@@ -288,7 +271,6 @@ export class GuestFormComponent implements OnInit {
 
   getRatingMsg() {
     const rating = this.hoverRating || this.formCreateGuest.get('rating')?.value;
-
     return this.ratingMsgs[rating];
   }
 
@@ -306,7 +288,6 @@ export class GuestFormComponent implements OnInit {
       }
 
       const country = this.findCountry(countryCode);
-
       if (!country) return;
 
       this.updateCountryInfo(country);
@@ -323,9 +304,7 @@ export class GuestFormComponent implements OnInit {
       }
 
       const apiCountryCode = this.getCountryApiCode();
-
       if (!apiCountryCode) return;
-
       this.loadHometownCities(apiCountryCode, state.iso2);
     });
   }
@@ -339,7 +318,6 @@ export class GuestFormComponent implements OnInit {
       }
 
       const apiCountryCode = WORLD[countryCode as keyof typeof WORLD]?.flag;
-
       if (!apiCountryCode) return;
 
       this._city
@@ -348,11 +326,7 @@ export class GuestFormComponent implements OnInit {
         .subscribe((states: IState[]) => {
           this.livingInStates = states;
           this.livingInCities = [];
-
-          this.formCreateGuest.patchValue({
-            livingInState: '',
-            livingInCity: '',
-          });
+          this.formCreateGuest.patchValue({ livingInState: '', livingInCity: '' });
         });
     });
   }
@@ -365,11 +339,8 @@ export class GuestFormComponent implements OnInit {
       }
 
       const countryCode = this.livingInCodeCtrl?.value;
-
       if (!countryCode) return;
-
       const apiCountryCode = WORLD[countryCode as keyof typeof WORLD]?.flag;
-
       if (!apiCountryCode) return;
 
       this._city
@@ -377,10 +348,7 @@ export class GuestFormComponent implements OnInit {
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe((cities: ICity[]) => {
           this.livingInCities = cities;
-
-          this.formCreateGuest.patchValue({
-            livingInCity: '',
-          });
+          this.formCreateGuest.patchValue({ livingInCity: '' });
         });
     });
   }
@@ -398,9 +366,7 @@ export class GuestFormComponent implements OnInit {
 
   private getCountryApiCode(): string | null {
     const hometownCode = this.hometownCodeCtrl?.value;
-
     if (!hometownCode) return null;
-
     return WORLD[hometownCode as keyof typeof WORLD]?.flag ?? null;
   }
 
@@ -416,10 +382,7 @@ export class GuestFormComponent implements OnInit {
         this.hometownStates = states;
         this.hometownCities = [];
 
-        this.formCreateGuest.patchValue({
-          hometownState: '',
-          hometownCity: '',
-        });
+        this.formCreateGuest.patchValue({ hometownState: '', hometownCity: '' });
       });
   }
 
@@ -435,22 +398,13 @@ export class GuestFormComponent implements OnInit {
 
   private setDefaultPrefix(prefix: string): void {
     if (this.prefixCodeCtrl?.value) return;
-
-    this.formCreateGuest.patchValue({
-      prefixCode: prefix,
-    });
+    this.formCreateGuest.patchValue({ prefixCode: prefix });
   }
 
   private resetHometownLocation(): void {
     this.hometownStates = [];
     this.hometownCities = [];
-
-    this.formCreateGuest.patchValue({
-      continent: '',
-      region: '',
-      hometownState: '',
-      hometownCity: '',
-    });
+    this.formCreateGuest.patchValue({ continent: '', region: '', hometownState: '', hometownCity: '' });
   }
 
   filterHometowns(event: any): void {
@@ -472,20 +426,14 @@ export class GuestFormComponent implements OnInit {
     if (!value) return;
 
     if (this.gifts.length >= 15) {
-      this._alerts.showToast({
-        icon: 'warning',
-        title: 'maximum 15 gifts allowed',
-      });
+      this._alerts.showToast({ icon: 'warning', title: 'maximum 15 gifts allowed' });
       return;
     }
 
     const isRepeat = this.gifts.some(gift => gift.name.toLowerCase() === value.toLowerCase());
 
     if (isRepeat) {
-      this._alerts.showToast({
-        icon: 'warning',
-        title: 'This gift has already been added',
-      });
+      this._alerts.showToast({ icon: 'warning', title: 'This gift has already been added' });
       return;
     }
 
@@ -500,7 +448,6 @@ export class GuestFormComponent implements OnInit {
     if (index >= 0) {
       this.gifts.splice(index, 1);
       this.updatedGiftsForm();
-
       this.announcer.announce(`Removed ${gift}`);
     }
   }
@@ -538,25 +485,18 @@ export class GuestFormComponent implements OnInit {
 
   clearGiftInput(): void {
     if (!this.gifts.length) {
-      this._alerts.showToast({
-        icon: 'info',
-        title: 'There are no gifts to clear',
-      });
+      this._alerts.showToast({ icon: 'info', title: 'There are no gifts to clear' });
       return;
     }
+
     this.gifts.length = 0;
     this.updatedGiftsForm();
 
-    this._alerts.showToast({
-      icon: 'success',
-      title: 'Gift list cleared',
-    });
+    this._alerts.showToast({ icon: 'success', title: 'Gift list cleared' });
   }
 
   btnSetToday(): void {
-    this.formCreateGuest.patchValue({
-      visitedDate: new Date(),
-    });
+    this.formCreateGuest.patchValue({ visitedDate: new Date() });
   }
 
   getFormValue(): IBodyGuest {
@@ -566,22 +506,15 @@ export class GuestFormComponent implements OnInit {
   isValid(controlName: string): boolean {
     const control = this.f[controlName];
 
-    if (!(control.dirty || control.touched) || !control.valid) {
-      return false;
-    }
-
+    if (!(control.dirty || control.touched) || !control.valid) return false;
     const value = control.value;
 
-    if (Array.isArray(value)) {
-      return value.length > 0;
-    }
-
+    if (Array.isArray(value)) return value.length > 0;
     return value !== null && value !== undefined && value !== '';
   }
 
   isInvalid(controlName: string): boolean {
     const control = this.f[controlName];
-
     return !!(control.invalid && (control.dirty || control.touched));
   }
 }

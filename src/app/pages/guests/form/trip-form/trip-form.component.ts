@@ -2,14 +2,8 @@ import { Component, DestroyRef, inject, Input, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-// Cdk
-import { LiveAnnouncer } from '@angular/cdk/a11y';
-
 // Interfaces
-import { IGroupMember, IGuestDetail, ITripDetail } from '@interfaces/couchsurfing.interface';
-
-// Services
-import { AlertsService } from '@services/alerts.service';
+import { IGroupMember, IGuestDetail, ITripDetail } from '@interfaces/guests.interface';
 
 @Component({
   selector: 'app-trip-form',
@@ -17,8 +11,7 @@ import { AlertsService } from '@services/alerts.service';
   styleUrls: ['./trip-form.component.css'],
 })
 export class TripFormComponent implements OnInit {
-  @Input()
-  trip?: IGuestDetail | IGroupMember;
+  @Input() trip?: IGuestDetail | IGroupMember;
 
   //Form Trip
   formTrip!: FormGroup;
@@ -32,11 +25,8 @@ export class TripFormComponent implements OnInit {
   }
 
   private readonly destroyRef = inject(DestroyRef);
-  constructor(
-    private fb: FormBuilder,
-    private _alerts: AlertsService,
-    private announcer: LiveAnnouncer
-  ) {}
+
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -55,21 +45,15 @@ export class TripFormComponent implements OnInit {
       ],
     });
 
-    if (!this.trip) {
-      return;
-    }
+    if (!this.trip) return;
 
-    this.formTrip.patchValue({
-      visitedDate: this.trip.visitedDate,
-      stayed: this.trip.stayed,
-      nights: this.trip.nights,
-    });
+    const { visitedDate, stayed, nights } = this.trip;
+    this.formTrip.patchValue({ visitedDate, stayed, nights });
   }
 
   //Format Date
   private formatDate(dateValue: string | Date | null): string {
     if (!dateValue) return '';
-
     const date = new Date(dateValue);
 
     return [date.getFullYear(), String(date.getMonth() + 1).padStart(2, '0'), String(date.getDate()).padStart(2, '0')].join('-');
@@ -88,9 +72,7 @@ export class TripFormComponent implements OnInit {
   }
 
   btnSetToday(): void {
-    this.formTrip.patchValue({
-      visitedDate: new Date(),
-    });
+    this.formTrip.patchValue({ visitedDate: new Date() });
   }
 
   getFormValue(): ITripDetail {

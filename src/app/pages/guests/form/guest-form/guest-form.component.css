@@ -78,7 +78,7 @@ mat-form-field {
   gap: 1rem;
   align-items: flex-start;
 
-  button {
+  & button {
     padding: 1rem 1.5rem;
     background-color: #5b316c;
   }

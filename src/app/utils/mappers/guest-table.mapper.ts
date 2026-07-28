@@ -1,21 +1,13 @@
-import { IGuestListItem } from '@interfaces/couchsurfing.interface';
+import { IGuestListItem } from '@interfaces/guests.interface';
 import { IGuestTableRow } from '@interfaces/data-structure-api';
-import { getAge, isGroup } from '../helpers/guests-table.utils';
+import { getAge, isGroup } from '@helpers/guests-table.utils';
 
-export function mapGuestTable(guests: IGuestListItem[]): IGuestTableRow[] {
+export const mapGuestTable = (guests: IGuestListItem[]): IGuestTableRow[] => {
   return guests.map(guest => {
     if (isGroup(guest)) {
       const members = guest.members;
-
-      const hometownObjects = members.map(m => ({
-        code: m.hometownCode,
-        city: m.hometown,
-      }));
-
-      const livingObjects = members.map(m => ({
-        code: m.livingInCode,
-        city: m.livingIn,
-      }));
+      const hometownObjects = members.map(m => ({ code: m.hometownCode, city: m.hometown }));
+      const livingObjects = members.map(m => ({ code: m.livingInCode, city: m.livingIn }));
 
       return {
         ...guest,
@@ -89,4 +81,4 @@ export function mapGuestTable(guests: IGuestListItem[]): IGuestTableRow[] {
       isHangOutUnique: true,
     } as IGuestTableRow;
   });
-}
+};

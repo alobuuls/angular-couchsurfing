@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '@env/environment';
 
 // Interfaces
-import { IBodyGuest, IGuestCreateResp, IGuestDeleteResp, IGuestDetailResp, IGuestsResp } from '@interfaces/couchsurfing.interface';
+import { IBodyGuest, IGroupDetail, IGroupDetailResp, IGuestCreateResp, IGuestDeleteResp, IGuestDetailResp, IGuestsResp } from '@interfaces/guests.interface';
 import { Continents } from '@type/word.types';
 
 export interface IQueryParamsGuests {
@@ -22,7 +22,8 @@ export interface IQueryParamsGuests {
   providedIn: 'root',
 })
 export class GuestsService {
-  private urlBaseApi: string = `${environment.endpointUrlApiCs}/guests`;
+  private urlGuests: string = `${environment.endpointUrlApiCs}/guests`;
+  private urlGuestsGroups: string = `${environment.endpointUrlApiCs}/groups`;
 
   constructor(private http: HttpClient) {}
 
@@ -34,22 +35,39 @@ export class GuestsService {
     if (groupType) params = params.set('groupType', String(groupType));
     if (continent) params = params.set('continent', String(continent));
     if (isFirstTime !== undefined) params = params.set('isFirstTime', String(isFirstTime));
-    return this.http.get<IGuestsResp>(this.urlBaseApi, { params });
+    return this.http.get<IGuestsResp>(this.urlGuests, { params });
   }
 
   createNewGuest(payload: IBodyGuest): Observable<IGuestCreateResp> {
-    return this.http.post<IGuestCreateResp>(this.urlBaseApi, payload);
+    return this.http.post<IGuestCreateResp>(this.urlGuests, payload);
   }
 
   getGuestById(guestId: string): Observable<IGuestDetailResp> {
-    return this.http.get<IGuestDetailResp>(`${this.urlBaseApi}/${guestId}`);
+    return this.http.get<IGuestDetailResp>(`${this.urlGuests}/${guestId}`);
   }
 
   updateGuestById(guestId: string, guest: IBodyGuest): Observable<IGuestCreateResp> {
-    return this.http.put<IGuestCreateResp>(`${this.urlBaseApi}/${guestId}`, guest);
+    return this.http.put<IGuestCreateResp>(`${this.urlGuests}/${guestId}`, guest);
   }
 
   removeGuestById(guestId: string): Observable<IGuestDeleteResp> {
-    return this.http.delete<IGuestDeleteResp>(`${this.urlBaseApi}/${guestId}`);
+    return this.http.delete<IGuestDeleteResp>(`${this.urlGuests}/${guestId}`);
+  }
+
+  // GROUPS
+  getGroupById(groupId: string): Observable<IGroupDetailResp> {
+    return this.http.get<IGroupDetailResp>(`${this.urlGuestsGroups}/${groupId}`);
+  }
+
+  createNewGroup(payload: IGroupDetail): Observable<IGuestCreateResp> {
+    return this.http.post<IGuestCreateResp>(this.urlGuestsGroups, payload);
+  }
+
+  updateGroupById(guestId: string, group: IGroupDetail): Observable<IGuestCreateResp> {
+    return this.http.put<IGuestCreateResp>(`${this.urlGuestsGroups}/guests/${guestId}`, group);
+  }
+
+  removeGroupById(groupId: string): Observable<IGuestDeleteResp> {
+    return this.http.delete<IGuestDeleteResp>(`${this.urlGuestsGroups}/${groupId}`);
   }
 }

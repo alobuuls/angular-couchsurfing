@@ -20,7 +20,7 @@ import { mapGuestTable } from 'src/app/utils/mappers/guest-table.mapper';
 import { isGroup } from 'src/app/utils/helpers/guests-table.utils';
 
 // Interfaces
-import { IGuestListItem } from '@interfaces/couchsurfing.interface';
+import { IGuestListItem } from '@interfaces/guests.interface';
 import { IGuestsTableVM, IGuestTableRow, IGuestTableRowWithIndex } from '@interfaces/data-structure-api';
 
 // Types
@@ -54,13 +54,7 @@ export class GuestsComponent implements OnInit {
   private filters$ = new BehaviorSubject<IQueryParamsGuests>({});
 
   // Pagination
-  private page$ = new BehaviorSubject<{
-    page: number;
-    size: number;
-  }>({
-    page: 1,
-    size: 10,
-  });
+  private page$ = new BehaviorSubject<{ page: number; size: number }>({ page: 1, size: 10 });
 
   // Sort
   private sort$ = new BehaviorSubject<Sort>({
@@ -113,57 +107,31 @@ export class GuestsComponent implements OnInit {
     this.filters$.next(filters);
 
     // Reset pagination
-    this.page$.next({
-      page: 1,
-      size: this.page$.value.size,
-    });
+    this.page$.next({ page: 1, size: this.page$.value.size });
   }
 
   clearFilters(): void {
-    this.filtersForm.reset({
-      country: '',
-      continent: '',
-      groupType: '',
-      from: '',
-      to: '',
-      isFirstTime: '',
-    });
+    this.filtersForm.reset({ country: '', continent: '', groupType: '', from: '', to: '', isFirstTime: '' });
 
     // Show all countries again to autocomplete
     this.filteredCountries = [...this.countries];
   }
 
   private getBooleanFilter(value: boolean | string | null): boolean | undefined {
-    if (value === '' || value === null || value === undefined) {
-      return undefined;
-    }
-
+    if (value === '' || value === null || value === undefined) return undefined;
     return value === true || value === 'true';
   }
 
   private formatDate(dateValue: Date | string | null): string | undefined {
-    if (!dateValue) {
-      return undefined;
-    }
-
+    if (!dateValue) return undefined;
     const date = new Date(dateValue);
-
     return [date.getFullYear(), String(date.getMonth() + 1).padStart(2, '0'), String(date.getDate()).padStart(2, '0')].join('-');
   }
 
   // VIEW MODEL
   private initVm(): void {
     this.vm$ = combineLatest([this.page$, this.filters$]).pipe(
-      switchMap(([{ page, size }, filters]) =>
-        withReqState(
-          this._guests.getAllGuests({
-            limit: size,
-            page,
-            ...filters,
-          }),
-          this._errH
-        )
-      ),
+      switchMap(([{ page, size: limit }, filters]) => withReqState(this._guests.getAllGuests({ limit, page, ...filters }), this._errH)),
 
       map(vm => {
         if (vm.status !== 'success') {
@@ -174,27 +142,18 @@ export class GuestsComponent implements OnInit {
           };
         }
 
-        const enriched = mapGuestTable(vm.data);
+        const data = mapGuestTable(vm.data);
+        const offset = this.getOffset();
 
-        return {
-          ...vm,
-          data: enriched,
-          offset: this.getOffset(),
-        };
+        return { ...vm, data, offset };
       }),
 
       combineLatestWith(this.sort$),
 
       map(([vm, sort]) => {
-        if (vm.status !== 'success') {
-          return vm;
-        }
+        if (vm.status !== 'success') return vm;
 
-        let data: IGuestTableRowWithIndex[] = vm.data.map((item, index) => ({
-          ...item,
-          pageIndex: this.getOffset() + index,
-        }));
-
+        let data: IGuestTableRowWithIndex[] = vm.data.map((item, index) => ({ ...item, pageIndex: this.getOffset() + index }));
         data = this._sortService.sort(data, sort);
 
         return {
@@ -212,54 +171,34 @@ export class GuestsComponent implements OnInit {
 
     // First click
     if (!current.active) {
-      this.sort$.next({
-        active: sort.active,
-        direction: 'asc',
-      });
-
+      this.sort$.next({ active: sort.active, direction: 'asc' });
       return;
     }
 
     // Same column
     if (current.active === sort.active) {
       if (current.direction === 'asc') {
-        this.sort$.next({
-          active: sort.active,
-          direction: 'desc',
-        });
+        this.sort$.next({ active: sort.active, direction: 'desc' });
       } else if (current.direction === 'desc') {
-        this.sort$.next({
-          active: '',
-          direction: '',
-        });
+        this.sort$.next({ active: '', direction: '' });
       } else {
-        this.sort$.next({
-          active: sort.active,
-          direction: 'asc',
-        });
+        this.sort$.next({ active: sort.active, direction: 'asc' });
       }
 
       return;
     }
 
     // New column
-    this.sort$.next({
-      active: sort.active,
-      direction: 'asc',
-    });
+    this.sort$.next({ active: sort.active, direction: 'asc' });
   }
 
   // PAGINATION
   onPageChange(event: PageEvent): void {
-    this.page$.next({
-      page: event.pageIndex + 1,
-      size: event.pageSize,
-    });
+    this.page$.next({ page: event.pageIndex + 1, size: event.pageSize });
   }
 
   private getOffset(): number {
     const { page, size } = this.page$.value;
-
     return (page - 1) * size;
   }
 
@@ -281,12 +220,11 @@ export class GuestsComponent implements OnInit {
     const group = isGroup(guest);
 
     if (group) {
-      this._router.navigate(['/couchsurfing/groups', guest.groupId]);
-
+      this._router.navigate(['/guests/groups', guest.groupId]);
       return;
     }
 
-    this._router.navigate(['/couchsurfing/guests', guest.guestId]);
+    this._router.navigate(['/guests', guest.guestId]);
   }
 
   openCouchsurfing(profileId: string): void {
@@ -300,39 +238,29 @@ export class GuestsComponent implements OnInit {
   // DELETE
   async removeGuestConfirmation(guest: IGuestListItem): Promise<void> {
     const deleted = await this._deleteService.confirmAndDelete(guest);
-
-    if (!deleted) {
-      return;
-    }
-
-    this.page$.next({
-      ...this.page$.value,
-    });
+    if (!deleted) return;
+    this.page$.next({ ...this.page$.value });
   }
   // EDIT
   editGuest(item: IGuestListItem): void {
     if (isGroup(item)) {
-      this._router.navigate(['/couchsurfing/groups/edit', item.groupId]);
-
+      this._router.navigate(['/guests/groups/edit', item.groupId]);
       return;
     }
 
-    this._router.navigate(['/couchsurfing/guests/edit', item.guestId]);
+    this._router.navigate(['/guests/edit', item.guestId]);
   }
 
-  //AUTOCOMPLETE
+  // AUTOCOMPLETE
   private listenCountryAutocomplete(): void {
     const countryCtrl = this.filtersForm.get('country');
 
     countryCtrl?.valueChanges.subscribe(value => {
       // Si el valor es un código porque seleccionó una opción,
       // no hacemos filtrado por texto
-      if (typeof value !== 'string') {
-        return;
-      }
+      if (typeof value !== 'string') return;
 
       const search = value.toLowerCase().trim();
-
       const selectedContinent = this.filtersForm.get('continent')?.value;
 
       // Start with all countries
@@ -348,15 +276,13 @@ export class GuestsComponent implements OnInit {
         return;
       }
 
-      //filter by country name or country code
+      // filter by country name or country code
       this.filteredCountries = countries.filter(country => country.name.toLowerCase().includes(search) || country.countryCode.toLowerCase().includes(search));
     });
   }
   displayCountryCode = (countryCode: string | null): string => {
     if (!countryCode) return '';
-
     const country = this.countries.find(country => country.countryCode === countryCode);
-
     return country?.name ?? '';
   };
 
@@ -369,7 +295,6 @@ export class GuestsComponent implements OnInit {
       // No continent selected
       if (!continent) {
         this.filteredCountries = [...this.countries];
-
         return;
       }
 
@@ -379,10 +304,7 @@ export class GuestsComponent implements OnInit {
       // Check if current country belongs to selected continent
       const currentCountry = countryCtrl?.value;
 
-      if (!currentCountry) {
-        return;
-      }
-
+      if (!currentCountry) return;
       const countryExists = this.filteredCountries.some(country => country.countryCode === currentCountry);
 
       // Clear country if it doesn't belong to selected continent
@@ -394,13 +316,8 @@ export class GuestsComponent implements OnInit {
 
   onCountrySelected(event: MatAutocompleteSelectedEvent): void {
     const countryCode = event.option.value;
-
     const selectedCountry = this.countries.find(country => country.countryCode === countryCode);
-
-    if (!selectedCountry) {
-      return;
-    }
-
+    if (!selectedCountry) return;
     this.filtersForm.get('continent')?.setValue(selectedCountry.continent);
   }
 }

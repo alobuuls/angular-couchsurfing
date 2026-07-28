@@ -4,11 +4,10 @@ import Swal from 'sweetalert2';
 
 // Services
 import { GuestsService } from '@services/guests.service';
-import { GroupsService } from '@services/groups.service';
 import { AlertsService } from '@services/alerts.service';
 
 // Interfaces
-import { IGuestListItem } from '@interfaces/couchsurfing.interface';
+import { IGuestListItem } from '@interfaces/guests.interface';
 
 // Utils
 import { isGroup } from '@helpers/guests-table.utils';
@@ -22,7 +21,6 @@ import { ALERT_MESSAGES } from '@const/alerts';
 export class GuestDeleteService {
   constructor(
     private _guests: GuestsService,
-    private _groups: GroupsService,
     private _alerts: AlertsService
   ) {}
 
@@ -60,12 +58,8 @@ export class GuestDeleteService {
       showCancelButton: true,
 
       preConfirm: (value: string) => {
-        if (value === fullname) {
-          return true;
-        }
-
+        if (value === fullname) return true;
         Swal.showValidationMessage(`Must type "${fullname}" exactly`);
-
         return false;
       },
     });
@@ -73,17 +67,11 @@ export class GuestDeleteService {
     if (!isConfirmed) return false;
 
     const id = group ? guest.groupId : guest.guestId;
-
-    const request$ = group ? this._groups.removeGroupById(id) : this._guests.removeGuestById(id);
+    const request$ = group ? this._guests.removeGroupById(id) : this._guests.removeGuestById(id);
 
     await firstValueFrom(request$);
 
-    this._alerts.showToast({
-      icon: 'success',
-      title: alerts.success.message(fullname),
-      time: 6000,
-    });
-
+    this._alerts.showToast({ icon: 'success', title: alerts.success.message(fullname), time: 6000 });
     return true;
   }
 }

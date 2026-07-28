@@ -12,21 +12,12 @@ import { compare } from '@helpers/sort.utils';
 })
 export class GuestSortService {
   sort(data: IGuestTableRowWithIndex[], sort: Sort): IGuestTableRowWithIndex[] {
-    if (!sort.active || !sort.direction) {
-      return data;
-    }
-
+    if (!sort.active || !sort.direction) return data;
     const isAsc = sort.direction === 'asc';
 
     return [...data].sort((a, b) => {
-      if (sort.active === 'rating') {
-        return this.sortRating(a, b, isAsc);
-      }
-
-      if (['continent', 'hometownCode', 'livingInCode'].includes(sort.active)) {
-        return this.sortLocation(a, b, sort.active, isAsc);
-      }
-
+      if (sort.active === 'rating') return this.sortRating(a, b, isAsc);
+      if (['continent', 'hometownCode', 'livingInCode'].includes(sort.active)) return this.sortLocation(a, b, sort.active, isAsc);
       return this.sortDefault(a, b, sort.active, isAsc);
     });
   }
@@ -34,13 +25,10 @@ export class GuestSortService {
   private sortRating(a: IGuestTableRowWithIndex, b: IGuestTableRowWithIndex, asc: boolean): number {
     const groupCompare = this.compareGroup(a, b);
 
-    if (groupCompare !== 0) {
-      return groupCompare;
-    }
+    if (groupCompare !== 0) return groupCompare;
 
     const ratingA = this.getMinRating(a);
     const ratingB = this.getMinRating(b);
-
     return asc ? ratingA - ratingB : ratingB - ratingA;
   }
 
@@ -50,24 +38,17 @@ export class GuestSortService {
 
     const result = compare(valueA, valueB, asc);
 
-    if (result !== 0) {
-      return result;
-    }
-
+    if (result !== 0) return result;
     return this.compareGroup(a, b);
   }
 
   private sortDefault(a: IGuestTableRowWithIndex, b: IGuestTableRowWithIndex, field: string, asc: boolean): number {
     const priorityA = this.getPriority(a, field, asc);
-
     const priorityB = this.getPriority(b, field, asc);
 
-    if (priorityA !== priorityB) {
-      return priorityA - priorityB;
-    }
+    if (priorityA !== priorityB) return priorityA - priorityB;
 
     const valueA = this.getSortValue(a, field, asc);
-
     const valueB = this.getSortValue(b, field, asc);
 
     return compare(valueA, valueB, asc);
@@ -107,20 +88,13 @@ export class GuestSortService {
           .filter(Boolean)
           .sort() ?? [];
 
-      if (!names.length) {
-        return 2;
-      }
-
+      if (!names.length) return 2;
       return guest.people?.length === 1 ? 0 : 1;
     }
 
     if (field === 'birth_date') {
       const ages = guest.people?.map(p => Number(p.age)).filter(age => !isNaN(age)) ?? [];
-
-      if (!ages.length) {
-        return 2;
-      }
-
+      if (!ages.length) return 2;
       return guest.people?.length === 1 ? 0 : 1;
     }
 
@@ -143,25 +117,17 @@ export class GuestSortService {
 
   private personAccessors: Record<string, (person: any) => any> = {
     fullName: p => p.fullName?.toLowerCase() ?? '',
-
     gender: p => p.gender?.toLowerCase() ?? '',
-
     continent: p => p.continent?.toLowerCase() ?? '',
-
     hometownCode: p => p.hometown?.code?.toLowerCase() ?? '',
-
     livingInCode: p => p.livingIn?.code?.toLowerCase() ?? '',
-
     rating: p => p.rating ?? 0,
   };
 
   private sortAccessors: Record<string, (guest: any) => any> = {
     nights: guest => guest.nights ?? 0,
-
     visitedDate: guest => new Date(guest.visitedDate ?? 0).getTime(),
-
     birth_date: guest => Math.min(...(guest.people?.map((p: any) => (p.age === '?' || p.age == null ? 999 : Number(p.age))) ?? [999])),
-
     hangOut: guest => (guest.people?.some((p: any) => p.hangOut) ? 1 : 0),
   };
 
@@ -171,9 +137,7 @@ export class GuestSortService {
 
   private compareGroup(a: IGuestTableRowWithIndex, b: IGuestTableRowWithIndex): number {
     const groupA = a.people?.length > 1 ? 1 : 0;
-
     const groupB = b.people?.length > 1 ? 1 : 0;
-
     return groupA - groupB;
   }
 }
