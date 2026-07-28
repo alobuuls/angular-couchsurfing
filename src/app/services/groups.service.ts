@@ -10,16 +10,16 @@ import { IGroupDetail, IGroupDetailResp, IGuestCreateResp, IGuestDeleteResp } fr
   providedIn: 'root',
 })
 export class GroupsService {
-  private urlBaseApi: string = `${environment.endpointUrlApiCs}`;
+  private urlBaseApi: string = `${environment.endpointUrlApiCs}/groups`;
 
   constructor(private http: HttpClient) {}
 
   getGroupById(groupId: string): Observable<IGroupDetailResp> {
-    return this.http.get<IGroupDetailResp>(`${this.urlBaseApi}/groups/${groupId}`);
+    return this.http.get<IGroupDetailResp>(`${this.urlBaseApi}/${groupId}`);
   }
 
   createNewGroup(payload: IGroupDetail): Observable<IGuestCreateResp> {
-    return this.http.post<IGuestCreateResp>(`${this.urlBaseApi}/groups`, payload);
+    return this.http.post<IGuestCreateResp>(this.urlBaseApi, payload);
   }
 
   updateGroupById(guestId: string, group: IGroupDetail): Observable<IGuestCreateResp> {
@@ -27,6 +27,6 @@ export class GroupsService {
   }
 
   removeGroupById(groupId: string): Observable<IGuestDeleteResp> {
-    return this.http.delete<IGuestDeleteResp>(`${this.urlBaseApi}/groups/${groupId}`);
+    return this.http.delete<IGuestDeleteResp>(`${this.urlBaseApi}/${groupId}`);
   }
 }

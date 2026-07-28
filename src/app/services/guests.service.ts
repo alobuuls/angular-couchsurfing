@@ -22,7 +22,7 @@ export interface IQueryParamsGuests {
   providedIn: 'root',
 })
 export class GuestsService {
-  private urlBaseApi: string = `${environment.endpointUrlApiCs}`;
+  private urlBaseApi: string = `${environment.endpointUrlApiCs}/guests`;
 
   constructor(private http: HttpClient) {}
 
@@ -34,22 +34,22 @@ export class GuestsService {
     if (groupType) params = params.set('groupType', String(groupType));
     if (continent) params = params.set('continent', String(continent));
     if (isFirstTime !== undefined) params = params.set('isFirstTime', String(isFirstTime));
-    return this.http.get<IGuestsResp>(`${this.urlBaseApi}/guests`, { params });
+    return this.http.get<IGuestsResp>(this.urlBaseApi, { params });
   }
 
   createNewGuest(payload: IBodyGuest): Observable<IGuestCreateResp> {
-    return this.http.post<IGuestCreateResp>(`${this.urlBaseApi}/guests`, payload);
+    return this.http.post<IGuestCreateResp>(this.urlBaseApi, payload);
   }
 
   getGuestById(guestId: string): Observable<IGuestDetailResp> {
-    return this.http.get<IGuestDetailResp>(`${this.urlBaseApi}/guests/${guestId}`);
+    return this.http.get<IGuestDetailResp>(`${this.urlBaseApi}/${guestId}`);
   }
 
   updateGuestById(guestId: string, guest: IBodyGuest): Observable<IGuestCreateResp> {
-    return this.http.put<IGuestCreateResp>(`${this.urlBaseApi}/guests/${guestId}`, guest);
+    return this.http.put<IGuestCreateResp>(`${this.urlBaseApi}/${guestId}`, guest);
   }
 
   removeGuestById(guestId: string): Observable<IGuestDeleteResp> {
-    return this.http.delete<IGuestDeleteResp>(`${this.urlBaseApi}/guests/${guestId}`);
+    return this.http.delete<IGuestDeleteResp>(`${this.urlBaseApi}/${guestId}`);
   }
 }
