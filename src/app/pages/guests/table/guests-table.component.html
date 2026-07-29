@@ -11,7 +11,7 @@
 
     <!-- HANG OUT -->
     <ng-container matColumnDef="hangOut">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header><mat-icon>people</mat-icon>Hang Out</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header><i class="fa-solid fa-door-open"></i>Hang Out</th>
       <td mat-cell *matCellDef="let guest">
         <div *ngIf="guest.isHangOutUnique; else hangOutList">
           <mat-icon
@@ -43,9 +43,7 @@
 
     <!-- GENDER (members) -->
     <ng-container matColumnDef="gender">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        <i class="fa-solid fa-person-half-dress"></i> <mat-icon>wc</mat-icon> Gender
-      </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header><i class="fa-solid fa-venus-mars"></i> Gender</th>
       <td mat-cell *matCellDef="let guest">
         <div *ngFor="let person of guest.people">
           <mat-icon
@@ -89,7 +87,7 @@
             mat-icon-button
             (click)="whatsapp.emit(person.whatsapp)"
           >
-            <i class="fa fa-whatsapp"></i>
+            <i class="fa-brands fa-whatsapp"></i>
           </button>
 
           <div class="ctn-first">
