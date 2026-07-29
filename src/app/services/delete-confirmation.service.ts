@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 
 // Services
-import { GuestsService } from '@services/guests.service';
 import { AlertsService } from '@services/alerts.service';
 
 // Interfaces
@@ -20,11 +19,10 @@ import { ALERT_MESSAGES } from '@const/alerts';
 })
 export class GuestDeleteService {
   constructor(
-    private _guests: GuestsService,
     private _alerts: AlertsService
   ) {}
 
-  async confirmAndDelete(guest: IGuestListItem): Promise<boolean> {
+  async confirmAndDelete(guest: IGuestListItem, deleteFn: (guest: IGuestListItem) => Observable<unknown>): Promise<boolean> {
     const group = isGroup(guest);
     const fullname = group ? guest.members[0].fullName : guest.fullName;
 
@@ -66,11 +64,11 @@ export class GuestDeleteService {
 
     if (!isConfirmed) return false;
 
-    const id = group ? guest.groupId : guest.guestId;
-    const request$ = group ? this._guests.removeGroupById(id) : this._guests.removeGuestById(id);
-
+    // Delete
+    const request$ = deleteFn(guest);
     await firstValueFrom(request$);
 
+    // Success
     this._alerts.showToast({ icon: 'success', title: alerts.success.message(fullname), time: 6000 });
     return true;
   }

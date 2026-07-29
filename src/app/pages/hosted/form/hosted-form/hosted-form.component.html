@@ -1,0 +1,62 @@
+<h1>Guests Form</h1>
+
+<!-- Group Type (solo en Create) -->
+<section class="group-type-section" *ngIf="mode === 'create'">
+  <h2>How did they travel?</h2>
+
+  <mat-radio-group [value]="selectedGroupType" (change)="selectGroupType($event.value)">
+    <mat-radio-button value="solo">Solo</mat-radio-button>
+
+    <mat-radio-button value="couple">Couple</mat-radio-button>
+
+    <mat-radio-button value="friends">Friends</mat-radio-button>
+
+    <mat-radio-button value="family">Family</mat-radio-button>
+  </mat-radio-group>
+</section>
+
+<!-- Form -->
+<section *ngIf="selectedGroupType">
+  <!-- Trip -->
+  <hosted-trip-form [trip]="guest || group?.[0]"> </hosted-trip-form>
+
+  <!-- CREATE -->
+  <ng-container *ngIf="mode === 'create'">
+    <hosted-individual-form *ngFor="let form of [].constructor(formsToShow)" [selectedGroupType]="selectedGroupType">
+    </hosted-individual-form>
+  </ng-container>
+
+  <!-- EDIT -->
+  <ng-container *ngIf="mode === 'edit'">
+    <!-- Solo -->
+    <hosted-individual-form *ngIf="guest" [guest]="guest"> </hosted-individual-form>
+
+    <!-- Group -->
+    <hosted-individual-form *ngFor="let member of group" [guest]="member"> </hosted-individual-form>
+  </ng-container>
+
+  <!-- Add Guest -->
+  <button
+    *ngIf="mode === 'create' && (selectedGroupType === 'friends' || selectedGroupType === 'family')"
+    type="button"
+    mat-stroked-button
+    color="primary"
+    (click)="addGuestForm()"
+  >
+    Add another guest
+  </button>
+
+  <!-- Submit -->
+  <button
+    id="btn-create-guest"
+    type="button"
+    mat-raised-button
+    color="primary"
+    [disabled]="wasFormSubmitted"
+    (click)="submit()"
+  >
+    <mat-icon *ngIf="wasFormSubmitted" class="loading-animation" fontIcon="refresh"> </mat-icon>
+
+    {{ mode === 'create' ? 'Create' : 'Update' }}
+  </button>
+</section>

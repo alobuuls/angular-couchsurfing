@@ -1,0 +1,136 @@
+<ng-container *ngIf="vm$ | async as vm">
+  <!-- FILTERS -->
+  <form [formGroup]="filtersForm" class="filters-form" (ngSubmit)="onFiltersSubmit()">
+    <!-- CONTINENT -->
+    <mat-form-field appearance="outline">
+      <mat-label>Continent</mat-label>
+
+      <mat-icon matPrefix>public</mat-icon>
+
+      <mat-select formControlName="continent">
+        <mat-option value="">All continents</mat-option>
+        <mat-option *ngFor="let continent of continents" [value]="continent">
+          {{ continent | titlecase }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- COUNTRY -->
+    <mat-form-field appearance="outline">
+      <mat-label>Country</mat-label>
+      <mat-icon matPrefix>public</mat-icon>
+      <input matInput formControlName="country" [matAutocomplete]="autoCountry" />
+
+      <mat-autocomplete
+        #autoCountry="matAutocomplete"
+        [displayWith]="displayCountryCode"
+        (optionSelected)="onCountrySelected($event)"
+      >
+        <mat-option *ngFor="let country of filteredCountries" [value]="country.countryCode">
+          <span [class]="country.countryCode | flag"></span>
+          {{ country.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <!-- GROUP TYPE -->
+    <mat-form-field appearance="outline">
+      <mat-label>Group Type</mat-label>
+      <mat-icon matPrefix>groups</mat-icon>
+
+      <mat-select formControlName="groupType">
+        <mat-option value="">All groups</mat-option>
+        <mat-option value="solo">Solo</mat-option>
+        <mat-option value="couple">Couple</mat-option>
+        <mat-option value="friends">Friends</mat-option>
+        <mat-option value="family">Family</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- FROM -->
+    <mat-form-field appearance="outline">
+      <mat-label>Visited From</mat-label>
+      <mat-icon matPrefix>calendar_month</mat-icon>
+
+      <input matInput [matDatepicker]="fromPicker" formControlName="from" />
+      <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+      <mat-datepicker #fromPicker></mat-datepicker>
+    </mat-form-field>
+
+    <!-- TO -->
+    <mat-form-field appearance="outline">
+      <mat-label>Visited To</mat-label>
+
+      <mat-icon matPrefix>calendar_month</mat-icon>
+      <input matInput [matDatepicker]="toPicker" formControlName="to" />
+      <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+      <mat-datepicker #toPicker></mat-datepicker>
+    </mat-form-field>
+
+    <!-- FIRST TIME -->
+    <mat-form-field appearance="outline">
+      <mat-label>First Time</mat-label>
+      <mat-icon matPrefix>editor_choice</mat-icon>
+      <mat-select formControlName="isFirstTime">
+        <mat-option value="">All</mat-option>
+        <mat-option [value]="true">Yes</mat-option>
+        <mat-option [value]="false">No</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- ACTIONS -->
+    <div class="filters-actions">
+      <button type="button" mat-stroked-button (click)="clearFilters()">
+        <mat-icon>clear</mat-icon>
+        Clear
+      </button>
+
+      <button type="submit" mat-raised-button color="primary">
+        <mat-icon>search</mat-icon>
+        Search
+      </button>
+    </div>
+  </form>
+
+  <!-- ADD BUTTON -->
+  <div class="ctn–btn" *ngIf="vm.status === 'success' && vm.data.length">
+    <button [routerLink]="['/hosted/add']" class="btn-add" mat-icon-button matTooltip="Create Guest">
+      <mat-icon fontIcon="add"></mat-icon>
+    </button>
+  </div>
+
+  <!-- ERROR -->
+  <h1 *ngIf="vm.status === 'error'">
+    {{ vm?.error?.message }}
+  </h1>
+
+  <!-- LOADING -->
+  <h1 *ngIf="vm.status === 'loading'">Loading...</h1>
+
+  <!-- EMPTY -->
+  <div *ngIf="vm.status === 'success' && !vm.data.length">
+    <h1>
+      There are no guests yet, Create a new guest here
+
+      <button [routerLink]="['/hosted/add']" class="btn-add" mat-icon-button>
+        <mat-icon fontIcon="add"></mat-icon>
+      </button>
+    </h1>
+  </div>
+
+  <!-- TABLE -->
+  <hosted-table
+    *ngIf="vm.status === 'success'"
+    [data]="vm.data"
+    [pagination]="vm.pagination"
+    [offset]="vm.offset"
+    (detail)="openDetail($event)"
+    (edit)="editGuest($event)"
+    (remove)="removeGuestConfirmation($event)"
+    (whatsapp)="openWhatsapp($event)"
+    (couchsurfing)="openCouchsurfing($event)"
+    (sort)="onSortChange($event)"
+    (page)="onPageChange($event)"
+  >
+  </hosted-table>
+</ng-container>

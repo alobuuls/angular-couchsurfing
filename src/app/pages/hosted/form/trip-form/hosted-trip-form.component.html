@@ -1,0 +1,39 @@
+<h1>Trip Form</h1>
+
+<div class="ctn-form">
+  <form [formGroup]="formTrip">
+    <div class="trip-row">
+      <!-- VISITED DATE -->
+      <mat-form-field appearance="outline" class="date-field">
+        <mat-label>Visited Date</mat-label>
+
+        <mat-icon matPrefix>calendar_month</mat-icon>
+
+        <input matInput [matDatepicker]="picker" formControlName="visitedDate" />
+
+        <mat-datepicker-toggle matSuffix [for]="picker"> </mat-datepicker-toggle>
+
+        <mat-datepicker #picker></mat-datepicker>
+
+        <mat-error *ngIf="f['visitedDate'].hasError('required')"> Visited Date is required </mat-error>
+      </mat-form-field>
+
+      <!-- TODAY -->
+      <button mat-stroked-button type="button" class="today-btn" (click)="btnSetToday()">Today</button>
+
+      <!-- STAYED -->
+      <mat-checkbox formControlName="stayed"> Stayed </mat-checkbox>
+
+      <!-- NIGHTS -->
+      <mat-form-field appearance="outline" class="nights-field" *ngIf="f['stayed'].value">
+        <mat-label>Nights</mat-label>
+
+        <mat-select formControlName="nights">
+          <mat-option *ngFor="let night of nights" [value]="night">
+            {{ night }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </form>
+</div>

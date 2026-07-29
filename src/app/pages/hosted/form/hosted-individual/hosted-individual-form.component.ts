@@ -26,11 +26,11 @@ import { WORLD } from '@config/world';
 import { OCCUPATIONS_BY_AREA } from '@config/occupations/occupations';
 
 @Component({
-  selector: 'app-guest-form',
-  templateUrl: './guest-form.component.html',
-  styleUrls: ['./guest-form.component.css'],
+  selector: 'hosted-individual-form',
+  templateUrl: './hosted-individual-form.component.html',
+  styleUrls: ['./hosted-individual-form.component.css'],
 })
-export class GuestFormComponent implements OnInit {
+export class HostedIndividualFormComponent implements OnInit {
   // Group Form
   @Input() selectedGroupType: 'solo' | 'couple' | 'friends' | 'family' | null = null;
 
@@ -206,10 +206,7 @@ export class GuestFormComponent implements OnInit {
       theirReference: this.guest.theirReference,
       myReference: this.guest.myReference,
     });
-
-    if (this.guest.gift) {
-      this.gifts = this.guest.gift.map(name => ({ name }));
-    }
+    this.gifts = this.guest.gift.map(name => ({ name }));
   }
 
   onSubmit(): void {

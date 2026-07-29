@@ -9,7 +9,8 @@ import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 
 // Services
-import { GuestsService, IQueryParamsGuests } from '@services/guests.service';
+import { HostedService } from '@services/hosted.service';
+import { IQueryParamsGuests } from '@services/guests.service';
 import { GuestDeleteService } from '@services/delete-confirmation.service';
 import { ErrorHandlerService } from '@services/err-handler.service';
 import { GuestSortService } from '@services/guest-sort.service';
@@ -31,11 +32,11 @@ import { WORLD } from '@config/world';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
-  selector: 'guests',
-  templateUrl: './guests.component.html',
-  styleUrls: ['./guests.component.css'],
+  selector: 'hosted',
+  templateUrl: './hosted.component.html',
+  styleUrls: ['./hosted.component.css'],
 })
-export class GuestsComponent implements OnInit {
+export class HostedComponent implements OnInit {
   vm$!: Observable<IGuestsTableVM>;
 
   // Filters
@@ -65,7 +66,7 @@ export class GuestsComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private _router: Router,
-    private _guests: GuestsService,
+    private _hosted: HostedService,
     private _sortService: GuestSortService,
     private _deleteService: GuestDeleteService,
     private _errH: ErrorHandlerService
@@ -131,7 +132,7 @@ export class GuestsComponent implements OnInit {
   // VIEW MODEL
   private initVm(): void {
     this.vm$ = combineLatest([this.page$, this.filters$]).pipe(
-      switchMap(([{ page, size: limit }, filters]) => withReqState(this._guests.getAllGuests({ limit, page, ...filters }), this._errH)),
+      switchMap(([{ page, size: limit }, filters]) => withReqState(this._hosted.getAllGuests({ limit, page, ...filters }), this._errH)),
 
       map(vm => {
         if (vm.status !== 'success') {
@@ -220,11 +221,11 @@ export class GuestsComponent implements OnInit {
     const group = isGroup(guest);
 
     if (group) {
-      this._router.navigate(['/guests/groups', guest.groupId]);
+      this._router.navigate(['/hosted/groups', guest.groupId]);
       return;
     }
 
-    this._router.navigate(['/guests', guest.guestId]);
+    this._router.navigate(['/hosted', guest.guestId]);
   }
 
   openCouchsurfing(profileId: string): void {
@@ -239,20 +240,21 @@ export class GuestsComponent implements OnInit {
   async removeGuestConfirmation(guest: IGuestListItem): Promise<void> {
     const deleted = await this._deleteService.confirmAndDelete(guest, item => {
       const group = isGroup(item);
-      const id = group ? item.groupId : item.guestId
-      return group ? this._guests.removeGroupById(id) : this._guests.removeGuestById(id)
+      const id = group ? item.groupId : item.guestId;
+      return group ? this._hosted.removeGroupById(id) : this._hosted.removeGuestById(id);
     });
     if (!deleted) return;
     this.page$.next({ ...this.page$.value });
   }
+
   // EDIT
   editGuest(item: IGuestListItem): void {
     if (isGroup(item)) {
-      this._router.navigate(['/guests/groups/edit', item.groupId]);
+      this._router.navigate(['/hosted/groups/edit', item.groupId]);
       return;
     }
 
-    this._router.navigate(['/guests/edit', item.guestId]);
+    this._router.navigate(['/hosted/edit', item.guestId]);
   }
 
   // AUTOCOMPLETE

@@ -1,0 +1,151 @@
+.ctn-guests {
+  margin-top: 2.5rem;
+  text-align: center;
+  padding: 1rem;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-column-actions {
+  width: 150px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ctn-first {
+  display: flex;
+  gap: 0 5px;
+}
+
+.btn-edit {
+  background-color: #0e6ca2;
+  color: white;
+}
+
+.ctn-fullname-btns {
+  display: flex;
+  gap: 0.5rem;
+
+  &:not(:only-child) {
+    margin-block: 0.5rem;
+  }
+}
+
+.btn-whatsapp,
+.btn-cs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+
+  & > mat-icon {
+    line-height: 1.5rem;
+    font-size: 1rem;
+  }
+
+  &[disabled] {
+    background-color: #cdcdcd;
+    color: #1c1c1c;
+    cursor: no-drop;
+    pointer-events: none;
+
+    & > i {
+      color: #1c1c1c;
+    }
+  }
+
+  &.btn-whatsapp {
+    color: white;
+    font-size: 1rem;
+  }
+
+  &.btn-cs {
+    color: white;
+    font-size: 1rem;
+  }
+}
+
+.btn-whatsapp {
+  background-color: #16b751;
+}
+
+.btn-delete {
+  background-color: #9b2108;
+  color: white;
+}
+
+.btn-detail {
+  background-color: #3e089b;
+  color: white;
+}
+
+.btn-cs {
+  background-color: #ff7043;
+  color: white;
+
+  &[disabled] {
+    background-color: #8f8c8c;
+    color: #1c1c1c;
+    cursor: no-drop;
+    pointer-events: none;
+  }
+}
+
+.ctn-stars {
+  color: goldenrod;
+  display: flex;
+  gap: 0 0.25rem;
+
+  & > mat-icon {
+    color: transparent;
+    /* -webkit-text-stroke: 0.1mm #c51010; */
+    -webkit-text-fill-color: #fefb24;
+    opacity: 0.2;
+    transition: -webkit-text-fill-color 0.3s ease-in-out;
+
+    &.filled {
+      opacity: 1;
+      -webkit-text-fill-color: #fefb24;
+    }
+  }
+}
+
+th {
+  cursor: pointer;
+}
+
+.male {
+  font-size: 1.5rem;
+  color: #5a94bf;
+}
+
+.female {
+  font-size: 1.5rem;
+  color: #eaa5be;
+}
+
+td,
+th {
+  color: white;
+}
+
+.mat-mdc-header-row {
+  background-color: rgb(1, 31, 55);
+}
+
+tr:nth-of-type(even) {
+  background-color: #1a1e21;
+}
+
+th mat-icon,
+th {
+  color: #fff;
+}
