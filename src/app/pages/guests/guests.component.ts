@@ -49,6 +49,13 @@ export class GuestsComponent implements OnInit {
 
   // Continents
   continents: Continents[] = ['africa', 'america', 'asia', 'europe', 'oceania'];
+  continentIcons = {
+    africa: 'fa-solid fa-earth-africa',
+    america: 'fa-solid fa-earth-americas',
+    asia: 'fa-solid fa-earth-asia',
+    europe: 'fa-solid fa-earth-europe',
+    oceania: 'fa-solid fa-earth-oceania',
+  };
 
   // Current Filters
   private filters$ = new BehaviorSubject<IQueryParamsGuests>({});
@@ -239,8 +246,8 @@ export class GuestsComponent implements OnInit {
   async removeGuestConfirmation(guest: IGuestListItem): Promise<void> {
     const deleted = await this._deleteService.confirmAndDelete(guest, item => {
       const group = isGroup(item);
-      const id = group ? item.groupId : item.guestId
-      return group ? this._guests.removeGroupById(id) : this._guests.removeGuestById(id)
+      const id = group ? item.groupId : item.guestId;
+      return group ? this._guests.removeGroupById(id) : this._guests.removeGuestById(id);
     });
     if (!deleted) return;
     this.page$.next({ ...this.page$.value });
@@ -276,7 +283,7 @@ export class GuestsComponent implements OnInit {
 
       // If there is no search text, show countries from selected continent
       if (!search) {
-        this.filteredCountries = [...this.countries];
+        this.filteredCountries = [...countries];
         return;
       }
 
@@ -285,7 +292,7 @@ export class GuestsComponent implements OnInit {
     });
   }
   displayCountryCode = (countryCode: string | null): string => {
-    if (!countryCode) return '';
+    if (!countryCode) return 'All Countries';
     const country = this.countries.find(country => country.countryCode === countryCode);
     return country?.name ?? '';
   };
@@ -320,6 +327,11 @@ export class GuestsComponent implements OnInit {
 
   onCountrySelected(event: MatAutocompleteSelectedEvent): void {
     const countryCode = event.option.value;
+    // All Countries
+    if (!countryCode) {
+      this.filtersForm.get('continent')?.setValue('');
+      return;
+    }
     const selectedCountry = this.countries.find(country => country.countryCode === countryCode);
     if (!selectedCountry) return;
     this.filtersForm.get('continent')?.setValue(selectedCountry.continent);

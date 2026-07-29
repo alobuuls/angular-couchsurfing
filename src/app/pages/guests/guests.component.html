@@ -8,9 +8,16 @@
       <mat-icon matPrefix>public</mat-icon>
 
       <mat-select formControlName="continent">
-        <mat-option value="">All continents</mat-option>
+        <mat-option value="">
+          <i class="fa-solid fa-globe"></i>
+          All continents
+        </mat-option>
+
         <mat-option *ngFor="let continent of continents" [value]="continent">
-          {{ continent | titlecase }}
+          <span class="continent-option">
+            <i [class]="continentIcons[continent]"></i>
+            {{ continent | titlecase }}
+          </span>
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -26,6 +33,10 @@
         [displayWith]="displayCountryCode"
         (optionSelected)="onCountrySelected($event)"
       >
+        <mat-option value="">
+          <mat-icon>public</mat-icon>
+          All Countries
+        </mat-option>
         <mat-option *ngFor="let country of filteredCountries" [value]="country.countryCode">
           <span [class]="country.countryCode | flag"></span>
           {{ country.name }}
@@ -39,11 +50,11 @@
       <mat-icon matPrefix>groups</mat-icon>
 
       <mat-select formControlName="groupType">
-        <mat-option value="">All groups</mat-option>
-        <mat-option value="solo">Solo</mat-option>
-        <mat-option value="couple">Couple</mat-option>
-        <mat-option value="friends">Friends</mat-option>
-        <mat-option value="family">Family</mat-option>
+        <mat-option value=""> <mat-icon>groups</mat-icon>All groups</mat-option>
+        <mat-option value="solo"> <mat-icon>person</mat-icon>Solo</mat-option>
+        <mat-option value="couple"> <mat-icon>favorite</mat-icon>Couple</mat-option>
+        <mat-option value="friends"> <mat-icon>group</mat-icon>Friends</mat-option>
+        <mat-option value="family"> <mat-icon>family_restroom</mat-icon>Family</mat-option>
       </mat-select>
     </mat-form-field>
 
@@ -72,9 +83,9 @@
       <mat-label>First Time</mat-label>
       <mat-icon matPrefix>editor_choice</mat-icon>
       <mat-select formControlName="isFirstTime">
-        <mat-option value="">All</mat-option>
-        <mat-option [value]="true">Yes</mat-option>
-        <mat-option [value]="false">No</mat-option>
+        <mat-option value=""> <mat-icon>editor_choice</mat-icon>All</mat-option>
+        <mat-option [value]="true"> <mat-icon>check_circle</mat-icon>Yes</mat-option>
+        <mat-option [value]="false"> <mat-icon>cancel</mat-icon>No</mat-option>
       </mat-select>
     </mat-form-field>
 
