@@ -50,6 +50,13 @@ export class HostedComponent implements OnInit {
 
   // Continents
   continents: Continents[] = ['africa', 'america', 'asia', 'europe', 'oceania'];
+  continentIcons = {
+    africa: 'fa-solid fa-earth-africa',
+    america: 'fa-solid fa-earth-americas',
+    asia: 'fa-solid fa-earth-asia',
+    europe: 'fa-solid fa-earth-europe',
+    oceania: 'fa-solid fa-earth-oceania',
+  };
 
   // Current Filters
   private filters$ = new BehaviorSubject<IQueryParamsGuests>({});
@@ -278,7 +285,7 @@ export class HostedComponent implements OnInit {
 
       // If there is no search text, show countries from selected continent
       if (!search) {
-        this.filteredCountries = [...this.countries];
+        this.filteredCountries = [...countries];
         return;
       }
 
@@ -287,7 +294,7 @@ export class HostedComponent implements OnInit {
     });
   }
   displayCountryCode = (countryCode: string | null): string => {
-    if (!countryCode) return '';
+    if (!countryCode) return 'All Countries';
     const country = this.countries.find(country => country.countryCode === countryCode);
     return country?.name ?? '';
   };
@@ -322,6 +329,11 @@ export class HostedComponent implements OnInit {
 
   onCountrySelected(event: MatAutocompleteSelectedEvent): void {
     const countryCode = event.option.value;
+    // All Countries
+    if (!countryCode) {
+      this.filtersForm.get('continent')?.setValue('');
+      return;
+    }
     const selectedCountry = this.countries.find(country => country.countryCode === countryCode);
     if (!selectedCountry) return;
     this.filtersForm.get('continent')?.setValue(selectedCountry.continent);
