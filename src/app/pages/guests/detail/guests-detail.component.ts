@@ -63,4 +63,16 @@ export class GuestsDetailComponent implements OnInit {
       });
     }
   }
+
+  openCouchsurfing(profileId: string): void {
+    window.open(`https://www.couchsurfing.com/c/users/${profileId}`, '_blank');
+  }
+
+  openInstagram(username: string): void {
+    window.open(`https://www.instagram.com/${username}`, '_blank');
+  }
+
+  formatRegion(region: string): string {
+    return region.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+  }
 }
