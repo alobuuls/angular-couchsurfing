@@ -1,19 +1,19 @@
 <h1>Trip Form</h1>
 
 <div class="ctn-form">
-  <form [formGroup]="formTrip">
+  <form #tripFormElement [formGroup]="formTrip" >
     <div class="trip-row">
       <!-- VISITED DATE -->
-      <mat-form-field appearance="outline" class="date-field">
+      <mat-form-field appearance="outline">
         <mat-label>Visited Date</mat-label>
 
         <mat-icon matPrefix>calendar_month</mat-icon>
 
-        <input matInput [matDatepicker]="picker" formControlName="visitedDate" />
+        <input matInput [matDatepicker]="visitedDatePicker" formControlName="visitedDate" />
 
-        <mat-datepicker-toggle matSuffix [for]="picker"> </mat-datepicker-toggle>
+        <mat-datepicker-toggle matSuffix [for]="visitedDatePicker"></mat-datepicker-toggle>
 
-        <mat-datepicker #picker></mat-datepicker>
+        <mat-datepicker #visitedDatePicker></mat-datepicker>
 
         <mat-error *ngIf="f['visitedDate'].hasError('required')"> Visited Date is required </mat-error>
       </mat-form-field>

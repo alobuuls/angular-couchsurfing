@@ -1,4 +1,4 @@
-import { Component, DestroyRef, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, DestroyRef, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -31,6 +31,9 @@ import { OCCUPATIONS_BY_AREA } from '@config/occupations/occupations';
   styleUrls: ['./guest-form.component.css'],
 })
 export class GuestFormComponent implements OnInit {
+  // To scroll error
+  @ViewChild('guestForm', { static: false }) guestForm!: ElementRef<HTMLFormElement>;
+
   // Group Form
   @Input() selectedGroupType: 'solo' | 'couple' | 'friends' | 'family' | null = null;
 
@@ -162,6 +165,7 @@ export class GuestFormComponent implements OnInit {
       whatsapp: ['', [Validators.required, Validators.maxLength(16), Validators.pattern(/^\+?[1-9]\d{7,14}$/)]],
       occupationArea: [[], Validators.required],
       occupation: [[]],
+      otherOccupation: [''],
       rating: [''],
       comments: ['', [Validators.maxLength(500)]],
       gift: [[]],
@@ -212,11 +216,24 @@ export class GuestFormComponent implements OnInit {
     }
   }
 
-  onSubmit(): void {
-    if (this.formCreateGuest.invalid) {
-      this.formCreateGuest.markAllAsTouched();
-      return;
-    }
+  scrollToFirstInvalidControl(): void {
+    this.formCreateGuest.markAllAsTouched();
+    this.formCreateGuest.updateValueAndValidity();
+
+    setTimeout(() => {
+      const firstInvalidControl = this.guestForm.nativeElement.querySelector(
+        'input.ng-invalid, textarea.ng-invalid, mat-select.ng-invalid, mat-radio-group.ng-invalid'
+      ) as HTMLElement;
+
+      if (!firstInvalidControl) {
+        return;
+      }
+
+      firstInvalidControl.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    });
   }
 
   private formatDate(dateValue: string | Date | null): string {
@@ -226,14 +243,36 @@ export class GuestFormComponent implements OnInit {
   }
 
   private buildGuestPayload(): IBodyGuest {
-    const { occupationArea, hometownState, hometownCity, livingInState, livingInCity, ...guest } = this.formCreateGuest.getRawValue();
+    const { occupationArea, otherOccupation, hometownState, hometownCity, livingInState, livingInCity, ...guest } = this.formCreateGuest.getRawValue();
 
-    return {
+    const occupation = [...guest.occupation];
+    const otherOccupationIndex = occupation.indexOf('Write another occupation');
+
+    if (otherOccupationIndex !== -1) {
+      occupation.splice(otherOccupationIndex, 1);
+
+      if (otherOccupation?.trim()) {
+        occupation.push(otherOccupation.trim());
+      }
+    }
+
+    const payload = {
       ...guest,
+      occupation,
       birthDate: this.formatDate(guest.birthDate),
       hometown: [hometownCity?.name, hometownState?.name].filter(Boolean).join(', '),
       livingIn: [livingInCity?.name, livingInState?.name].filter(Boolean).join(', '),
     };
+
+    if (!guest.rating) {
+      delete payload.rating;
+    }
+
+    if (!guest.birthDate) {
+      delete payload.birthDate;
+    }
+
+    return payload;
   }
 
   getMaxLength(controlName: string): number {

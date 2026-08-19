@@ -1,7 +1,7 @@
 <h1>guest form</h1>
 
 <div class="ctn-form">
-  <form [formGroup]="formCreateGuest" (ngSubmit)="onSubmit()">
+  <form #guestForm [formGroup]="formCreateGuest">
     <!-- FULL NAME -->
     <mat-form-field appearance="outline">
       <mat-label>Full Name</mat-label>
@@ -89,7 +89,7 @@
       <mat-datepicker-toggle matSuffix [for]="birthPicker"></mat-datepicker-toggle>
       <mat-datepicker #birthPicker></mat-datepicker>
 
-      <mat-error *ngIf="f['birthDate'].hasError('required')"> Birth Date is required </mat-error>
+      <!-- <mat-error *ngIf="f['birthDate'].hasError('required')"> Birth Date is required </mat-error> -->
     </mat-form-field>
 
     <!-- GENDER -->
@@ -102,7 +102,7 @@
         <mat-radio-button value="trans">Trans</mat-radio-button>
       </mat-radio-group>
 
-      <!-- <mat-error *ngIf="f['gender'].hasError('required')"> Gender is required </mat-error> -->
+      <div class="error-msg" *ngIf="f['gender'].hasError('required') && f['gender'].touched">Gender is required</div>
     </section>
 
     <!-- HOMETOWN COUNTRY -->
@@ -279,6 +279,19 @@
       </mat-select>
     </mat-form-field>
 
+    <!-- OTHER OCCUPATION -->
+    <mat-form-field
+      appearance="outline"
+      *ngIf="f['occupation'].value?.includes('Write another occupation')"
+      class="select-field"
+    >
+      <mat-label>Write your occupation</mat-label>
+
+      <mat-icon matPrefix>edit</mat-icon>
+
+      <input matInput formControlName="otherOccupation" placeholder="Enter your occupation" maxlength="100" />
+    </mat-form-field>
+
     <!-- CHECKBOXES -->
     <section class="card-section checkbox-group">
       <!-- FIRST TIME -->
@@ -293,16 +306,20 @@
 
     <!-- RATING -->
     <section class="rating rating full-row">
-      <mat-icon
-        *ngFor="let star of stars"
-        class="star material-symbols-outlined"
-        [class.active]="star <= (hoverRating || f['rating'].value)"
-        (mouseenter)="hoverRating = star"
-        (mouseleave)="hoverRating = 0"
-        (click)="starsRating(star)"
-      >
-        star
-      </mat-icon>
+      <div class="rating-content">
+        <div class="rating-stars">
+          <mat-icon
+            *ngFor="let star of stars"
+            class="star material-symbols-outlined"
+            [class.active]="star <= (hoverRating || f['rating'].value)"
+            (mouseenter)="hoverRating = star"
+            (mouseleave)="hoverRating = 0"
+            (click)="starsRating(star)"
+          >
+            star
+          </mat-icon>
+        </div>
+      </div>
 
       <div class="rating-msg">
         {{ getRatingMsg() }}
@@ -339,7 +356,10 @@
 
         <mat-hint align="end"> {{ gifts.length }}/15 gifts </mat-hint>
       </mat-form-field>
-      <button type="button" (click)="clearGiftInput()">clean</button>
+      <button type="button" mat-stroked-button class="btn-clear-gifts" (click)="clearGiftInput()">
+        <mat-icon>delete</mat-icon>
+        Clear
+      </button>
     </div>
 
     <!-- THEIR REFERENCE -->

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, QueryList, ViewChild, ViewChildren, OnInit, OnChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, QueryList, ViewChild, ViewChildren, OnChanges } from '@angular/core';
 
 // Interfaces
 import { IGroupEdit, IGuestDetail, IGuestsFormSubmit } from '@interfaces/guests.interface';
@@ -17,7 +17,9 @@ import { AlertsService } from '@services/alerts.service';
 })
 export class GuestsFormComponent implements OnChanges {
   @ViewChild(TripFormComponent) tripFormComponent!: TripFormComponent;
-  @ViewChildren(GuestFormComponent) guestForms!: QueryList<GuestFormComponent>;
+
+  @ViewChildren(GuestFormComponent)
+  guestForms!: QueryList<GuestFormComponent>;
 
   @Output() submitForm = new EventEmitter<IGuestsFormSubmit>();
 
@@ -40,7 +42,9 @@ export class GuestsFormComponent implements OnChanges {
   constructor(private _alerts: AlertsService) {}
 
   ngOnChanges(): void {
-    if (this.mode === 'edit') this.loadData();
+    if (this.mode === 'edit') {
+      this.loadData();
+    }
   }
 
   private loadData(): void {
@@ -72,20 +76,65 @@ export class GuestsFormComponent implements OnChanges {
   }
 
   submit(): void {
-    if (!this.selectedGroupType) return;
+    if (!this.selectedGroupType) {
+      return;
+    }
 
+    // 1 Marcar Trip Form como touched
+    this.tripFormComponent.formTrip.markAllAsTouched();
+    this.tripFormComponent.formTrip.updateValueAndValidity();
+
+    // 2 Marcar todos los Guest Forms como touched
+    const guestForms = this.guestForms.toArray();
+
+    guestForms.forEach(form => {
+      form.formCreateGuest.markAllAsTouched();
+      form.formCreateGuest.updateValueAndValidity();
+    });
+
+    // 3 Verificar si Trip es inválido
+    if (this.tripFormComponent.formTrip.invalid) {
+      this.tripFormComponent.scrollToFirstInvalidControl();
+      return;
+    }
+
+    // 4 Verificar si algún Guest Form es inválido
+    const firstInvalidForm = guestForms.find(form => form.formCreateGuest.invalid);
+
+    if (firstInvalidForm) {
+      firstInvalidForm.scrollToFirstInvalidControl();
+      return;
+    }
+
+    // 5 Todo es válido
     const trip = this.tripFormComponent.getFormValue();
-    const guests = this.guestForms.toArray().map(form => form.getFormValue());
 
-    this.submitForm.emit({ groupType: this.selectedGroupType, trip, guests });
+    const guests = guestForms.map(form => form.getFormValue());
+
+    this.submitForm.emit({
+      groupType: this.selectedGroupType,
+      trip,
+      guests,
+    });
   }
 
   addGuestForm(): void {
     if (this.formsToShow >= this.limitGroupMembers) {
-      this._alerts.showToast({ icon: 'warning', title: 'You can add max 5 members' });
+      this._alerts.showToast({
+        icon: 'warning',
+        title: 'You can add max 5 members',
+      });
+
       return;
     }
 
     this.formsToShow++;
   }
+
+  // get isFormInvalid(): boolean {
+  //   const tripInvalid = this.tripFormComponent?.formTrip.invalid ?? true;
+  //   const guestInvalid = this.guestForms?.some(form => form.formCreateGuest.invalid) ?? true;
+
+  //   return tripInvalid || guestInvalid;
+  // }
 }

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, Input, OnInit } from '@angular/core';
+import { Component, DestroyRef, ElementRef, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -11,6 +11,7 @@ import { IGroupMember, IGuestDetail, ITripDetail } from '@interfaces/guests.inte
   styleUrls: ['./trip-form.component.css'],
 })
 export class TripFormComponent implements OnInit {
+  @ViewChild('tripFormElement', { static: false }) tripFormElement!: ElementRef<HTMLFormElement>;
   @Input() trip?: IGuestDetail | IGroupMember;
 
   //Form Trip
@@ -61,14 +62,16 @@ export class TripFormComponent implements OnInit {
 
   // Nights
   private onStayed(): void {
+    const stayedCtrl = this.formTrip.get('stayed');
     const nightsCtrl = this.formTrip.get('nights');
 
-    this.formTrip
-      .get('stayed')
-      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(stayed => {
-        stayed ? nightsCtrl?.enable() : nightsCtrl?.disable();
-      });
+    if (!stayedCtrl || !nightsCtrl) return;
+
+    stayedCtrl.value ? nightsCtrl.enable() : nightsCtrl.disable();
+
+    stayedCtrl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(stayed => {
+      stayed ? nightsCtrl?.enable() : nightsCtrl?.disable();
+    });
   }
 
   btnSetToday(): void {
@@ -82,10 +85,29 @@ export class TripFormComponent implements OnInit {
   // Payload
   private buildTripPayload() {
     const trip = this.formTrip.getRawValue();
-
-    return {
+    const payload = {
       ...trip,
       visitedDate: this.formatDate(trip.visitedDate),
     };
+
+    if (!trip.stayed) {
+      delete payload.nights;
+    }
+    console.log('TRIP FORM VALUE:', trip);
+    console.log('TRIP PAYLOAD:', payload);
+    return payload;
+  }
+
+  scrollToFirstInvalidControl(): void {
+    const firstInvalidControl = this.tripFormElement.nativeElement.querySelector('input.ng-invalid, textarea.ng-invalid, mat-select.ng-invalid') as HTMLElement;
+
+    if (!firstInvalidControl) {
+      return;
+    }
+
+    firstInvalidControl.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    });
   }
 }

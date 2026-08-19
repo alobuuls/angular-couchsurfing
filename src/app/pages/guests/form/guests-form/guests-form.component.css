@@ -5,3 +5,8 @@
   width: 100%;
   flex-direction: column;
 }
+
+#btn-create-guest {
+  display: block;
+  margin: auto;
+}

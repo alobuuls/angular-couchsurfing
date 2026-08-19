@@ -51,5 +51,5 @@ export const OCCUPATIONS_BY_AREA: Record<string, string[]> = {
 
   science: ['Biologist', 'Chemist', 'Physicist', 'Research Scientist', 'Laboratory Technician'],
 
-  other: ['Student', 'Freelancer', 'Entrepreneur', 'Consultant', 'Self-Employed', 'Retired', 'Unemployed'],
+  other: ['Student', 'Freelancer', 'Entrepreneur', 'Consultant', 'Self-Employed', 'Retired', 'Unemployed', 'Write another occupation'],
 };
