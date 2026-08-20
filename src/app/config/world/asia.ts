@@ -2,134 +2,153 @@ import { ICountry } from '@type/word.types';
 
 export const ASIA = {
   /*** MIDDLE EAST ASIA ***/
+
   arm: {
     flag: 'am',
     name: 'Armenia',
     prefix: '+374',
     continent: 'asia',
-    region: 'middle_east_asia',
+    region: 'west_asia',
   },
+
   aze: {
     flag: 'az',
     name: 'Azerbaijan',
     prefix: '+994',
     continent: 'asia',
-    region: 'middle_east_asia',
+    region: 'west_asia',
   },
+
   bhr: {
     flag: 'bh',
     name: 'Bahrain',
     prefix: '+973',
     continent: 'asia',
-    region: 'middle_east_asia',
+    region: 'west_asia',
   },
+
   geo: {
     flag: 'ge',
     name: 'Georgia',
     prefix: '+995',
     continent: 'asia',
-    region: 'middle_east_asia',
+    region: 'west_asia',
   },
+
   irn: {
     flag: 'ir',
     name: 'Iran',
     prefix: '+98',
     continent: 'asia',
-    region: 'middle_east_asia',
+    region: 'west_asia',
   },
+
   irq: {
     flag: 'iq',
     name: 'Iraq',
     prefix: '+964',
     continent: 'asia',
-    region: 'middle_east_asia',
+    region: 'west_asia',
   },
+
   isr: {
     flag: 'il',
     name: 'Israel',
     prefix: '+972',
     continent: 'asia',
-    region: 'middle_east_asia',
+    region: 'west_asia',
   },
+
   jor: {
     flag: 'jo',
     name: 'Jordan',
     prefix: '+962',
     continent: 'asia',
-    region: 'middle_east_asia',
+    region: 'west_asia',
   },
+
   kwt: {
     flag: 'kw',
     name: 'Kuwait',
     prefix: '+965',
     continent: 'asia',
-    region: 'middle_east_asia',
+    region: 'west_asia',
   },
+
   lbn: {
     flag: 'lb',
     name: 'Lebanon',
     prefix: '+961',
     continent: 'asia',
-    region: 'middle_east_asia',
+    region: 'west_asia',
   },
+
   omn: {
     flag: 'om',
     name: 'Oman',
     prefix: '+968',
     continent: 'asia',
-    region: 'middle_east_asia',
+    region: 'west_asia',
   },
+
   pse: {
     flag: 'ps',
     name: 'Palestine',
     prefix: '+970',
     continent: 'asia',
-    region: 'middle_east_asia',
+    region: 'west_asia',
   },
+
   qat: {
     flag: 'qa',
     name: 'Qatar',
     prefix: '+974',
     continent: 'asia',
-    region: 'middle_east_asia',
+    region: 'west_asia',
   },
+
   sau: {
     flag: 'sa',
     name: 'Saudi Arabia',
     prefix: '+966',
     continent: 'asia',
-    region: 'middle_east_asia',
+    region: 'west_asia',
   },
+
   syr: {
     flag: 'sy',
     name: 'Syria',
     prefix: '+963',
     continent: 'asia',
-    region: 'middle_east_asia',
+    region: 'west_asia',
   },
+
   tur: {
     flag: 'tr',
     name: 'Türkiye',
     prefix: '+90',
     continent: 'asia',
-    region: 'middle_east_asia',
+    region: 'west_asia',
   },
+
   are: {
     flag: 'ae',
     name: 'United Arab Emirates',
     prefix: '+971',
     continent: 'asia',
-    region: 'middle_east_asia',
+    region: 'west_asia',
   },
+
   yem: {
     flag: 'ye',
     name: 'Yemen',
     prefix: '+967',
     continent: 'asia',
-    region: 'middle_east_asia',
+    region: 'west_asia',
   },
 
   /*** SOUTHEAST ASIA ***/
+
   brn: {
     flag: 'bn',
     name: 'Brunei',
@@ -137,6 +156,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'southeast_asia',
   },
+
   khm: {
     flag: 'kh',
     name: 'Cambodia',
@@ -144,6 +164,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'southeast_asia',
   },
+
   idn: {
     flag: 'id',
     name: 'Indonesia',
@@ -151,6 +172,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'southeast_asia',
   },
+
   lao: {
     flag: 'la',
     name: 'Laos',
@@ -158,6 +180,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'southeast_asia',
   },
+
   mys: {
     flag: 'my',
     name: 'Malaysia',
@@ -165,6 +188,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'southeast_asia',
   },
+
   mmr: {
     flag: 'mm',
     name: 'Myanmar',
@@ -172,6 +196,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'southeast_asia',
   },
+
   phl: {
     flag: 'ph',
     name: 'Philippines',
@@ -179,6 +204,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'southeast_asia',
   },
+
   sgp: {
     flag: 'sg',
     name: 'Singapore',
@@ -186,6 +212,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'southeast_asia',
   },
+
   tha: {
     flag: 'th',
     name: 'Thailand',
@@ -193,6 +220,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'southeast_asia',
   },
+
   tls: {
     flag: 'tl',
     name: 'Timor-Leste',
@@ -200,6 +228,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'southeast_asia',
   },
+
   vnm: {
     flag: 'vn',
     name: 'Vietnam',
@@ -209,6 +238,7 @@ export const ASIA = {
   },
 
   /*** EAST ASIA ***/
+
   chn: {
     flag: 'cn',
     name: 'China',
@@ -216,6 +246,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'east_asia',
   },
+
   hkg: {
     flag: 'hk',
     name: 'Hong Kong',
@@ -223,6 +254,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'east_asia',
   },
+
   jpn: {
     flag: 'jp',
     name: 'Japan',
@@ -230,6 +262,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'east_asia',
   },
+
   kor: {
     flag: 'kr',
     name: 'South Korea',
@@ -237,6 +270,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'east_asia',
   },
+
   prk: {
     flag: 'kp',
     name: 'North Korea',
@@ -244,6 +278,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'east_asia',
   },
+
   mac: {
     flag: 'mo',
     name: 'Macao',
@@ -251,6 +286,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'east_asia',
   },
+
   mng: {
     flag: 'mn',
     name: 'Mongolia',
@@ -258,6 +294,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'east_asia',
   },
+
   twn: {
     flag: 'tw',
     name: 'Taiwan',
@@ -267,6 +304,7 @@ export const ASIA = {
   },
 
   /*** SOUTH ASIA ***/
+
   afg: {
     flag: 'af',
     name: 'Afghanistan',
@@ -274,6 +312,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'south_asia',
   },
+
   bgd: {
     flag: 'bd',
     name: 'Bangladesh',
@@ -281,6 +320,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'south_asia',
   },
+
   btn: {
     flag: 'bt',
     name: 'Bhutan',
@@ -288,6 +328,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'south_asia',
   },
+
   ind: {
     flag: 'in',
     name: 'India',
@@ -295,6 +336,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'south_asia',
   },
+
   mdv: {
     flag: 'mv',
     name: 'Maldives',
@@ -302,6 +344,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'south_asia',
   },
+
   npl: {
     flag: 'np',
     name: 'Nepal',
@@ -309,6 +352,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'south_asia',
   },
+
   pak: {
     flag: 'pk',
     name: 'Pakistan',
@@ -316,6 +360,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'south_asia',
   },
+
   lka: {
     flag: 'lk',
     name: 'Sri Lanka',
@@ -325,6 +370,7 @@ export const ASIA = {
   },
 
   /*** CENTRAL ASIA ***/
+
   kaz: {
     flag: 'kz',
     name: 'Kazakhstan',
@@ -332,6 +378,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'central_asia',
   },
+
   kgz: {
     flag: 'kg',
     name: 'Kyrgyzstan',
@@ -339,6 +386,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'central_asia',
   },
+
   tkm: {
     flag: 'tm',
     name: 'Turkmenistan',
@@ -346,6 +394,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'central_asia',
   },
+
   uzb: {
     flag: 'uz',
     name: 'Uzbekistan',
@@ -353,6 +402,7 @@ export const ASIA = {
     continent: 'asia',
     region: 'central_asia',
   },
+
   tjk: {
     flag: 'tj',
     name: 'Tajikistan',

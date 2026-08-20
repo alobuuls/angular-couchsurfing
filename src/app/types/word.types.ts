@@ -13,19 +13,37 @@ export type CountriesCodes = keyof typeof WORLD;
 export type Continents = 'africa' | 'america' | 'asia' | 'europe' | 'oceania';
 
 export type Regions =
-  | 'africa'
+  // 🌍 Africa
+  | 'northern_africa'
+  | 'western_africa'
+  | 'central_africa'
+  | 'eastern_africa'
+  | 'southern_africa'
+
+  // 🌎 America
   | 'north_america'
-  | 'central_america'
-  | 'caribbean'
   | 'south_america'
-  | 'middle_east_asia'
-  | 'south_asia'
+  | 'caribbean'
+  | 'central_america'
+
+  // 🌏 Asia
   | 'central_asia'
   | 'east_asia'
+  | 'south_asia'
   | 'southeast_asia'
-  | 'scandinavia'
-  | 'west_europe'
-  | 'eastern_europe'
+  | 'west_asia'
+
+  // 🇪🇺 Europe
   | 'northern_europe'
+  | 'scandinavia'
+  | 'baltics'
+  | 'central_europe'
+  | 'western_europe'
+  | 'eastern_europe'
   | 'southern_europe'
+
+  // 🌊 Oceania
+  | 'melanesia'
+  | 'micronesia'
+  | 'polinesia'
   | 'oceania';

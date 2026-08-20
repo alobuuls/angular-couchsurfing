@@ -2,6 +2,7 @@ import { ICountry } from '@type/word.types';
 
 export const AMERICA = {
   /*** NORTH AMERICA ***/
+
   can: {
     flag: 'ca',
     name: 'Canada',
@@ -9,6 +10,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'north_america',
   },
+
   mex: {
     flag: 'mx',
     name: 'Mexico',
@@ -16,6 +18,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'north_america',
   },
+
   usa: {
     flag: 'us',
     name: 'United States',
@@ -23,7 +26,9 @@ export const AMERICA = {
     continent: 'america',
     region: 'north_america',
   },
-  /*** CARIBEAN ***/
+
+  /*** CARIBBEAN ***/
+
   abw: {
     flag: 'aw',
     name: 'Aruba',
@@ -31,6 +36,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   atg: {
     flag: 'ag',
     name: 'Antigua and Barbuda',
@@ -38,6 +44,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   bhs: {
     flag: 'bs',
     name: 'Bahamas',
@@ -45,6 +52,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   brb: {
     flag: 'bb',
     name: 'Barbados',
@@ -52,6 +60,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   vgb: {
     flag: 'vg',
     name: 'British Virgin Islands',
@@ -59,6 +68,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   cub: {
     flag: 'cu',
     name: 'Cuba',
@@ -66,6 +76,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   cuw: {
     flag: 'cw',
     name: 'Curaçao',
@@ -73,6 +84,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   cym: {
     flag: 'ky',
     name: 'Cayman Islands',
@@ -80,6 +92,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   dma: {
     flag: 'dm',
     name: 'Dominica',
@@ -87,6 +100,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   dom: {
     flag: 'do',
     name: 'Dominican Republic',
@@ -94,6 +108,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   glp: {
     flag: 'gp',
     name: 'Guadeloupe',
@@ -101,6 +116,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   grd: {
     flag: 'gd',
     name: 'Grenada',
@@ -108,6 +124,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   hti: {
     flag: 'ht',
     name: 'Haiti',
@@ -115,6 +132,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   jam: {
     flag: 'jm',
     name: 'Jamaica',
@@ -122,6 +140,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   msr: {
     flag: 'ms',
     name: 'Montserrat',
@@ -129,6 +148,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   mtq: {
     flag: 'mq',
     name: 'Martinique',
@@ -136,6 +156,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   pri: {
     flag: 'pr',
     name: 'Puerto Rico',
@@ -143,6 +164,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   kna: {
     flag: 'kn',
     name: 'Saint Kitts and Nevis',
@@ -150,6 +172,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   lca: {
     flag: 'lc',
     name: 'Saint Lucia',
@@ -157,6 +180,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   sxm: {
     flag: 'sx',
     name: 'Sint Maarten',
@@ -164,6 +188,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   tca: {
     flag: 'tc',
     name: 'Turks and Caicos Islands',
@@ -171,6 +196,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   tto: {
     flag: 'tt',
     name: 'Trinidad and Tobago',
@@ -178,6 +204,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   vct: {
     flag: 'vc',
     name: 'Saint Vincent and the Grenadines',
@@ -185,6 +212,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   vir: {
     flag: 'vi',
     name: 'U.S. Virgin Islands',
@@ -192,7 +220,9 @@ export const AMERICA = {
     continent: 'america',
     region: 'caribbean',
   },
+
   /*** CENTRAL AMERICA ***/
+
   blz: {
     flag: 'bz',
     name: 'Belize',
@@ -200,6 +230,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'central_america',
   },
+
   cri: {
     flag: 'cr',
     name: 'Costa Rica',
@@ -207,6 +238,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'central_america',
   },
+
   slv: {
     flag: 'sv',
     name: 'El Salvador',
@@ -214,6 +246,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'central_america',
   },
+
   gtm: {
     flag: 'gt',
     name: 'Guatemala',
@@ -221,6 +254,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'central_america',
   },
+
   hnd: {
     flag: 'hn',
     name: 'Honduras',
@@ -228,6 +262,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'central_america',
   },
+
   nic: {
     flag: 'ni',
     name: 'Nicaragua',
@@ -235,6 +270,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'central_america',
   },
+
   pan: {
     flag: 'pa',
     name: 'Panama',
@@ -242,7 +278,9 @@ export const AMERICA = {
     continent: 'america',
     region: 'central_america',
   },
+
   /*** SOUTH AMERICA ***/
+
   arg: {
     flag: 'ar',
     name: 'Argentina',
@@ -250,6 +288,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'south_america',
   },
+
   bol: {
     flag: 'bo',
     name: 'Bolivia',
@@ -257,6 +296,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'south_america',
   },
+
   bra: {
     flag: 'br',
     name: 'Brazil',
@@ -264,6 +304,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'south_america',
   },
+
   chl: {
     flag: 'cl',
     name: 'Chile',
@@ -271,6 +312,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'south_america',
   },
+
   col: {
     flag: 'co',
     name: 'Colombia',
@@ -278,6 +320,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'south_america',
   },
+
   ecu: {
     flag: 'ec',
     name: 'Ecuador',
@@ -285,6 +328,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'south_america',
   },
+
   flk: {
     flag: 'fk',
     name: 'Falkland Islands',
@@ -292,6 +336,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'south_america',
   },
+
   guf: {
     flag: 'gf',
     name: 'French Guiana',
@@ -299,6 +344,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'south_america',
   },
+
   guy: {
     flag: 'gy',
     name: 'Guyana',
@@ -306,6 +352,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'south_america',
   },
+
   per: {
     flag: 'pe',
     name: 'Peru',
@@ -313,6 +360,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'south_america',
   },
+
   pry: {
     flag: 'py',
     name: 'Paraguay',
@@ -320,6 +368,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'south_america',
   },
+
   sur: {
     flag: 'sr',
     name: 'Suriname',
@@ -327,6 +376,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'south_america',
   },
+
   ury: {
     flag: 'uy',
     name: 'Uruguay',
@@ -334,6 +384,7 @@ export const AMERICA = {
     continent: 'america',
     region: 'south_america',
   },
+
   ven: {
     flag: 've',
     name: 'Venezuela',

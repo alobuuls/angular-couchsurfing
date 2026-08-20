@@ -2,6 +2,7 @@ import { ICountry } from '@type/word.types';
 
 export const EUROPE = {
   /*** SCANDINAVIA ***/
+
   dnk: {
     flag: 'dk',
     name: 'Denmark',
@@ -9,6 +10,7 @@ export const EUROPE = {
     continent: 'europe',
     region: 'scandinavia',
   },
+
   nor: {
     flag: 'no',
     name: 'Norway',
@@ -16,6 +18,7 @@ export const EUROPE = {
     continent: 'europe',
     region: 'scandinavia',
   },
+
   swe: {
     flag: 'se',
     name: 'Sweden',
@@ -25,71 +28,81 @@ export const EUROPE = {
   },
 
   /*** WEST EUROPE ***/
+
   aut: {
     flag: 'at',
     name: 'Austria',
     prefix: '+43',
     continent: 'europe',
-    region: 'west_europe',
+    region: 'central_europe',
   },
+
   bel: {
     flag: 'be',
     name: 'Belgium',
     prefix: '+32',
     continent: 'europe',
-    region: 'west_europe',
+    region: 'western_europe',
   },
+
   fra: {
     flag: 'fr',
     name: 'France',
     prefix: '+33',
     continent: 'europe',
-    region: 'west_europe',
+    region: 'western_europe',
   },
+
   deu: {
     flag: 'de',
     name: 'Germany',
     prefix: '+49',
     continent: 'europe',
-    region: 'west_europe',
+    region: 'central_europe',
   },
+
   lie: {
     flag: 'li',
     name: 'Liechtenstein',
     prefix: '+423',
     continent: 'europe',
-    region: 'west_europe',
+    region: 'central_europe',
   },
+
   lux: {
     flag: 'lu',
     name: 'Luxembourg',
     prefix: '+352',
     continent: 'europe',
-    region: 'west_europe',
+    region: 'western_europe',
   },
+
   mco: {
     flag: 'mc',
     name: 'Monaco',
     prefix: '+377',
     continent: 'europe',
-    region: 'west_europe',
+    region: 'western_europe',
   },
+
   nld: {
     flag: 'nl',
     name: 'Netherlands',
     prefix: '+31',
     continent: 'europe',
-    region: 'west_europe',
+    region: 'western_europe',
   },
+
   che: {
     flag: 'ch',
     name: 'Switzerland',
     prefix: '+41',
     continent: 'europe',
-    region: 'west_europe',
+    region: 'central_europe',
   },
 
   /*** SOUTHERN EUROPE ***/
+
   alb: {
     flag: 'al',
     name: 'Albania',
@@ -97,6 +110,7 @@ export const EUROPE = {
     continent: 'europe',
     region: 'southern_europe',
   },
+
   and: {
     flag: 'ad',
     name: 'Andorra',
@@ -104,6 +118,7 @@ export const EUROPE = {
     continent: 'europe',
     region: 'southern_europe',
   },
+
   bih: {
     flag: 'ba',
     name: 'Bosnia and Herzegovina',
@@ -111,6 +126,7 @@ export const EUROPE = {
     continent: 'europe',
     region: 'southern_europe',
   },
+
   hrv: {
     flag: 'hr',
     name: 'Croatia',
@@ -118,6 +134,7 @@ export const EUROPE = {
     continent: 'europe',
     region: 'southern_europe',
   },
+
   grc: {
     flag: 'gr',
     name: 'Greece',
@@ -125,6 +142,7 @@ export const EUROPE = {
     continent: 'europe',
     region: 'southern_europe',
   },
+
   ita: {
     flag: 'it',
     name: 'Italy',
@@ -132,6 +150,7 @@ export const EUROPE = {
     continent: 'europe',
     region: 'southern_europe',
   },
+
   mlt: {
     flag: 'mt',
     name: 'Malta',
@@ -139,6 +158,7 @@ export const EUROPE = {
     continent: 'europe',
     region: 'southern_europe',
   },
+
   mne: {
     flag: 'me',
     name: 'Montenegro',
@@ -146,6 +166,7 @@ export const EUROPE = {
     continent: 'europe',
     region: 'southern_europe',
   },
+
   prt: {
     flag: 'pt',
     name: 'Portugal',
@@ -153,6 +174,7 @@ export const EUROPE = {
     continent: 'europe',
     region: 'southern_europe',
   },
+
   smr: {
     flag: 'sm',
     name: 'San Marino',
@@ -160,6 +182,7 @@ export const EUROPE = {
     continent: 'europe',
     region: 'southern_europe',
   },
+
   srb: {
     flag: 'rs',
     name: 'Serbia',
@@ -167,13 +190,15 @@ export const EUROPE = {
     continent: 'europe',
     region: 'southern_europe',
   },
+
   svn: {
     flag: 'si',
     name: 'Slovenia',
     prefix: '+386',
     continent: 'europe',
-    region: 'southern_europe',
+    region: 'central_europe',
   },
+
   esp: {
     flag: 'es',
     name: 'Spain',
@@ -181,6 +206,7 @@ export const EUROPE = {
     continent: 'europe',
     region: 'southern_europe',
   },
+
   mkd: {
     flag: 'mk',
     name: 'North Macedonia',
@@ -190,6 +216,7 @@ export const EUROPE = {
   },
 
   /*** NORTHERN EUROPE ***/
+
   gbr: {
     flag: 'gb',
     name: 'England',
@@ -197,6 +224,7 @@ export const EUROPE = {
     continent: 'europe',
     region: 'northern_europe',
   },
+
   sct: {
     flag: 'gb-sct',
     name: 'Scotland',
@@ -204,20 +232,23 @@ export const EUROPE = {
     continent: 'europe',
     region: 'northern_europe',
   },
+
   est: {
     flag: 'ee',
     name: 'Estonia',
     prefix: '+372',
     continent: 'europe',
-    region: 'northern_europe',
+    region: 'baltics',
   },
+
   fin: {
     flag: 'fi',
     name: 'Finland',
     prefix: '+358',
     continent: 'europe',
-    region: 'northern_europe',
+    region: 'scandinavia',
   },
+
   irl: {
     flag: 'ie',
     name: 'Ireland',
@@ -225,27 +256,31 @@ export const EUROPE = {
     continent: 'europe',
     region: 'northern_europe',
   },
+
   isl: {
     flag: 'is',
     name: 'Iceland',
     prefix: '+354',
     continent: 'europe',
-    region: 'northern_europe',
+    region: 'scandinavia',
   },
+
   lva: {
     flag: 'lv',
     name: 'Latvia',
     prefix: '+371',
     continent: 'europe',
-    region: 'northern_europe',
+    region: 'baltics',
   },
+
   ltu: {
     flag: 'lt',
     name: 'Lithuania',
     prefix: '+370',
     continent: 'europe',
-    region: 'northern_europe',
+    region: 'baltics',
   },
+
   nir: {
     flag: 'gb-ni',
     name: 'Northern Ireland',
@@ -253,6 +288,7 @@ export const EUROPE = {
     continent: 'europe',
     region: 'northern_europe',
   },
+
   wls: {
     flag: 'gb-wl',
     name: 'Wales',
@@ -262,6 +298,7 @@ export const EUROPE = {
   },
 
   /*** EASTERN EUROPE ***/
+
   blr: {
     flag: 'by',
     name: 'Belarus',
@@ -269,6 +306,7 @@ export const EUROPE = {
     continent: 'europe',
     region: 'eastern_europe',
   },
+
   bgr: {
     flag: 'bg',
     name: 'Bulgaria',
@@ -276,20 +314,23 @@ export const EUROPE = {
     continent: 'europe',
     region: 'eastern_europe',
   },
+
   cze: {
     flag: 'cz',
     name: 'Czech Republic',
     prefix: '+420',
     continent: 'europe',
-    region: 'eastern_europe',
+    region: 'central_europe',
   },
+
   hun: {
     flag: 'hu',
     name: 'Hungary',
     prefix: '+36',
     continent: 'europe',
-    region: 'eastern_europe',
+    region: 'central_europe',
   },
+
   mda: {
     flag: 'md',
     name: 'Moldova',
@@ -297,13 +338,15 @@ export const EUROPE = {
     continent: 'europe',
     region: 'eastern_europe',
   },
+
   pol: {
     flag: 'pl',
     name: 'Poland',
     prefix: '+48',
     continent: 'europe',
-    region: 'eastern_europe',
+    region: 'central_europe',
   },
+
   rou: {
     flag: 'ro',
     name: 'Romania',
@@ -311,6 +354,7 @@ export const EUROPE = {
     continent: 'europe',
     region: 'eastern_europe',
   },
+
   rus: {
     flag: 'ru',
     name: 'Russia',
@@ -318,13 +362,15 @@ export const EUROPE = {
     continent: 'europe',
     region: 'eastern_europe',
   },
+
   svk: {
     flag: 'sk',
     name: 'Slovakia',
     prefix: '+421',
     continent: 'europe',
-    region: 'eastern_europe',
+    region: 'central_europe',
   },
+
   ukr: {
     flag: 'ua',
     name: 'Ukraine',
