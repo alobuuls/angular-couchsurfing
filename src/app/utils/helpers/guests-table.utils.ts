@@ -4,7 +4,7 @@ export const isGroup = (guest: IGuestListItem): guest is IGroupDetail => {
   return 'members' in guest;
 };
 
-export const collapseIfSame = <T>(items: T[], getValue: (item: T) => any): any[] => {
+export const collapseIfSame = <T, R>(items: T[], getValue: (item: T) => R): R[] => {
   if (!items || items.length === 0) return [];
   const values = items.map(getValue);
   const first = values[0];

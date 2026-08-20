@@ -26,11 +26,11 @@ export class CityService {
     });
   }
 
-  getStates(countryCode: string): Observable<any> {
-    return this.http.get(`${this.enpoint}/countries/${countryCode}/states`, { headers: this.headers });
+  getStates(countryCode: string): Observable<IState[]> {
+    return this.http.get<IState[]>(`${this.enpoint}/countries/${countryCode}/states`, { headers: this.headers });
   }
 
-  getCities(countryCode: string, stateCode: string): Observable<any> {
-    return this.http.get(`${this.enpoint}/countries/${countryCode}/states/${stateCode}/cities`, { headers: this.headers });
+  getCities(countryCode: string, stateCode: string): Observable<ICity[]> {
+    return this.http.get<ICity[]>(`${this.enpoint}/countries/${countryCode}/states/${stateCode}/cities`, { headers: this.headers });
   }
 }

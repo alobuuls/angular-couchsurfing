@@ -133,6 +133,6 @@ export type IGuestCreateResp = IApiCsOkResp<IGuestDetail>;
 // Post Body
 export type IBodyGuest = Omit<IGuestDetail, 'guestId'>;
 
-export type IGuestCreatePayload = IBodyGuest | IGroupDetail;
-
 export type IDetailResp = IGuestDetail | IGroupDetail;
+
+export type IGroupCreatePayload = Omit<IGroupDetail, 'groupId'>;

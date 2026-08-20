@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 
 // Interfaces
-import { IGuestTableRow, IGuestTableRowWithIndex } from '@interfaces/data-structure-api';
+import { IGuestTableMember, IGuestTableRow, IGuestTableRowWithIndex } from '@interfaces/data-structure-api';
 
 // Utils
 import { compare } from '@helpers/sort.utils';
@@ -101,7 +101,7 @@ export class GuestSortService {
     return 0;
   }
 
-  private getSortValue(guest: IGuestTableRow, field: string, asc: boolean): any {
+  private getSortValue(guest: IGuestTableRow, field: string, asc: boolean): string | number {
     const values =
       guest.people
         ?.map(person => this.personAccessors[field]?.(person))
@@ -115,7 +115,7 @@ export class GuestSortService {
     return this.sortAccessors[field]?.(guest) ?? guest[field as keyof IGuestTableRow];
   }
 
-  private personAccessors: Record<string, (person: any) => any> = {
+  private personAccessors: Record<string, (person: IGuestTableMember) => string | number> = {
     fullName: p => p.fullName?.toLowerCase() ?? '',
     gender: p => p.gender?.toLowerCase() ?? '',
     continent: p => p.continent?.toLowerCase() ?? '',
@@ -124,11 +124,11 @@ export class GuestSortService {
     rating: p => p.rating ?? 0,
   };
 
-  private sortAccessors: Record<string, (guest: any) => any> = {
+  private sortAccessors: Record<string, (guest: IGuestTableRow) => string | number> = {
     nights: guest => guest.nights ?? 0,
     visitedDate: guest => new Date(guest.visitedDate ?? 0).getTime(),
-    birth_date: guest => Math.min(...(guest.people?.map((p: any) => (p.age === '?' || p.age == null ? 999 : Number(p.age))) ?? [999])),
-    hangOut: guest => (guest.people?.some((p: any) => p.hangOut) ? 1 : 0),
+    birth_date: guest => Math.min(...(guest.people?.map(p => (p.age === '?' || p.age == null ? 999 : Number(p.age))) ?? [999])),
+    hangOut: guest => (guest.people?.some(p => p.hangOut) ? 1 : 0),
   };
 
   private getMinRating(guest: IGuestTableRowWithIndex): number {

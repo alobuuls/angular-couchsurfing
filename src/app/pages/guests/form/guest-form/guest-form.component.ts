@@ -1,5 +1,5 @@
 import { Component, DestroyRef, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 // Cdk
@@ -277,10 +277,11 @@ export class GuestFormComponent implements OnInit {
 
   getMaxLength(controlName: string): number {
     const control = this.formCreateGuest?.get(controlName);
-    if (!control || !control.validator) return 0;
 
-    // Run the validator against an artificially long mock control to grab the limit number
-    const errors = control.validator({ value: 'x'.repeat(100000) } as any);
+    if (!control || !control.validator) return 0;
+    const mockControl = new FormControl('x'.repeat(100000));
+    const errors = control.validator(mockControl);
+
     return errors?.['maxlength']?.['requiredLength'] || 0;
   }
 
@@ -449,13 +450,15 @@ export class GuestFormComponent implements OnInit {
     this.formCreateGuest.patchValue({ continent: '', region: '', hometownState: '', hometownCity: '' });
   }
 
-  filterHometowns(event: any): void {
-    const value = event.target.value?.toLowerCase() || '';
+  filterHometowns(event: Event): void {
+    const value = (event.target as HTMLInputElement).value.toLowerCase();
+
     this.filteredCountries = this.countries.filter(country => country.name.toLowerCase().includes(value));
   }
 
-  filterLiving(event: any): void {
-    const value = event.target.value?.toLowerCase() || '';
+  filterLiving(event: Event): void {
+    const value = (event.target as HTMLInputElement).value.toLowerCase();
+
     this.filteredLiving = this.countries.filter(country => country.name.toLowerCase().includes(value));
   }
 
