@@ -6,11 +6,16 @@ import { GuestsComponent } from '@pages/guests/guests.component';
 import { GuestsCreateComponent } from '@pages/guests/create/guests-create.component';
 import { GuestsDetailComponent } from '@pages/guests/detail/guests-detail.component';
 import { GuestsEditComponent } from '@pages/guests/edit/guests-edit.component';
+import { GuestsCardsComponent } from '@pages/guests/cards/guests-cards.component';
 
 const guestsRoutes: Routes = [
   {
     path: '',
     component: GuestsComponent,
+  },
+  {
+    path: 'cards',
+    component: GuestsCardsComponent,
   },
   {
     path: 'add',

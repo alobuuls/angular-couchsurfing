@@ -1,0 +1,40 @@
+<div class="ctn-cards">
+  <!-- YEARS -->
+  <div *ngFor="let year of cardsGuest" class="year-group">
+    <h2 class="year-title">
+      {{ year.year }}
+    </h2>
+
+    <!-- MONTHS -->
+    <div *ngFor="let month of year.months" class="month-group">
+      <h3 class="month-title">
+        {{ month.monthName | uppercase }}
+      </h3>
+
+      <div class="cards">
+        <ng-container *ngFor="let guest of month.guests">
+          <!-- ONE CARD PER PERSON -->
+          <div *ngFor="let p of guest.people" class="card">
+            <span class="layover"></span>
+
+            <div class="content">
+              <h2>
+                {{ p.fullName }}
+
+                <mat-icon
+                  [class.male]="p.gender === 'male'"
+                  [class.female]="p.gender === 'female'"
+                  [fontIcon]="p.gender === 'female' ? 'woman' : 'man'"
+                />
+              </h2>
+
+              <p>Lorem ipsum dor achinyer ron bulk hui heishaia</p>
+
+              <a (click)="getDetailGuest(p)"> Read more </a>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

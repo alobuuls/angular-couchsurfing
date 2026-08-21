@@ -19,6 +19,7 @@ export const mapGuestTable = (guests: IGuestListItem[]): IGuestTableRow[] => {
 
         people: members.map(m => ({
           fullName: m.fullName,
+          guestId: m.guestId,
           gender: m.gender,
           age: getAge(m.birthDate),
           continent: m.continent,
@@ -37,6 +38,7 @@ export const mapGuestTable = (guests: IGuestListItem[]): IGuestTableRow[] => {
           },
 
           hangOut: m.hangOut,
+          groupId: guest.groupId,
 
           rating: m.rating ?? 0,
         })),
@@ -53,6 +55,8 @@ export const mapGuestTable = (guests: IGuestListItem[]): IGuestTableRow[] => {
 
       people: [
         {
+          guestId: guest.guestId,
+          groupId: guest.groupId,
           fullName: guest.fullName,
           gender: guest.gender,
           age: getAge(guest.birthDate),

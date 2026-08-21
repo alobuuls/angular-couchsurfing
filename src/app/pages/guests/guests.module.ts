@@ -13,6 +13,7 @@ import { GuestFormComponent } from '@pages/guests/form/guest-form/guest-form.com
 import { TripFormComponent } from '@pages/guests/form/trip-form/trip-form.component';
 import { GuestsFormComponent } from '@pages/guests/form/guests-form/guests-form.component';
 import { GuestsTableComponent } from '@pages/guests/table/guests-table.component';
+import { GuestsCardsComponent } from '@pages/guests/cards/guests-cards.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { GuestsTableComponent } from '@pages/guests/table/guests-table.component
     TripFormComponent,
     GuestsFormComponent,
     GuestsTableComponent,
+    GuestsCardsComponent
   ],
   imports: [SharedModule, GuestsRoutingModule],
 })

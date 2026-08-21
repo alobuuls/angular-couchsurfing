@@ -33,6 +33,7 @@ export interface IGuestDetail extends ITripDetail {
   isGay: false;
   theirReference: string | null;
   myReference: string | null;
+  groupId?: string;
 }
 
 export interface IGuestFormData extends IGuestDetail {
@@ -57,7 +58,7 @@ export interface IGroupDetail extends ITripDetail {
   members: IBodyGuest[];
 }
 
-export interface IGuestTableMember {
+export interface IGuestTableMemberCard {
   fullName: string;
   gender: 'female' | 'male' | 'trans';
   age: string | null;
@@ -131,7 +132,7 @@ export type IGuestDeleteResp = IApiCsOkResp<IGuestDetail>;
 // Post
 export type IGuestCreateResp = IApiCsOkResp<IGuestDetail>;
 // Post Body
-export type IBodyGuest = Omit<IGuestDetail, 'guestId'>;
+export type IBodyGuest = IGuestDetail;
 
 export type IDetailResp = IGuestDetail | IGroupDetail;
 

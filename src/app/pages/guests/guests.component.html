@@ -103,8 +103,12 @@
     </div>
   </form>
 
-  <!-- ADD BUTTON -->
-  <div class="ctn–btn" *ngIf="vm.status === 'success' && vm.data.length">
+  <!-- CARDS BUTTON -->
+  <div class="ctn–buttons" *ngIf="vm.status === 'success' && vm.data.length">
+    <button [routerLink]="['/guests/cards']" class="btn-cards" mat-icon-button matTooltip="See cards">
+      <mat-icon fontIcon="cards_stack"></mat-icon>
+    </button>
+
     <button [routerLink]="['/guests/add']" class="btn-add" mat-icon-button matTooltip="Create Guest">
       <mat-icon fontIcon="add"></mat-icon>
     </button>
@@ -140,6 +144,7 @@
     (remove)="removeGuestConfirmation($event)"
     (whatsapp)="openWhatsapp($event)"
     (couchsurfing)="openCouchsurfing($event)"
+    (detailGuest)="getDetailForShowingMore($event)"
     (sort)="onSortChange($event)"
     (page)="onPageChange($event)"
   >

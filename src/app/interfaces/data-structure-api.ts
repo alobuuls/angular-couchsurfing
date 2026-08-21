@@ -44,6 +44,14 @@ export interface IGuestTableMember {
   hangOut: boolean;
 
   rating: number;
+
+  // FIX LATER
+  guestId?: string;
+  groupId?: string;
+  isOpen?: boolean;
+  comments?: string | null;
+  gift?: string[];
+  instagram?: string | null;
 }
 
 export type IGuestTableRow = IGuestListItem & {
@@ -66,3 +74,14 @@ export type IGuestsTableVM = Omit<GuestsVM, 'data'> & {
 };
 
 export type DataStatePag<T> = Pick<DataState<T>, 'data'> & IApiCsPag;
+
+export interface IGuestMonthGroup {
+  month: number;
+  monthName: string;
+  guests: IGuestTableRow[];
+}
+
+export interface IGuestYearGroup {
+  year: number;
+  months: IGuestMonthGroup[];
+}

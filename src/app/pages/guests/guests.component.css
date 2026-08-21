@@ -4,14 +4,21 @@
   padding: 1rem;
 }
 
-.ctn–btn {
+.ctn-buttons {
   margin-top: 3rem;
-  text-align: center;
-  line-height: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
 }
 
 .btn-add {
   background-color: #c04d10;
+  color: white;
+}
+
+.btn-cards {
+  background-color: #c01097;
   color: white;
 }
 

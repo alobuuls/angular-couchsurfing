@@ -191,7 +191,6 @@ export class GuestsComponent implements OnInit {
       } else {
         this.sort$.next({ active: sort.active, direction: 'asc' });
       }
-
       return;
     }
 
@@ -222,15 +221,13 @@ export class GuestsComponent implements OnInit {
     this.filteredCountries = [...this.countries];
   }
 
-  // NAVIG
+  // NAVIGATION
   openDetail(guest: IGuestListItem): void {
     const group = isGroup(guest);
-
     if (group) {
       this._router.navigate(['/guests/groups', guest.groupId]);
       return;
     }
-
     this._router.navigate(['/guests', guest.guestId]);
   }
 
@@ -258,7 +255,6 @@ export class GuestsComponent implements OnInit {
       this._router.navigate(['/guests/groups/edit', item.groupId]);
       return;
     }
-
     this._router.navigate(['/guests/edit', item.guestId]);
   }
 
@@ -291,6 +287,7 @@ export class GuestsComponent implements OnInit {
       this.filteredCountries = countries.filter(country => country.name.toLowerCase().includes(search) || country.countryCode.toLowerCase().includes(search));
     });
   }
+
   displayCountryCode = (countryCode: string | null): string => {
     if (!countryCode) return 'All Countries';
     const country = this.countries.find(country => country.countryCode === countryCode);
@@ -335,5 +332,9 @@ export class GuestsComponent implements OnInit {
     const selectedCountry = this.countries.find(country => country.countryCode === countryCode);
     if (!selectedCountry) return;
     this.filtersForm.get('continent')?.setValue(selectedCountry.continent);
+  }
+
+  getDetailForShowingMore(guestId: string) {
+    this._guests.getGuestById(guestId).subscribe(res => res);
   }
 }

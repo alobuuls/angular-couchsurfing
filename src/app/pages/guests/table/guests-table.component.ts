@@ -1,10 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-// Material
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 
-// Interfaces
 import { IGuestListItem, IApiCsPag } from '@interfaces/guests.interface';
 import { IGuestTableRow } from '@interfaces/data-structure-api';
 
@@ -15,14 +13,25 @@ import { IGuestTableRow } from '@interfaces/data-structure-api';
 })
 export class GuestsTableComponent {
   @Input() pagination?: IApiCsPag;
+
   @Input() offset = 0;
-  @Input() data!: IGuestTableRow[];
+
+  private _data: IGuestTableRow[] = [];
+
+  @Input() set data(value: IGuestTableRow[]) {
+    this._data = value ?? [];
+  }
+
+  get data(): IGuestTableRow[] {
+    return this._data;
+  }
 
   @Output() detail = new EventEmitter<IGuestListItem>();
   @Output() edit = new EventEmitter<IGuestListItem>();
   @Output() remove = new EventEmitter<IGuestListItem>();
   @Output() whatsapp = new EventEmitter<string>();
   @Output() couchsurfing = new EventEmitter<string>();
+  @Output() detailGuest = new EventEmitter<string>();
 
   @Output() page = new EventEmitter<PageEvent>();
   @Output() sort = new EventEmitter<Sort>();
