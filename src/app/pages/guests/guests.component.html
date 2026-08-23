@@ -116,12 +116,7 @@
   </div>
 
   <!-- CARDS -->
-  <guests-cards
-    *ngIf="vm.status === 'success' && currentView === 'cards'"
-    [data]="vm.data"
-    [pagination]="vm.pagination"
-    [offset]="vm.offset"
-  ></guests-cards>
+  <guests-cards *ngIf="vm.status === 'success' && currentView === 'cards'" [data]="vm.data"></guests-cards>
 
   <!-- MAP -->
   <guests-map *ngIf="vm.status === 'success' && currentView === 'map'" [data]="vm.data"> </guests-map>

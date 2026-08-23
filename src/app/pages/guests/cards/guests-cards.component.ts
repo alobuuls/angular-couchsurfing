@@ -2,17 +2,12 @@ import { Component, Input } from '@angular/core';
 
 import { IGuestTableMember, IGuestTableRow, IGuestYearGroup } from '@interfaces/data-structure-api';
 
-import { IApiCsPag } from '@interfaces/guests.interface';
-
 @Component({
   selector: 'guests-cards',
   templateUrl: './guests-cards.component.html',
   styleUrls: ['./guests-cards.component.css'],
 })
 export class GuestsCardsComponent {
-  @Input() pagination?: IApiCsPag;
-  @Input() offset = 0;
-
   private _data: IGuestTableRow[] = [];
 
   @Input()
