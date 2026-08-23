@@ -188,3 +188,23 @@
   font-size: 1.5rem;
   color: #eaa5be;
 }
+
+.ctn-stars {
+  align-items: center;
+  color: goldenrod;
+  display: flex;
+  gap: 0 0.25rem;
+  justify-content: center;
+
+  & > mat-icon {
+    color: transparent;
+    -webkit-text-fill-color: #fefb24;
+    opacity: 0.2;
+    transition: -webkit-text-fill-color 0.3s ease-in-out;
+
+    &.filled {
+      opacity: 1;
+      -webkit-text-fill-color: #fefb24;
+    }
+  }
+}

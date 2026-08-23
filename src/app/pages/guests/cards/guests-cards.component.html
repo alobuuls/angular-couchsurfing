@@ -28,7 +28,9 @@
                 />
               </h2>
 
-              <p>Lorem ipsum dor achinyer ron bulk hui heishaia</p>
+              <div class="ctn-stars">
+                <mat-icon *ngFor="let s of [1, 2, 3, 4, 5]" [class.filled]="s < p.rating" fontIcon="star"> </mat-icon>
+              </div>
 
               <a (click)="getDetailGuest(p)"> Read more </a>
             </div>

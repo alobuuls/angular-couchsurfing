@@ -1,41 +1,32 @@
-import { Component, OnInit, inject } from '@angular/core';
-
-import { GuestsService } from '@services/guests.service';
+import { Component, Input } from '@angular/core';
 
 import { IGuestTableMember, IGuestTableRow, IGuestYearGroup } from '@interfaces/data-structure-api';
 
-import { mapGuestTable } from 'src/app/utils/mappers/guest-table.mapper';
+import { IApiCsPag } from '@interfaces/guests.interface';
 
 @Component({
   selector: 'guests-cards',
   templateUrl: './guests-cards.component.html',
   styleUrls: ['./guests-cards.component.css'],
 })
-export class GuestsCardsComponent implements OnInit {
-  private _guests = inject(GuestsService);
+export class GuestsCardsComponent {
+  @Input() pagination?: IApiCsPag;
+  @Input() offset = 0;
 
-  data: IGuestTableRow[] = [];
+  private _data: IGuestTableRow[] = [];
+
+  @Input()
+  set data(value: IGuestTableRow[]) {
+    this._data = value ?? [];
+    this.groupGuestsByDate();
+  }
+
+  get data(): IGuestTableRow[] {
+    return this._data;
+  }
 
   cardsGuest: IGuestYearGroup[] = [];
-
   selectedCard: IGuestTableMember | null = null;
-
-  ngOnInit(): void {
-    this.loadGuests();
-  }
-
-  private loadGuests(): void {
-    this._guests
-      .getAllGuests({
-        page: 1,
-        limit: 200,
-      })
-      .subscribe(res => {
-        this.data = mapGuestTable(res.data);
-
-        this.groupGuestsByDate();
-      });
-  }
 
   private groupGuestsByDate(): void {
     const years = new Map<number, Map<number, IGuestTableRow[]>>();
@@ -85,14 +76,6 @@ export class GuestsCardsComponent implements OnInit {
   }
 
   getDetailGuest(g: IGuestTableMember): void {
-    console.log('Persona recibida:', g);
-    console.log('Guest ID:', g.guestId);
-
-    if (!g.guestId) {
-      console.error('no tiene guestId', g);
-      return;
-    }
-
-    console.log(' Guest ID', g.guestId);
+    if (!g.guestId) return;
   }
 }
