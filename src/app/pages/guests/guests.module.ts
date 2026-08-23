@@ -14,6 +14,7 @@ import { TripFormComponent } from '@pages/guests/form/trip-form/trip-form.compon
 import { GuestsFormComponent } from '@pages/guests/form/guests-form/guests-form.component';
 import { GuestsTableComponent } from '@pages/guests/table/guests-table.component';
 import { GuestsCardsComponent } from '@pages/guests/cards/guests-cards.component';
+import { GuestsMapComponent } from './map/guests-map.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { GuestsCardsComponent } from '@pages/guests/cards/guests-cards.component
     TripFormComponent,
     GuestsFormComponent,
     GuestsTableComponent,
-    GuestsCardsComponent
+    GuestsCardsComponent,
+    GuestsMapComponent,
   ],
   imports: [SharedModule, GuestsRoutingModule],
 })

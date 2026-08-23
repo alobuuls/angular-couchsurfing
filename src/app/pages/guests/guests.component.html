@@ -123,6 +123,9 @@
     [offset]="vm.offset"
   ></guests-cards>
 
+  <!-- MAP -->
+  <guests-map *ngIf="vm.status === 'success' && currentView === 'map'" [data]="vm.data"> </guests-map>
+
   <!-- ERROR -->
   <h1 *ngIf="vm.status === 'error'">
     {{ vm?.error?.message }}

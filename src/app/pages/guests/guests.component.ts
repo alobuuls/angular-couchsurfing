@@ -353,6 +353,10 @@ export class GuestsComponent implements OnInit {
         break;
 
       case 'cards':
+        this.currentView = 'map';
+        break;
+
+      case 'map':
         this.currentView = 'table';
         break;
     }
@@ -365,6 +369,9 @@ export class GuestsComponent implements OnInit {
         return 'cards_stack';
 
       case 'cards':
+        return 'map';
+
+      case 'map':
         return 'table';
     }
   }
@@ -376,6 +383,9 @@ export class GuestsComponent implements OnInit {
         return 'See cards';
 
       case 'cards':
+        return 'See map';
+
+      case 'map':
         return 'See table';
     }
   }
