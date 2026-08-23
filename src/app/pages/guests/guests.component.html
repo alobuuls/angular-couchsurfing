@@ -103,16 +103,25 @@
     </div>
   </form>
 
-  <!-- CARDS BUTTON -->
-  <div class="ctn–buttons" *ngIf="vm.status === 'success' && vm.data.length">
-    <button [routerLink]="['/guests/cards']" class="btn-cards" mat-icon-button matTooltip="See cards">
-      <mat-icon fontIcon="cards_stack"></mat-icon>
+  <div class="ctn-btns">
+    <!-- TOGGLE BUTTON -->
+    <button class="btn-toggle" mat-icon-button (click)="changeView()" [matTooltip]="nextViewTooltip">
+      <mat-icon [fontIcon]="nextViewIcon"></mat-icon>
     </button>
 
+    <!-- ADD BUTTON -->
     <button [routerLink]="['/guests/add']" class="btn-add" mat-icon-button matTooltip="Create Guest">
       <mat-icon fontIcon="add"></mat-icon>
     </button>
   </div>
+
+  <!-- CARDS -->
+  <guests-cards
+    *ngIf="vm.status === 'success' && currentView === 'cards'"
+    [data]="vm.data"
+    [pagination]="vm.pagination"
+    [offset]="vm.offset"
+  ></guests-cards>
 
   <!-- ERROR -->
   <h1 *ngIf="vm.status === 'error'">
@@ -135,7 +144,7 @@
 
   <!-- TABLE -->
   <guests-table
-    *ngIf="vm.status === 'success'"
+    *ngIf="vm.status === 'success' && currentView === 'table'"
     [data]="vm.data"
     [pagination]="vm.pagination"
     [offset]="vm.offset"

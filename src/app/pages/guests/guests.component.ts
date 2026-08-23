@@ -21,7 +21,7 @@ import { isGroup } from 'src/app/utils/helpers/guests-table.utils';
 
 // Interfaces
 import { IGuestListItem } from '@interfaces/guests.interface';
-import { IGuestsTableVM, IGuestTableRow, IGuestTableRowWithIndex } from '@interfaces/data-structure-api';
+import { ICurrentView, IGuestsTableVM, IGuestTableRow, IGuestTableRowWithIndex } from '@interfaces/data-structure-api';
 
 // Types
 import { Continents, CountriesCodes, ICountry } from '@type/word.types';
@@ -56,6 +56,8 @@ export class GuestsComponent implements OnInit {
     europe: 'fa-solid fa-earth-europe',
     oceania: 'fa-solid fa-earth-oceania',
   };
+
+  currentView: ICurrentView = 'table';
 
   // Current Filters
   private filters$ = new BehaviorSubject<IQueryParamsGuests>({});
@@ -336,5 +338,45 @@ export class GuestsComponent implements OnInit {
 
   getDetailForShowingMore(guestId: string) {
     this._guests.getGuestById(guestId).subscribe(res => res);
+  }
+
+  // Set view
+  setView(view: ICurrentView): void {
+    this.currentView = view;
+  }
+
+  // Change view
+  changeView(): void {
+    switch (this.currentView) {
+      case 'table':
+        this.currentView = 'cards';
+        break;
+
+      case 'cards':
+        this.currentView = 'table';
+        break;
+    }
+  }
+
+  // Change view
+  get nextViewIcon(): string {
+    switch (this.currentView) {
+      case 'table':
+        return 'cards_stack';
+
+      case 'cards':
+        return 'table';
+    }
+  }
+
+  // Show Tooltip
+  get nextViewTooltip(): string {
+    switch (this.currentView) {
+      case 'table':
+        return 'See cards';
+
+      case 'cards':
+        return 'See table';
+    }
   }
 }

@@ -85,3 +85,5 @@ export interface IGuestYearGroup {
   year: number;
   months: IGuestMonthGroup[];
 }
+
+export type ICurrentView = 'table' | 'cards';
