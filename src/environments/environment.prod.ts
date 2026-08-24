@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
 
-  endpointUrlApiCs: 'https://opposition-abraham-retirement-press.trycloudflare.com/api/v1',
+  endpointUrlApiCs: 'https://works-dana-yarn-fragrance.trycloudflare.com/api/v1',
   exampleEndpoint400: 'https://httpbin.org/status/400',
   exampleEndpoint404: 'https://httpbin.org/status/404',
   exampleEndpoint401: 'https://httpbin.org/status/401',
@@ -10,5 +10,7 @@ export const environment = {
   exampleEndpoint502: 'https://httpbin.org/status/502',
   exampleEndpointDelay: 'https://httpbin.org/delay/5',
   endpointApiCities: 'https://api.countrystatecity.in/v1',
-  API_KEY_CITIES: '0a6d63ebdae60ae9862a370ccd90cbce8ba7098aa5d5246568f0c2d3c402518f',
+  API_KEY_CITIES: 'ef030fa4f57823ff8e5b494afd8d2a5ad43ed2c0da03b7ce7482314e87a80804',
+  endpointBaseCountryMap: 'https://raw.githubusercontent.com',
+  endpointNaturalEarthAdmin1: 'https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson',
 };
