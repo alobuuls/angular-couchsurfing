@@ -5,8 +5,9 @@ import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { combineLatestWith, map, switchMap } from 'rxjs/operators';
 
 // Material
-import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
+import { PageEvent } from '@angular/material/paginator';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 // Services
 import { GuestsService, IQueryParamsGuests } from '@services/guests.service';
@@ -21,14 +22,13 @@ import { isGroup } from 'src/app/utils/helpers/guests-table.utils';
 
 // Interfaces
 import { IGuestListItem } from '@interfaces/guests.interface';
-import { ICurrentView, IGuestsTableVM, IGuestTableRow, IGuestTableRowWithIndex } from '@interfaces/data-structure-api';
+import { ICurrentView, IGuestsTableVM, IGuestTableRow, IGuestTableRowWithIndex, VIEW_CONFIG } from '@interfaces/data-structure-api';
 
 // Types
 import { Continents, CountriesCodes, ICountry } from '@type/word.types';
 
 // Constants
 import { WORLD } from '@config/world';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'guests',
@@ -63,7 +63,7 @@ export class GuestsComponent implements OnInit {
   private filters$ = new BehaviorSubject<IQueryParamsGuests>({});
 
   // Pagination
-  private page$ = new BehaviorSubject<{ page: number; size: number }>({ page: 1, size: 10 });
+  private page$ = new BehaviorSubject<{ page: number; size: number }>({ page: 1, size: 200 });
 
   // Sort
   private sort$ = new BehaviorSubject<Sort>({
@@ -345,48 +345,15 @@ export class GuestsComponent implements OnInit {
     this.currentView = view;
   }
 
-  // Change view
-  changeView(): void {
-    switch (this.currentView) {
-      case 'table':
-        this.currentView = 'cards';
-        break;
-
-      case 'cards':
-        this.currentView = 'map';
-        break;
-
-      case 'map':
-        this.currentView = 'table';
-        break;
-    }
-  }
-
-  // Change view
   get nextViewIcon(): string {
-    switch (this.currentView) {
-      case 'table':
-        return 'cards_stack';
-
-      case 'cards':
-        return 'map';
-
-      case 'map':
-        return 'table';
-    }
+    return VIEW_CONFIG[this.currentView].icon;
   }
 
-  // Show Tooltip
   get nextViewTooltip(): string {
-    switch (this.currentView) {
-      case 'table':
-        return 'See cards';
+    return VIEW_CONFIG[this.currentView].tooltip;
+  }
 
-      case 'cards':
-        return 'See map';
-
-      case 'map':
-        return 'See table';
-    }
+  changeView(): void {
+    this.currentView = VIEW_CONFIG[this.currentView].next;
   }
 }

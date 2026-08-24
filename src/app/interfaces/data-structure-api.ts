@@ -87,3 +87,27 @@ export interface IGuestYearGroup {
 }
 
 export type ICurrentView = 'table' | 'cards' | 'map';
+
+export type ViewConfig = {
+  next: ICurrentView;
+  icon: string;
+  tooltip: string;
+};
+
+export const VIEW_CONFIG: Record<ICurrentView, ViewConfig> = {
+  table: {
+    next: 'cards',
+    icon: 'cards_stack',
+    tooltip: 'Change view to cards',
+  },
+  cards: {
+    next: 'map',
+    icon: 'map',
+    tooltip: 'Change view to map',
+  },
+  map: {
+    next: 'table',
+    icon: 'table',
+    tooltip: 'Change view to table',
+  },
+};
