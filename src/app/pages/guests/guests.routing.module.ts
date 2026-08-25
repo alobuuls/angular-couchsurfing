@@ -6,6 +6,7 @@ import { GuestsComponent } from '@pages/guests/guests.component';
 import { GuestsCreateComponent } from '@pages/guests/create/guests-create.component';
 import { GuestsDetailComponent } from '@pages/guests/detail/guests-detail.component';
 import { GuestsEditComponent } from '@pages/guests/edit/guests-edit.component';
+import { GuestsStatsComponent } from './stats/guests-stats.component';
 
 const guestsRoutes: Routes = [
   {
@@ -15,6 +16,10 @@ const guestsRoutes: Routes = [
   {
     path: 'add',
     component: GuestsCreateComponent,
+  },
+  {
+    path: 'stats',
+    component: GuestsStatsComponent,
   },
   {
     path: 'groups/edit/:groupId',

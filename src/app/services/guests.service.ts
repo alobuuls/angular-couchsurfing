@@ -4,20 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '@env/environment';
 
 // Interfaces
-import { IBodyGuest, IGroupDetail, IGroupDetailResp, IGuestCreateResp, IGuestDeleteResp, IGuestDetailResp, IGuestsResp } from '@interfaces/guests.interface';
-import { Continents } from '@type/word.types';
-
-export interface IQueryParamsGuests {
-  limit?: number;
-  page?: number;
-  country?: string;
-  from?: string;
-  to?: string;
-  groupType?: 'solo' | 'family' | 'friends' | 'couple';
-  continent?: Continents;
-  isFirstTime?: boolean;
-}
-
+import { IBodyGuest, IGroupDetail, IGroupDetailResp, IGuestCreateResp, IGuestDeleteResp, IGuestDetailResp, IGuestsResp, IQueryParamsGuests } from '@interfaces/guests.interface';
 @Injectable({
   providedIn: 'root',
 })
@@ -27,7 +14,7 @@ export class GuestsService {
 
   constructor(private http: HttpClient) {}
 
-  getAllGuests({ limit = 10, page = 1, country, from, to, groupType, continent, isFirstTime }: IQueryParamsGuests): Observable<IGuestsResp> {
+  getAllGuests({ limit = 10, page = 1, country, from, to, groupType, continent, isFirstTime, rating }: IQueryParamsGuests): Observable<IGuestsResp> {
     let params = new HttpParams().set('limit', String(limit)).set('page', String(page));
     if (country) params = params.set('country', String(country));
     if (from) params = params.set('from', String(from));
@@ -35,6 +22,7 @@ export class GuestsService {
     if (groupType) params = params.set('groupType', String(groupType));
     if (continent) params = params.set('continent', String(continent));
     if (isFirstTime !== undefined) params = params.set('isFirstTime', String(isFirstTime));
+    if (rating !== undefined) params = params.set('rating', String(rating));
     return this.http.get<IGuestsResp>(this.urlGuests, { params });
   }
 

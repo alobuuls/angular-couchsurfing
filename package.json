@@ -22,6 +22,7 @@
     "@angular/router": "^16.2.0",
     "@fortawesome/fontawesome-free": "^7.3.1",
     "@turf/turf": "^7.4.0",
+    "chart.js": "^4.5.1",
     "flag-icons": "^7.5.0",
     "leaflet": "1.9.4",
     "rxjs": "~7.8.0",

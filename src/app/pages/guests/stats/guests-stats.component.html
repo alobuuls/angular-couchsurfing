@@ -1,0 +1,43 @@
+<div *ngIf="vm$ | async as vm">
+  <h1 class="title-stats">Stats</h1>
+
+  <h1 *ngIf="vm.status === 'loading'">Loading...</h1>
+
+  <h1 *ngIf="vm.status === 'error'">
+    {{ vm.error.message }}
+  </h1>
+
+  <div class="ctn-buttons">
+    <!-- Summary -->
+    <button matTooltip="See Summary" mat-icon-button class="btn-summary" (click)="changeChart('summary')">
+      <mat-icon>bar_chart</mat-icon>
+    </button>
+
+    <!-- Ranking -->
+    <button matTooltip="See Ranking" mat-icon-button class="btn-ranking" (click)="changeChart('ranking')">
+      <mat-icon>leaderboard</mat-icon>
+    </button>
+
+    <!-- Demographics -->
+    <button
+      matTooltip="See Demographics"
+      mat-icon-button
+      class="btn-demographics"
+      (click)="changeChart('demographics')"
+    >
+      <mat-icon>groups</mat-icon>
+    </button>
+
+    <!-- Rating -->
+    <button matTooltip="See Rating" mat-icon-button class="btn-rating" (click)="changeChart('rating')">
+      <mat-icon>star</mat-icon>
+    </button>
+  </div>
+
+  <ng-container *ngIf="vm.status === 'success'">
+    <div class="ctn-chart">
+      <guest-rating-chart *ngIf="currentChart === 'rating'" [distributions]="vm.data.ratings.distribution">
+      </guest-rating-chart>
+    </div>
+  </ng-container>
+</div>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { combineLatestWith, map, switchMap } from 'rxjs/operators';
 
@@ -10,7 +10,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 // Services
-import { GuestsService, IQueryParamsGuests } from '@services/guests.service';
+import { GuestsService } from '@services/guests.service';
 import { GuestDeleteService } from '@services/delete-confirmation.service';
 import { ErrorHandlerService } from '@services/err-handler.service';
 import { GuestSortService } from '@services/guest-sort.service';
@@ -21,7 +21,7 @@ import { mapGuestTable } from 'src/app/utils/mappers/guest-table.mapper';
 import { isGroup } from 'src/app/utils/helpers/guests-table.utils';
 
 // Interfaces
-import { IGuestListItem } from '@interfaces/guests.interface';
+import { IGuestListItem, IQueryParamsGuests } from '@interfaces/guests.interface';
 import { ICurrentView, IGuestsTableVM, IGuestTableRow, IGuestTableRowWithIndex, VIEW_CONFIG } from '@interfaces/data-structure-api';
 
 // Types
@@ -63,7 +63,7 @@ export class GuestsComponent implements OnInit {
   private filters$ = new BehaviorSubject<IQueryParamsGuests>({});
 
   // Pagination
-  private page$ = new BehaviorSubject<{ page: number; size: number }>({ page: 1, size: 200 });
+  private page$ = new BehaviorSubject<{ page: number; size: number }>({ page: 1, size: 10 });
 
   // Sort
   private sort$ = new BehaviorSubject<Sort>({
@@ -74,6 +74,7 @@ export class GuestsComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private _router: Router,
+    private _route: ActivatedRoute,
     private _guests: GuestsService,
     private _sortService: GuestSortService,
     private _deleteService: GuestDeleteService,
@@ -83,6 +84,7 @@ export class GuestsComponent implements OnInit {
   ngOnInit(): void {
     this.initFiltersForm();
     this.loadDataCountries();
+    this.listenQueryParams();
     this.initVm();
     this.listenCountryAutocomplete();
     this.listenContinentFilter();
@@ -355,5 +357,28 @@ export class GuestsComponent implements OnInit {
 
   changeView(): void {
     this.currentView = VIEW_CONFIG[this.currentView].next;
+  }
+
+  // To see cards from stats
+  private listenQueryParams(): void {
+    this._route.queryParams.subscribe(params => {
+      const rating = params['rating'];
+      const view = params['view'];
+      const groupType = params['groupType'];
+
+      if (view) {
+        this.currentView = view;
+      }
+
+      if (rating || groupType) {
+        const currentFilters = this.filters$.value;
+
+        this.filters$.next({
+          ...currentFilters,
+          rating: rating ? Number(rating) : undefined,
+          groupType: groupType || undefined,
+        });
+      }
+    });
   }
 }

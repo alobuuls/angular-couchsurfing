@@ -1,0 +1,45 @@
+<div class="rating-charts">
+
+  <div class="chart-row">
+
+    <div class="rating-charts-ctn">
+      <canvas #ratingsChart></canvas>
+    </div>
+
+    <div class="ctn-chart-types">
+      <button
+        mat-icon-button
+        class="btn-type-chart"
+        type="button"
+        (click)="selectChartType('bar')"
+        [class.active]="selectedChart === 'bar'"
+      >
+        <mat-icon>bar_chart</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        class="btn-type-chart"
+        type="button"
+        (click)="selectChartType('doughnut')"
+        [class.active]="selectedChart === 'doughnut'"
+      >
+        <mat-icon>pie_chart</mat-icon>
+      </button>
+    </div>
+
+  </div>
+
+  <div class="ctn-buttons">
+    <button
+      type="button"
+      *ngFor="let view of ratingViews"
+      (click)="selectView(view)"
+      [class.active]="selectedView === view"
+      class="btn-rating"
+    >
+      {{ view }}
+    </button>
+  </div>
+
+</div>

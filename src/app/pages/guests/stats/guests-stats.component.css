@@ -1,0 +1,38 @@
+.title-stats {
+  margin-top: 5rem;
+  text-align: center;
+}
+.ctn-buttons {
+  margin: 3rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ctn-chart {
+  width: 100%;
+  max-width: 1000px;
+  height: 500px;
+  margin: 0 auto;
+}
+
+.btn-summary {
+  background-color: #000000;
+  color: #0089cd;
+}
+
+.btn-ranking {
+  background-color: #000000;
+  color: #00cd0e;
+}
+
+.btn-rating {
+  background-color: #000000;
+  color: #cda400;
+}
+
+.btn-demographics {
+  background-color: #000000;
+  color: #cd0029;
+}

@@ -115,6 +115,18 @@ export interface IApiCsPag {
   totalPages: number;
 }
 
+export interface IQueryParamsGuests {
+  limit?: number;
+  page?: number;
+  country?: string;
+  from?: string;
+  to?: string;
+  groupType?: 'solo' | 'family' | 'friends' | 'couple';
+  continent?: Continents;
+  isFirstTime?: boolean;
+  rating?: number;
+}
+
 export interface IGuestsFormSubmit {
   groupType: IGuestDetail['groupType'] | IGroupDetail['groupType'];
   trip: Omit<IGroupDetail, 'groupId' | 'members' | 'groupType'>;
