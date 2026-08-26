@@ -116,8 +116,8 @@ export class GuestsComponent implements OnInit {
       from: [new Date(2023, 0, 1)],
       to: [new Date()],
       isFirstTime: [''],
-      ambassador: [false],
-      didTheyReq: [false],
+      ambassador: [''],
+      didTheyReq: [''],
     });
   }
 
@@ -154,7 +154,7 @@ export class GuestsComponent implements OnInit {
   }
 
   clearFilters(): void {
-    this.filtersForm.reset({ country: '', continent: '', groupType: '', from: '', to: '', isFirstTime: '', region: '', ambassador: false, didTheyReq: false });
+    this.filtersForm.reset({ country: '', continent: '', groupType: '', from: '', to: '', isFirstTime: '', region: '', ambassador: '', didTheyReq: '' });
 
     // Show all countries again to autocomplete
     this.filteredCountries = [...this.countries];

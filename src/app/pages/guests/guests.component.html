@@ -107,10 +107,26 @@
     </mat-form-field>
 
     <!-- AMBASSADOR -->
-    <mat-checkbox formControlName="ambassador">Ambassador</mat-checkbox>
+    <mat-form-field appearance="outline">
+      <mat-label>Ambassador</mat-label>
+      <mat-icon matPrefix>badge</mat-icon>
+      <mat-select formControlName="ambassador">
+        <mat-option value=""> <mat-icon>badge</mat-icon>All</mat-option>
+        <mat-option [value]="true"> <mat-icon>check_circle</mat-icon>Yes</mat-option>
+        <mat-option [value]="false"> <mat-icon>cancel</mat-icon>No</mat-option>
+      </mat-select>
+    </mat-form-field>
 
     <!-- DID THEY REQUEST -->
-    <mat-checkbox formControlName="didTheyReq">Did they request?</mat-checkbox>
+    <mat-form-field appearance="outline">
+      <mat-label>Did they request?</mat-label>
+      <mat-icon matPrefix>mark_email_unread</mat-icon>
+      <mat-select formControlName="didTheyReq">
+        <mat-option value=""> <mat-icon>mark_email_unread</mat-icon>All</mat-option>
+        <mat-option [value]="true"> <mat-icon>check_circle</mat-icon>Yes</mat-option>
+        <mat-option [value]="false"> <mat-icon>cancel</mat-icon>No</mat-option>
+      </mat-select>
+    </mat-form-field>
 
     <!-- ACTIONS -->
     <div class="filters-actions">
