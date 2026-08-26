@@ -125,6 +125,7 @@ export interface IQueryParamsGuests {
   continent?: Continents;
   isFirstTime?: boolean;
   rating?: number;
+  region?: Regions;
 }
 
 export interface IGuestsFormSubmit {

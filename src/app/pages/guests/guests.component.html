@@ -22,6 +22,23 @@
       </mat-select>
     </mat-form-field>
 
+    <!-- REGION -->
+    <mat-form-field appearance="outline">
+      <mat-label>Region</mat-label>
+      <mat-icon matPrefix>map</mat-icon>
+
+      <mat-select formControlName="region">
+        <mat-option value="">
+          <mat-icon>public</mat-icon>
+          All regions
+        </mat-option>
+
+        <mat-option *ngFor="let region of filteredRegions" [value]="region">
+          {{ regionNames[region] }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
     <!-- COUNTRY -->
     <mat-form-field appearance="outline">
       <mat-label>Country</mat-label>

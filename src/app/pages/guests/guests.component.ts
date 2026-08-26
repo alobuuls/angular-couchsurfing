@@ -25,10 +25,11 @@ import { IGuestListItem, IQueryParamsGuests } from '@interfaces/guests.interface
 import { ICurrentView, IGuestsTableVM, IGuestTableRow, IGuestTableRowWithIndex, VIEW_CONFIG } from '@interfaces/data-structure-api';
 
 // Types
-import { Continents, CountriesCodes, ICountry } from '@type/word.types';
+import { Continents, CountriesCodes, ICountry, Regions } from '@type/word.types';
 
 // Constants
 import { WORLD } from '@config/world';
+import { REGION_NAMES } from '@config/world/regions';
 
 @Component({
   selector: 'guests',
@@ -44,6 +45,11 @@ export class GuestsComponent implements OnInit {
   // Countries
   countries: Array<ICountry & { countryCode: CountriesCodes }> = [];
 
+  // Regions
+  regions: Regions[] = [];
+  filteredRegions: Regions[] = [];
+
+  regionNames = REGION_NAMES;
   // Countries filtered by autocomplete search
   filteredCountries: Array<ICountry & { countryCode: CountriesCodes }> = [];
 
@@ -88,6 +94,7 @@ export class GuestsComponent implements OnInit {
     this.initVm();
     this.listenCountryAutocomplete();
     this.listenContinentFilter();
+    this.listenRegionFilter();
   }
 
   // FILTERS
@@ -95,6 +102,7 @@ export class GuestsComponent implements OnInit {
     this.filtersForm = this.fb.group({
       country: [''],
       continent: [''],
+      region: [''],
       groupType: [''],
       from: [new Date(2023, 0, 1)],
       to: [new Date()],
@@ -108,6 +116,7 @@ export class GuestsComponent implements OnInit {
     const filters: IQueryParamsGuests = {
       country: formValue.country || undefined,
       continent: formValue.continent || undefined,
+      region: formValue.region || undefined,
       groupType: formValue.groupType || undefined,
       from: this.formatDate(formValue.from),
       to: this.formatDate(formValue.to),
@@ -122,7 +131,7 @@ export class GuestsComponent implements OnInit {
   }
 
   clearFilters(): void {
-    this.filtersForm.reset({ country: '', continent: '', groupType: '', from: '', to: '', isFirstTime: '' });
+    this.filtersForm.reset({ country: '', continent: '', groupType: '', from: '', to: '', isFirstTime: '', region: '' });
 
     // Show all countries again to autocomplete
     this.filteredCountries = [...this.countries];
@@ -221,6 +230,11 @@ export class GuestsComponent implements OnInit {
       }))
       .sort((a, b) => a.name.localeCompare(b.name));
 
+    // Get regions from data countries
+    this.regions = [...new Set(this.countries.map(country => country.region))];
+
+    // Initially show all regions to autocomplete
+    this.filteredRegions = [...this.regions];
     // Initially show all countries to autocomplete
     this.filteredCountries = [...this.countries];
   }
@@ -265,29 +279,30 @@ export class GuestsComponent implements OnInit {
   // AUTOCOMPLETE
   private listenCountryAutocomplete(): void {
     const countryCtrl = this.filtersForm.get('country');
-
     countryCtrl?.valueChanges.subscribe(value => {
-      // Si el valor es un código porque seleccionó una opción,
+      // Si es un código porque seleccionó una opción,
       // no hacemos filtrado por texto
       if (typeof value !== 'string') return;
 
       const search = value.toLowerCase().trim();
       const selectedContinent = this.filtersForm.get('continent')?.value;
-
-      // Start with all countries
+      const selectedRegion = this.filtersForm.get('region')?.value;
       let countries = this.countries;
 
+      // Filter by continent
       if (selectedContinent) {
         countries = countries.filter(country => country.continent === selectedContinent);
       }
-
-      // If there is no search text, show countries from selected continent
+      // Filter by region
+      if (selectedRegion) {
+        countries = countries.filter(country => country.region === selectedRegion);
+      }
+      // No search text
       if (!search) {
         this.filteredCountries = [...countries];
         return;
       }
-
-      // filter by country name or country code
+      // Search by country name or code
       this.filteredCountries = countries.filter(country => country.name.toLowerCase().includes(search) || country.countryCode.toLowerCase().includes(search));
     });
   }
@@ -298,50 +313,153 @@ export class GuestsComponent implements OnInit {
     return country?.name ?? '';
   };
 
-  // Fiter country by continent
+  // FITER COUNTRY BY CONTINENT
   private listenContinentFilter(): void {
     const continentCtrl = this.filtersForm.get('continent');
+    const regionCtrl = this.filtersForm.get('region');
     const countryCtrl = this.filtersForm.get('country');
 
-    continentCtrl?.valueChanges.subscribe(continent => {
+    continentCtrl?.valueChanges.subscribe((continent: Continents | '') => {
       // No continent selected
       if (!continent) {
+        this.filteredRegions = [...this.regions];
         this.filteredCountries = [...this.countries];
+
         return;
       }
 
-      // Filter countries by continent
+      // Regions belonging to selected continent
+      this.filteredRegions = [...new Set(this.countries.filter(country => country.continent === continent).map(country => country.region))];
+
+      // Countries belonging to selected continent
       this.filteredCountries = this.countries.filter(country => country.continent === continent);
 
-      // Check if current country belongs to selected continent
+      // Check current region
+      const currentRegion = regionCtrl?.value;
+
+      if (currentRegion) {
+        const regionExists = this.filteredRegions.includes(currentRegion);
+
+        if (!regionExists) {
+          regionCtrl?.setValue('', {
+            emitEvent: false,
+          });
+        }
+      }
+
+      // Check current country
       const currentCountry = countryCtrl?.value;
 
-      if (!currentCountry) return;
-      const countryExists = this.filteredCountries.some(country => country.countryCode === currentCountry);
-
-      // Clear country if it doesn't belong to selected continent
-      if (!countryExists) {
-        countryCtrl?.setValue('');
+      if (currentCountry) {
+        const countryExists = this.filteredCountries.some(country => country.countryCode === currentCountry);
+        if (!countryExists) {
+          countryCtrl?.setValue('', {
+            emitEvent: false,
+          });
+        }
       }
     });
   }
 
   onCountrySelected(event: MatAutocompleteSelectedEvent): void {
     const countryCode = event.option.value;
+    const continentCtrl = this.filtersForm.get('continent');
+    const regionCtrl = this.filtersForm.get('region');
+
     // All Countries
     if (!countryCode) {
-      this.filtersForm.get('continent')?.setValue('');
+      continentCtrl?.setValue('', { emitEvent: false });
+      regionCtrl?.setValue('', { emitEvent: false });
+      this.filteredRegions = [...this.regions];
+      this.filteredCountries = [...this.countries];
+
       return;
     }
+
     const selectedCountry = this.countries.find(country => country.countryCode === countryCode);
+
     if (!selectedCountry) return;
-    this.filtersForm.get('continent')?.setValue(selectedCountry.continent);
+
+    // Set related filters
+    continentCtrl?.setValue(selectedCountry.continent, {
+      emitEvent: false,
+    });
+
+    regionCtrl?.setValue(selectedCountry.region, {
+      emitEvent: false,
+    });
+
+    // Update regions
+    this.filteredRegions = [...new Set(this.countries.filter(country => country.continent === selectedCountry.continent).map(country => country.region))];
+
+    // Update countries
+    this.filteredCountries = this.countries.filter(country => country.continent === selectedCountry.continent && country.region === selectedCountry.region);
   }
 
   getDetailForShowingMore(guestId: string) {
     this._guests.getGuestById(guestId).subscribe(res => res);
   }
 
+  // REGIONS
+  private listenRegionFilter(): void {
+    const regionCtrl = this.filtersForm.get('region');
+    const continentCtrl = this.filtersForm.get('continent');
+    const countryCtrl = this.filtersForm.get('country');
+
+    regionCtrl?.valueChanges.subscribe((region: Regions | '') => {
+      // No region selected
+      if (!region) {
+        const continent = continentCtrl?.value;
+
+        if (continent) {
+          // Show countries from selected continent
+          this.filteredCountries = this.countries.filter(country => country.continent === continent);
+
+          // Show regions from selected continent
+          this.filteredRegions = [...new Set(this.countries.filter(country => country.continent === continent).map(country => country.region))];
+        } else {
+          // Show everything
+          this.filteredCountries = [...this.countries];
+          this.filteredRegions = [...this.regions];
+        }
+
+        return;
+      }
+
+      // Countries belonging to selected region
+      const regionCountries = this.countries.filter(country => country.region === region);
+
+      // Show only countries from selected region
+      this.filteredCountries = regionCountries;
+
+      // Get continent from region
+      const regionContinent = regionCountries[0]?.continent;
+
+      if (regionContinent) {
+        // Set continent WITHOUT triggering listenContinentFilter
+        continentCtrl?.setValue(regionContinent, {
+          emitEvent: false,
+        });
+
+        // Show only regions from that continent
+        this.filteredRegions = [...new Set(this.countries.filter(country => country.continent === regionContinent).map(country => country.region))];
+      }
+
+      // Check current country
+      const currentCountry = countryCtrl?.value;
+
+      if (currentCountry) {
+        const countryExists = regionCountries.some(country => country.countryCode === currentCountry);
+
+        // Clear country if it doesn't belong to selected region
+        if (!countryExists) {
+          countryCtrl?.setValue('');
+        }
+      }
+    });
+  }
+
+  // CARDS
   // Set view
   setView(view: ICurrentView): void {
     this.currentView = view;
