@@ -42,6 +42,9 @@
       </guest-rating-chart>
 
       <guest-rankings-chart *ngIf="currentChart === 'ranking'" [rankings]="vm.data.rankings"> </guest-rankings-chart>
+
+      <guest-demographics-chart *ngIf="currentChart === 'demographics'" [demographics]="vm.data.demographics">
+      </guest-demographics-chart>
     </div>
   </ng-container>
 </div>

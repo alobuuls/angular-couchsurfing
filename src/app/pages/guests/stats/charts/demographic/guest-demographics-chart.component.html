@@ -1,0 +1,21 @@
+<div class="demographics-charts">
+  <!-- Demographics views -->
+  <div class="ctn-buttons">
+    <button
+      type="button"
+      *ngFor="let view of demographicsViews"
+      (click)="selectView(view)"
+      [class.active]="selectedView === view"
+      class="btn-demographics"
+    >
+      {{ view }}
+    </button>
+  </div>
+
+  <div class="demographics-chart-row">
+    <div class="demographics-chart-ctn">
+      <!-- Chart -->
+      <canvas #demographicsChart></canvas>
+    </div>
+  </div>
+</div>

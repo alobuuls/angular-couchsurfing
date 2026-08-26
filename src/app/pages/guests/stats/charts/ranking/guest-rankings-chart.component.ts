@@ -5,7 +5,7 @@ import Chart from 'chart.js/auto';
 import { IRankingItem, IRankingView, IRankingsDistribution } from '@interfaces/stats-interface';
 
 @Component({
-  selector: 'guest-rankings',
+  selector: 'guest-rankings-chart',
   templateUrl: './guest-rankings-chart.component.html',
   styleUrls: ['./guest-rankings-chart.component.css'],
 })

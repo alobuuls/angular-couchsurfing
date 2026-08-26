@@ -62,6 +62,30 @@ export interface IRankingsDistribution {
   groups: IRankingCategory;
 }
 
+// Demographics
+export type IDemographicsView = 'overall' | 'groups';
+
+export interface IDemographicGroup {
+  male: number;
+  female: number;
+  trans: number;
+  isGay: number;
+}
+
+export interface IDemographicsTotals {
+  overall: IDemographicGroup;
+
+  groups: {
+    solo: IDemographicGroup;
+    couple: IDemographicGroup;
+    friends: IDemographicGroup;
+    family: IDemographicGroup;
+  };
+}
+
+export interface IDemographicsDistribution {
+  totals: IDemographicsTotals;
+}
 
 // Rating
 export type IRatingView = 'overall' | 'solo' | 'couple' | 'friends' | 'family';
