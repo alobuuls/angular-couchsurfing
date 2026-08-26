@@ -159,18 +159,13 @@
 
   <!-- EMPTY -->
   <div *ngIf="vm.status === 'success' && !vm.data.length">
-    <h1>
-      There are no guests yet, Create a new guest here
-
-      <button [routerLink]="['/guests/add']" class="btn-add" mat-icon-button>
-        <mat-icon fontIcon="add"></mat-icon>
-      </button>
-    </h1>
+    <h1><strong>No guests found!</strong></h1>
+    <h1>Try changing your search criteria.</h1>
   </div>
 
   <!-- TABLE -->
   <guests-table
-    *ngIf="vm.status === 'success' && currentView === 'table'"
+    *ngIf="vm.status === 'success' && vm.data.length > 0 && currentView === 'table'"
     [data]="vm.data"
     [pagination]="vm.pagination"
     [offset]="vm.offset"
