@@ -18,6 +18,7 @@ import { GuestsMapComponent } from '@pages/guests/map/guests-map.component';
 import { GuestsStatsComponent } from '@pages/guests/stats/guests-stats.component';
 import { GuestRatingChartComponent } from '@pages/guests/stats/charts/rating/guest-rating-chart.component';
 import { GuestSummaryChartComponent } from '@pages/guests/stats/charts/summary/guest-summary-chart.component';
+import { GuestRankingsChartComponent } from '@pages/guests/stats/charts/ranking/guest-rankings-chart.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { GuestSummaryChartComponent } from '@pages/guests/stats/charts/summary/g
     GuestsStatsComponent,
     GuestRatingChartComponent,
     GuestSummaryChartComponent,
+    GuestRankingsChartComponent,
   ],
   imports: [SharedModule, GuestsRoutingModule],
 })

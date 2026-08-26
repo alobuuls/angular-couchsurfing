@@ -34,12 +34,14 @@
     </button>
   </div>
 
-  <ng-container *ngIf="vm.status === 'success' ">
+  <ng-container *ngIf="vm.status === 'success'">
     <div class="ctn-content">
       <guest-summary-chart *ngIf="currentChart === 'summary'" [summary]="vm.data.summary"> </guest-summary-chart>
 
       <guest-rating-chart *ngIf="currentChart === 'rating'" [distributions]="vm.data.ratings.distribution">
       </guest-rating-chart>
+
+      <guest-rankings-chart *ngIf="currentChart === 'ranking'" [rankings]="vm.data.rankings"> </guest-rankings-chart>
     </div>
   </ng-container>
 </div>

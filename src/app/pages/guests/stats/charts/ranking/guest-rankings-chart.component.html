@@ -1,0 +1,21 @@
+<div class="ranking-charts">
+  <!-- Ranking chart -->
+  <div class="ranking-chart-row">
+    <div class="ranking-chart-ctn">
+      <canvas #rankingChart></canvas>
+    </div>
+  </div>
+
+  <!-- Ranking views -->
+  <div class="ctn-buttons">
+    <button
+      type="button"
+      *ngFor="let view of rankingViews"
+      (click)="selectView(view)"
+      [class.active]="selectedView === view"
+      class="btn-ranking"
+    >
+      {{ view }}
+    </button>
+  </div>
+</div>
