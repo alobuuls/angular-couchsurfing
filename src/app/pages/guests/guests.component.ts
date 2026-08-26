@@ -68,9 +68,18 @@ export class GuestsComponent implements OnInit {
   // Current Filters
   private filters$ = new BehaviorSubject<IQueryParamsGuests>({});
 
-  // Pagination
-  private page$ = new BehaviorSubject<{ page: number; size: number }>({ page: 1, size: 10 });
+  // Table pagination
+  private page$ = new BehaviorSubject<{ page: number; size: number }>({
+    page: 1,
+    size: 10,
+  });
 
+  // Cards infinite scroll
+  cardsData: IGuestTableRow[] = [];
+  cardsPage = 1;
+  cardsPageSize = 10;
+  cardsLoading = false;
+  cardsHasMore = true;
   // Sort
   private sort$ = new BehaviorSubject<Sort>({
     active: '',
@@ -123,15 +132,25 @@ export class GuestsComponent implements OnInit {
       from: this.formatDate(formValue.from),
       to: this.formatDate(formValue.to),
       isFirstTime: this.getBooleanFilter(formValue.isFirstTime),
-      ambassador: formValue.ambassador || undefined,
-      didTheyReq: formValue.didTheyReq || undefined,
+      ambassador: this.getBooleanFilter(formValue.ambassador),
+      didTheyReq: this.getBooleanFilter(formValue.didTheyReq),
     };
 
-    // Update filters
     this.filters$.next(filters);
 
-    // Reset pagination
-    this.page$.next({ page: 1, size: this.page$.value.size });
+    // Reset table pagination
+    this.page$.next({
+      page: 1,
+      size: this.page$.value.size,
+    });
+
+    // Reset cards infinite scroll
+    this.resetCards();
+
+    // Reload cards if the current view is cards
+    if (this.currentView === 'cards') {
+      this.loadMoreCards();
+    }
   }
 
   clearFilters(): void {
@@ -469,6 +488,11 @@ export class GuestsComponent implements OnInit {
   // Set view
   setView(view: ICurrentView): void {
     this.currentView = view;
+
+    // if we change cards view, it starts the load
+    if (view === 'cards' && !this.cardsData.length) {
+      this.loadMoreCards();
+    }
   }
 
   get nextViewIcon(): string {
@@ -481,6 +505,10 @@ export class GuestsComponent implements OnInit {
 
   changeView(): void {
     this.currentView = VIEW_CONFIG[this.currentView].next;
+    // if we change cards view, it starts the load
+    if (this.currentView === 'cards' && !this.cardsData.length) {
+      this.loadMoreCards();
+    }
   }
 
   // To see cards from stats
@@ -504,5 +532,48 @@ export class GuestsComponent implements OnInit {
         });
       }
     });
+  }
+
+  // INFINITE SCROLL
+  // Load the next page of guests for the cards view
+  loadMoreCards(): void {
+    // Prevent duplicated requests while loading or when there is no more data
+    if (this.cardsLoading || !this.cardsHasMore) return;
+    this.cardsLoading = true;
+    this._guests
+      .getAllGuests({
+        limit: this.cardsPageSize,
+        page: this.cardsPage,
+        ...this.filters$.value,
+      })
+      .subscribe({
+        next: response => {
+          const newGuests = mapGuestTable(response.data);
+
+          // Append the new guests instead of replacing the existing cards
+          this.cardsData = [...this.cardsData, ...newGuests];
+
+          // Move to the next page for the next scroll
+          this.cardsPage++;
+
+          // If the API returned fewer guests than requested,
+          // there are no more pages to load
+          if (newGuests.length < this.cardsPageSize) {
+            this.cardsHasMore = false;
+          }
+          this.cardsLoading = false;
+        },
+        error: () => {
+          this.cardsLoading = false;
+        },
+      });
+  }
+
+  // Reset the cards infinite scroll state
+  private resetCards(): void {
+    this.cardsData = [];
+    this.cardsPage = 1;
+    this.cardsHasMore = true;
+    this.cardsLoading = false;
   }
 }

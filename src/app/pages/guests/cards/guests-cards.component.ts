@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 
 import { IGuestTableRow, IGuestYearGroup } from '@interfaces/data-structure-api';
 
@@ -18,6 +18,27 @@ export class GuestsCardsComponent {
 
   get data(): IGuestTableRow[] {
     return this._data;
+  }
+
+  // To infinite Scroll
+  @Output() loadMore = new EventEmitter<void>();
+
+  // Listen for scroll events on the browser window.
+  @HostListener('window:scroll')
+  onScroll(): void {
+    // Get the current position of the bottom of the visible viewport.
+    const scrollPosition = window.innerHeight + window.scrollY;
+
+    // Get the total height of the document.
+    const pageHeight = document.documentElement.scrollHeight;
+
+    // Start loading more cards when 300px remain before reaching the bottom.
+    const threshold = 300;
+
+    // Emit the event when the user is close to the bottom of the page.
+    if (scrollPosition >= pageHeight - threshold) {
+      this.loadMore.emit();
+    }
   }
 
   cardsGuest: IGuestYearGroup[] = [];
