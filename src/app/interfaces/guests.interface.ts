@@ -126,6 +126,8 @@ export interface IQueryParamsGuests {
   isFirstTime?: boolean;
   rating?: number;
   region?: Regions;
+  ambassador?: boolean;
+  didTheyReq?: boolean;
 }
 
 export interface IGuestsFormSubmit {

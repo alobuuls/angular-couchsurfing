@@ -14,7 +14,20 @@ export class GuestsService {
 
   constructor(private http: HttpClient) {}
 
-  getAllGuests({ limit = 10, page = 1, country, from, to, groupType, continent, isFirstTime, rating }: IQueryParamsGuests): Observable<IGuestsResp> {
+  getAllGuests({
+    limit = 10,
+    page = 1,
+    country,
+    from,
+    to,
+    groupType,
+    continent,
+    isFirstTime,
+    rating,
+    region,
+    ambassador,
+    didTheyReq,
+  }: IQueryParamsGuests): Observable<IGuestsResp> {
     let params = new HttpParams().set('limit', String(limit)).set('page', String(page));
     if (country) params = params.set('country', String(country));
     if (from) params = params.set('from', String(from));
@@ -23,6 +36,9 @@ export class GuestsService {
     if (continent) params = params.set('continent', String(continent));
     if (isFirstTime !== undefined) params = params.set('isFirstTime', String(isFirstTime));
     if (rating !== undefined) params = params.set('rating', String(rating));
+    if (region !== undefined) params = params.set('region', String(region));
+    if (ambassador !== undefined) params = params.set('ambassador', String(ambassador));
+    if (didTheyReq !== undefined) params = params.set('didTheyReq', String(didTheyReq));
     return this.http.get<IGuestsResp>(this.urlGuests, { params });
   }
 

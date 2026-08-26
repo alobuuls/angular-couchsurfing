@@ -107,6 +107,8 @@ export class GuestsComponent implements OnInit {
       from: [new Date(2023, 0, 1)],
       to: [new Date()],
       isFirstTime: [''],
+      ambassador: [false],
+      didTheyReq: [false],
     });
   }
 
@@ -121,6 +123,8 @@ export class GuestsComponent implements OnInit {
       from: this.formatDate(formValue.from),
       to: this.formatDate(formValue.to),
       isFirstTime: this.getBooleanFilter(formValue.isFirstTime),
+      ambassador: formValue.ambassador || undefined,
+      didTheyReq: formValue.didTheyReq || undefined,
     };
 
     // Update filters
@@ -131,10 +135,12 @@ export class GuestsComponent implements OnInit {
   }
 
   clearFilters(): void {
-    this.filtersForm.reset({ country: '', continent: '', groupType: '', from: '', to: '', isFirstTime: '', region: '' });
+    this.filtersForm.reset({ country: '', continent: '', groupType: '', from: '', to: '', isFirstTime: '', region: '', ambassador: false, didTheyReq: false });
 
     // Show all countries again to autocomplete
     this.filteredCountries = [...this.countries];
+    // Show all regions again to autocomplete
+    this.filteredRegions = [...this.regions];
   }
 
   private getBooleanFilter(value: boolean | string | null): boolean | undefined {
