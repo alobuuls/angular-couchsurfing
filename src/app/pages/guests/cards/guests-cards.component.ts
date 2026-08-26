@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { IGuestTableMember, IGuestTableRow, IGuestYearGroup } from '@interfaces/data-structure-api';
+import { IGuestTableRow, IGuestYearGroup } from '@interfaces/data-structure-api';
 
 @Component({
   selector: 'guests-cards',
@@ -21,7 +21,9 @@ export class GuestsCardsComponent {
   }
 
   cardsGuest: IGuestYearGroup[] = [];
-  selectedCard: IGuestTableMember | null = null;
+
+  // Cards that are currently open
+  openCards = new Set<string>();
 
   private groupGuestsByDate(): void {
     const years = new Map<number, Map<number, IGuestTableRow[]>>();
@@ -36,13 +38,11 @@ export class GuestsCardsComponent {
       if (!years.has(year)) {
         years.set(year, new Map());
       }
-
       const months = years.get(year)!;
 
       if (!months.has(month)) {
         months.set(month, []);
       }
-
       months.get(month)!.push(guest);
     }
 
@@ -66,11 +66,34 @@ export class GuestsCardsComponent {
     }).format(new Date(2024, month, 1));
   }
 
-  toggleCard(person: IGuestTableMember): void {
-    this.selectedCard = this.selectedCard === person ? null : person;
+  // Open / close a card
+  toggleCard(guest: any): void {
+    const cardId = guest.groupId ?? guest.guestId;
+
+    if (!cardId) return;
+
+    if (this.openCards.has(cardId)) {
+      this.openCards.delete(cardId);
+    } else {
+      this.openCards.add(cardId);
+    }
   }
 
-  getDetailGuest(g: IGuestTableMember): void {
-    if (!g.guestId) return;
+  isCardOpen(guest: any): boolean {
+    const cardId = guest.groupId ?? guest.guestId;
+
+    if (!cardId) return false;
+
+    return this.openCards.has(cardId);
+  }
+
+  //  Get the names of the people in the guest/trip
+  getGuestNames(guest: IGuestTableRow): string {
+    return guest.people.map(person => person.fullName).join(' & ');
+  }
+
+  // Get guest details
+  getDetailGuest(guest: IGuestTableRow): void {
+    console.log(guest);
   }
 }

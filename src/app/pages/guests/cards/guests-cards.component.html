@@ -1,41 +1,49 @@
 <div class="ctn-cards">
   <!-- YEARS -->
   <div *ngFor="let year of cardsGuest" class="year-group">
-    <h2 class="year-title">
-      {{ year.year }}
-    </h2>
+    <h2 class="year-title">{{ year.year }}</h2>
 
     <!-- MONTHS -->
     <div *ngFor="let month of year.months" class="month-group">
-      <h3 class="month-title">
-        {{ month.monthName | uppercase }}
-      </h3>
+      <h3 class="month-title">{{ month.monthName | uppercase }}</h3>
 
       <div class="cards">
-        <ng-container *ngFor="let guest of month.guests">
-          <!-- ONE CARD PER PERSON -->
-          <div *ngFor="let p of guest.people" class="card">
-            <span class="layover"></span>
+        <!-- ONE CARD PER GUEST/TRIP -->
+        <div *ngFor="let guest of month.guests" class="card">
+          <span class="layover"></span>
+          <div class="content">
+            <!-- PEOPLE -->
+            <div *ngFor="let p of guest.people" class="person">
+              <div class="person-info">
+                <h2>
+                  {{ p.fullName }}
+                  <mat-icon
+                    [class.male]="p.gender === 'male'"
+                    [class.female]="p.gender === 'female'"
+                    [fontIcon]="p.gender === 'female' ? 'woman' : 'man'"
+                  >
+                  </mat-icon>
+                </h2>
 
-            <div class="content">
-              <h2>
-                {{ p.fullName }}
-
-                <mat-icon
-                  [class.male]="p.gender === 'male'"
-                  [class.female]="p.gender === 'female'"
-                  [fontIcon]="p.gender === 'female' ? 'woman' : 'man'"
-                />
-              </h2>
-
-              <div class="ctn-stars">
-                <mat-icon *ngFor="let s of [1, 2, 3, 4, 5]" [class.filled]="s < p.rating" fontIcon="star"> </mat-icon>
+                <!-- RATING -->
+                <div class="ctn-stars">
+                  <mat-icon *ngFor="let s of [1, 2, 3, 4, 5]" [class.filled]="s <= p.rating" fontIcon="star">
+                  </mat-icon>
+                </div>
               </div>
+            </div>
 
-              <a (click)="getDetailGuest(p)"> Read more </a>
+            <!-- READ MORE -->
+            <a (click)="toggleCard(guest)">
+              {{ isCardOpen(guest) ? 'Show less' : 'Read more' }}
+            </a>
+
+            <!-- DETAILS -->
+            <div *ngIf="isCardOpen(guest)" class="card-details">
+              <p>Visited: {{ guest.visitedDate }}</p>
             </div>
           </div>
-        </ng-container>
+        </div>
       </div>
     </div>
   </div>
