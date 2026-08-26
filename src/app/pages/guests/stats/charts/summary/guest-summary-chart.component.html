@@ -1,0 +1,37 @@
+<div class="summary-charts">
+  <!-- Summary views -->
+  <div class="ctn-buttons">
+    <button
+      type="button"
+      *ngFor="let view of summaryViews"
+      (click)="selectView(view)"
+      [class.active]="selectedView === view"
+      class="btn-summary"
+    >
+      {{ view }}
+    </button>
+  </div>
+  <!-- Total -->
+  <div *ngIf="selectedView === 'total'">
+    <div class="summary-cards">
+      <div class="summary-card" *ngFor="let card of cards">
+        <div class="icon-summary-card">
+          <mat-icon>{{ card.icon }}</mat-icon>
+        </div>
+
+        <div class="ctn-summary-card">
+          <span class="value-summary-card">
+            {{ card.value }}
+          </span>
+
+          <span class="label-summary-card">
+            {{ card.label }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <canvas *ngIf="selectedView !== 'total'" #summaryChart></canvas>
+</div>

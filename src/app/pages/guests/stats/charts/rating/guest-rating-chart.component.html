@@ -1,7 +1,16 @@
 <div class="rating-charts">
-
+  <div class="ctn-buttons">
+    <button
+      type="button"
+      *ngFor="let view of ratingViews"
+      (click)="selectView(view)"
+      [class.active]="selectedView === view"
+      class="btn-rating"
+    >
+      {{ view }}
+    </button>
+  </div>
   <div class="chart-row">
-
     <div class="rating-charts-ctn">
       <canvas #ratingsChart></canvas>
     </div>
@@ -27,19 +36,5 @@
         <mat-icon>pie_chart</mat-icon>
       </button>
     </div>
-
   </div>
-
-  <div class="ctn-buttons">
-    <button
-      type="button"
-      *ngFor="let view of ratingViews"
-      (click)="selectView(view)"
-      [class.active]="selectedView === view"
-      class="btn-rating"
-    >
-      {{ view }}
-    </button>
-  </div>
-
 </div>

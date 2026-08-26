@@ -14,9 +14,10 @@ import { TripFormComponent } from '@pages/guests/form/trip-form/trip-form.compon
 import { GuestsFormComponent } from '@pages/guests/form/guests-form/guests-form.component';
 import { GuestsTableComponent } from '@pages/guests/table/guests-table.component';
 import { GuestsCardsComponent } from '@pages/guests/cards/guests-cards.component';
-import { GuestsMapComponent } from './map/guests-map.component';
-import { GuestsStatsComponent } from './stats/guests-stats.component';
-import { GuestRatingChartComponent } from './stats/charts/rating/guest-rating-chart.component';
+import { GuestsMapComponent } from '@pages/guests/map/guests-map.component';
+import { GuestsStatsComponent } from '@pages/guests/stats/guests-stats.component';
+import { GuestRatingChartComponent } from '@pages/guests/stats/charts/rating/guest-rating-chart.component';
+import { GuestSummaryChartComponent } from '@pages/guests/stats/charts/summary/guest-summary-chart.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { GuestRatingChartComponent } from './stats/charts/rating/guest-rating-ch
     GuestsMapComponent,
     GuestsStatsComponent,
     GuestRatingChartComponent,
+    GuestSummaryChartComponent,
   ],
   imports: [SharedModule, GuestsRoutingModule],
 })
