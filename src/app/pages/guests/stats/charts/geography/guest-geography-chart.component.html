@@ -1,0 +1,35 @@
+<div class="geography-charts">
+  <!-- Geography views -->
+  <div class="ctn-buttons">
+    <button
+      type="button"
+      *ngFor="let view of geographyViews"
+      (click)="selectView(view)"
+      [class.active]="selectedView === view"
+      class="btn-geography"
+    >
+      {{ view }}
+    </button>
+  </div>
+
+  <!-- Ranking views -->
+  <div class="ctn-ranking-buttons">
+    <button
+      type="button"
+      *ngFor="let ranking of rankingViews"
+      (click)="selectRanking(ranking)"
+      [class.active]="selectedRanking === ranking"
+      [disabled]="(selectedView === 'livingIn' || selectedView === 'hometown') && ranking === 'bottom'"
+      class="btn-ranking"
+    >
+      {{ ranking === 'all' ? 'All' : ranking === 'top' ? 'Top 3' : 'Bottom 3' }}
+    </button>
+  </div>
+
+  <!-- Geography chart -->
+  <div class="geography-chart-row">
+    <div class="geography-chart-ctn">
+      <canvas #geographyChart></canvas>
+    </div>
+  </div>
+</div>

@@ -32,6 +32,11 @@
     <button matTooltip="See Rating" mat-icon-button class="btn-rating" (click)="changeChart('rating')">
       <mat-icon>star</mat-icon>
     </button>
+
+    <!-- Geography -->
+    <button matTooltip="See Geography" mat-icon-button class="btn-geography" (click)="changeChart('geography')">
+      <mat-icon>globe_location_pin</mat-icon>
+    </button>
   </div>
 
   <ng-container *ngIf="vm.status === 'success'">
@@ -45,6 +50,9 @@
 
       <guest-demographics-chart *ngIf="currentChart === 'demographics'" [demographics]="vm.data.demographics">
       </guest-demographics-chart>
+
+      <guest-geography-chart *ngIf="currentChart === 'geography'" [geography]="vm.data.geography">
+      </guest-geography-chart>
     </div>
   </ng-container>
 </div>

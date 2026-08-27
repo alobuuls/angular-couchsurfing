@@ -1,5 +1,5 @@
 // View Chart
-export type ICurrentChart = 'summary' | 'ranking' | 'demographics' | 'oldest' | 'youngest' | 'mostVisitedGender' | 'firstLast' | 'rating';
+export type ICurrentChart = 'summary' | 'ranking' | 'demographics' | 'oldest' | 'youngest' | 'mostVisitedGender' | 'firstLast' | 'rating' | 'geography';
 
 // Summary
 
@@ -97,6 +97,52 @@ export interface IRatingsDistribution {
   '4': number;
   '5': number;
   unrated: number;
+}
+/* Geography */
+export type IGeographyView = 'continents' | 'regions' | 'countries' | 'livingIn' | 'hometown';
+
+export interface IGeographyContinent {
+  code: string;
+  total: number;
+  firstVisit: string;
+}
+
+export interface IGeographyRegion {
+  code: string;
+  total: number;
+  firstVisit: string;
+}
+
+export interface IGeographyCountry {
+  code: string;
+  total: number;
+  male: number;
+  female: number;
+  firstVisit: string;
+}
+
+export interface IGeographyLocation {
+  code: string;
+  name: string;
+  total: number;
+}
+
+export interface IGeographyRanking<T> {
+  all: T[];
+  top: T[];
+  bottom: T[];
+}
+
+export interface IGeographyDistribution {
+  continents: IGeographyRanking<IGeographyContinent>;
+  regions: IGeographyRanking<IGeographyRegion>;
+  countries: IGeographyRanking<IGeographyCountry>;
+  livingIn: {
+    top: IGeographyLocation[];
+  };
+  hometown: {
+    top: IGeographyLocation[];
+  };
 }
 
 export type IChartType = 'bar' | 'doughnut';
