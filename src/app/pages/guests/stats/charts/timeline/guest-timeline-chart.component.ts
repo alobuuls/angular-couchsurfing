@@ -28,6 +28,14 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
   // Available timeline views.
   readonly timelineViews: ITimelineView[] = ['years', 'months', 'days', 'sameArrivalDay', 'sameStay'];
 
+  readonly timelineViewLabels: Record<ITimelineView, string> = {
+    years: 'Years',
+    months: 'Months',
+    days: 'Days',
+    sameArrivalDay: 'Same Arrival Day',
+    sameStay: 'Same Stay',
+  };
+
   private chart?: Chart;
 
   // Configuration for each timeline view.
@@ -129,8 +137,9 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
       data: {
         labels: data.map(item => {
           if ('date' in item) {
-            return item.date;
+            return this.formatArrivalDate(item.date);
           }
+
           return item.period;
         }),
         datasets: [
@@ -321,5 +330,20 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
     // Destroy the current Chart.js instance.
     this.chart?.destroy();
     this.chart = undefined;
+  }
+
+  // DATE
+  private formatArrivalDate(date: string): string {
+    const parsedDate = new Date(`${date}T00:00:00`);
+    const parts = new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }).formatToParts(parsedDate);
+    const year = parts.find(part => part.type === 'year')?.value;
+    const month = parts.find(part => part.type === 'month')?.value;
+    const day = parts.find(part => part.type === 'day')?.value;
+
+    return `${year}, ${month} ${day}`;
   }
 }
