@@ -22,7 +22,7 @@
       [disabled]="(selectedView === 'livingIn' || selectedView === 'hometown') && ranking === 'bottom'"
       class="btn-ranking"
     >
-      {{ ranking === 'all' ? 'All' : ranking === 'top' ? 'Top 3' : 'Bottom 3' }}
+      {{ ranking === 'all' ? 'All' : ranking === 'top' ? 'Top' : 'Bottom' }}
     </button>
   </div>
 
@@ -30,6 +30,12 @@
   <div class="geography-chart-row">
     <div class="geography-chart-ctn">
       <canvas #geographyChart></canvas>
+    </div>
+    <!-- Country labels with flags -->
+    <div *ngIf="selectedView === 'countries'" class="country-labels" [class.ranking-labels]="selectedRanking !== 'all'">
+      <div *ngFor="let country of getSelectedCountries()" class="country-label">
+        <span [class]="country.code | flag"></span>
+      </div>
     </div>
   </div>
 </div>

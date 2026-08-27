@@ -9,6 +9,40 @@
   width: 100%;
 }
 
+.country-labels {
+  display: flex;
+  flex-direction: column;
+  width: 180px;
+  flex-shrink: 0;
+  padding-top: 62px;
+}
+
+.country-label {
+  display: flex;
+  align-items: center;
+  height: 25.5px;
+  font-size: 12.5px;
+}
+
+/* TOP / BOTTOM */
+.ranking-labels {
+  gap: 5rem;
+}
+
+.ranking-labels .country-label {
+  height: 45px;
+}
+
+.ranking-labels .country-label span {
+  font-size: 50px;
+}
+
+.geography-chart-ctn {
+  width: 100%;
+  max-width: 1000px;
+  min-height: 400px;
+}
+
 .geography-chart-ctn {
   width: 100%;
   max-width: 1000px;
@@ -144,4 +178,12 @@
   .btn-ranking {
     min-width: 90px;
   }
+
+  /* .country-labels {
+    width: 130px;
+  }
+
+  .country-label {
+    font-size: 12px;
+  } */
 }

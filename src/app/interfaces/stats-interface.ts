@@ -1,3 +1,5 @@
+import { CountriesCodes } from '@type/word.types';
+
 // View Chart
 export type ICurrentChart = 'summary' | 'ranking' | 'demographics' | 'oldest' | 'youngest' | 'mostVisitedGender' | 'firstLast' | 'rating' | 'geography' | 'timeline';
 
@@ -114,7 +116,7 @@ export interface IGeographyRegion {
 }
 
 export interface IGeographyCountry {
-  code: string;
+  code: CountriesCodes;
   total: number;
   male: number;
   female: number;

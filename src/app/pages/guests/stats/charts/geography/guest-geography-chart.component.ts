@@ -2,7 +2,13 @@ import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, 
 
 import Chart from 'chart.js/auto';
 
+// Interfaces
 import { IChartType, IGeographyContinent, IGeographyCountry, IGeographyDistribution, IGeographyLocation, IGeographyRegion, IGeographyView } from '@interfaces/stats-interface';
+
+// Constants
+import { REGION_NAMES } from '@config/world/regions';
+import { CountriesCodes, Regions } from '@type/word.types';
+import { WORLD } from '@config/world';
 
 @Component({
   selector: 'guest-geography-chart',
@@ -155,8 +161,16 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
           if ('name' in item) {
             return item.name;
           }
-
-          // Continents, regions and countries use their code.
+          // Remove _ in regions.
+          if (this.selectedView === 'regions') {
+            return REGION_NAMES[item.code as Regions] ?? item.code;
+          }
+          // Countries use their readable name instead of the ISO code.
+          if (this.selectedView === 'countries') {
+            const code = item.code.toLowerCase() as CountriesCodes;
+            return WORLD[code]?.name ?? item.code;
+          }
+          // Continents use their code.
           return item.code;
         }),
 
@@ -206,9 +220,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
 
   private getSelectedData(config: {
     getAllData: (geography: IGeographyDistribution) => IGeographyContinent[] | IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[];
-
     getTopData: (geography: IGeographyDistribution) => IGeographyContinent[] | IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[];
-
     getBottomData: (geography: IGeographyDistribution) => IGeographyContinent[] | IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[];
   }): IGeographyContinent[] | IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[] {
     // Map each ranking to its corresponding data.
@@ -221,16 +233,21 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
       // Display only the first three elements from the bottom ranking.
       bottom: config.getBottomData(this.geography).slice(0, 3),
     };
+    const data = rankingData[this.selectedRanking];
 
-    return rankingData[this.selectedRanking];
+    // Order regions from highest to lowest
+    if (this.selectedView === 'regions' || this.selectedView === 'countries') {
+      return [...data].sort((a, b) => b.total - a.total) as IGeographyRegion[];
+    }
+    return data;
   }
 
   private getChartTitle(label: string): string {
     // Map each ranking to its corresponding chart title.
     const rankingTitles = {
       all: label,
-      top: `${label} - Top 3`,
-      bottom: `${label} - Bottom 3`,
+      top: `${label} - Top 2`,
+      bottom: `${label} - Bottom 2`,
     };
 
     return rankingTitles[this.selectedRanking];
@@ -243,7 +260,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
     // Countries can contain many entries, so give each item
     // enough vertical space to remain readable.
     if (this.selectedView === 'countries' && this.selectedRanking === 'all') {
-      const height = Math.max(500, dataLength * 35);
+      const height = Math.max(500, dataLength * 10);
 
       canvas.style.height = `${height}px`;
     } else {
@@ -255,5 +272,15 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
     // Destroy the current Chart.js instance.
     this.chart?.destroy();
     this.chart = undefined;
+  }
+
+  // FLAG
+  getSelectedCountries(): IGeographyCountry[] {
+    const data = this.getSelectedData(this.chartConfig.countries);
+    return data as IGeographyCountry[];
+  }
+  getCountryName(code: string): string {
+    const countryCode = code.toLowerCase() as CountriesCodes;
+    return WORLD[countryCode]?.name ?? code;
   }
 }
