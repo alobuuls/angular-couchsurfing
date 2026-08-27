@@ -23,6 +23,8 @@ export class GuestSummaryChartComponent implements OnChanges {
 
   private chart?: Chart;
 
+  cards: ISummaryCard[] = [];
+
   // Configuration for each chart-based summary view.
   private readonly chartConfig: Record<
     Exclude<ISummaryView, 'total'>,
@@ -63,12 +65,44 @@ export class GuestSummaryChartComponent implements OnChanges {
     },
   };
 
-
   ngOnChanges(changes: SimpleChanges): void {
-    // Recreate the chart when the summary data changes.
+    if (changes['summary']) {
+      this.cards = [
+        {
+          label: 'Total Guests',
+          value: this.summary.totalGuests,
+          icon: 'groups',
+        },
+        {
+          label: 'Solo Guests',
+          value: this.summary.totalGuestsSolo,
+          icon: 'person',
+        },
+        {
+          label: 'Group Guests',
+          value: this.summary.totalGuestsGroups,
+          icon: 'group',
+        },
+        {
+          label: 'Total Visits',
+          value: this.summary.totalVisits,
+          icon: 'event',
+        },
+        {
+          label: 'Total Nights',
+          value: this.summary.totalNights,
+          icon: 'hotel',
+        },
+      ];
+    }
+
     if (changes['summary'] && this.selectedView !== 'total') {
       this.createChart();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.chart?.destroy();
   }
 
   selectView(view: ISummaryView): void {
@@ -150,36 +184,5 @@ export class GuestSummaryChartComponent implements OnChanges {
         }),
       },
     });
-  }
-
-  // Summary cards for the total view.
-  get cards(): ISummaryCard[] {
-    return [
-      {
-        label: 'Total Guests',
-        value: this.summary.totalGuests,
-        icon: 'groups',
-      },
-      {
-        label: 'Solo Guests',
-        value: this.summary.totalGuestsSolo,
-        icon: 'person',
-      },
-      {
-        label: 'Group Guests',
-        value: this.summary.totalGuestsGroups,
-        icon: 'group',
-      },
-      {
-        label: 'Total Visits',
-        value: this.summary.totalVisits,
-        icon: 'event',
-      },
-      {
-        label: 'Total Nights',
-        value: this.summary.totalNights,
-        icon: 'hotel',
-      },
-    ];
   }
 }
