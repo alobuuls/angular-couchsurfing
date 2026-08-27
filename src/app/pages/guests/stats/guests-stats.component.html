@@ -37,6 +37,11 @@
     <button matTooltip="See Geography" mat-icon-button class="btn-geography" (click)="changeChart('geography')">
       <mat-icon>globe_location_pin</mat-icon>
     </button>
+
+    <!-- Timeline -->
+    <button matTooltip="See Timeline" mat-icon-button class="btn-timeline" (click)="changeChart('timeline')">
+      <mat-icon>timeline</mat-icon>
+    </button>
   </div>
 
   <ng-container *ngIf="vm.status === 'success'">
@@ -53,6 +58,8 @@
 
       <guest-geography-chart *ngIf="currentChart === 'geography'" [geography]="vm.data.geography">
       </guest-geography-chart>
+
+      <guest-timeline-chart *ngIf="currentChart === 'timeline'" [timeline]="vm.data.timeline"> </guest-timeline-chart>
     </div>
   </ng-container>
 </div>

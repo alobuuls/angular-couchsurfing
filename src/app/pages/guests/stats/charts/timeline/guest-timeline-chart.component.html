@@ -1,0 +1,21 @@
+<div class="timeline-charts">
+  <!-- Timeline views -->
+  <div class="ctn-buttons">
+    <button
+      type="button"
+      *ngFor="let view of timelineViews"
+      (click)="selectView(view)"
+      [class.active]="selectedView === view"
+      class="btn-timeline"
+    >
+      {{ view }}
+    </button>
+  </div>
+
+  <!-- Timeline chart -->
+  <div class="timeline-chart-row">
+    <div class="timeline-chart-ctn">
+      <canvas #timelineChart></canvas>
+    </div>
+  </div>
+</div>

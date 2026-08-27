@@ -1,5 +1,5 @@
 // View Chart
-export type ICurrentChart = 'summary' | 'ranking' | 'demographics' | 'oldest' | 'youngest' | 'mostVisitedGender' | 'firstLast' | 'rating' | 'geography';
+export type ICurrentChart = 'summary' | 'ranking' | 'demographics' | 'oldest' | 'youngest' | 'mostVisitedGender' | 'firstLast' | 'rating' | 'geography' | 'timeline';
 
 // Summary
 
@@ -144,5 +144,55 @@ export interface IGeographyDistribution {
     top: IGeographyLocation[];
   };
 }
+
+// Timeline
+export type ITimelineView = 'years' | 'months' | 'days' | 'sameArrivalDay' | 'sameStay';
+export interface ITimelineItem {
+  period: string;
+  total: number;
+}
+export interface ISameArrivalDayGuest {
+  guestId: string;
+  fullName: string;
+  gender: 'male' | 'female';
+  groupId: string | null;
+  groupType: string;
+  hometownCode: string;
+  continent: string;
+  region: string;
+  visitedDate: string;
+  birthDate: string | null;
+}
+export interface ISameArrivalDay {
+  date: string;
+  total: number;
+  guests: ISameArrivalDayGuest[];
+}
+export interface ISameStayGuest {
+  guestId: string;
+  fullName: string;
+  gender: 'male' | 'female';
+  groupId: string | null;
+  groupType: string;
+  hometownCode: string;
+  continent: string;
+  region: string;
+  visitedDate: string;
+  birthDate: string | null;
+}
+export interface ISameStay {
+  guest: ISameStayGuest;
+  overlap: number;
+  guests: ISameStayGuest[];
+}
+export interface ITimelineDistribution {
+  years: ITimelineItem[];
+  months: ITimelineItem[];
+  days: ITimelineItem[];
+  sameArrivalDay: ISameArrivalDay[];
+  sameStay: ISameStay[];
+}
+
+export type ITimelineChartType = 'bar' | 'network';
 
 export type IChartType = 'bar' | 'doughnut';
