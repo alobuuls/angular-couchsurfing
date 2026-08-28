@@ -34,6 +34,8 @@ export interface IGuestDetail extends ITripDetail {
   theirReference: string | null;
   myReference: string | null;
   groupId?: string;
+  ambassador?: boolean;
+  didTheyReq?: boolean;
 }
 
 export interface IGuestFormData extends IGuestDetail {

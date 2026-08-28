@@ -17,34 +17,69 @@
     <ng-container *ngIf="guest">
       <!-- GUEST NAME -->
       <h2 *ngIf="guest.fullName">
-        <mat-icon [fontIcon]="guest.gender === 'male' ? 'male' : 'female'"></mat-icon>{{ guest.fullName }}
+        <mat-icon [fontIcon]="guest.gender === 'male' ? 'male' : 'female'"></mat-icon>
+        {{ guest.fullName }}
+        <mat-icon *ngIf="guest.ambassador" matTooltip="Ambassador">badge</mat-icon>
       </h2>
 
       <!-- TRIP -->
-      <ng-container *ngIf="
+      <ng-container
+        *ngIf="
           guest.visitedDate ||
           (guest.nights !== null && guest.nights !== undefined) ||
           (guest.stayed !== null && guest.stayed !== undefined) ||
           (guest.hangOut !== null && guest.hangOut !== undefined) ||
           (guest.isFirstTime !== null && guest.isFirstTime !== undefined) ||
-          guest.groupType">
-
+          guest.groupType
+        "
+      >
         <h3>TRIP</h3>
         <ul>
-          <li *ngIf="guest.visitedDate"><strong>Visited Date: </strong>{{ guest.visitedDate | date: 'yyyy MMMM d' }}</li>
-          <li *ngIf="guest.nights !== null && guest.nights !== undefined"><strong>Nights: </strong>{{ guest.nights }}</li>
-          <li *ngIf="guest.stayed !== null && guest.stayed !== undefined"><strong>Stayed: </strong>
-            <mat-icon [fontIcon]="guest.stayed ? 'check' : 'close'" [class.success]="guest.stayed"  [class.danger]="!guest.stayed"></mat-icon>
+          <li *ngIf="guest.visitedDate">
+            <strong>Visited Date: </strong>{{ guest.visitedDate | date: 'yyyy MMMM d' }}
           </li>
-          <li *ngIf="guest.hangOut !== null && guest.hangOut !== undefined"><strong>Hang Out: </strong>
-            <mat-icon [fontIcon]="guest.hangOut ? 'check' : 'close'" [class.success]="guest.hangOut" [class.danger]="!guest.hangOut"></mat-icon>
+          <li *ngIf="guest.nights !== null && guest.nights !== undefined">
+            <strong>Nights: </strong>{{ guest.nights }}
           </li>
-          <li *ngIf="guest.isFirstTime !== null && guest.isFirstTime !== undefined"><strong>First Time: </strong>
-            <mat-icon [fontIcon]="guest.isFirstTime ? 'check' : 'close'" [class.success]="guest.isFirstTime" [class.danger]="!guest.isFirstTime"></mat-icon>
+          <li *ngIf="guest.stayed !== null && guest.stayed !== undefined">
+            <strong>Stayed: </strong>
+            <mat-icon
+              [fontIcon]="guest.stayed ? 'check' : 'close'"
+              [class.success]="guest.stayed"
+              [class.danger]="!guest.stayed"
+            ></mat-icon>
           </li>
-          <li *ngIf="guest.groupType"><strong>Group Type: </strong>
+          <li *ngIf="guest.hangOut !== null && guest.hangOut !== undefined">
+            <strong>Hang Out: </strong>
+            <mat-icon
+              [fontIcon]="guest.hangOut ? 'check' : 'close'"
+              [class.success]="guest.hangOut"
+              [class.danger]="!guest.hangOut"
+            ></mat-icon>
+          </li>
+          <li *ngIf="guest.isFirstTime !== null && guest.isFirstTime !== undefined">
+            <strong>First Time: </strong>
+            <mat-icon
+              [fontIcon]="guest.isFirstTime ? 'check' : 'close'"
+              [class.success]="guest.isFirstTime"
+              [class.danger]="!guest.isFirstTime"
+            ></mat-icon>
+          </li>
+          <li *ngIf="guest.groupType">
+            <strong>Group Type: </strong>
             <span class="gap-icons">
-              <mat-icon [fontIcon]="guest.groupType === 'solo' ? 'person' : guest.groupType === 'couple' ? 'favorite' : guest.groupType === 'friends'? 'groups' : 'family_restroom'"></mat-icon>{{ guest.groupType | titlecase }}
+              <mat-icon
+                [fontIcon]="
+                  guest.groupType === 'solo'
+                    ? 'person'
+                    : guest.groupType === 'couple'
+                      ? 'favorite'
+                      : guest.groupType === 'friends'
+                        ? 'groups'
+                        : 'family_restroom'
+                "
+              ></mat-icon
+              >{{ guest.groupType | titlecase }}
             </span>
           </li>
         </ul>
@@ -122,6 +157,17 @@
               [class.success]="guest.isGay"
               [class.danger]="!guest.isGay"
             ></mat-icon>
+          </li>
+
+          <li *ngIf="guest.didTheyReq !== null && guest.didTheyReq !== undefined">
+            <ng-container *ngIf="guest.didTheyReq; else requestSent">
+              <strong>Did they request a stay?</strong>
+              <mat-icon fontIcon="check" class="success"></mat-icon>
+            </ng-container>
+
+            <ng-template #requestSent>
+              <strong>I sent the request</strong>
+            </ng-template>
           </li>
         </ul>
       </ng-container>
@@ -283,6 +329,7 @@
         <h2 *ngIf="member.fullName">
           <mat-icon [fontIcon]="member.gender === 'male' ? 'male' : 'female'"></mat-icon>
           {{ member.fullName }}
+          <mat-icon *ngIf="member.ambassador" matTooltip="Ambassador">badge</mat-icon>
         </h2>
 
         <!-- PERSONAL INFORMATION -->
@@ -308,7 +355,12 @@
 
             <li *ngIf="member.gender">
               <strong>Gender:</strong>
-              <i [class]="member.gender === 'male' ? 'fa-solid fa-person gender-male' : 'fa-solid fa-person-dress gender-female'"></i>{{ member.gender | titlecase }}
+              <i
+                [class]="
+                  member.gender === 'male' ? 'fa-solid fa-person gender-male' : 'fa-solid fa-person-dress gender-female'
+                "
+              ></i
+              >{{ member.gender | titlecase }}
             </li>
 
             <li *ngIf="member.birthDate">
@@ -352,6 +404,17 @@
                 [class.success]="member.isGay"
                 [class.danger]="!member.isGay"
               ></mat-icon>
+            </li>
+
+            <li *ngIf="member.didTheyReq !== null && member.didTheyReq !== undefined">
+              <ng-container *ngIf="member.didTheyReq; else memberRequestSent">
+                <strong>Did they request a stay?</strong>
+                <mat-icon fontIcon="check" class="success"></mat-icon>
+              </ng-container>
+
+              <ng-template #memberRequestSent>
+                <strong>I sent the request</strong>
+              </ng-template>
             </li>
           </ul>
         </ng-container>

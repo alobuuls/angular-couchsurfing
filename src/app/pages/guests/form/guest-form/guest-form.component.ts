@@ -172,8 +172,10 @@ export class GuestFormComponent implements OnInit {
       // Type Form
       groupType: [this.selectedGroupType, Validators.required],
       isFirstTime: [false],
+      didTheyReq: [false],
       isGay: [false],
       hangOut: [false],
+      ambassador: [false],
       theirReference: ['', [Validators.maxLength(500)]],
       myReference: ['', [Validators.maxLength(500)]],
     });
@@ -205,8 +207,10 @@ export class GuestFormComponent implements OnInit {
       groupType: this.guest.groupType,
       gift: this.guest.gift,
       isFirstTime: this.guest.isFirstTime,
+      didTheyReq: this.guest.didTheyReq,
       hangOut: this.guest.hangOut,
       isGay: this.guest.isGay,
+      ambassador: this.guest.ambassador ?? false,
       theirReference: this.guest.theirReference,
       myReference: this.guest.myReference,
     });
