@@ -12,9 +12,48 @@
     </button>
   </div>
 
+  <!-- Totals views -->
+  <div class="ctn-buttons" *ngIf="selectedView === 'totals'">
+    <button
+      type="button"
+      *ngFor="let view of demographicTotalsViews"
+      (click)="selectTotalsView(view)"
+      [class.active]="selectedTotalsView === view"
+      class="btn-demographics"
+    >
+      {{ view }}
+    </button>
+  </div>
+
+  <!-- Age-based views -->
+  <div class="ctn-buttons" *ngIf="selectedView === 'oldest' || selectedView === 'youngest'">
+    <button
+      type="button"
+      *ngFor="let view of demographicAgeViews"
+      (click)="selectAgeView(view)"
+      [class.active]="selectedAgeView === view"
+      class="btn-demographics"
+    >
+      {{ view }}
+    </button>
+  </div>
+
+  <!-- First/Last views -->
+  <div class="ctn-buttons" *ngIf="selectedView === 'firstLast'">
+    <button
+      type="button"
+      *ngFor="let view of demographicFirstLastViews"
+      (click)="selectFirstLastView(view)"
+      [class.active]="selectedFirstLastView === view"
+      class="btn-demographics"
+    >
+      {{ view }}
+    </button>
+  </div>
+
+  <!-- Chart -->
   <div class="demographics-chart-row">
     <div class="demographics-chart-ctn">
-      <!-- Chart -->
       <canvas #demographicsChart></canvas>
     </div>
   </div>

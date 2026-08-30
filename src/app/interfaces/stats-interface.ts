@@ -1,10 +1,10 @@
 import { CountriesCodes } from '@type/word.types';
 
 // View Chart
-export type ICurrentChart = 'summary' | 'ranking' | 'demographics' | 'oldest' | 'youngest' | 'mostVisitedGender' | 'firstLast' | 'rating' | 'geography' | 'timeline';
+export type ICurrentChart = 'summary' | 'ranking' | 'demographics' | 'geography' | 'timeline' | 'rating';
+export type IChartType = 'bar' | 'doughnut';
 
 // Summary
-
 export type ISummaryView = 'total' | 'nights' | 'gifts' | 'rating';
 export interface ISummaryDistribution {
   totalGuests: number;
@@ -65,7 +65,28 @@ export interface IRankingsDistribution {
 }
 
 // Demographics
-export type IDemographicsView = 'overall' | 'groups';
+export type IDemographicsView = 'totals' | 'mostVisitedGender' | 'oldest' | 'youngest' | 'firstLast';
+export type IDemographicsGroup = 'overall' | 'solo' | 'couple' | 'friends' | 'family';
+export type IDemographicGender = 'male' | 'female' | 'trans' | 'isGay';
+export type IDemographicsTotalsView = 'groups' | 'overall';
+export type IDemographicsOldestView = 'overall' | 'solo' | 'groups';
+export type IDemographicGroups = Record<Exclude<IDemographicsGroup, 'overall'>, IDemographicGroup>;
+export interface IDemographicPerson {
+  guestId: string;
+  fullName: string;
+  gender: IDemographicGender;
+  groupId: string | null;
+  groupType: IDemographicsGroup;
+  hometownCode: string;
+  continent: string;
+  region: string;
+  visitedDate: string;
+  birthDate: string | null;
+}
+
+export interface IDemographicRatedPerson extends IDemographicPerson {
+  rating: number;
+}
 
 export interface IDemographicGroup {
   male: number;
@@ -76,17 +97,59 @@ export interface IDemographicGroup {
 
 export interface IDemographicsTotals {
   overall: IDemographicGroup;
+  groups: IDemographicGroups;
+}
 
-  groups: {
-    solo: IDemographicGroup;
-    couple: IDemographicGroup;
-    friends: IDemographicGroup;
-    family: IDemographicGroup;
+export interface IDemographicGenderPeople {
+  male: IDemographicPerson[];
+  female: IDemographicPerson[];
+  trans: IDemographicPerson[];
+  isGay: IDemographicPerson[];
+}
+
+export interface IDemographicAgeGroup {
+  solo: IDemographicGenderPeople;
+  overall: {
+    people: IDemographicPerson[];
   };
+  couple: IDemographicPerson[];
+  friends: IDemographicPerson[];
+  family: IDemographicPerson[];
+}
+
+export interface IDemographicsMostVisitedGender {
+  overall: IDemographicGender;
+  solo: IDemographicGender;
+  couple: IDemographicGender;
+  friends: IDemographicGender;
+  family: IDemographicGender;
+}
+export interface IDemographicFirstLast {
+  first: IDemographicPerson | null;
+  last: IDemographicPerson | null;
+}
+
+export interface IDemographicsFirstLast {
+  overall: {
+    people: IDemographicFirstLast;
+  };
+  solo: {
+    female: IDemographicFirstLast;
+    male: IDemographicFirstLast;
+    trans: IDemographicFirstLast;
+    isGay: IDemographicFirstLast;
+  };
+  couple: IDemographicFirstLast;
+  friends: IDemographicFirstLast;
+  family: IDemographicFirstLast;
 }
 
 export interface IDemographicsDistribution {
   totals: IDemographicsTotals;
+  oldest: IDemographicAgeGroup;
+  youngest: IDemographicAgeGroup;
+  mostVisitedGender: IDemographicsMostVisitedGender;
+  firstLast: IDemographicsFirstLast;
 }
 
 // Rating
@@ -100,7 +163,7 @@ export interface IRatingsDistribution {
   '5': number;
   unrated: number;
 }
-/* Geography */
+// Geography
 export type IGeographyView = 'continents' | 'regions' | 'countries' | 'livingIn' | 'hometown';
 
 export interface IGeographyContinent {
@@ -196,5 +259,3 @@ export interface ITimelineDistribution {
 }
 
 export type ITimelineChartType = 'bar' | 'network';
-
-export type IChartType = 'bar' | 'doughnut';
