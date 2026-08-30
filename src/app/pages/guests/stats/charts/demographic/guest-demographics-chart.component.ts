@@ -23,6 +23,14 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
   // Available main views shown in the UI.
   readonly demographicsViews: IDemographicsView[] = ['totals', 'mostVisitedGender', 'oldest', 'youngest', 'firstLast'];
 
+  readonly demographicsViewLabels: Record<IDemographicsView, string> = {
+    totals: 'Totals',
+    mostVisitedGender: 'Top Gender',
+    oldest: 'Oldest',
+    youngest: 'Youngest',
+    firstLast: 'First - Last',
+  };
+
   // Currently selected totals sub-view.
   selectedTotalsView: IDemographicsTotalsView = 'overall';
   // Available totals sub-views.
