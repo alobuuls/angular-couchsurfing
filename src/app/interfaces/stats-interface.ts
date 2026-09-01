@@ -165,6 +165,7 @@ export interface IRatingsDistribution {
 }
 // Geography
 export type IGeographyView = 'continents' | 'regions' | 'countries' | 'livingIn' | 'hometown';
+export type ICountryRanking = 'all' | 'top' | 'bottom' | 'topFemale' | 'topMale' | 'mostConsecutive';
 
 export interface IGeographyContinent {
   code: string;
@@ -201,13 +202,41 @@ export interface IGeographyRanking<T> {
 export interface IGeographyDistribution {
   continents: IGeographyRanking<IGeographyContinent>;
   regions: IGeographyRanking<IGeographyRegion>;
-  countries: IGeographyRanking<IGeographyCountry>;
+  countries: IGeographyCountryRanking;
   livingIn: {
     top: IGeographyLocation[];
   };
   hometown: {
     top: IGeographyLocation[];
   };
+}
+
+export interface IGeographyMostConsecutive {
+  code: CountriesCodes;
+  streak: number;
+  firstVisit: string;
+  lastVisit: string;
+  guests: {
+    guestId: string;
+    fullName: string;
+    gender: string;
+    groupId: string | null;
+    groupType: string;
+    birthDate: string;
+    continent: string;
+    hometownCode: string;
+    region: string;
+    visitedDate: string;
+  }[];
+}
+
+export interface IGeographyCountryRanking {
+  all: IGeographyCountry[];
+  top: IGeographyCountry[];
+  bottom: IGeographyCountry[];
+  topFemale: IGeographyCountry[];
+  topMale: IGeographyCountry[];
+  mostConsecutive: IGeographyMostConsecutive;
 }
 
 // Timeline

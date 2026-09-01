@@ -3,7 +3,16 @@ import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, 
 import Chart from 'chart.js/auto';
 
 // Interfaces
-import { IChartType, IGeographyContinent, IGeographyCountry, IGeographyDistribution, IGeographyLocation, IGeographyRegion, IGeographyView } from '@interfaces/stats-interface';
+import {
+  IChartType,
+  ICountryRanking,
+  IGeographyContinent,
+  IGeographyCountry,
+  IGeographyDistribution,
+  IGeographyLocation,
+  IGeographyRegion,
+  IGeographyView,
+} from '@interfaces/stats-interface';
 
 // Constants
 import { REGION_NAMES } from '@config/world/regions';
@@ -25,13 +34,15 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
   selectedView: IGeographyView = 'continents';
 
   // Controls which part of the selected geography is displayed.
-  selectedRanking: 'all' | 'top' | 'bottom' = 'all';
+  selectedRanking: ICountryRanking = 'all';
 
   // Available geography views.
   readonly geographyViews: IGeographyView[] = ['continents', 'regions', 'countries', 'livingIn', 'hometown'];
 
   // Available ranking views.
-  readonly rankingViews: ('all' | 'top' | 'bottom')[] = ['all', 'top', 'bottom'];
+  readonly countryRankingViews: ICountryRanking[] = ['topFemale', 'topMale', 'mostConsecutive'];
+
+  readonly rankingViews: ICountryRanking[] = ['all', 'top', 'bottom'];
 
   private chart?: Chart;
 
@@ -120,7 +131,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
     });
   }
 
-  selectRanking(ranking: 'all' | 'top' | 'bottom'): void {
+  selectRanking(ranking: ICountryRanking): void {
     this.selectedRanking = ranking;
 
     // Destroy the previous chart before creating a new one.
@@ -136,69 +147,68 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
     if (!this.geographyChart || !this.geography) {
       return;
     }
-    const config = this.chartConfig[this.selectedView];
 
-    // Get the data according to the selected ranking.
+    if (this.selectedView === 'countries' && this.selectedRanking === 'mostConsecutive') {
+      this.createMostConsecutiveChart();
+      return;
+    }
+
+    const config = this.chartConfig[this.selectedView];
     const geographyData = this.getSelectedData(config);
 
-    // Do not create a chart when there is no data.
     if (!geographyData.length) {
       return;
     }
 
-    // Destroy any existing chart instance.
     this.destroyChart();
-
-    // Give countries more vertical space when displaying all countries.
     this.setChartHeight(geographyData.length);
 
+    const chartValues =
+      this.selectedRanking === 'topFemale'
+        ? geographyData.map(item => (item as IGeographyCountry).female)
+        : this.selectedRanking === 'topMale'
+          ? geographyData.map(item => (item as IGeographyCountry).male)
+          : geographyData.map(item => item.total);
+
+    const datasetLabel = this.selectedRanking === 'topFemale' ? 'Female Guests' : this.selectedRanking === 'topMale' ? 'Male Guests' : config.label;
     this.chart = new Chart(this.geographyChart.nativeElement, {
       type: config.type,
-
       data: {
         labels: geographyData.map(item => {
-          // Locations use their name instead of their code.
           if ('name' in item) {
             return item.name;
           }
-          // Remove _ in regions.
           if (this.selectedView === 'regions') {
             return REGION_NAMES[item.code as Regions] ?? item.code;
           }
-          // Countries use their readable name instead of the ISO code.
           if (this.selectedView === 'countries') {
             const code = item.code.toLowerCase() as CountriesCodes;
             return WORLD[code]?.name ?? item.code;
           }
-          // Continents use their code.
           return item.code;
         }),
-
         datasets: [
           {
-            label: config.label,
-            // Use the total number of guests as the chart value.
-            data: geographyData.map(item => item.total),
+            label: datasetLabel,
+            data: chartValues,
             backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(255, 159, 64, 0.2)', 'rgba(255, 205, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(54, 162, 235, 0.2)'],
             borderColor: ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)'],
             borderWidth: 1,
           },
         ],
       },
-
       options: {
         responsive: true,
-
-        // Horizontal bars make geographic names easier to read.
         indexAxis: config.type === 'bar' ? 'y' : 'x',
         plugins: {
           title: {
             display: true,
             text: this.getChartTitle(config.label),
           },
+          legend: {
+            display: false,
+          },
         },
-
-        // Doughnut charts do not need scales.
         scales:
           config.type === 'bar'
             ? {
@@ -223,31 +233,39 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
     getTopData: (geography: IGeographyDistribution) => IGeographyContinent[] | IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[];
     getBottomData: (geography: IGeographyDistribution) => IGeographyContinent[] | IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[];
   }): IGeographyContinent[] | IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[] {
-    // Map each ranking to its corresponding data.
     const rankingData = {
       all: config.getAllData(this.geography),
-
-      // Display only the first three elements.
-      top: config.getTopData(this.geography).slice(0, 3),
-
-      // Display only the first three elements from the bottom ranking.
-      bottom: config.getBottomData(this.geography).slice(0, 3),
+      top: config.getTopData(this.geography).slice(0, 5),
+      bottom: config.getBottomData(this.geography).slice(0, 5),
+      topFemale: this.selectedView === 'countries' ? this.geography.countries.topFemale.slice(0, 5) : [],
+      topMale: this.selectedView === 'countries' ? this.geography.countries.topMale.slice(0, 5) : [],
     };
-    const data = rankingData[this.selectedRanking];
 
-    // Order regions from highest to lowest
+    const ranking = this.selectedRanking as 'all' | 'top' | 'bottom' | 'topFemale' | 'topMale';
+    const data = rankingData[ranking];
+
     if (this.selectedView === 'regions' || this.selectedView === 'countries') {
-      return [...data].sort((a, b) => b.total - a.total) as IGeographyRegion[];
+      return [...data].sort((a, b) => {
+        if (this.selectedRanking === 'topFemale') {
+          return (b as IGeographyCountry).female - (a as IGeographyCountry).female;
+        }
+        if (this.selectedRanking === 'topMale') {
+          return (b as IGeographyCountry).male - (a as IGeographyCountry).male;
+        }
+        return b.total - a.total;
+      }) as IGeographyRegion[] | IGeographyCountry[];
     }
     return data;
   }
 
   private getChartTitle(label: string): string {
-    // Map each ranking to its corresponding chart title.
-    const rankingTitles = {
+    const rankingTitles: Record<ICountryRanking, string> = {
       all: label,
-      top: `${label} - Top 2`,
-      bottom: `${label} - Bottom 2`,
+      top: `${label} - Top 5`,
+      bottom: `${label} - Bottom 5`,
+      topFemale: `${label} - Top Female`,
+      topMale: `${label} - Top Male`,
+      mostConsecutive: `${label} - Most Consecutive`,
     };
 
     return rankingTitles[this.selectedRanking];
@@ -261,7 +279,6 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
     // enough vertical space to remain readable.
     if (this.selectedView === 'countries' && this.selectedRanking === 'all') {
       const height = Math.max(500, dataLength * 10);
-
       canvas.style.height = `${height}px`;
     } else {
       canvas.style.height = '';
@@ -276,11 +293,124 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
 
   // FLAG
   getSelectedCountries(): IGeographyCountry[] {
+    if (this.selectedRanking === 'mostConsecutive') {
+      return [];
+    }
     const data = this.getSelectedData(this.chartConfig.countries);
     return data as IGeographyCountry[];
   }
   getCountryName(code: string): string {
     const countryCode = code.toLowerCase() as CountriesCodes;
     return WORLD[countryCode]?.name ?? code;
+  }
+
+  // COUNTRY - MOST CONSECUTIVE
+  private createMostConsecutiveChart(): void {
+    const consecutive = this.geography.countries.mostConsecutive;
+    if (!consecutive || !consecutive.guests.length) {
+      return;
+    }
+    this.destroyChart();
+
+    const countryName = this.getCountryName(consecutive.code);
+    const guests = [...consecutive.guests].sort((a, b) => new Date(a.visitedDate).getTime() - new Date(b.visitedDate).getTime());
+    const startDate = new Date(consecutive.firstVisit);
+    const endDate = new Date(consecutive.lastVisit);
+    const minDate = startDate.getTime();
+    const maxDate = endDate.getTime();
+
+    // Add some space around the first and last points
+    const datePadding = 24 * 60 * 60 * 1000;
+
+    this.geographyChart.nativeElement.style.height = `${Math.max(250, guests.length * 70)}px`;
+
+    const genderColors: Record<string, string> = {
+      female: 'rgb(255, 99, 132)',
+      male: 'rgb(54, 162, 235)',
+      gay: 'rgb(255, 205, 86)',
+      trans: 'rgb(153, 102, 255)',
+    };
+
+    const getGenderColor = (gender: string): string => genderColors[gender.toLowerCase()] ?? 'rgb(128, 128, 128)';
+
+    this.chart = new Chart(this.geographyChart.nativeElement, {
+      type: 'scatter',
+      data: {
+        datasets: [
+          {
+            label: `${countryName} - ${consecutive.streak} Consecutive Visits`,
+            data: guests.map(guest => ({
+              x: new Date(guest.visitedDate).getTime(),
+              y: guest.fullName,
+            })),
+            pointRadius: 20,
+            pointHoverRadius: 10,
+            pointBackgroundColor: guests.map(guest => getGenderColor(guest.gender)),
+            pointBorderColor: guests.map(guest => getGenderColor(guest.gender)),
+            showLine: false,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        layout: {
+          padding: {
+            left: 15,
+            right: 15,
+            top: 10,
+            bottom: 10,
+          },
+        },
+        plugins: {
+          title: {
+            display: true,
+            text: `${countryName} — ${consecutive.streak} Consecutive Visits`,
+          },
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            callbacks: {
+              label: context => {
+                const guest = guests[context.dataIndex];
+                const date = new Date(guest.visitedDate).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                });
+                return [guest.fullName, `Gender: ${guest.gender}`, `Group: ${guest.groupType}`, `Visited: ${date}`];
+              },
+            },
+          },
+        },
+        scales: {
+          x: {
+            type: 'linear',
+            min: minDate - datePadding,
+            max: maxDate + datePadding,
+            ticks: {
+              callback: value => {
+                return new Date(Number(value)).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                });
+              },
+            },
+            title: {
+              display: true,
+              text: 'Visit Date',
+            },
+          },
+          y: {
+            type: 'category',
+            labels: guests.map(guest => guest.fullName),
+            title: {
+              display: true,
+              text: 'Guests',
+            },
+          },
+        },
+      },
+    });
   }
 }

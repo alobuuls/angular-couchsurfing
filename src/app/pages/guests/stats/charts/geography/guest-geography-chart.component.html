@@ -14,6 +14,7 @@
 
   <!-- Ranking views -->
   <div class="ctn-ranking-buttons">
+    <!-- General rankings -->
     <button
       type="button"
       *ngFor="let ranking of rankingViews"
@@ -24,6 +25,19 @@
     >
       {{ ranking === 'all' ? 'All' : ranking === 'top' ? 'Top' : 'Bottom' }}
     </button>
+
+    <!-- Country-specific rankings -->
+    <ng-container *ngIf="selectedView === 'countries'">
+      <button
+        type="button"
+        *ngFor="let ranking of countryRankingViews"
+        (click)="selectRanking(ranking)"
+        [class.active]="selectedRanking === ranking"
+        class="btn-ranking"
+      >
+        {{ ranking === 'topFemale' ? 'Top Female' : ranking === 'topMale' ? 'Top Male' : 'Most Consecutive' }}
+      </button>
+    </ng-container>
   </div>
 
   <!-- Geography chart -->
