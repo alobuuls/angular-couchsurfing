@@ -219,6 +219,14 @@ export const EUROPE = {
 
   gbr: {
     flag: 'gb',
+    name: 'United Kingdom',
+    prefix: '+44',
+    continent: 'europe',
+    region: 'northern_europe',
+  },
+
+  eng: {
+    flag: 'gb-eng',
     name: 'England',
     prefix: '+44',
     continent: 'europe',
@@ -282,7 +290,7 @@ export const EUROPE = {
   },
 
   nir: {
-    flag: 'gb-ni',
+    flag: 'gb-nir',
     name: 'Northern Ireland',
     prefix: '+44',
     continent: 'europe',
@@ -290,7 +298,7 @@ export const EUROPE = {
   },
 
   wls: {
-    flag: 'gb-wl',
+    flag: 'gb-wls',
     name: 'Wales',
     prefix: '+44',
     continent: 'europe',
