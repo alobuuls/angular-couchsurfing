@@ -39,6 +39,14 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
   // Available geography views.
   readonly geographyViews: IGeographyView[] = ['continents', 'regions', 'countries', 'livingIn', 'hometown'];
 
+  readonly geographyViewLabels: Record<IGeographyView, string> = {
+    continents: 'Continents',
+    regions: 'Regions',
+    countries: 'Countries',
+    livingIn: 'Living In',
+    hometown: 'Hometown',
+  };
+
   // Available ranking views.
   readonly countryRankingViews: ICountryRanking[] = ['topFemale', 'topMale', 'mostConsecutive'];
 
@@ -206,7 +214,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
             text: this.getChartTitle(config.label),
           },
           legend: {
-            display: false,
+            display: this.selectedView === 'continents',
           },
         },
         scales:
@@ -261,8 +269,8 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
   private getChartTitle(label: string): string {
     const rankingTitles: Record<ICountryRanking, string> = {
       all: label,
-      top: `${label} - Top 5`,
-      bottom: `${label} - Bottom 5`,
+      top: `${label} - Top`,
+      bottom: `${label} - Bottom`,
       topFemale: `${label} - Top Female`,
       topMale: `${label} - Top Male`,
       mostConsecutive: `${label} - Most Consecutive`,
