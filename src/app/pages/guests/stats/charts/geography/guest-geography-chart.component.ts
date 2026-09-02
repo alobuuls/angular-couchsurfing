@@ -67,7 +67,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
   > = {
     continents: {
       label: 'Guests by Continent',
-      type: 'doughnut',
+      type: 'pie',
       getAllData: geography => geography.continents.all,
       getTopData: geography => geography.continents.top,
       getBottomData: geography => geography.continents.bottom,

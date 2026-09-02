@@ -2,7 +2,7 @@ import { CountriesCodes } from '@type/word.types';
 
 // View Chart
 export type ICurrentChart = 'summary' | 'ranking' | 'demographics' | 'geography' | 'timeline' | 'rating' | 'gifts';
-export type IChartType = 'bar' | 'doughnut';
+export type IChartType = 'bar' | 'doughnut' | 'pie';
 
 // Summary
 export type ISummaryView = 'total' | 'nights' | 'gifts' | 'rating';
