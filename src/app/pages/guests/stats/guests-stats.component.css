@@ -19,25 +19,35 @@
 
 .btn-summary {
   background-color: #000000;
-  color: #0089cd;
+  color: #ffffff;
 }
 
 .btn-ranking {
   background-color: #000000;
-  color: #00cd0e;
+  color: #ffffff;
 }
 
 .btn-rating {
   background-color: #000000;
-  color: #cda400;
+  color: #ffffff;
 }
 
 .btn-demographics {
   background-color: #000000;
-  color: #cd0029;
+  color: #ffffff;
 }
 
 .btn-geography {
   background-color: #000000;
-  color: #4400cd;
+  color: #ffffff;
+}
+
+.btn-timeline {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.btn-gifts {
+  background-color: #000000;
+  color: #ffffff;
 }

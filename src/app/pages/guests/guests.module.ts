@@ -21,7 +21,8 @@ import { GuestSummaryChartComponent } from '@pages/guests/stats/charts/summary/g
 import { GuestRankingsChartComponent } from '@pages/guests/stats/charts/ranking/guest-rankings-chart.component';
 import { GuestDemographicsChartComponent } from '@pages/guests/stats/charts/demographic/guest-demographics-chart.component';
 import { GuestGeographyChartComponent } from '@pages/guests/stats/charts/geography/guest-geography-chart.component';
-import { GuestTimelineChartComponent } from './stats/charts/timeline/guest-timeline-chart.component';
+import { GuestTimelineChartComponent } from '@pages/guests/stats/charts/timeline/guest-timeline-chart.component';
+import { GuestGiftsChartComponent } from '@pages/guests/stats/charts/gifts/guest-gifts-chart.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { GuestTimelineChartComponent } from './stats/charts/timeline/guest-timel
     GuestDemographicsChartComponent,
     GuestGeographyChartComponent,
     GuestTimelineChartComponent,
+    GuestGiftsChartComponent,
   ],
   imports: [SharedModule, GuestsRoutingModule],
 })

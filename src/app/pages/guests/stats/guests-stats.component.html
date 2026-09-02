@@ -13,11 +13,6 @@
       <mat-icon>bar_chart</mat-icon>
     </button>
 
-    <!-- Ranking -->
-    <button matTooltip="See Ranking" mat-icon-button class="btn-ranking" (click)="changeChart('ranking')">
-      <mat-icon>leaderboard</mat-icon>
-    </button>
-
     <!-- Demographics -->
     <button
       matTooltip="See Demographics"
@@ -28,14 +23,24 @@
       <mat-icon>groups</mat-icon>
     </button>
 
-    <!-- Rating -->
-    <button matTooltip="See Rating" mat-icon-button class="btn-rating" (click)="changeChart('rating')">
-      <mat-icon>star</mat-icon>
-    </button>
-
     <!-- Geography -->
     <button matTooltip="See Geography" mat-icon-button class="btn-geography" (click)="changeChart('geography')">
       <mat-icon>globe_location_pin</mat-icon>
+    </button>
+
+    <!-- Gifts -->
+    <button matTooltip="See Gifts" mat-icon-button class="btn-gifts" (click)="changeChart('gifts')">
+      <mat-icon>featured_seasonal_and_gifts</mat-icon>
+    </button>
+
+    <!-- Ranking -->
+    <button matTooltip="See Ranking" mat-icon-button class="btn-ranking" (click)="changeChart('ranking')">
+      <mat-icon>leaderboard</mat-icon>
+    </button>
+
+    <!-- Rating -->
+    <button matTooltip="See Rating" mat-icon-button class="btn-rating" (click)="changeChart('rating')">
+      <mat-icon>star</mat-icon>
     </button>
 
     <!-- Timeline -->
@@ -52,6 +57,7 @@
       <guest-demographics-chart *ngIf="currentChart === 'demographics'" [demographics]="vm.data.demographics" />
       <guest-geography-chart *ngIf="currentChart === 'geography'" [geography]="vm.data.geography" />
       <guest-timeline-chart *ngIf="currentChart === 'timeline'" [timeline]="vm.data.timeline" />
+      <guest-gifts-chart *ngIf="currentChart === 'gifts'" [gifts]="vm.data.gifts" />
     </div>
   </ng-container>
 </div>

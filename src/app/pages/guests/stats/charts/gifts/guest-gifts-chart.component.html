@@ -1,0 +1,21 @@
+<div class="gifts-charts">
+  <!-- Gifts views -->
+  <div class="ctn-buttons">
+    <button
+      type="button"
+      *ngFor="let view of giftsViews"
+      (click)="selectView(view)"
+      [class.active]="selectedView === view"
+      class="btn-gifts"
+    >
+      {{ giftsViewLabels[view] }}
+    </button>
+  </div>
+
+  <!-- Gifts chart -->
+  <div class="gifts-chart-row">
+    <div class="gifts-chart-ctn">
+      <canvas #giftsChart></canvas>
+    </div>
+  </div>
+</div>

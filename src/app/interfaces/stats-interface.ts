@@ -1,7 +1,7 @@
 import { CountriesCodes } from '@type/word.types';
 
 // View Chart
-export type ICurrentChart = 'summary' | 'ranking' | 'demographics' | 'geography' | 'timeline' | 'rating';
+export type ICurrentChart = 'summary' | 'ranking' | 'demographics' | 'geography' | 'timeline' | 'rating' | 'gifts';
 export type IChartType = 'bar' | 'doughnut';
 
 // Summary
@@ -237,6 +237,29 @@ export interface IGeographyCountryRanking {
   topFemale: IGeographyCountry[];
   topMale: IGeographyCountry[];
   mostConsecutive: IGeographyMostConsecutive;
+}
+
+// Gifts
+export type IGiftsView = 'groups' | 'solo';
+
+export interface IGiftGuest {
+  guestId: string;
+  fullName: string;
+  gender: string;
+  groupId: string | null;
+  groupType: string;
+  birthDate: string;
+  continent: string;
+  hometownCode: string;
+  region: string;
+  gifts: string[];
+  total: number;
+  visitedDate: string;
+}
+
+export interface IGiftsDistribution {
+  groups: IGiftGuest[];
+  solo: IGiftGuest[];
 }
 
 // Timeline
