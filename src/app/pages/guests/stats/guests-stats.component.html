@@ -47,6 +47,11 @@
     <button matTooltip="See Timeline" mat-icon-button class="btn-timeline" (click)="changeChart('timeline')">
       <mat-icon>timeline</mat-icon>
     </button>
+
+    <!-- Stays -->
+    <button matTooltip="See Stays" mat-icon-button class="btn-stays" (click)="changeChart('stays')">
+      <mat-icon>hotel</mat-icon>
+    </button>
   </div>
 
   <ng-container *ngIf="vm.status === 'success'">
@@ -58,6 +63,7 @@
       <guest-geography-chart *ngIf="currentChart === 'geography'" [geography]="vm.data.geography" />
       <guest-timeline-chart *ngIf="currentChart === 'timeline'" [timeline]="vm.data.timeline" />
       <guest-gifts-chart *ngIf="currentChart === 'gifts'" [gifts]="vm.data.gifts" />
+      <guest-stays-chart *ngIf="currentChart === 'stays'" [stays]="vm.data.stays" />
     </div>
   </ng-container>
 </div>

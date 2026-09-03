@@ -1,0 +1,34 @@
+<div class="stays-charts">
+  <!-- Stays views -->
+  <div class="ctn-buttons">
+    <button
+      type="button"
+      *ngFor="let view of staysViews"
+      (click)="selectView(view)"
+      [class.active]="selectedView === view"
+      class="btn-stays"
+    >
+      {{ staysViewLabels[view] }}
+    </button>
+  </div>
+
+  <!-- Longest / Shortest views -->
+  <div class="ctn-buttons" *ngIf="selectedView === 'longest' || selectedView === 'shortest'">
+    <button
+      type="button"
+      *ngFor="let view of stayViews"
+      (click)="selectStayView(view)"
+      [class.active]="selectedStayView === view"
+      class="btn-stays"
+    >
+      {{ view }}
+    </button>
+  </div>
+
+  <!-- Stays chart -->
+  <div class="stays-chart-row">
+    <div class="stays-chart-ctn">
+      <canvas #staysChart></canvas>
+    </div>
+  </div>
+</div>

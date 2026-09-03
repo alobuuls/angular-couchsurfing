@@ -1,7 +1,7 @@
 import { CountriesCodes } from '@type/word.types';
 
 // View Chart
-export type ICurrentChart = 'summary' | 'ranking' | 'demographics' | 'geography' | 'timeline' | 'rating' | 'gifts';
+export type ICurrentChart = 'summary' | 'ranking' | 'demographics' | 'geography' | 'timeline' | 'rating' | 'gifts' | 'stays';
 export type IChartType = 'bar' | 'doughnut' | 'pie';
 
 // Summary
@@ -310,4 +310,33 @@ export interface ITimelineDistribution {
   sameStay: ISameStay[];
 }
 
+// Stays
 export type ITimelineChartType = 'bar' | 'network';
+export type IStaysView = 'longest' | 'shortest' | 'maxPeopleTogether' | 'sameArrival' | 'sameDates';
+export type ILongestView = 'overall' | 'solo' | 'couple' | 'friends' | 'family';
+export interface IStayGuest {
+  guestId: string;
+  fullName: string;
+  gender: string;
+  groupId: string | null;
+  groupType: string;
+  hometownCode: string;
+  continent: string;
+  region: string;
+  visitedDate: string;
+}
+export interface ILongestItem {
+  guest: IStayGuest;
+  nights: number;
+}
+export interface ILongestDistribution {
+  overall: ILongestItem[];
+  solo: ILongestItem[];
+  couple: ILongestItem[];
+  friends: ILongestItem[];
+  family: ILongestItem[];
+}
+export interface IStaysDistribution {
+  longest: ILongestDistribution;
+  shortest: ILongestDistribution;
+}
