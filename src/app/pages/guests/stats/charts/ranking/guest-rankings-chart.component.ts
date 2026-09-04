@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, 
 
 import Chart from 'chart.js/auto';
 
-import { IRankingGroupView, IRankingItem, IRankingMenView, IRankingView, IRankingsDistribution } from '@interfaces/stats-interface';
+import { IRankingGenderView, IRankingGroupView, IRankingItem, IRankingView, IRankingsDistribution } from '@interfaces/stats-interface';
 
 @Component({
   selector: 'guest-rankings-chart',
@@ -27,11 +27,17 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
   // Available group ranking views.
   readonly groupRankingViews: IRankingGroupView[] = ['overall', 'couple', 'family', 'friends'];
 
+  // Controls the selected women ranking view.
+  selectedWomenView: IRankingGenderView = 'overall';
+
+  // Available women ranking views.
+  readonly womenRankingViews: IRankingGenderView[] = ['overall', 'solo'];
+
   // Controls the selected men ranking view.
-  selectedMenView: IRankingMenView = 'overall';
+  selectedMenView: IRankingGenderView = 'overall';
 
   // Available men ranking views.
-  readonly menRankingViews: IRankingMenView[] = ['overall', 'solo'];
+  readonly menRankingViews: IRankingGenderView[] = ['overall', 'solo'];
 
   private chart?: Chart;
 
@@ -81,15 +87,46 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
   selectView(view: IRankingView): void {
     this.selectedView = view;
 
-    // Reset the group ranking to overall when selecting Groups.
-    if (view === 'groups') {
-      this.selectedGroupView = 'overall';
+    // Reset the women ranking to overall when selecting Women.
+    if (view === 'women') {
+      this.selectedWomenView = 'overall';
     }
 
     // Reset the men ranking to overall when selecting Men.
     if (view === 'men') {
       this.selectedMenView = 'overall';
     }
+
+    // Reset the group ranking to overall when selecting Groups.
+    if (view === 'groups') {
+      this.selectedGroupView = 'overall';
+    }
+
+    // Destroy the previous chart before creating a new one.
+    this.chart?.destroy();
+    this.chart = undefined;
+
+    // Wait for Angular to update the view before creating the chart.
+    setTimeout(() => {
+      this.createChart();
+    });
+  }
+
+  selectWomenView(view: IRankingGenderView): void {
+    this.selectedWomenView = view;
+
+    // Destroy the previous chart before creating a new one.
+    this.chart?.destroy();
+    this.chart = undefined;
+
+    // Wait for Angular to update the view before creating the chart.
+    setTimeout(() => {
+      this.createChart();
+    });
+  }
+
+  selectMenView(view: IRankingGenderView): void {
+    this.selectedMenView = view;
 
     // Destroy the previous chart before creating a new one.
     this.chart?.destroy();
@@ -114,32 +151,21 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
     });
   }
 
-  selectMenView(view: IRankingMenView): void {
-    this.selectedMenView = view;
-
-    // Destroy the previous chart before creating a new one.
-    this.chart?.destroy();
-    this.chart = undefined;
-
-    // Wait for Angular to update the view before creating the chart.
-    setTimeout(() => {
-      this.createChart();
-    });
-  }
-
   private createChart(): void {
     if (!this.rankingChart || !this.rankings) {
       return;
     }
     const config = this.chartConfig[this.selectedView];
 
-    // Use the selected subgroup ranking when Groups is active.
+    // Use the selected ranking view for Women, Men, or Groups.
     const rankingData =
-      this.selectedView === 'groups'
-        ? (this.rankings.groups[this.selectedGroupView] ?? [])
+      this.selectedView === 'women'
+        ? (this.rankings.women[this.selectedWomenView] ?? [])
         : this.selectedView === 'men'
           ? (this.rankings.men[this.selectedMenView] ?? [])
-          : config.getData(this.rankings);
+          : this.selectedView === 'groups'
+            ? (this.rankings.groups[this.selectedGroupView] ?? [])
+            : config.getData(this.rankings);
 
     // Do not create a chart when there is no ranking data.
     if (!rankingData.length) {
@@ -170,11 +196,13 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
         datasets: [
           {
             label:
-              this.selectedView === 'groups'
-                ? `${config.label} - ${this.selectedGroupView}`
+              this.selectedView === 'women'
+                ? `${config.label} - ${this.selectedWomenView}`
                 : this.selectedView === 'men'
                   ? `${config.label} - ${this.selectedMenView}`
-                  : config.label,
+                  : this.selectedView === 'groups'
+                    ? `${config.label} - ${this.selectedGroupView}`
+                    : config.label,
             data: rankingData.map(item => item.position),
             backgroundColor: [
               'rgba(255, 99, 132, 0.2)',
