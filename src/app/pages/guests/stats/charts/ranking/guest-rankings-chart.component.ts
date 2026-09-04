@@ -21,11 +21,11 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
   // Available ranking views.
   readonly rankingViews: IRankingView[] = ['people', 'women', 'men', 'groups'];
 
-  // Controls the selected group ranking view.
-  selectedGroupView: IRankingGroupView = 'overall';
+  // Controls the selected People ranking view.
+  selectedPeopleView: IRankingGenderView = 'overall';
 
-  // Available group ranking views.
-  readonly groupRankingViews: IRankingGroupView[] = ['overall', 'couple', 'family', 'friends'];
+  // Available People ranking views.
+  readonly peopleRankingViews: IRankingGenderView[] = ['overall', 'solo'];
 
   // Controls the selected women ranking view.
   selectedWomenView: IRankingGenderView = 'overall';
@@ -39,6 +39,13 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
   // Available men ranking views.
   readonly menRankingViews: IRankingGenderView[] = ['overall', 'solo'];
 
+  // Controls the selected Group ranking view.
+  selectedGroupView: IRankingGroupView = 'overall';
+
+  // Available Group ranking views.
+  readonly groupRankingViews: IRankingGroupView[] = ['overall', 'couple', 'family', 'friends'];
+
+  // Stores current Chart.js instance.
   private chart?: Chart;
 
   // Configuration for each ranking view.
@@ -70,24 +77,30 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
     },
   };
 
+  // Create the initial ranking chart after the canvas is rendered.
   ngAfterViewInit(): void {
-    // Create the initial ranking chart after the canvas is rendered.
     if (this.rankings) {
       this.createChart();
     }
   }
 
+  // Recreate the chart when ranking data changes.
   ngOnChanges(changes: SimpleChanges): void {
-    // Recreate the chart when ranking data changes.
     if (changes['rankings'] && this.rankingChart) {
       this.createChart();
     }
   }
 
+  // Changes the main ranking view.
   selectView(view: IRankingView): void {
     this.selectedView = view;
 
-    // Reset the women ranking to overall when selecting Women.
+    // Reset People ranking to overall when selecting People.
+    if (view === 'people') {
+      this.selectedPeopleView = 'overall';
+    }
+
+    // Reset Women ranking to overall when selecting Women.
     if (view === 'women') {
       this.selectedWomenView = 'overall';
     }
@@ -112,6 +125,21 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
     });
   }
 
+  // Changes the selected People ranking view.
+  selectPeopleView(view: IRankingGenderView): void {
+    this.selectedPeopleView = view;
+
+    // Destroy the previous chart before creating a new one.
+    this.chart?.destroy();
+    this.chart = undefined;
+
+    // Wait for Angular to update the view before creating the chart.
+    setTimeout(() => {
+      this.createChart();
+    });
+  }
+
+  // Changes the selected Women ranking view.
   selectWomenView(view: IRankingGenderView): void {
     this.selectedWomenView = view;
 
@@ -125,6 +153,7 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
     });
   }
 
+  // Changes the selected Men ranking view.
   selectMenView(view: IRankingGenderView): void {
     this.selectedMenView = view;
 
@@ -138,6 +167,7 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
     });
   }
 
+  // Changes the selected Group ranking view.
   selectGroupView(view: IRankingGroupView): void {
     this.selectedGroupView = view;
 
@@ -151,21 +181,24 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
     });
   }
 
+  // Creates the ranking chart according to the selected view.
   private createChart(): void {
     if (!this.rankingChart || !this.rankings) {
       return;
     }
     const config = this.chartConfig[this.selectedView];
 
-    // Use the selected ranking view for Women, Men, or Groups.
+    // Use the selected subview for People, Women, Men, or Groups.
     const rankingData =
-      this.selectedView === 'women'
-        ? (this.rankings.women[this.selectedWomenView] ?? [])
-        : this.selectedView === 'men'
-          ? (this.rankings.men[this.selectedMenView] ?? [])
-          : this.selectedView === 'groups'
-            ? (this.rankings.groups[this.selectedGroupView] ?? [])
-            : config.getData(this.rankings);
+      this.selectedView === 'people'
+        ? (this.rankings.people[this.selectedPeopleView] ?? [])
+        : this.selectedView === 'women'
+          ? (this.rankings.women[this.selectedWomenView] ?? [])
+          : this.selectedView === 'men'
+            ? (this.rankings.men[this.selectedMenView] ?? [])
+            : this.selectedView === 'groups'
+              ? (this.rankings.groups[this.selectedGroupView] ?? [])
+              : config.getData(this.rankings);
 
     // Do not create a chart when there is no ranking data.
     if (!rankingData.length) {
@@ -189,20 +222,25 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
 
     // Destroy any existing chart instance.
     this.chart?.destroy();
+
     this.chart = new Chart(this.rankingChart.nativeElement, {
       type: 'bar',
+
       data: {
         labels: rankingData.map(item => item.guest.fullName),
+
         datasets: [
           {
             label:
-              this.selectedView === 'women'
-                ? `${config.label} - ${this.selectedWomenView}`
-                : this.selectedView === 'men'
-                  ? `${config.label} - ${this.selectedMenView}`
-                  : this.selectedView === 'groups'
-                    ? `${config.label} - ${this.selectedGroupView}`
-                    : config.label,
+              this.selectedView === 'people'
+                ? `${config.label} - ${this.selectedPeopleView}`
+                : this.selectedView === 'women'
+                  ? `${config.label} - ${this.selectedWomenView}`
+                  : this.selectedView === 'men'
+                    ? `${config.label} - ${this.selectedMenView}`
+                    : this.selectedView === 'groups'
+                      ? `${config.label} - ${this.selectedGroupView}`
+                      : config.label,
             data: rankingData.map(item => item.position),
             backgroundColor: [
               'rgba(255, 99, 132, 0.2)',
