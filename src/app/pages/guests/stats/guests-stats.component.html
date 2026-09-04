@@ -57,7 +57,7 @@
   <ng-container *ngIf="vm.status === 'success'">
     <div class="ctn-content">
       <guest-summary-chart *ngIf="currentChart === 'summary'" [summary]="vm.data.summary" />
-      <guest-rating-chart *ngIf="currentChart === 'rating'" [distributions]="vm.data.ratings.distribution" />
+      <guest-rating-chart *ngIf="currentChart === 'rating'" [ratings]="vm.data.ratings" />
       <guest-rankings-chart *ngIf="currentChart === 'ranking'" [rankings]="vm.data.rankings" />
       <guest-demographics-chart *ngIf="currentChart === 'demographics'" [demographics]="vm.data.demographics" />
       <guest-geography-chart *ngIf="currentChart === 'geography'" [geography]="vm.data.geography" />

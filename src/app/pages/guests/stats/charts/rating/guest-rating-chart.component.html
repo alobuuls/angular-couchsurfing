@@ -12,8 +12,8 @@
     </button>
   </div>
 
-  <!-- Distribution views -->
-  <div class="ctn-buttons" *ngIf="selectedMainView === 'distribution'">
+  <!-- Rating group views -->
+  <div class="ctn-buttons">
     <button
       type="button"
       *ngFor="let view of ratingViews"
@@ -24,13 +24,17 @@
       {{ view }}
     </button>
   </div>
+
   <!-- Chart + type buttons -->
   <div class="chart-row">
+    <!-- Rating chart -->
     <div class="rating-charts-ctn">
       <canvas #ratingsChart></canvas>
     </div>
 
+    <!-- Distribution chart type buttons -->
     <div class="ctn-chart-types" *ngIf="selectedMainView === 'distribution'">
+      <!-- Bar chart -->
       <button
         mat-icon-button
         class="btn-type-chart"
@@ -41,6 +45,7 @@
         <mat-icon>bar_chart</mat-icon>
       </button>
 
+      <!-- Doughnut chart -->
       <button
         mat-icon-button
         class="btn-type-chart"

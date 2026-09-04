@@ -158,6 +158,8 @@ export interface IDemographicsDistribution {
 export type IRatingView = 'overall' | 'solo' | 'couple' | 'friends' | 'family';
 export type IRatingGroupType = Exclude<IRatingView, 'overall'>;
 export type IRatingMainView = 'distribution' | 'lowest' | 'highest';
+export type IRatingRankings = Record<IRatingView, IRatingGuest[]>;
+
 export interface IRatingsDistribution {
   '1': number;
   '2': number;
@@ -166,6 +168,27 @@ export interface IRatingsDistribution {
   '5': number;
   unrated: number;
 }
+
+export interface IRatingGuest {
+  guestId: string;
+  fullName: string;
+  gender: string;
+  groupId: string | null;
+  groupType: string;
+  hometownCode: string;
+  continent: string;
+  region: string;
+  visitedDate: string;
+  birthDate: string | null;
+  rating: number;
+}
+
+export interface IRatingsData {
+  distribution: Record<IRatingView, IRatingsDistribution>;
+  highest: IRatingRankings;
+  lowest: IRatingRankings;
+}
+
 // Geography
 export type IGeographyView = 'continents' | 'regions' | 'countries' | 'livingIn' | 'hometown';
 export type ICountryRanking = 'all' | 'top' | 'bottom' | 'topFemale' | 'topMale' | 'mostConsecutive';
