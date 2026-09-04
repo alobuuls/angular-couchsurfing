@@ -2,6 +2,13 @@ import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, Simp
 
 import Chart from 'chart.js/auto';
 
+import { LinearScale, PointElement } from 'chart.js';
+
+import { EdgeLine, ForceDirectedGraphController } from 'chartjs-chart-graph';
+
+// Register the network graph.
+Chart.register(ForceDirectedGraphController, EdgeLine, LinearScale, PointElement);
+
 // Interfaces
 import { ILongestView, IStaysDistribution, IStaysView } from '@interfaces/stats-interface';
 
@@ -28,16 +35,19 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
   readonly staysViewLabels: Record<IStaysView, string> = {
     longest: 'Longest',
     shortest: 'Shortest',
-    maxPeopleTogether: 'Max People Together',
+    maxPeopleTogether: 'People Together',
     sameArrival: 'Same Arrival',
     sameDates: 'Same Dates',
   };
 
-  // Stores the selected subview for Longest and Shortest
+  // Stores the selected Longest/Shortest subview
   selectedStayView: ILongestView = 'overall';
 
-  // Longest and Shortest subviews
+  // Longest and Shortest subviews.
   readonly stayViews: ILongestView[] = ['overall', 'solo', 'couple', 'friends', 'family'];
+
+  // Stores the selected Same Dates group.
+  selectedSameDatesGroup = 0;
 
   // Stores current Chart.js instance
   private chart?: Chart;
@@ -54,7 +64,6 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
       label: 'Longest Stays',
       getData: stays => stays.longest,
     },
-
     shortest: {
       label: 'Shortest Stays',
       getData: stays => stays.shortest,
@@ -102,14 +111,22 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
 
   // Recreates the chart when the input data changes
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['stays'] && this.staysChart) {
-      this.createChart();
+    if (changes['stays'] && this.staysChart && this.stays) {
+      // Reset the selected group when new data arrives.
+      this.selectedSameDatesGroup = 0;
+
+      setTimeout(() => this.createChart());
     }
   }
 
   // Changes the main Stays view
   selectView(view: IStaysView): void {
     this.selectedView = view;
+
+    // Reset Same Dates group when entering this view.
+    if (view === 'sameDates') {
+      this.selectedSameDatesGroup = 0;
+    }
 
     // Destroy current chart
     this.destroyChart();
@@ -122,10 +139,21 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
   selectStayView(view: ILongestView): void {
     this.selectedStayView = view;
 
-    // Destroy current chart
+    // Destroy current chart.
     this.destroyChart();
 
-    // Wait for Angular to update the template
+    // Wait for Angular to update the template.
+    setTimeout(() => this.createChart());
+  }
+
+  // Changes the selected Same Dates group.
+  selectSameDatesGroup(index: number): void {
+    this.selectedSameDatesGroup = index;
+
+    // Destroy current chart.
+    this.destroyChart();
+
+    // Wait for Angular to update the canvas.
     setTimeout(() => this.createChart());
   }
 
@@ -140,9 +168,28 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
       const config = this.chartConfig[this.selectedView];
       const stayData = config.getData(this.stays);
       this.createStayPolarChart(stayData, this.selectedStayView, config.label);
+      return;
+    }
+
+    // Same Arrival uses a Horizontal Bar chart.
+    if (this.selectedView === 'sameArrival') {
+      this.createSameArrivalBarChart();
+      return;
+    }
+
+    // Same Dates uses one Network chart per group.
+    if (this.selectedView === 'sameDates') {
+      this.createSameDatesNetworkChart();
+      return;
+    }
+
+    // Max People Together will be implemented separately.
+    if (this.selectedView === 'maxPeopleTogether') {
+      this.destroyChart();
     }
   }
 
+  // LONGEST / SHORTEST
   // Creates the Polar Area chart for Longest and Shortest stays
   private createStayPolarChart(stayData: IStaysDistribution['longest'], selectedView: ILongestView, chartLabel: string): void {
     if (!this.staysChart || !stayData) {
@@ -167,7 +214,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
           {
             label: chartLabel,
 
-            // Number of nights determines the size of each section
+            // Number of nights determines the section size.
             data: people.map(item => item.nights),
 
             // Use guest gender for section colors
@@ -194,7 +241,6 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
                 const guest = people[context.dataIndex];
                 return guest.guest.fullName;
               },
-
               afterBody: context => {
                 const guest = people[context[0].dataIndex];
                 return this.getTooltipLines(guest);
@@ -214,7 +260,209 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     });
   }
 
-  // Builds the common tooltip information
+  // SAME ARRIVAL
+  // Creates the Horizontal Bar chart for Same Arrival.
+  private createSameArrivalBarChart(): void {
+    if (!this.staysChart || !this.stays) {
+      return;
+    }
+    const chartData = this.stays.sameArrival;
+    if (!chartData || chartData.length === 0) {
+      return;
+    }
+
+    // Destroy previous chart.
+    this.destroyChart();
+
+    // Create Horizontal Bar chart.
+    this.chart = new Chart(this.staysChart.nativeElement, {
+      type: 'bar',
+      data: {
+        labels: chartData.map(item => this.formatDate(item.date)),
+        datasets: [
+          {
+            label: 'Same Arrival',
+
+            // Number of guests determines bar length.
+            data: chartData.map(item => item.total),
+
+            // Use the first guest gender for the bar color.
+            backgroundColor: chartData.map(item => {
+              const gender = item.guests[0]?.gender;
+              return this.genderColors[gender] ?? 'rgba(100, 100, 100, 0.5)';
+            }),
+            borderColor: chartData.map(item => {
+              const gender = item.guests[0]?.gender;
+              return this.genderBorderColors[gender] ?? 'rgb(100, 100, 100)';
+            }),
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Guests with Same Arrival Date',
+          },
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            callbacks: {
+              label: context => {
+                return `Overlapping guests: ${context.parsed.x}`;
+              },
+              afterBody: context => {
+                const item = chartData[context[0].dataIndex];
+
+                return ['', 'Guests:', ...item.guests.map(guest => `• ${guest.fullName}`)];
+              },
+            },
+          },
+        },
+        scales: {
+          x: {
+            beginAtZero: true,
+            ticks: {
+              precision: 0,
+              stepSize: 1,
+            },
+            title: {
+              display: true,
+              text: 'Overlapping Guests',
+            },
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Arrival Date',
+            },
+          },
+        },
+      },
+    });
+  }
+
+  // SAME DATES
+  // Creates a Network chart for the selected Same Dates group.
+  private createSameDatesNetworkChart(): void {
+    if (!this.staysChart || !this.stays) {
+      return;
+    }
+    const groups = this.stays.sameDates;
+    if (!groups || groups.length === 0) {
+      return;
+    }
+
+    // Get only the selected group.
+    const group = groups[this.selectedSameDatesGroup];
+    if (!group || !group.guests || group.guests.length === 0) {
+      return;
+    }
+
+    // Destroy previous chart.
+    this.destroyChart();
+
+    // Create one node for every guest in the group.
+    const nodes = group.guests.map(guest => ({
+      id: guest.guestId,
+      label: guest.fullName,
+      gender: guest.gender,
+    }));
+
+    // Connect every guest with the other guests in the same group.
+    const edges = this.getSameDatesEdges(nodes);
+
+    // Create Network chart.
+    this.chart = new Chart(this.staysChart.nativeElement, {
+      type: 'forceDirectedGraph',
+      data: {
+        // Use guest names as node labels.
+        labels: nodes.map(node => node.label),
+        datasets: [
+          {
+            // Create one node for every guest.
+            data: nodes.map(() => ({})),
+
+            // Connect guests from the same group.
+            edges,
+
+            // Node size.
+            pointRadius: 10,
+            pointHoverRadius: 13,
+
+            // Use guest gender for node colors.
+            pointBackgroundColor: nodes.map(node => this.genderColors[node.gender] ?? 'rgba(100, 100, 100, 0.5)'),
+            pointBorderColor: nodes.map(node => this.genderBorderColors[node.gender] ?? 'rgb(100, 100, 100)'),
+            borderColor: 'rgba(100, 100, 100, 0.4)',
+            borderWidth: 2,
+          },
+        ],
+      },
+
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: `Same Dates - Group ${this.selectedSameDatesGroup + 1}`,
+          },
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            callbacks: {
+              label: context => {
+                const guest = nodes[context.dataIndex];
+                return guest.label;
+              },
+              afterBody: context => {
+                const guest = group.guests[context[0].dataIndex];
+                return this.getNetworkTooltipLines(guest, nodes.length - 1);
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  // Creates connections between every guest in the same group.
+  private getSameDatesEdges(
+    nodes: {
+      id: string;
+      label: string;
+      gender: string;
+    }[]
+  ): {
+    source: number;
+    target: number;
+  }[] {
+    const edges: {
+      source: number;
+      target: number;
+    }[] = [];
+
+    // Create a connection between each pair of guests.
+    for (let source = 0; source < nodes.length; source++) {
+      for (let target = source + 1; target < nodes.length; target++) {
+        edges.push({
+          source,
+          target,
+        });
+      }
+    }
+
+    return edges;
+  }
+
+  // TOOLTIP
+  // Builds the common tooltip information for stay charts.
   private getTooltipLines(item: IStaysDistribution['longest']['overall'][number]): string[] {
     const guest = item.guest;
     return [
@@ -226,12 +474,15 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     ];
   }
 
-  // Formats group type for display
-  private formatGroupType(groupType: string): string {
-    if (!groupType) {
-      return 'Unknown';
-    }
-    return groupType.charAt(0).toUpperCase() + groupType.slice(1);
+  // Builds tooltip information for Same Dates network nodes.
+  private getNetworkTooltipLines(guest: IStaysDistribution['sameDates'][number]['guests'][number], connections: number): string[] {
+    return [
+      `Connections: ${connections}`,
+      `Group: ${this.groupTypeLabels[guest.groupType] ?? guest.groupType}`,
+      `Gender: ${this.genderLabels[guest.gender] ?? guest.gender}`,
+      `Country: ${guest.hometownCode}`,
+      `Visited: ${this.formatDate(guest.visitedDate)}`,
+    ];
   }
 
   // Formats date for tooltip display

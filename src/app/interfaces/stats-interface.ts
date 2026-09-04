@@ -336,7 +336,18 @@ export interface ILongestDistribution {
   friends: ILongestItem[];
   family: ILongestItem[];
 }
+export interface ISameArrivalItem {
+  date: string;
+  total: number;
+  guests: IStayGuest[];
+}
+export interface ISameDatesItem {
+  total: number;
+  guests: IStayGuest[];
+}
 export interface IStaysDistribution {
   longest: ILongestDistribution;
   shortest: ILongestDistribution;
+  sameArrival: ISameArrivalItem[];
+  sameDates: ISameDatesItem[];
 }

@@ -19,9 +19,22 @@
       *ngFor="let view of stayViews"
       (click)="selectStayView(view)"
       [class.active]="selectedStayView === view"
-      class="btn-stays"
+      class="btn-stay"
     >
       {{ view }}
+    </button>
+  </div>
+
+  <!-- Same Dates groups -->
+  <div class="ctn-buttons" *ngIf="selectedView === 'sameDates' && stays?.sameDates?.length">
+    <button
+      type="button"
+      *ngFor="let group of stays.sameDates; let i = index"
+      (click)="selectSameDatesGroup(i)"
+      [class.active]="selectedSameDatesGroup === i"
+      class="btn-group"
+    >
+      Group {{ i + 1 }}
     </button>
   </div>
 
