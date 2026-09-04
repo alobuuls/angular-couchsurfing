@@ -31,6 +31,7 @@ export interface ISummaryCard {
 // Rankings
 export type IRankingView = 'people' | 'women' | 'men' | 'groups';
 export type IRankingGroupView = 'overall' | 'couple' | 'family' | 'friends';
+export type IRankingMenView = 'overall' | 'solo';
 
 export interface IRankingGuest {
   guestId: string;

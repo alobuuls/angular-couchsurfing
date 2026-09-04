@@ -12,6 +12,19 @@
     </button>
   </div>
 
+  <!-- Men ranking views -->
+  <div class="ctn-buttons group-buttons" *ngIf="selectedView === 'men'">
+    <button
+      type="button"
+      *ngFor="let view of menRankingViews"
+      (click)="selectMenView(view)"
+      [class.active]="selectedMenView === view"
+      class="btn-ranking"
+    >
+      {{ view }}
+    </button>
+  </div>
+
   <!-- Group ranking views -->
   <div class="ctn-buttons group-buttons" *ngIf="selectedView === 'groups'">
     <button
