@@ -348,6 +348,15 @@ export interface ISameDatesItem {
 export interface IStaysDistribution {
   longest: ILongestDistribution;
   shortest: ILongestDistribution;
+  maxPeopleTogether: IMaxPeopleTogetherDistribution;
   sameArrival: ISameArrivalItem[];
   sameDates: ISameDatesItem[];
+}
+export interface IMaxPeopleTogetherItem {
+  total: number;
+  guests: IStayGuest[];
+}
+export interface IMaxPeopleTogetherDistribution {
+  overall: IMaxPeopleTogetherItem;
+  solo: IMaxPeopleTogetherItem;
 }

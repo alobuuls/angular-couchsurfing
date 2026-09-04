@@ -114,7 +114,6 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     if (changes['stays'] && this.staysChart && this.stays) {
       // Reset the selected group when new data arrives.
       this.selectedSameDatesGroup = 0;
-
       setTimeout(() => this.createChart());
     }
   }
@@ -166,8 +165,16 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     // Longest and Shortest use the same Polar Area chart
     if (this.selectedView === 'longest' || this.selectedView === 'shortest') {
       const config = this.chartConfig[this.selectedView];
+
       const stayData = config.getData(this.stays);
+
       this.createStayPolarChart(stayData, this.selectedStayView, config.label);
+
+      return;
+    }
+
+    if (this.selectedView === 'maxPeopleTogether') {
+      this.createMaxPeopleTogetherBarChart();
       return;
     }
 
@@ -181,11 +188,6 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     if (this.selectedView === 'sameDates') {
       this.createSameDatesNetworkChart();
       return;
-    }
-
-    // Max People Together will be implemented separately.
-    if (this.selectedView === 'maxPeopleTogether') {
-      this.destroyChart();
     }
   }
 
@@ -260,8 +262,88 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     });
   }
 
-  // SAME ARRIVAL
-  // Creates the Horizontal Bar chart for Same Arrival.
+  // MAX PEOPLE TOGETHER
+  // Create Bar chart comparing Overall and Solo.
+  private createMaxPeopleTogetherBarChart(): void {
+    if (!this.staysChart || !this.stays) {
+      return;
+    }
+    const chartData = this.stays.maxPeopleTogether;
+
+    if (!chartData) {
+      return;
+    }
+
+    const overall = chartData.overall;
+    const solo = chartData.solo;
+
+    if (!overall || !solo) {
+      return;
+    }
+
+    this.destroyChart();
+    this.chart = new Chart(this.staysChart.nativeElement, {
+      type: 'bar',
+      data: {
+        labels: ['Overall', 'Solo'],
+        datasets: [
+          {
+            label: 'Maximum Guests Together',
+            data: [overall.total, solo.total],
+            backgroundColor: ['rgba(54, 162, 235, 0.5)', 'rgba(153, 102, 255, 0.5)'],
+            borderColor: ['rgb(54, 162, 235)', 'rgb(153, 102, 255)'],
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Maximum Guests Together',
+          },
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            callbacks: {
+              label: context => {
+                return `Maximum guests: ${context.parsed.y}`;
+              },
+              afterBody: context => {
+                const index = context[0].dataIndex;
+                const selectedData = index === 0 ? overall : solo;
+                return ['', 'Guests:', ...selectedData.guests.map(guest => `• ${guest.fullName}`)];
+              },
+            },
+          },
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              precision: 0,
+              stepSize: 1,
+            },
+            title: {
+              display: true,
+              text: 'Guests',
+            },
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Stay Type',
+            },
+          },
+        },
+      },
+    });
+  }
+
+  // Create Horizontal Bar chart for guests with the same arrival date.
   private createSameArrivalBarChart(): void {
     if (!this.staysChart || !this.stays) {
       return;
@@ -271,10 +353,8 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
       return;
     }
 
-    // Destroy previous chart.
     this.destroyChart();
 
-    // Create Horizontal Bar chart.
     this.chart = new Chart(this.staysChart.nativeElement, {
       type: 'bar',
       data: {
@@ -282,10 +362,8 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
         datasets: [
           {
             label: 'Same Arrival',
-
             // Number of guests determines bar length.
             data: chartData.map(item => item.total),
-
             // Use the first guest gender for the bar color.
             backgroundColor: chartData.map(item => {
               const gender = item.guests[0]?.gender;
@@ -347,8 +425,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     });
   }
 
-  // SAME DATES
-  // Creates a Network chart for the selected Same Dates group.
+  // Create network chart for guests with the same dates.
   private createSameDatesNetworkChart(): void {
     if (!this.staysChart || !this.stays) {
       return;
@@ -358,13 +435,11 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
       return;
     }
 
-    // Get only the selected group.
     const group = groups[this.selectedSameDatesGroup];
     if (!group || !group.guests || group.guests.length === 0) {
       return;
     }
 
-    // Destroy previous chart.
     this.destroyChart();
 
     // Create one node for every guest in the group.
@@ -432,7 +507,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     });
   }
 
-  // Creates connections between every guest in the same group.
+  // Create connections between every guest in the same dates group.
   private getSameDatesEdges(
     nodes: {
       id: string;
@@ -448,7 +523,6 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
       target: number;
     }[] = [];
 
-    // Create a connection between each pair of guests.
     for (let source = 0; source < nodes.length; source++) {
       for (let target = source + 1; target < nodes.length; target++) {
         edges.push({
@@ -457,12 +531,10 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
         });
       }
     }
-
     return edges;
   }
 
-  // TOOLTIP
-  // Builds the common tooltip information for stay charts.
+  // Build tooltip information for stay charts.
   private getTooltipLines(item: IStaysDistribution['longest']['overall'][number]): string[] {
     const guest = item.guest;
     return [
@@ -474,7 +546,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     ];
   }
 
-  // Builds tooltip information for Same Dates network nodes.
+  // Build tooltip information for network nodes.
   private getNetworkTooltipLines(guest: IStaysDistribution['sameDates'][number]['guests'][number], connections: number): string[] {
     return [
       `Connections: ${connections}`,
@@ -485,7 +557,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     ];
   }
 
-  // Formats date for tooltip display
+  // Format dates for chart labels and tooltips.
   private formatDate(date: string): string {
     return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -494,13 +566,13 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     });
   }
 
-  // Destroys the current Chart.js instance
+  // Destroy the current chart instance.
   private destroyChart(): void {
     this.chart?.destroy();
     this.chart = undefined;
   }
 
-  // Destroy Chart.js instance when component is destroyed
+  // Clean up chart when the component is destroyed.
   ngOnDestroy(): void {
     this.destroyChart();
   }

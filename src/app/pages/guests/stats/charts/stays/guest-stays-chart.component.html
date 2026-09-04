@@ -1,4 +1,5 @@
 <div class="stays-charts">
+
   <!-- Stays views -->
   <div class="ctn-buttons">
     <button
@@ -13,7 +14,13 @@
   </div>
 
   <!-- Longest / Shortest views -->
-  <div class="ctn-buttons" *ngIf="selectedView === 'longest' || selectedView === 'shortest'">
+  <div
+    class="ctn-buttons"
+    *ngIf="
+      selectedView === 'longest' ||
+      selectedView === 'shortest'
+    "
+  >
     <button
       type="button"
       *ngFor="let view of stayViews"
@@ -26,10 +33,19 @@
   </div>
 
   <!-- Same Dates groups -->
-  <div class="ctn-buttons" *ngIf="selectedView === 'sameDates' && stays?.sameDates?.length">
+  <div
+    class="ctn-buttons"
+    *ngIf="
+      selectedView === 'sameDates' &&
+      stays?.sameDates?.length
+    "
+  >
     <button
       type="button"
-      *ngFor="let group of stays.sameDates; let i = index"
+      *ngFor="
+        let group of stays.sameDates;
+        let i = index
+      "
       (click)="selectSameDatesGroup(i)"
       [class.active]="selectedSameDatesGroup === i"
       class="btn-group"
@@ -44,4 +60,5 @@
       <canvas #staysChart></canvas>
     </div>
   </div>
+
 </div>
