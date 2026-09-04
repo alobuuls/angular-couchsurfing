@@ -24,17 +24,12 @@
   font-size: 20px;
 }
 
-/* TOP / BOTTOM */
-.ranking-labels {
-  gap: 1.5rem;
-}
-
 .ranking-labels .country-label {
-  height: 45px;
+  height: 33px;
 }
 
 .ranking-labels .country-label span {
-  font-size: 50px;
+  font-size: 22px;
 }
 
 .geography-chart-ctn {

@@ -243,10 +243,10 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
   }): IGeographyContinent[] | IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[] {
     const rankingData = {
       all: config.getAllData(this.geography),
-      top: config.getTopData(this.geography).slice(0, 5),
-      bottom: config.getBottomData(this.geography).slice(0, 5),
-      topFemale: this.selectedView === 'countries' ? this.geography.countries.topFemale.slice(0, 5) : [],
-      topMale: this.selectedView === 'countries' ? this.geography.countries.topMale.slice(0, 5) : [],
+      top: config.getTopData(this.geography),
+      bottom: config.getBottomData(this.geography),
+      topFemale: this.selectedView === 'countries' ? this.geography.countries.topFemale : [],
+      topMale: this.selectedView === 'countries' ? this.geography.countries.topMale : [],
     };
 
     const ranking = this.selectedRanking as 'all' | 'top' | 'bottom' | 'topFemale' | 'topMale';
