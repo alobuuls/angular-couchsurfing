@@ -157,6 +157,7 @@ export interface IDemographicsDistribution {
 // Rating
 export type IRatingView = 'overall' | 'solo' | 'couple' | 'friends' | 'family';
 export type IRatingGroupType = Exclude<IRatingView, 'overall'>;
+export type IRatingMainView = 'distribution' | 'lowest' | 'highest';
 export interface IRatingsDistribution {
   '1': number;
   '2': number;

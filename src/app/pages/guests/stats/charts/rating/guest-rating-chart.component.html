@@ -1,5 +1,19 @@
 <div class="rating-charts">
+  <!-- Main Rating views -->
   <div class="ctn-buttons">
+    <button
+      type="button"
+      *ngFor="let view of ratingMainViews"
+      (click)="selectMainView(view)"
+      [class.active]="selectedMainView === view"
+      class="btn-rating"
+    >
+      {{ ratingMainViewLabels[view] }}
+    </button>
+  </div>
+
+  <!-- Distribution views -->
+  <div class="ctn-buttons" *ngIf="selectedMainView === 'distribution'">
     <button
       type="button"
       *ngFor="let view of ratingViews"
@@ -10,12 +24,13 @@
       {{ view }}
     </button>
   </div>
+  <!-- Chart + type buttons -->
   <div class="chart-row">
     <div class="rating-charts-ctn">
       <canvas #ratingsChart></canvas>
     </div>
 
-    <div class="ctn-chart-types">
+    <div class="ctn-chart-types" *ngIf="selectedMainView === 'distribution'">
       <button
         mat-icon-button
         class="btn-type-chart"
