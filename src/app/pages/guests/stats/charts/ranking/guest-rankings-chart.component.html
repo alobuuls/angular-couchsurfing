@@ -11,6 +11,20 @@
       {{ view }}
     </button>
   </div>
+
+  <!-- Group ranking views -->
+  <div class="ctn-buttons group-buttons" *ngIf="selectedView === 'groups'">
+    <button
+      type="button"
+      *ngFor="let view of groupRankingViews"
+      (click)="selectGroupView(view)"
+      [class.active]="selectedGroupView === view"
+      class="btn-ranking"
+    >
+      {{ view }}
+    </button>
+  </div>
+
   <!-- Ranking chart -->
   <div class="ranking-chart-row">
     <div class="ranking-chart-ctn">

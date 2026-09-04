@@ -27,6 +27,20 @@
   padding: 1rem;
 }
 
+/* Group ranking buttons */
+.group-buttons {
+  margin-top: -1.5rem;
+  margin-bottom: 3rem;
+  gap: 1rem;
+}
+
+.group-buttons .btn-ranking {
+  min-width: 130px;
+  font-size: 14px;
+  line-height: 40px;
+}
+
+/* Ranking button */
 .btn-ranking {
   color: #000000;
   cursor: pointer;
@@ -79,5 +93,9 @@
 @media (max-width: 600px) {
   .ranking-chart-ctn {
     min-height: 300px;
+  }
+
+  .group-buttons {
+    flex-wrap: wrap;
   }
 }

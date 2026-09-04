@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, 
 
 import Chart from 'chart.js/auto';
 
-import { IRankingItem, IRankingView, IRankingsDistribution } from '@interfaces/stats-interface';
+import { IRankingGroupView, IRankingItem, IRankingView, IRankingsDistribution } from '@interfaces/stats-interface';
 
 @Component({
   selector: 'guest-rankings-chart',
@@ -21,6 +21,12 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
   // Available ranking views.
   readonly rankingViews: IRankingView[] = ['people', 'women', 'men', 'groups'];
 
+  // Controls the selected group ranking view.
+  selectedGroupView: IRankingGroupView = 'overall';
+
+  // Available group ranking views.
+  readonly groupRankingViews: IRankingGroupView[] = ['overall', 'couple', 'family', 'friends'];
+
   private chart?: Chart;
 
   // Configuration for each ranking view.
@@ -35,14 +41,17 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
       label: 'People Ranking',
       getData: rankings => rankings.people.overall,
     },
+
     women: {
       label: 'Women Ranking',
       getData: rankings => rankings.women.overall,
     },
+
     men: {
       label: 'Men Ranking',
       getData: rankings => rankings.men.overall,
     },
+
     groups: {
       label: 'Groups Ranking',
       getData: rankings => rankings.groups.overall,
@@ -66,6 +75,24 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
   selectView(view: IRankingView): void {
     this.selectedView = view;
 
+    // Reset the group ranking to overall when leaving and returning to groups.
+    if (view === 'groups') {
+      this.selectedGroupView = 'overall';
+    }
+
+    // Destroy the previous chart before creating a new one.
+    this.chart?.destroy();
+    this.chart = undefined;
+
+    // Wait for Angular to update the view before creating the chart.
+    setTimeout(() => {
+      this.createChart();
+    });
+  }
+
+  selectGroupView(view: IRankingGroupView): void {
+    this.selectedGroupView = view;
+
     // Destroy the previous chart before creating a new one.
     this.chart?.destroy();
     this.chart = undefined;
@@ -81,7 +108,14 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
       return;
     }
     const config = this.chartConfig[this.selectedView];
-    const rankingData = config.getData(this.rankings);
+
+    // Use the selected group ranking when the Groups view is active.
+    const rankingData = this.selectedView === 'groups' ? (this.rankings.groups[this.selectedGroupView] ?? []) : config.getData(this.rankings);
+
+    // Do not create a chart when there is no ranking data.
+    if (!rankingData.length) {
+      return;
+    }
 
     // Get the highest ranking position from the current data.
     const maxPosition = Math.max(...rankingData.map(item => item.position));
@@ -106,7 +140,7 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
         labels: rankingData.map(item => item.guest.fullName),
         datasets: [
           {
-            label: config.label,
+            label: this.selectedView === 'groups' ? `${config.label} - ${this.selectedGroupView}` : config.label,
             data: rankingData.map(item => item.position),
             backgroundColor: [
               'rgba(255, 99, 132, 0.2)',
