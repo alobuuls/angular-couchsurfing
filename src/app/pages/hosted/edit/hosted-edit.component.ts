@@ -31,20 +31,7 @@ export class HostedEditComponent implements OnInit {
 
   private getById(): void {
     const guestId = this.route.snapshot.paramMap.get('hostedId');
-    const groupId = this.route.snapshot.paramMap.get('groupId');
-
-    if (groupId) {
-      this._hosted.getGroupById(groupId).subscribe(resp => {
-        this.group = resp.data;
-      });
-      return;
-    }
-
-    if (guestId) {
-      this._hosted.getGuestById(guestId).subscribe(resp => {
-        this.guest = resp.data;
-      });
-    }
+    if (guestId) this._hosted.getGuestById(guestId).subscribe(resp => (this.guest = resp.data));
   }
 
   update(data: IGuestsFormSubmit): void {
@@ -78,13 +65,5 @@ export class HostedEditComponent implements OnInit {
       ...data.trip,
       members: data.guests,
     };
-
-    this._hosted.updateGroupById(this.group[0].guestId, payload).subscribe({
-      next: () => {
-        this._alerts.showToast({ icon: 'success', title: 'Guest updated successfully' });
-        this.router.navigateByUrl('/hosted');
-      },
-      error: () => this._alerts.showToast({ icon: 'error', title: 'Error updating guest' }),
-    });
   }
 }

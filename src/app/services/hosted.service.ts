@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '@env/environment';
 
 // Interfaces
-import { IBodyGuest, IGroupDetail, IGroupDetailResp, IGuestCreateResp, IGuestDeleteResp, IGuestDetailResp, IGuestsResp } from '@interfaces/guests.interface';
+import { IBodyGuest, IGuestCreateResp, IGuestDeleteResp, IGuestDetailResp, IGuestsResp } from '@interfaces/guests.interface';
 import { Continents } from '@type/word.types';
 
 export interface IQueryParamsGuests {
@@ -23,7 +23,6 @@ export interface IQueryParamsGuests {
 })
 export class HostedService {
   private urlGuests: string = `${environment.endpointUrlApiCs}/hosted`;
-  private urlGuestsGroups: string = `${environment.endpointUrlApiCs}/groups`;
 
   constructor(private http: HttpClient) {}
 
@@ -52,22 +51,5 @@ export class HostedService {
 
   removeGuestById(guestId: string): Observable<IGuestDeleteResp> {
     return this.http.delete<IGuestDeleteResp>(`${this.urlGuests}/${guestId}`);
-  }
-
-  // GROUPS
-  getGroupById(groupId: string): Observable<IGroupDetailResp> {
-    return this.http.get<IGroupDetailResp>(`${this.urlGuestsGroups}/${groupId}`);
-  }
-
-  createNewGroup(payload: IGroupDetail): Observable<IGuestCreateResp> {
-    return this.http.post<IGuestCreateResp>(this.urlGuestsGroups, payload);
-  }
-
-  updateGroupById(guestId: string, group: IGroupDetail): Observable<IGuestCreateResp> {
-    return this.http.put<IGuestCreateResp>(`${this.urlGuestsGroups}/hosted/${guestId}`, group);
-  }
-
-  removeGroupById(groupId: string): Observable<IGuestDeleteResp> {
-    return this.http.delete<IGuestDeleteResp>(`${this.urlGuestsGroups}/${groupId}`);
   }
 }

@@ -31,24 +31,8 @@ export class HostedDetailComponent implements OnInit {
 
   private getById(): void {
     const guestId = this.route.snapshot.paramMap.get('hostedId');
-    const groupId = this.route.snapshot.paramMap.get('groupId');
 
     this.status = 'loading';
-
-    if (groupId) {
-      this._hosted.getGroupById(groupId).subscribe({
-        next: resp => {
-          this.group = resp.data;
-          this.status = 'success';
-        },
-        error: err => {
-          this.error = err;
-          this.status = 'error';
-        },
-      });
-
-      return;
-    }
 
     if (guestId) {
       this._hosted.getGuestById(guestId).subscribe({
@@ -62,5 +46,17 @@ export class HostedDetailComponent implements OnInit {
         },
       });
     }
+  }
+
+  openCouchsurfing(profileId: string): void {
+    window.open(`https://www.couchsurfing.com/c/users/${profileId}`, '_blank');
+  }
+
+  openInstagram(username: string): void {
+    window.open(`https://www.instagram.com/${username}`, '_blank');
+  }
+
+  formatRegion(region: string): string {
+    return region.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
   }
 }

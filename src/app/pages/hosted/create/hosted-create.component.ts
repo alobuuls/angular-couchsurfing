@@ -51,13 +51,5 @@ export class HostedCreateComponent {
       groupType: data.groupType,
       members: data.guests,
     };
-
-    this._hosted.createNewGroup(payload).subscribe({
-      next: () => {
-        this._alerts.showToast({ icon: 'success', title: 'Group created successfully' });
-        this.router.navigateByUrl('/hosted');
-      },
-      error: () => this._alerts.showToast({ icon: 'error', title: 'Error creating group' }),
-    });
   }
 }

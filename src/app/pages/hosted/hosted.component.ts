@@ -10,7 +10,6 @@ import { Sort } from '@angular/material/sort';
 
 // Services
 import { HostedService } from '@services/hosted.service';
-import { IQueryParamsGuests } from '@services/guests.service';
 import { GuestDeleteService } from '@services/delete-confirmation.service';
 import { ErrorHandlerService } from '@services/err-handler.service';
 import { GuestSortService } from '@services/guest-sort.service';
@@ -21,7 +20,7 @@ import { mapGuestTable } from 'src/app/utils/mappers/guest-table.mapper';
 import { isGroup } from 'src/app/utils/helpers/guests-table.utils';
 
 // Interfaces
-import { IGuestListItem } from '@interfaces/guests.interface';
+import { IGuestListItem, IQueryParamsGuests } from '@interfaces/guests.interface';
 import { IGuestsTableVM, IGuestTableRow, IGuestTableRowWithIndex } from '@interfaces/data-structure-api';
 
 // Types
@@ -248,7 +247,7 @@ export class HostedComponent implements OnInit {
     const deleted = await this._deleteService.confirmAndDelete(guest, item => {
       const group = isGroup(item);
       const id = group ? item.groupId : item.guestId;
-      return group ? this._hosted.removeGroupById(id) : this._hosted.removeGuestById(id);
+      return group ? this._hosted.removeGuestById(id) : this._hosted.removeGuestById(id);
     });
     if (!deleted) return;
     this.page$.next({ ...this.page$.value });

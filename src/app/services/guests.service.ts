@@ -10,7 +10,7 @@ import { IBodyGuest, IGroupDetail, IGroupDetailResp, IGuestCreateResp, IGuestDel
 })
 export class GuestsService {
   private urlGuests: string = `${environment.endpointUrlApiCs}/guests`;
-  private urlGuestsGroups: string = `${environment.endpointUrlApiCs}/groups`;
+  private urlGuestsGroups: string = `${environment.endpointUrlApiCs}/groups/guests`;
 
   constructor(private http: HttpClient) {}
 
