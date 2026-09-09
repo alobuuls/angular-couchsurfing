@@ -4,7 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:tunnel": "npx concurrently \"ng serve --host 0.0.0.0 --port 4200 --disable-host-check\" \"cloudflared tunnel --url http://localhost:4200\"",
     "build": "ng build",
+    "start:cloud": "ng serve --host 0.0.0.0 --port 4200 --disable-host-check",
+    "cloud": "cloudflared tunnel --url http://localhost:4200",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

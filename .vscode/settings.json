@@ -32,7 +32,7 @@
   "files.insertFinalNewline": true,
   "files.exclude": {
     "node_modules": true,
-    "dist": true,
+    "dist": false,git remote -v
     "build": true
   },
   "files.watcherExclude": {
