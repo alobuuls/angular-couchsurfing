@@ -1,13 +1,13 @@
 <h1>Trip Form</h1>
 
 <div class="ctn-form">
-  <form #tripFormElement [formGroup]="formTrip" >
+  <form #tripFormElement [formGroup]="formTrip">
     <div class="trip-row">
       <!-- VISITED DATE -->
       <mat-form-field appearance="outline">
         <mat-label>Visited Date</mat-label>
 
-        <mat-icon matPrefix>calendar_month</mat-icon>
+        <mat-icon class="material-symbols-outlined" matPrefix>calendar_month</mat-icon>
 
         <input matInput [matDatepicker]="visitedDatePicker" formControlName="visitedDate" />
 

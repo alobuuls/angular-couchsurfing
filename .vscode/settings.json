@@ -31,8 +31,8 @@
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
   "files.exclude": {
-    "node_modules": true,
-    "dist": false,git remote -v
+    "node_modules": false,
+    "dist": false,
     "build": true
   },
   "files.watcherExclude": {

@@ -17,9 +17,9 @@
     <ng-container *ngIf="guest">
       <!-- GUEST NAME -->
       <h2 *ngIf="guest.fullName">
-        <mat-icon [fontIcon]="guest.gender === 'male' ? 'male' : 'female'"></mat-icon>
+        <mat-icon class="material-symbols-outlined" [fontIcon]="guest.gender === 'male' ? 'male' : 'female'"></mat-icon>
         {{ guest.fullName }}
-        <mat-icon *ngIf="guest.ambassador" matTooltip="Ambassador">badge</mat-icon>
+        <mat-icon class="material-symbols-outlined" *ngIf="guest.ambassador" matTooltip="Ambassador">badge</mat-icon>
       </h2>
 
       <!-- TRIP -->
@@ -44,6 +44,7 @@
           <li *ngIf="guest.stayed !== null && guest.stayed !== undefined">
             <strong>Stayed: </strong>
             <mat-icon
+              class="material-symbols-outlined"
               [fontIcon]="guest.stayed ? 'check' : 'close'"
               [class.success]="guest.stayed"
               [class.danger]="!guest.stayed"
@@ -52,6 +53,7 @@
           <li *ngIf="guest.hangOut !== null && guest.hangOut !== undefined">
             <strong>Hang Out: </strong>
             <mat-icon
+              class="material-symbols-outlined"
               [fontIcon]="guest.hangOut ? 'check' : 'close'"
               [class.success]="guest.hangOut"
               [class.danger]="!guest.hangOut"
@@ -60,6 +62,7 @@
           <li *ngIf="guest.isFirstTime !== null && guest.isFirstTime !== undefined">
             <strong>First Time: </strong>
             <mat-icon
+              class="material-symbols-outlined"
               [fontIcon]="guest.isFirstTime ? 'check' : 'close'"
               [class.success]="guest.isFirstTime"
               [class.danger]="!guest.isFirstTime"
@@ -69,6 +72,7 @@
             <strong>Group Type: </strong>
             <span class="gap-icons">
               <mat-icon
+                class="material-symbols-outlined"
                 [fontIcon]="
                   guest.groupType === 'solo'
                     ? 'person'
@@ -146,13 +150,14 @@
               matTooltip="View Couchsurfing profile"
               (click)="openCouchsurfing(guest.urlProfileCs)"
             >
-              <mat-icon fontIcon="chair"></mat-icon>
+              <mat-icon class="material-symbols-outlined" fontIcon="chair"></mat-icon>
             </button>
           </li>
 
           <li *ngIf="guest.isGay !== null && guest.isGay !== undefined">
             <strong>Gay:</strong>
             <mat-icon
+              class="material-symbols-outlined"
               [fontIcon]="guest.isGay ? 'check' : 'close'"
               [class.success]="guest.isGay"
               [class.danger]="!guest.isGay"
@@ -162,7 +167,7 @@
           <li *ngIf="guest.didTheyReq !== null && guest.didTheyReq !== undefined">
             <ng-container *ngIf="guest.didTheyReq; else requestSent">
               <strong>Did they request a stay?</strong>
-              <mat-icon fontIcon="check" class="success"></mat-icon>
+              <mat-icon class="material-symbols-outlined" fontIcon="check" class="success"></mat-icon>
             </ng-container>
 
             <ng-template #requestSent>
@@ -229,6 +234,7 @@
 
         <div class="ctn-stars">
           <mat-icon
+            class="material-symbols-outlined"
             *ngFor="let s of [1, 2, 3, 4, 5]; let idx = index"
             [class.filled]="idx < guest.rating"
             fontIcon="star"
@@ -294,6 +300,7 @@
           <li *ngIf="group[0].stayed !== null && group[0].stayed !== undefined">
             <strong>Stayed:</strong>
             <mat-icon
+              class="material-symbols-outlined"
               [fontIcon]="group[0].stayed ? 'check' : 'close'"
               [class.success]="group[0].stayed"
               [class.danger]="!group[0].stayed"
@@ -304,6 +311,7 @@
             <strong>Group Type:</strong>
             <span class="gap-icons">
               <mat-icon
+                class="material-symbols-outlined"
                 [fontIcon]="
                   group[0].groupType === 'solo'
                     ? 'person'
@@ -327,9 +335,12 @@
       <section *ngFor="let member of group">
         <!-- MEMBER NAME -->
         <h2 *ngIf="member.fullName">
-          <mat-icon [fontIcon]="member.gender === 'male' ? 'male' : 'female'"></mat-icon>
+          <mat-icon
+            class="material-symbols-outlined"
+            [fontIcon]="member.gender === 'male' ? 'male' : 'female'"
+          ></mat-icon>
           {{ member.fullName }}
-          <mat-icon *ngIf="member.ambassador" matTooltip="Ambassador">badge</mat-icon>
+          <mat-icon class="material-symbols-outlined" *ngIf="member.ambassador" matTooltip="Ambassador">badge</mat-icon>
         </h2>
 
         <!-- PERSONAL INFORMATION -->
@@ -393,13 +404,14 @@
                 matTooltip="View Couchsurfing profile"
                 (click)="openCouchsurfing(member.urlProfileCs)"
               >
-                <mat-icon fontIcon="chair"></mat-icon>
+                <mat-icon class="material-symbols-outlined" fontIcon="chair"></mat-icon>
               </button>
             </li>
 
             <li *ngIf="member.isGay !== null && member.isGay !== undefined">
               <strong>Gay:</strong>
               <mat-icon
+                class="material-symbols-outlined"
                 [fontIcon]="member.isGay ? 'check' : 'close'"
                 [class.success]="member.isGay"
                 [class.danger]="!member.isGay"
@@ -409,7 +421,7 @@
             <li *ngIf="member.didTheyReq !== null && member.didTheyReq !== undefined">
               <ng-container *ngIf="member.didTheyReq; else memberRequestSent">
                 <strong>Did they request a stay?</strong>
-                <mat-icon fontIcon="check" class="success"></mat-icon>
+                <mat-icon class="material-symbols-outlined" fontIcon="check" class="success"></mat-icon>
               </ng-container>
 
               <ng-template #memberRequestSent>
@@ -476,6 +488,7 @@
 
           <div class="ctn-stars">
             <mat-icon
+              class="material-symbols-outlined"
               *ngFor="let s of [1, 2, 3, 4, 5]; let idx = index"
               [class.filled]="idx < member.rating"
               fontIcon="star"

@@ -55,7 +55,8 @@
     [disabled]="wasFormSubmitted"
     (click)="submit()"
   >
-    <mat-icon *ngIf="wasFormSubmitted" class="loading-animation" fontIcon="refresh"> </mat-icon>
+    <mat-icon class="material-symbols-outlined" *ngIf="wasFormSubmitted" class="loading-animation" fontIcon="refresh">
+    </mat-icon>
 
     {{ mode === 'create' ? 'Create' : 'Update' }}
   </button>

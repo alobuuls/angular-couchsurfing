@@ -18,6 +18,7 @@
                 <h2>
                   {{ p.fullName }}
                   <mat-icon
+                    class="material-symbols-outlined"
                     [class.male]="p.gender === 'male'"
                     [class.female]="p.gender === 'female'"
                     [fontIcon]="p.gender === 'female' ? 'woman' : 'man'"
@@ -27,7 +28,12 @@
 
                 <!-- RATING -->
                 <div class="ctn-stars">
-                  <mat-icon *ngFor="let s of [1, 2, 3, 4, 5]" [class.filled]="s <= p.rating" fontIcon="star">
+                  <mat-icon
+                    class="material-symbols-outlined"
+                    *ngFor="let s of [1, 2, 3, 4, 5]"
+                    [class.filled]="s <= p.rating"
+                    fontIcon="star"
+                  >
                   </mat-icon>
                 </div>
               </div>

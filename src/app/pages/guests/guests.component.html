@@ -5,7 +5,7 @@
     <mat-form-field appearance="outline">
       <mat-label>Continent</mat-label>
 
-      <mat-icon matPrefix>public</mat-icon>
+      <mat-icon class="material-symbols-outlined" matPrefix>public</mat-icon>
 
       <mat-select formControlName="continent">
         <mat-option value="">
@@ -25,11 +25,11 @@
     <!-- REGION -->
     <mat-form-field appearance="outline">
       <mat-label>Region</mat-label>
-      <mat-icon matPrefix>map</mat-icon>
+      <mat-icon class="material-symbols-outlined" matPrefix>map</mat-icon>
 
       <mat-select formControlName="region">
         <mat-option value="">
-          <mat-icon>public</mat-icon>
+          <mat-icon class="material-symbols-outlined">public</mat-icon>
           All regions
         </mat-option>
 
@@ -42,7 +42,7 @@
     <!-- COUNTRY -->
     <mat-form-field appearance="outline">
       <mat-label>Country</mat-label>
-      <mat-icon matPrefix>public</mat-icon>
+      <mat-icon class="material-symbols-outlined" matPrefix>public</mat-icon>
       <input matInput formControlName="country" [matAutocomplete]="autoCountry" />
 
       <mat-autocomplete
@@ -51,7 +51,7 @@
         (optionSelected)="onCountrySelected($event)"
       >
         <mat-option value="">
-          <mat-icon>public</mat-icon>
+          <mat-icon class="material-symbols-outlined">public</mat-icon>
           All Countries
         </mat-option>
         <mat-option *ngFor="let country of filteredCountries" [value]="country.countryCode">
@@ -64,21 +64,23 @@
     <!-- GROUP TYPE -->
     <mat-form-field appearance="outline">
       <mat-label>Group Type</mat-label>
-      <mat-icon matPrefix>groups</mat-icon>
+      <mat-icon class="material-symbols-outlined" matPrefix>groups</mat-icon>
 
       <mat-select formControlName="groupType">
-        <mat-option value=""> <mat-icon>groups</mat-icon>All groups</mat-option>
-        <mat-option value="solo"> <mat-icon>person</mat-icon>Solo</mat-option>
-        <mat-option value="couple"> <mat-icon>favorite</mat-icon>Couple</mat-option>
-        <mat-option value="friends"> <mat-icon>group</mat-icon>Friends</mat-option>
-        <mat-option value="family"> <mat-icon>family_restroom</mat-icon>Family</mat-option>
+        <mat-option value=""> <mat-icon class="material-symbols-outlined">groups</mat-icon>All groups</mat-option>
+        <mat-option value="solo"> <mat-icon class="material-symbols-outlined">person</mat-icon>Solo</mat-option>
+        <mat-option value="couple"> <mat-icon class="material-symbols-outlined">favorite</mat-icon>Couple</mat-option>
+        <mat-option value="friends"> <mat-icon class="material-symbols-outlined">group</mat-icon>Friends</mat-option>
+        <mat-option value="family">
+          <mat-icon class="material-symbols-outlined">family_restroom</mat-icon>Family</mat-option
+        >
       </mat-select>
     </mat-form-field>
 
     <!-- FROM -->
     <mat-form-field appearance="outline">
       <mat-label>Visited From</mat-label>
-      <mat-icon matPrefix>calendar_month</mat-icon>
+      <mat-icon class="material-symbols-outlined" matPrefix>calendar_month</mat-icon>
 
       <input matInput [matDatepicker]="fromPicker" formControlName="from" />
       <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
@@ -89,7 +91,7 @@
     <mat-form-field appearance="outline">
       <mat-label>Visited To</mat-label>
 
-      <mat-icon matPrefix>calendar_month</mat-icon>
+      <mat-icon class="material-symbols-outlined" matPrefix>calendar_month</mat-icon>
       <input matInput [matDatepicker]="toPicker" formControlName="to" />
       <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
       <mat-datepicker #toPicker></mat-datepicker>
@@ -98,45 +100,45 @@
     <!-- FIRST TIME -->
     <mat-form-field appearance="outline">
       <mat-label>First Time</mat-label>
-      <mat-icon matPrefix>editor_choice</mat-icon>
+      <mat-icon class="material-symbols-outlined" matPrefix>editor_choice</mat-icon>
       <mat-select formControlName="isFirstTime">
-        <mat-option value=""> <mat-icon>editor_choice</mat-icon>All</mat-option>
-        <mat-option [value]="true"> <mat-icon>check_circle</mat-icon>Yes</mat-option>
-        <mat-option [value]="false"> <mat-icon>cancel</mat-icon>No</mat-option>
+        <mat-option value=""> <mat-icon class="material-symbols-outlined">editor_choice</mat-icon>All</mat-option>
+        <mat-option [value]="true"> <mat-icon class="material-symbols-outlined">check_circle</mat-icon>Yes</mat-option>
+        <mat-option [value]="false"> <mat-icon class="material-symbols-outlined">cancel</mat-icon>No</mat-option>
       </mat-select>
     </mat-form-field>
 
     <!-- AMBASSADOR -->
     <mat-form-field appearance="outline">
       <mat-label>Ambassador</mat-label>
-      <mat-icon matPrefix>badge</mat-icon>
+      <mat-icon class="material-symbols-outlined" matPrefix>badge</mat-icon>
       <mat-select formControlName="ambassador">
-        <mat-option value=""> <mat-icon>badge</mat-icon>All</mat-option>
-        <mat-option [value]="true"> <mat-icon>check_circle</mat-icon>Yes</mat-option>
-        <mat-option [value]="false"> <mat-icon>cancel</mat-icon>No</mat-option>
+        <mat-option value=""> <mat-icon class="material-symbols-outlined">badge</mat-icon>All</mat-option>
+        <mat-option [value]="true"> <mat-icon class="material-symbols-outlined">check_circle</mat-icon>Yes</mat-option>
+        <mat-option [value]="false"> <mat-icon class="material-symbols-outlined">cancel</mat-icon>No</mat-option>
       </mat-select>
     </mat-form-field>
 
     <!-- DID THEY REQUEST -->
     <mat-form-field appearance="outline">
       <mat-label>Did they request?</mat-label>
-      <mat-icon matPrefix>mark_email_unread</mat-icon>
+      <mat-icon class="material-symbols-outlined" matPrefix>mark_email_unread</mat-icon>
       <mat-select formControlName="didTheyReq">
-        <mat-option value=""> <mat-icon>mark_email_unread</mat-icon>All</mat-option>
-        <mat-option [value]="true"> <mat-icon>check_circle</mat-icon>Yes</mat-option>
-        <mat-option [value]="false"> <mat-icon>cancel</mat-icon>No</mat-option>
+        <mat-option value=""> <mat-icon class="material-symbols-outlined">mark_email_unread</mat-icon>All</mat-option>
+        <mat-option [value]="true"> <mat-icon class="material-symbols-outlined">check_circle</mat-icon>Yes</mat-option>
+        <mat-option [value]="false"> <mat-icon class="material-symbols-outlined">cancel</mat-icon>No</mat-option>
       </mat-select>
     </mat-form-field>
 
     <!-- ACTIONS -->
     <div class="filters-actions">
       <button type="button" mat-stroked-button (click)="clearFilters()">
-        <mat-icon>clear</mat-icon>
+        <mat-icon class="material-symbols-outlined">clear</mat-icon>
         Clear
       </button>
 
       <button type="submit" mat-raised-button color="primary">
-        <mat-icon>search</mat-icon>
+        <mat-icon class="material-symbols-outlined">search</mat-icon>
         Search
       </button>
     </div>
@@ -145,17 +147,17 @@
   <div class="ctn-btns">
     <!-- TOGGLE BUTTON -->
     <button class="btn-toggle" mat-icon-button (click)="changeView()" [matTooltip]="nextViewTooltip">
-      <mat-icon [fontIcon]="nextViewIcon"></mat-icon>
+      <mat-icon class="material-symbols-outlined" [fontIcon]="nextViewIcon"></mat-icon>
     </button>
 
     <!-- STATS BUTTON -->
     <button [routerLink]="['/guests/stats']" class="btn-stats" mat-icon-button matTooltip="See stats">
-      <mat-icon fontIcon="leaderboard"></mat-icon>
+      <mat-icon class="material-symbols-outlined" fontIcon="leaderboard"></mat-icon>
     </button>
 
     <!-- ADD BUTTON -->
     <button [routerLink]="['/guests/add']" class="btn-add" mat-icon-button matTooltip="Create Guest">
-      <mat-icon fontIcon="add"></mat-icon>
+      <mat-icon class="material-symbols-outlined" fontIcon="add"></mat-icon>
     </button>
   </div>
 

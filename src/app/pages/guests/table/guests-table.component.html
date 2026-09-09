@@ -3,7 +3,9 @@
   <table mat-table [dataSource]="data" matSort (matSortChange)="sort.emit($event)">
     <!-- NO -->
     <ng-container matColumnDef="no">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header><mat-icon>tag</mat-icon> No</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <mat-icon class="material-symbols-outlined">tag</mat-icon> No
+      </th>
       <td mat-cell *matCellDef="let guest; let i = index">
         <span [matBadge]="offset + i + 1" matBadgeColor="warn"></span>
       </td>
@@ -15,6 +17,7 @@
       <td mat-cell *matCellDef="let guest">
         <div *ngIf="guest.isHangOutUnique; else hangOutList">
           <mat-icon
+            class="material-symbols-outlined"
             [class.success]="guest.people[0].hangOut"
             [class.danger]="!guest.people[0].hangOut"
             [fontIcon]="guest.people[0].hangOut ? 'check' : 'close'"
@@ -24,6 +27,7 @@
         <ng-template #hangOutList>
           <div *ngFor="let person of guest.people">
             <mat-icon
+              class="material-symbols-outlined"
               [class.success]="person.hangOut"
               [class.danger]="!person.hangOut"
               [fontIcon]="person.hangOut ? 'check' : 'close'"
@@ -35,7 +39,9 @@
 
     <!-- NIGHTS -->
     <ng-container matColumnDef="nights">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header><mat-icon>hotel</mat-icon> Nights</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <mat-icon class="material-symbols-outlined">hotel</mat-icon> Nights
+      </th>
       <td mat-cell *matCellDef="let guest">
         <span [matBadge]="guest.nights" matBadgeColor="primary"></span>
       </td>
@@ -47,6 +53,7 @@
       <td mat-cell *matCellDef="let guest">
         <div *ngFor="let person of guest.people">
           <mat-icon
+            class="material-symbols-outlined"
             [class.male]="person.gender === 'male'"
             [class.female]="person.gender === 'female'"
             [fontIcon]="person.gender === 'female' ? 'woman' : 'man'"
@@ -57,7 +64,9 @@
 
     <!-- AGE (members + solo) -->
     <ng-container matColumnDef="birth_date">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header><mat-icon>cake</mat-icon> Age</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <mat-icon class="material-symbols-outlined">cake</mat-icon> Age
+      </th>
 
       <td mat-cell *matCellDef="let guest">
         <div *ngFor="let person of guest.people">
@@ -68,7 +77,9 @@
 
     <!-- FULL NAME -->
     <ng-container matColumnDef="fullName">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header><mat-icon>badge</mat-icon> Full Name</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <mat-icon class="material-symbols-outlined">badge</mat-icon> Full Name
+      </th>
       <td mat-cell *matCellDef="let guest">
         <div class="ctn-fullname-btns" *ngFor="let person of guest.people">
           <button
@@ -78,7 +89,7 @@
             mat-icon-button
             (click)="couchsurfing.emit(person.couchsurfing)"
           >
-            <mat-icon fontIcon="chair"></mat-icon>
+            <mat-icon class="material-symbols-outlined" fontIcon="chair"></mat-icon>
           </button>
           <button
             [disabled]="!person.whatsapp"
@@ -99,7 +110,9 @@
 
     <!-- CONTINENT -->
     <ng-container matColumnDef="continent">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header><mat-icon>public</mat-icon> Continent</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <mat-icon class="material-symbols-outlined">public</mat-icon> Continent
+      </th>
       <td mat-cell *matCellDef="let guest">
         <div *ngIf="guest.isContinentUnique; else continentList">
           {{ guest.people[0].continent }}
@@ -115,7 +128,9 @@
 
     <!-- HOMETOWN -->
     <ng-container matColumnDef="hometownCode">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header><mat-icon>home</mat-icon> Hometown</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <mat-icon class="material-symbols-outlined">home</mat-icon> Hometown
+      </th>
 
       <td mat-cell *matCellDef="let guest">
         <div *ngIf="guest.isHometownUnique; else hometownList">
@@ -136,7 +151,9 @@
 
     <!-- LIVING IN -->
     <ng-container matColumnDef="livingInCode">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header><mat-icon>location_city</mat-icon> Living In</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <mat-icon class="material-symbols-outlined">location_city</mat-icon> Living In
+      </th>
 
       <td mat-cell *matCellDef="let guest">
         <div *ngIf="guest.isLivingInUnique; else livingList">
@@ -157,7 +174,9 @@
 
     <!-- VISITED DATE -->
     <ng-container matColumnDef="visitedDate">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header><mat-icon>event</mat-icon> Visited</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <mat-icon class="material-symbols-outlined">event</mat-icon> Visited
+      </th>
       <td mat-cell *matCellDef="let guest">
         {{ guest.visitedDate | date }}
       </td>
@@ -165,11 +184,18 @@
 
     <!-- RATING -->
     <ng-container matColumnDef="rating">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header><mat-icon>star</mat-icon> Rating</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <mat-icon class="material-symbols-outlined">star</mat-icon> Rating
+      </th>
 
       <td mat-cell *matCellDef="let guest">
         <div class="ctn-stars" *ngFor="let person of guest.people">
-          <mat-icon *ngFor="let s of [1, 2, 3, 4, 5]; let i = index" [class.filled]="i < person.rating" fontIcon="star">
+          <mat-icon
+            class="material-symbols-outlined"
+            *ngFor="let s of [1, 2, 3, 4, 5]; let i = index"
+            [class.filled]="i < person.rating"
+            fontIcon="star"
+          >
           </mat-icon>
         </div>
       </td>
@@ -177,19 +203,19 @@
 
     <!-- ACTIONS -->
     <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef><mat-icon>settings</mat-icon> Actions</th>
+      <th mat-header-cell *matHeaderCellDef><mat-icon class="material-symbols-outlined">settings</mat-icon> Actions</th>
       <td mat-cell *matCellDef="let guest">
         <div class="actions">
           <button matTooltip="View guest" class="btn-detail" mat-icon-button (click)="detail.emit(guest)">
-            <mat-icon fontIcon="visibility" />
+            <mat-icon class="material-symbols-outlined" fontIcon="visibility" />
           </button>
 
           <button matTooltip="Edit guest" class="btn-edit" mat-icon-button (click)="edit.emit(guest)">
-            <mat-icon fontIcon="edit" />
+            <mat-icon class="material-symbols-outlined" fontIcon="edit" />
           </button>
 
           <button matTooltip="Delete guest" class="btn-delete" mat-icon-button (click)="remove.emit(guest)">
-            <mat-icon fontIcon="delete" />
+            <mat-icon class="material-symbols-outlined" fontIcon="delete" />
           </button>
         </div>
       </td>
