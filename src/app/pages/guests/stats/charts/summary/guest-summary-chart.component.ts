@@ -154,6 +154,19 @@ export class GuestSummaryChartComponent implements OnChanges {
             borderColor: ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(201, 203, 207)'],
 
             borderWidth: 1,
+
+            // Different color for each radar point.
+            pointBackgroundColor: [
+              'rgb(230, 99, 127)', // General
+              'rgb(58, 98, 219)', // Solo
+              'rgb(154, 230, 159)', // Groups
+            ],
+
+            pointBorderColor: ['rgb(204, 0, 44)', 'rgb(0, 19, 127)', 'rgb(0, 82, 35)'],
+
+            // Slightly larger points.
+            pointRadius: 8,
+            pointHoverRadius: 10,
           },
         ],
       },

@@ -12,7 +12,7 @@
   padding: 1.5rem;
   background-color: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 4px 12px #00000014;
+  box-shadow: 0 4px 12px #00000057;
 }
 
 .icon-summary-card {
@@ -89,8 +89,6 @@
   outline-color: #840000;
   outline-offset: 4px;
 }
-
-
 
 /* Responsive */
 @media (min-width: 600px) {
