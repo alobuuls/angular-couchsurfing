@@ -15,9 +15,9 @@
   <div *ngIf="selectedView === 'total'">
     <div class="summary-cards">
       <div class="summary-card" *ngFor="let card of cards">
-        <div class="icon-summary-card">
+        <button mat-icon-button class="icon-summary-card">
           <mat-icon class="material-symbols-outlined">{{ card.icon }}</mat-icon>
-        </div>
+        </button>
 
         <div class="ctn-summary-card">
           <span class="value-summary-card">

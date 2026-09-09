@@ -19,7 +19,7 @@ export class GuestSummaryChartComponent implements OnChanges {
   selectedView: ISummaryView = 'total';
 
   // Available summary views.
-  readonly summaryViews: ISummaryView[] = ['total', 'nights', 'gifts', 'rating'];
+  readonly summaryViews: ISummaryView[] = ['total', 'nights', 'rating', 'gifts'];
 
   private chart?: Chart;
 
@@ -29,7 +29,7 @@ export class GuestSummaryChartComponent implements OnChanges {
   private readonly chartConfig: Record<
     Exclude<ISummaryView, 'total'>,
     {
-      type: 'bar' | 'doughnut';
+      type: 'bar' | 'doughnut' | 'radar';
       labels: string[];
       label: string;
       getData: (summary: ISummaryDistribution) => number[];
@@ -39,11 +39,20 @@ export class GuestSummaryChartComponent implements OnChanges {
   > = {
     // Average nights by guest type.
     nights: {
-      type: 'bar',
+      type: 'radar',
       labels: ['General', 'Solo', 'Groups'],
       label: 'Average Nights',
       getData: summary => [summary.averageNightsGeneral, summary.averageNightsSolo, summary.averageNightsGroup],
-      indexAxis: 'y',
+      max: 4,
+    },
+
+    // Average rating by guest type.
+    rating: {
+      type: 'radar',
+      labels: ['General', 'Solo', 'Groups'],
+      label: 'Average Rating',
+      getData: summary => [summary.averageRatingGeneral, summary.averageRatingSolo, summary.averageRatingGroup],
+      max: 5,
     },
 
     // Gift distribution across visits.
@@ -52,16 +61,6 @@ export class GuestSummaryChartComponent implements OnChanges {
       labels: ['Received', 'Without Gift'],
       label: 'Gifts',
       getData: summary => [summary.giftsReceived, summary.guestsWithoutGift],
-    },
-
-    // Average rating by guest type.
-    rating: {
-      type: 'bar',
-      labels: ['General', 'Solo', 'Groups'],
-      label: 'Average Rating',
-      getData: summary => [summary.averageRatingGeneral, summary.averageRatingSolo, summary.averageRatingGroup],
-      indexAxis: 'y',
-      max: 5,
     },
   };
 
@@ -179,6 +178,23 @@ export class GuestSummaryChartComponent implements OnChanges {
               ...(config.max !== undefined && {
                 max: config.max,
               }),
+            },
+          },
+        }),
+
+        // Apply radial scale configuration only to radar charts.
+        ...(config.type === 'radar' && {
+          scales: {
+            r: {
+              beginAtZero: true,
+
+              ...(config.max !== undefined && {
+                max: config.max,
+              }),
+
+              ticks: {
+                precision: 0,
+              },
             },
           },
         }),
