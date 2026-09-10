@@ -515,6 +515,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         name: person.fullName,
         age: this.calculateAge(person.birthDate!),
         gender: person.gender,
+        visitedDate: person.visitedDate,
         country: person.hometownCode,
       }))
 
@@ -588,7 +589,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             callbacks: {
               label: context => {
                 const person = oldestPeople[context.dataIndex];
-                return person.country;
+                return [`Visited: ${person.visitedDate}`, `Country: ${person.country}`];
               },
             },
           },
@@ -742,7 +743,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             callbacks: {
               label: context => {
                 const person = soloPeople[context.dataIndex];
-                return [person.name, `Age: ${person.age}`, `Visited: ${person.visitedDateLabel}`, `Gender: ${person.gender}`, `Country: ${person.country}`];
+                return [person.name, `Age: ${person.age}`, `Visited: ${person.visitedDateLabel}`, `Country: ${person.country}`];
               },
             },
           },
@@ -947,6 +948,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         name: person.fullName,
         age: this.calculateAge(person.birthDate!),
         gender: person.gender,
+        visitedDate: person.visitedDate,
         country: person.hometownCode,
       }))
       // Sort from oldest to youngest.
@@ -1022,7 +1024,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             callbacks: {
               label: context => {
                 const person = youngestPeople[context.dataIndex];
-                return person.country;
+                return [`Visited: ${person.visitedDate}`, `Country: ${person.country}`];
               },
             },
           },
@@ -1157,7 +1159,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             callbacks: {
               label: context => {
                 const person = soloPeople[context.dataIndex];
-                return [person.name, `Age: ${person.age}`, `Visited: ${person.visitedDateLabel}`, `Gender: ${person.gender}`, `Country: ${person.country}`];
+                return [person.name, `Age: ${person.age}`, `Visited: ${person.visitedDateLabel}`, `Country: ${person.country}`];
               },
             },
           },
@@ -1449,12 +1451,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                     hometownCode: string;
                   };
                 };
-                return [
-                  `${point.type}: ${point.person.fullName}`,
-                  `Visited: ${point.person.visitedDate}`,
-                  `Gender: ${point.person.gender}`,
-                  `country: ${point.person.hometownCode}`,
-                ];
+                return [`${point.type}: ${point.person.fullName}`, `Visited: ${point.person.visitedDate}`, `country: ${point.person.hometownCode}`];
               },
             },
           },
@@ -1604,7 +1601,6 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                   `${context.dataIndex === 0 ? 'First' : 'Last'}: ${person.fullName}`,
                   `Category: ${category.label}`,
                   `Visited: ${person.visitedDate}`,
-                  `Gender: ${person.gender}`,
                   `Country: ${person.hometownCode}`,
                 ];
               },
