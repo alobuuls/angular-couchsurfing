@@ -242,7 +242,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         plugins: {
           // Place the legend below the chart.
           legend: {
-            position: 'bottom',
+            position: 'top',
           },
         },
       },
@@ -311,7 +311,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         },
         plugins: {
           legend: {
-            position: 'bottom',
+            position: 'top',
           },
         },
       },
@@ -321,6 +321,9 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
   // MOST VISITED GENDER
 
   private createMostVisitedGenderChart(): Chart {
+    const legendGenders = new Set<IDemographicGender>();
+    const backgroundColors: string[] = [];
+    const borderColors: string[] = [];
     // Get demographic data for each travel group.
     const groups = this.demographics.totals.groups;
     // Combine overall data and group data into a single structure
@@ -384,6 +387,9 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         // Remove genders that are not applicable to the current category.
         .filter(gender => !hiddenGenders[category.label]?.includes(gender.label))
 
+        // Remove genders with no registered guests.
+        .filter(gender => gender.value > 0)
+
         // Sort from highest value to lowest value.
         .sort((a, b) => b.value - a.value);
       genders.forEach(gender => {
@@ -392,6 +398,20 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
         // Add the corresponding value.
         data.push(gender.value);
+
+        // Assign the color according to the gender category.
+        const genderKey = {
+          Female: 'female',
+          Male: 'male',
+          Trans: 'trans',
+          Gay: 'isGay',
+        }[gender.label] as IDemographicGender;
+
+        backgroundColors.push(this.genderColors[genderKey].background);
+        borderColors.push(this.genderColors[genderKey].border);
+
+        // Store the gender for the dynamic legend.
+        legendGenders.add(genderKey);
       });
     });
 
@@ -404,7 +424,8 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             label: 'Most Visited Gender',
             data,
             // Colors are assigned according to the gender categories.
-            backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)'],
+            backgroundColor: backgroundColors,
+            borderColor: borderColors,
             borderWidth: 1,
           },
         ],
@@ -424,7 +445,55 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         plugins: {
           // The dataset label is not needed because the bars already have labels.
           legend: {
-            display: false,
+            display: true,
+            labels: {
+              generateLabels: () => {
+                const labels: {
+                  text: string;
+                  fillStyle: string;
+                  strokeStyle: string;
+                  lineWidth: number;
+                }[] = [];
+
+                if (legendGenders.has('male')) {
+                  labels.push({
+                    text: 'Male',
+                    fillStyle: this.genderColors.male.background,
+                    strokeStyle: this.genderColors.male.border,
+                    lineWidth: 1,
+                  });
+                }
+
+                if (legendGenders.has('female')) {
+                  labels.push({
+                    text: 'Female',
+                    fillStyle: this.genderColors.female.background,
+                    strokeStyle: this.genderColors.female.border,
+                    lineWidth: 1,
+                  });
+                }
+
+                if (legendGenders.has('trans')) {
+                  labels.push({
+                    text: 'Trans',
+                    fillStyle: this.genderColors.trans.background,
+                    strokeStyle: this.genderColors.trans.border,
+                    lineWidth: 1,
+                  });
+                }
+
+                if (legendGenders.has('isGay')) {
+                  labels.push({
+                    text: 'Gay',
+                    fillStyle: this.genderColors.isGay.background,
+                    strokeStyle: this.genderColors.isGay.border,
+                    lineWidth: 1,
+                  });
+                }
+
+                return labels;
+              },
+            },
           },
         },
       },
@@ -441,14 +510,16 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       // Only people with a registered birth date can have their age calculated.
       .filter(person => person.birthDate)
 
-      // Convert each person into a simpler object containing name and age.
+      // Convert each person containing name, age, gender and country.
       .map(person => ({
         name: person.fullName,
         age: this.calculateAge(person.birthDate!),
+        gender: person.gender,
+        country: person.hometownCode,
       }))
 
-      // Sort from oldest to youngest.
-      .sort((a, b) => b.age - a.age);
+      // Sort from youngest to oldest.
+      .sort((a, b) => a.age - b.age);
     return new Chart(this.demographicsChart.nativeElement, {
       type: 'bar',
       data: {
@@ -459,8 +530,8 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             label: 'Age',
             // Each bar represents the person's calculated age.
             data: oldestPeople.map(person => person.age),
-            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            borderColor: 'rgb(54, 162, 235)',
+            backgroundColor: oldestPeople.map(person => this.genderColors[person.gender].background),
+            borderColor: oldestPeople.map(person => this.genderColors[person.gender].border),
             borderWidth: 1,
           },
         ],
@@ -486,7 +557,40 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         plugins: {
           // Person names on the Y axis already identify the data.
           legend: {
-            display: false,
+            display: true,
+            labels: {
+              // Generate fixed labels to identify the data.
+              generateLabels: () => {
+                const labels = [];
+
+                if (oldestPeople.some(person => person.gender === 'male')) {
+                  labels.push({
+                    text: 'Male',
+                    fillStyle: 'rgba(54, 162, 235, 0.5)',
+                    strokeStyle: 'rgb(54, 162, 235)',
+                    lineWidth: 1,
+                  });
+                }
+
+                if (oldestPeople.some(person => person.gender === 'female')) {
+                  labels.push({
+                    text: 'Female',
+                    fillStyle: 'rgba(255, 99, 132, 0.5)',
+                    strokeStyle: 'rgb(255, 99, 132)',
+                    lineWidth: 1,
+                  });
+                }
+                return labels;
+              },
+            },
+          },
+          tooltip: {
+            callbacks: {
+              label: context => {
+                const person = oldestPeople[context.dataIndex];
+                return person.country;
+              },
+            },
           },
         },
       },
@@ -545,6 +649,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         visitedDateLabel: person.visitedDate,
         gender: person.gender,
         demographic: person.demographic,
+        country: person.hometownCode,
       }));
 
     return new Chart(this.demographicsChart.nativeElement, {
@@ -586,7 +691,50 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         },
         plugins: {
           legend: {
-            display: false,
+            display: true,
+            labels: {
+              generateLabels: () => {
+                const labels = [];
+
+                if (soloPeople.some(person => person.demographic === 'male')) {
+                  labels.push({
+                    text: 'Male',
+                    fillStyle: 'rgba(54, 162, 235, 0.5)',
+                    strokeStyle: 'rgb(54, 162, 235)',
+                    lineWidth: 1,
+                  });
+                }
+
+                if (soloPeople.some(person => person.demographic === 'female')) {
+                  labels.push({
+                    text: 'Female',
+                    fillStyle: 'rgba(255, 99, 132, 0.5)',
+                    strokeStyle: 'rgb(255, 99, 132)',
+                    lineWidth: 1,
+                  });
+                }
+
+                if (soloPeople.some(person => person.demographic === 'trans')) {
+                  labels.push({
+                    text: 'Trans',
+                    fillStyle: 'rgba(153, 102, 255, 0.5)',
+                    strokeStyle: 'rgb(153, 102, 255)',
+                    lineWidth: 1,
+                  });
+                }
+
+                if (soloPeople.some(person => person.demographic === 'isGay')) {
+                  labels.push({
+                    text: 'Gay',
+                    fillStyle: 'rgba(255, 193, 7, 0.5)',
+                    strokeStyle: 'rgb(255, 193, 7)',
+                    lineWidth: 1,
+                  });
+                }
+
+                return labels;
+              },
+            },
           },
 
           // Show guest information when hovering over a point.
@@ -594,7 +742,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             callbacks: {
               label: context => {
                 const person = soloPeople[context.dataIndex];
-                return [person.name, `Age: ${person.age}`, `Visited: ${person.visitedDateLabel}`, `Gender: ${person.gender}`];
+                return [person.name, `Age: ${person.age}`, `Visited: ${person.visitedDateLabel}`, `Gender: ${person.gender}`, `Country: ${person.country}`];
               },
             },
           },
@@ -655,6 +803,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         gender: person.gender,
         demographic: person.demographic,
         groupId: person.groupId,
+        country: person.hometownCode,
       }));
 
     // Map each group to a numeric value for the Y axis.
@@ -719,7 +868,40 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         },
         plugins: {
           legend: {
-            display: false,
+            display: true,
+            labels: {
+              generateLabels: () => {
+                const labels = [];
+
+                if (groupsPeople.some(person => person.group === 'Couple')) {
+                  labels.push({
+                    text: 'Couple',
+                    fillStyle: 'rgba(255, 99, 132, 0.5)',
+                    strokeStyle: 'rgb(255, 99, 132)',
+                    lineWidth: 1,
+                  });
+                }
+
+                if (groupsPeople.some(person => person.group === 'Friends')) {
+                  labels.push({
+                    text: 'Friends',
+                    fillStyle: 'rgba(75, 192, 192, 0.5)',
+                    strokeStyle: 'rgb(75, 192, 192)',
+                    lineWidth: 1,
+                  });
+                }
+
+                if (groupsPeople.some(person => person.group === 'Family')) {
+                  labels.push({
+                    text: 'Family',
+                    fillStyle: 'rgba(255, 193, 7, 0.5)',
+                    strokeStyle: 'rgb(255, 193, 7)',
+                    lineWidth: 1,
+                  });
+                }
+                return labels;
+              },
+            },
           },
 
           // Show guest information when hovering over a bubble.
@@ -727,7 +909,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             callbacks: {
               label: context => {
                 const person = groupsPeople[context.dataIndex];
-                return [person.name, `Age: ${person.age}`, `Group: ${person.group}`, `Gender: ${person.gender}`];
+                return [person.name, `Age: ${person.age}`, `Group: ${person.group}`, `Gender: ${person.gender}`, `Country: ${person.country}`];
               },
             },
           },
@@ -751,7 +933,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
     },
   };
 
-  // YOUNGEST
+  // YOUNGEST - OVERALL
   private createOverallYoungestChart(): Chart {
     // Get people belonging to the overall demographic group.
     const people = this.demographics.youngest.overall.people;
@@ -760,13 +942,15 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
     const youngestPeople = people
       // Only people with a registered birth date can have their age calculated.
       .filter(person => person.birthDate)
-      // Convert each person into a simpler object containing name and age.
+      // Convert each person object containing name, gender and country.
       .map(person => ({
         name: person.fullName,
         age: this.calculateAge(person.birthDate!),
+        gender: person.gender,
+        country: person.hometownCode,
       }))
-      // Sort from youngest to oldest.
-      .sort((a, b) => a.age - b.age);
+      // Sort from oldest to youngest.
+      .sort((a, b) => b.age - a.age);
 
     return new Chart(this.demographicsChart.nativeElement, {
       type: 'bar',
@@ -778,8 +962,8 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             label: 'Age',
             // Each bar represents the person's calculated age.
             data: youngestPeople.map(person => person.age),
-            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            borderColor: 'rgb(54, 162, 235)',
+            backgroundColor: youngestPeople.map(person => this.genderColors[person.gender].background),
+            borderColor: youngestPeople.map(person => this.genderColors[person.gender].border),
             borderWidth: 1,
           },
         ],
@@ -807,7 +991,40 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         plugins: {
           // Person names on the Y axis already identify the data.
           legend: {
-            display: false,
+            display: true,
+            labels: {
+              // Generate fixed labels to identify the data.
+              generateLabels: () => {
+                const labels = [];
+
+                if (youngestPeople.some(person => person.gender === 'male')) {
+                  labels.push({
+                    text: 'Male',
+                    fillStyle: 'rgba(54, 162, 235, 0.5)',
+                    strokeStyle: 'rgb(54, 162, 235)',
+                    lineWidth: 1,
+                  });
+                }
+
+                if (youngestPeople.some(person => person.gender === 'female')) {
+                  labels.push({
+                    text: 'Female',
+                    fillStyle: 'rgba(255, 99, 132, 0.5)',
+                    strokeStyle: 'rgb(255, 99, 132)',
+                    lineWidth: 1,
+                  });
+                }
+                return labels;
+              },
+            },
+          },
+          tooltip: {
+            callbacks: {
+              label: context => {
+                const person = youngestPeople[context.dataIndex];
+                return person.country;
+              },
+            },
           },
         },
       },
@@ -848,6 +1065,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         visitedDateLabel: person.visitedDate,
         gender: person.gender,
         demographic: person.demographic,
+        country: person.hometownCode,
       }));
 
     return new Chart(this.demographicsChart.nativeElement, {
@@ -890,13 +1108,56 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         },
         plugins: {
           legend: {
-            display: false,
+            display: true,
+            labels: {
+              generateLabels: () => {
+                const labels = [];
+
+                if (soloPeople.some(person => person.demographic === 'male')) {
+                  labels.push({
+                    text: 'Male',
+                    fillStyle: 'rgba(54, 162, 235, 0.5)',
+                    strokeStyle: 'rgb(54, 162, 235)',
+                    lineWidth: 1,
+                  });
+                }
+
+                if (soloPeople.some(person => person.demographic === 'female')) {
+                  labels.push({
+                    text: 'Female',
+                    fillStyle: 'rgba(255, 99, 132, 0.5)',
+                    strokeStyle: 'rgb(255, 99, 132)',
+                    lineWidth: 1,
+                  });
+                }
+
+                if (soloPeople.some(person => person.demographic === 'trans')) {
+                  labels.push({
+                    text: 'Trans',
+                    fillStyle: 'rgba(153, 102, 255, 0.5)',
+                    strokeStyle: 'rgb(153, 102, 255)',
+                    lineWidth: 1,
+                  });
+                }
+
+                if (soloPeople.some(person => person.demographic === 'isGay')) {
+                  labels.push({
+                    text: 'Gay',
+                    fillStyle: 'rgba(255, 193, 7, 0.5)',
+                    strokeStyle: 'rgb(255, 193, 7)',
+                    lineWidth: 1,
+                  });
+                }
+
+                return labels;
+              },
+            },
           },
           tooltip: {
             callbacks: {
               label: context => {
                 const person = soloPeople[context.dataIndex];
-                return [person.name, `Age: ${person.age}`, `Visited: ${person.visitedDateLabel}`, `Gender: ${person.gender}`];
+                return [person.name, `Age: ${person.age}`, `Visited: ${person.visitedDateLabel}`, `Gender: ${person.gender}`, `Country: ${person.country}`];
               },
             },
           },
@@ -937,6 +1198,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         gender: person.gender,
         demographic: person.demographic,
         groupId: person.groupId,
+        country: person.hometownCode,
       }));
 
     // Map each group to a numeric value for the Y axis.
@@ -1001,7 +1263,40 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         },
         plugins: {
           legend: {
-            display: false,
+            display: true,
+            labels: {
+              generateLabels: () => {
+                const labels = [];
+
+                if (groupsPeople.some(person => person.group === 'Couple')) {
+                  labels.push({
+                    text: 'Couple',
+                    fillStyle: 'rgba(255, 99, 132, 0.5)',
+                    strokeStyle: 'rgb(255, 99, 132)',
+                    lineWidth: 1,
+                  });
+                }
+
+                if (groupsPeople.some(person => person.group === 'Friends')) {
+                  labels.push({
+                    text: 'Friends',
+                    fillStyle: 'rgba(75, 192, 192, 0.5)',
+                    strokeStyle: 'rgb(75, 192, 192)',
+                    lineWidth: 1,
+                  });
+                }
+
+                if (groupsPeople.some(person => person.group === 'Family')) {
+                  labels.push({
+                    text: 'Family',
+                    fillStyle: 'rgba(255, 193, 7, 0.5)',
+                    strokeStyle: 'rgb(255, 193, 7)',
+                    lineWidth: 1,
+                  });
+                }
+                return labels;
+              },
+            },
           },
 
           // Show guest information when hovering over a bubble.
@@ -1009,7 +1304,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             callbacks: {
               label: context => {
                 const person = groupsPeople[context.dataIndex];
-                return [person.name, `Age: ${person.age}`, `Group: ${person.group}`, `Gender: ${person.gender}`];
+                return [person.name, `Age: ${person.age}`, `Group: ${person.group}`, `Gender: ${person.gender}`, `Country: ${person.country}`];
               },
             },
           },
@@ -1090,7 +1385,57 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         },
         plugins: {
           legend: {
-            position: 'bottom',
+            position: 'top',
+            labels: {
+              generateLabels: () => {
+                const labels: {
+                  text: string;
+                  fillStyle: string;
+                  strokeStyle: string;
+                  lineWidth: number;
+                }[] = [];
+
+                const genders = [
+                  {
+                    key: 'male' as const,
+                    text: 'Male',
+                    background: 'rgba(54, 162, 235, 0.7)',
+                    border: 'rgb(54, 162, 235)',
+                  },
+                  {
+                    key: 'female' as const,
+                    text: 'Female',
+                    background: 'rgba(255, 99, 132, 0.7)',
+                    border: 'rgb(255, 99, 132)',
+                  },
+                  {
+                    key: 'trans' as const,
+                    text: 'Trans',
+                    background: 'rgba(153, 102, 255, 0.7)',
+                    border: 'rgb(153, 102, 255)',
+                  },
+                  {
+                    key: 'isGay' as const,
+                    text: 'Gay',
+                    background: 'rgba(255, 193, 7, 0.7)',
+                    border: 'rgb(255, 193, 7)',
+                  },
+                ];
+
+                genders.forEach(gender => {
+                  if (first?.gender === gender.key || last?.gender === gender.key) {
+                    labels.push({
+                      text: gender.text,
+                      fillStyle: gender.background,
+                      strokeStyle: gender.border,
+                      lineWidth: 1,
+                    });
+                  }
+                });
+
+                return labels;
+              },
+            },
           },
           tooltip: {
             callbacks: {
@@ -1101,9 +1446,15 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                     fullName: string;
                     visitedDate: string;
                     gender: IDemographicGender;
+                    hometownCode: string;
                   };
                 };
-                return [`${point.type}: ${point.person.fullName}`, `Visited: ${point.person.visitedDate}`, `Gender: ${point.person.gender}`];
+                return [
+                  `${point.type}: ${point.person.fullName}`,
+                  `Visited: ${point.person.visitedDate}`,
+                  `Gender: ${point.person.gender}`,
+                  `country: ${point.person.hometownCode}`,
+                ];
               },
             },
           },
@@ -1196,7 +1547,50 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         },
         plugins: {
           legend: {
-            display: false,
+            display: true,
+            labels: {
+              generateLabels: () => {
+                const labels = [];
+
+                if (validCategories.some(category => category.label === 'Solo Female')) {
+                  labels.push({
+                    text: 'Female',
+                    fillStyle: 'rgba(255, 99, 132, 0.7)',
+                    strokeStyle: 'rgb(255, 99, 132)',
+                    lineWidth: 1,
+                  });
+                }
+
+                if (validCategories.some(category => category.label === 'Solo Male')) {
+                  labels.push({
+                    text: 'Male',
+                    fillStyle: 'rgba(54, 162, 235, 0.7)',
+                    strokeStyle: 'rgb(54, 162, 235)',
+                    lineWidth: 1,
+                  });
+                }
+
+                if (validCategories.some(category => category.label === 'Solo Trans')) {
+                  labels.push({
+                    text: 'Trans',
+                    fillStyle: 'rgba(153, 102, 255, 0.7)',
+                    strokeStyle: 'rgb(153, 102, 255)',
+                    lineWidth: 1,
+                  });
+                }
+
+                if (validCategories.some(category => category.label === 'Solo Gay')) {
+                  labels.push({
+                    text: 'Gay',
+                    fillStyle: 'rgba(255, 193, 7, 0.7)',
+                    strokeStyle: 'rgb(255, 193, 7)',
+                    lineWidth: 1,
+                  });
+                }
+
+                return labels;
+              },
+            },
           },
           tooltip: {
             callbacks: {
@@ -1211,6 +1605,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                   `Category: ${category.label}`,
                   `Visited: ${person.visitedDate}`,
                   `Gender: ${person.gender}`,
+                  `Country: ${person.hometownCode}`,
                 ];
               },
             },
@@ -1296,7 +1691,30 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         },
         plugins: {
           legend: {
-            display: false,
+            display: true,
+            labels: {
+              generateLabels: () => {
+                const labels: {
+                  text: string;
+                  fillStyle: string;
+                  strokeStyle: string;
+                  lineWidth: number;
+                }[] = [];
+
+                categories.forEach(category => {
+                  if (category.first || category.last) {
+                    labels.push({
+                      text: category.label,
+                      fillStyle: category.color.background,
+                      strokeStyle: category.color.border,
+                      lineWidth: 1,
+                    });
+                  }
+                });
+
+                return labels;
+              },
+            },
           },
           tooltip: {
             callbacks: {
@@ -1311,6 +1729,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                   `Group: ${category.label}`,
                   `Visited: ${person.visitedDate}`,
                   `Gender: ${person.gender}`,
+                  `Country: ${person.hometownCode}`,
                 ];
               },
             },
