@@ -910,7 +910,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             callbacks: {
               label: context => {
                 const person = groupsPeople[context.dataIndex];
-                return [person.name, `Age: ${person.age}`, `Group: ${person.group}`, `Gender: ${person.gender}`, `Country: ${person.country}`];
+                return [person.name, `Age: ${person.age}`, `Gender: ${person.gender}`, `Country: ${person.country}`];
               },
             },
           },
@@ -1306,7 +1306,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             callbacks: {
               label: context => {
                 const person = groupsPeople[context.dataIndex];
-                return [person.name, `Age: ${person.age}`, `Group: ${person.group}`, `Gender: ${person.gender}`, `Country: ${person.country}`];
+                return [person.name, `Age: ${person.age}`, `Gender: ${person.gender}`, `Country: ${person.country}`];
               },
             },
           },
@@ -1447,11 +1447,19 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                   person: {
                     fullName: string;
                     visitedDate: string;
+                    groupType: string;
                     gender: IDemographicGender;
                     hometownCode: string;
                   };
                 };
-                return [`${point.type}: ${point.person.fullName}`, `Visited: ${point.person.visitedDate}`, `country: ${point.person.hometownCode}`];
+
+                return [
+                  `${point.type}: ${point.person.fullName}`,
+                  `Category: ${point.person.groupType}`,
+                  `Visited: ${point.person.visitedDate}`,
+                  `Gender: ${point.person.gender}`,
+                  `Country: ${point.person.hometownCode}`,
+                ];
               },
             },
           },
@@ -1722,7 +1730,6 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                 }
                 return [
                   `${context.dataIndex === 0 ? 'First' : 'Last'}: ${person.fullName}`,
-                  `Group: ${category.label}`,
                   `Visited: ${person.visitedDate}`,
                   `Gender: ${person.gender}`,
                   `Country: ${person.hometownCode}`,
