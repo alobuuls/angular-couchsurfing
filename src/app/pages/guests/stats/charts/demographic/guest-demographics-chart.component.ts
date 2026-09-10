@@ -618,7 +618,6 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
   // OLDEST - SOLO
   private createSoloOldestChart(): Chart {
-    // Get all solo guests from each gender category.
     const people = [
       ...this.demographics.oldest.solo.male.map(person => ({
         ...person,
@@ -632,16 +631,33 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         ...person,
         demographic: 'trans' as const,
       })),
-
       ...this.demographics.oldest.solo.isGay.map(person => ({
         ...person,
         demographic: 'isGay' as const,
       })),
     ];
 
-    // Prepare the data required by the scatter plot.
-    const soloPeople = people
-      // Only people with a registered birth date can have their age calculated.
+    const priorityPeople = new Map<string, (typeof people)[number]>();
+
+    for (const person of people) {
+      const existing = priorityPeople.get(person.guestId);
+
+      if (!existing) {
+        priorityPeople.set(person.guestId, person);
+        continue;
+      }
+
+      if (person.demographic === 'isGay') {
+        priorityPeople.set(person.guestId, person);
+        continue;
+      }
+
+      if (person.demographic === 'trans' && existing.demographic !== 'isGay') {
+        priorityPeople.set(person.guestId, person);
+      }
+    }
+
+    const oldestPeople = Array.from(priorityPeople.values())
       .filter(person => person.birthDate)
       .map(person => ({
         name: person.fullName,
@@ -658,30 +674,49 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       data: {
         datasets: [
           {
-            label: 'Solo Guests',
-            data: soloPeople.map(person => ({
+            label: 'Oldest',
+            data: oldestPeople.map(person => ({
               x: person.visitedDate,
               y: person.age,
             })),
-            backgroundColor: soloPeople.map(person => this.genderColors[person.demographic].background),
-            borderColor: soloPeople.map(person => this.genderColors[person.demographic].border),
-            pointRadius: 5,
-            pointHoverRadius: 7,
+            backgroundColor: oldestPeople.map(person => {
+              if (person.demographic === 'isGay') {
+                return this.genderColors.isGay.background;
+              }
+
+              if (person.demographic === 'trans') {
+                return this.genderColors.trans.background;
+              }
+
+              return this.genderColors[person.gender].background;
+            }),
+            borderColor: oldestPeople.map(person => {
+              if (person.demographic === 'isGay') {
+                return this.genderColors.isGay.border;
+              }
+
+              if (person.demographic === 'trans') {
+                return this.genderColors.trans.border;
+              }
+
+              return this.genderColors[person.gender].border;
+            }),
+            pointRadius: 6,
+            pointHoverRadius: 8,
+            borderWidth: 1,
           },
         ],
       },
       options: {
         responsive: true,
         scales: {
-          // X axis represents the guest's visit date.
           x: {
             type: 'time',
             title: {
               display: true,
-              text: 'Visit Date',
+              text: 'Visited Date',
             },
           },
-          // Y axis represents the guest's age.
           y: {
             beginAtZero: true,
             title: {
@@ -697,38 +732,38 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
               generateLabels: () => {
                 const labels = [];
 
-                if (soloPeople.some(person => person.demographic === 'male')) {
+                if (oldestPeople.some(person => person.demographic === 'male')) {
                   labels.push({
                     text: 'Male',
-                    fillStyle: 'rgba(54, 162, 235, 0.5)',
-                    strokeStyle: 'rgb(54, 162, 235)',
+                    fillStyle: this.genderColors.male.background,
+                    strokeStyle: this.genderColors.male.border,
                     lineWidth: 1,
                   });
                 }
 
-                if (soloPeople.some(person => person.demographic === 'female')) {
+                if (oldestPeople.some(person => person.demographic === 'female')) {
                   labels.push({
                     text: 'Female',
-                    fillStyle: 'rgba(255, 99, 132, 0.5)',
-                    strokeStyle: 'rgb(255, 99, 132)',
+                    fillStyle: this.genderColors.female.background,
+                    strokeStyle: this.genderColors.female.border,
                     lineWidth: 1,
                   });
                 }
 
-                if (soloPeople.some(person => person.demographic === 'trans')) {
-                  labels.push({
-                    text: 'Trans',
-                    fillStyle: 'rgba(153, 102, 255, 0.5)',
-                    strokeStyle: 'rgb(153, 102, 255)',
-                    lineWidth: 1,
-                  });
-                }
-
-                if (soloPeople.some(person => person.demographic === 'isGay')) {
+                if (oldestPeople.some(person => person.demographic === 'isGay')) {
                   labels.push({
                     text: 'Gay',
-                    fillStyle: 'rgba(255, 193, 7, 0.5)',
-                    strokeStyle: 'rgb(255, 193, 7)',
+                    fillStyle: this.genderColors.isGay.background,
+                    strokeStyle: this.genderColors.isGay.border,
+                    lineWidth: 1,
+                  });
+                }
+
+                if (oldestPeople.some(person => person.demographic === 'trans')) {
+                  labels.push({
+                    text: 'Trans',
+                    fillStyle: this.genderColors.trans.background,
+                    strokeStyle: this.genderColors.trans.border,
                     lineWidth: 1,
                   });
                 }
@@ -737,13 +772,20 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
               },
             },
           },
-
-          // Show guest information when hovering over a point.
           tooltip: {
             callbacks: {
               label: context => {
-                const person = soloPeople[context.dataIndex];
-                return [person.name, `Age: ${person.age}`, `Visited: ${person.visitedDateLabel}`, `Country: ${person.country}`];
+                const person = oldestPeople[context.dataIndex];
+
+                const tooltip = [person.name, `Age: ${person.age}`];
+
+                if (person.demographic === 'isGay' || person.demographic === 'trans') {
+                  tooltip.push(`Gender: ${person.gender}`);
+                }
+
+                tooltip.push(`Visited: ${person.visitedDateLabel}`, `Country: ${person.country}`);
+
+                return tooltip;
               },
             },
           },
@@ -805,6 +847,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         demographic: person.demographic,
         groupId: person.groupId,
         country: person.hometownCode,
+        visitedDate: person.visitedDate,
       }));
 
     // Map each group to a numeric value for the Y axis.
@@ -910,7 +953,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             callbacks: {
               label: context => {
                 const person = groupsPeople[context.dataIndex];
-                return [person.name, `Age: ${person.age}`, `Gender: ${person.gender}`, `Country: ${person.country}`];
+                return [person.name, `Age: ${person.age}`, `Gender: ${person.gender}`, `Country: ${person.country}`, `Visited: ${person.visitedDate}`];
               },
             },
           },
@@ -1201,6 +1244,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         demographic: person.demographic,
         groupId: person.groupId,
         country: person.hometownCode,
+        visitedDate: person.visitedDate,
       }));
 
     // Map each group to a numeric value for the Y axis.
@@ -1306,7 +1350,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             callbacks: {
               label: context => {
                 const person = groupsPeople[context.dataIndex];
-                return [person.name, `Age: ${person.age}`, `Gender: ${person.gender}`, `Country: ${person.country}`];
+                return [person.name, `Age: ${person.age}`, `Gender: ${person.gender}`, `Country: ${person.country}`, `Visited: ${person.visitedDate}`];
               },
             },
           },
