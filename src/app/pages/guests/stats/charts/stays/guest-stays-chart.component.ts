@@ -239,13 +239,14 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
           },
           tooltip: {
             callbacks: {
-              label: context => {
-                const guest = people[context.dataIndex];
+              title: context => {
+                const guest = people[context[0].dataIndex];
                 return guest.guest.fullName;
               },
+              label: () => '',
               afterBody: context => {
                 const guest = people[context[0].dataIndex];
-                return this.getTooltipLines(guest);
+                return this.getTooltipLines(guest, selectedView);
               },
             },
           },
@@ -309,6 +310,13 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
           },
           tooltip: {
             callbacks: {
+              title: context => {
+                const index = context[0].dataIndex;
+                const selectedData = index === 0 ? overall : solo;
+                const guest = selectedData.guests[0];
+
+                return guest ? this.formatDate(guest.visitedDate) : '';
+              },
               label: context => {
                 return `Maximum guests: ${context.parsed.y}`;
               },
@@ -492,10 +500,11 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
           },
           tooltip: {
             callbacks: {
-              label: context => {
-                const guest = nodes[context.dataIndex];
+              title: context => {
+                const guest = nodes[context[0].dataIndex];
                 return guest.label;
               },
+              label: () => '',
               afterBody: context => {
                 const guest = group.guests[context[0].dataIndex];
                 return this.getNetworkTooltipLines(guest, nodes.length - 1);
@@ -535,15 +544,16 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
   }
 
   // Build tooltip information for stay charts.
-  private getTooltipLines(item: IStaysDistribution['longest']['overall'][number]): string[] {
+  private getTooltipLines(item: IStaysDistribution['longest']['overall'][number], selectedView: ILongestView): string[] {
     const guest = item.guest;
-    return [
-      `Total nights: ${item.nights}`,
-      `Group: ${this.groupTypeLabels[guest.groupType] ?? guest.groupType}`,
-      `Gender: ${this.genderLabels[guest.gender] ?? guest.gender}`,
-      `Country: ${guest.hometownCode}`,
-      `Visited: ${this.formatDate(guest.visitedDate)}`,
-    ];
+
+    const lines = [`Total nights: ${item.nights}`, `Country: ${guest.hometownCode}`, `Visited: ${this.formatDate(guest.visitedDate)}`];
+
+    if (selectedView === 'overall') {
+      lines.splice(1, 0, `Group: ${this.groupTypeLabels[guest.groupType] ?? guest.groupType}`);
+    }
+
+    return lines;
   }
 
   // Build tooltip information for network nodes.
@@ -551,7 +561,6 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     return [
       `Connections: ${connections}`,
       `Group: ${this.groupTypeLabels[guest.groupType] ?? guest.groupType}`,
-      `Gender: ${this.genderLabels[guest.gender] ?? guest.gender}`,
       `Country: ${guest.hometownCode}`,
       `Visited: ${this.formatDate(guest.visitedDate)}`,
     ];

@@ -259,6 +259,17 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
       options: {
         responsive: true,
         indexAxis: 'y',
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: context => {
+                const item = rankingData[context.dataIndex];
+
+                return [`Visited date: ${item.guest.visitedDate}`, `Overall ranking: ${item.position}`];
+              },
+            },
+          },
+        },
         scales: {
           x: {
             beginAtZero: true,

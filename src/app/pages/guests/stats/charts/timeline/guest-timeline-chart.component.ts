@@ -216,7 +216,6 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
           },
         ],
       },
-
       options: {
         responsive: true,
         plugins: {
@@ -227,6 +226,15 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
           legend: {
             display: false,
           },
+          tooltip: {
+            callbacks: {
+              label: context => {
+                const node = nodes[context.dataIndex];
+
+                return [`Country: ${node.country}`, `Visited Date: ${this.formatArrivalDate(node.visitedDate)}`];
+              },
+            },
+          },
         },
       },
     });
@@ -235,12 +243,16 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
   private getNetworkNodes(data: ISameStay[]): {
     id: string;
     label: string;
+    country: string;
+    visitedDate: string;
   }[] {
     const nodes = new Map<
       string,
       {
         id: string;
         label: string;
+        country: string;
+        visitedDate: string;
       }
     >();
 
@@ -249,6 +261,8 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
       nodes.set(item.guest.guestId, {
         id: item.guest.guestId,
         label: item.guest.fullName,
+        country: item.guest.hometownCode,
+        visitedDate: item.guest.visitedDate,
       });
 
       // Add every overlapping guest as a node.
@@ -256,6 +270,8 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
         nodes.set(guest.guestId, {
           id: guest.guestId,
           label: guest.fullName,
+          country: guest.hometownCode,
+          visitedDate: guest.visitedDate,
         });
       });
     });

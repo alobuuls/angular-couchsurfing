@@ -115,7 +115,7 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges {
             callbacks: {
               label: context => {
                 const guest = giftsData[context.dataIndex];
-                return `${guest.fullName}: ${guest.total} gifts`;
+                return `${guest.total} Gifts`;
               },
               afterBody: context => {
                 const guest = giftsData[context[0].dataIndex];
@@ -159,11 +159,9 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges {
   // Builds the common tooltip information for both charts.
   private getTooltipLines(guest: IGiftGuest): string[] {
     return [
-      `Total gifts: ${guest.total}`,
       `Group: ${this.formatGroupType(guest.groupType)}`,
       `Country: ${guest.hometownCode}`,
       `Visited: ${this.formatDate(guest.visitedDate)}`,
-      '',
       'Gifts received:',
       ...guest.gifts.map(gift => `• ${gift}`),
     ];

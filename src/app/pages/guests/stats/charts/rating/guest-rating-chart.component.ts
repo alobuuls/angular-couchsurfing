@@ -220,7 +220,7 @@ export class GuestRatingChartComponent implements AfterViewInit, OnChanges {
                 const index = context.dataIndex;
                 const guest = orderedGuests[index];
 
-                return `${guest.fullName}: ${guest.rating} ⭐`;
+                return [guest.fullName, `Rating: ${guest.rating} ⭐`, `Country: ${guest.hometownCode}`, `Visited date: ${guest.visitedDate}`];
               },
             },
           },
