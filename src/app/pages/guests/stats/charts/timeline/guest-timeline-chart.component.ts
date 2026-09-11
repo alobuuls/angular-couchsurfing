@@ -11,7 +11,7 @@ Chart.register(ForceDirectedGraphController, EdgeLine, LinearScale, PointElement
 import { ISameArrivalDay, ISameStay, ITimelineDistribution, ITimelineItem, ITimelineView } from '@interfaces/stats-interface';
 
 // Service
-import { DateFormatService } from '@services/date-format.service';
+import { FormatService } from '@services/format.service';
 
 @Component({
   selector: 'guest-timeline-chart',
@@ -19,7 +19,7 @@ import { DateFormatService } from '@services/date-format.service';
   styleUrls: ['./guest-timeline-chart.component.css'],
 })
 export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
-  private _dateFormat = inject(DateFormatService);
+  private _format = inject(FormatService);
 
   @Input() timeline!: ITimelineDistribution;
 
@@ -141,7 +141,7 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
       data: {
         labels: data.map(item => {
           if ('date' in item) {
-            return this._dateFormat.formatDate(item.date);
+            return this._format.formatDate(item.date);
           }
 
           return item.period;
@@ -235,7 +235,7 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
               label: context => {
                 const node = nodes[context.dataIndex];
 
-                return [`Country: ${node.country}`, `Visit: ${this._dateFormat.formatDate(node.visitedDate)}`];
+                return [`Country: ${this._format.formatCountry(node.country)}`, `Visit: ${this._format.formatDate(node.visitedDate)}`];
               },
             },
           },

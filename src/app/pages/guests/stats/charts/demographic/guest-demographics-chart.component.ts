@@ -7,7 +7,7 @@ import 'chartjs-adapter-date-fns';
 import { IDemographicsDistribution, IDemographicsView, IDemographicsTotalsView, IDemographicGender, IDemographicsOldestView } from '@interfaces/stats-interface';
 
 // Services
-import { DateFormatService } from '@services/date-format.service';
+import { FormatService } from '@services/format.service';
 
 @Component({
   selector: 'guest-demographics-chart',
@@ -15,7 +15,7 @@ import { DateFormatService } from '@services/date-format.service';
   styleUrls: ['./guest-demographics-chart.component.css'],
 })
 export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges, OnDestroy {
-  private _dateFormat = inject(DateFormatService);
+  private _format = inject(FormatService);
   // Demographic data received from the parent component.
   @Input() demographics!: IDemographicsDistribution;
 
@@ -594,7 +594,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             callbacks: {
               label: context => {
                 const person = oldestPeople[context.dataIndex];
-                return [`Visit: ${this._dateFormat.formatDate(person.visitedDate)}`, `Country: ${person.country}`];
+                return [`Visit: ${this._format.formatDate(person.visitedDate)}`, `Country: ${this._format.formatCountry(person.country)}`];
               },
             },
           },
@@ -788,7 +788,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                   tooltip.push(`Gender: ${person.gender}`);
                 }
 
-                tooltip.push(`Country: ${person.country}`, `Visit: ${this._dateFormat.formatDate(person.visitedDateLabel)}`);
+                tooltip.push(`Country: ${this._format.formatCountry(person.country)}`, `Visit: ${this._format.formatDate(person.visitedDateLabel)}`);
 
                 return tooltip;
               },
@@ -962,8 +962,8 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                   person.name,
                   `Age: ${person.age}`,
                   `Gender: ${person.gender}`,
-                  `Country: ${person.country}`,
-                  `Visit: ${this._dateFormat.formatDate(person.visitedDate)}`,
+                  `Country: ${this._format.formatCountry(person.country)}`,
+                  `Visit: ${this._format.formatDate(person.visitedDate)}`,
                 ];
               },
             },
@@ -1078,7 +1078,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             callbacks: {
               label: context => {
                 const person = youngestPeople[context.dataIndex];
-                return [`Country: ${person.country}`, `Visit: ${this._dateFormat.formatDate(person.visitedDate)}`];
+                return [`Country: ${this._format.formatCountry(person.country)}`, `Visit: ${this._format.formatDate(person.visitedDate)}`];
               },
             },
           },
@@ -1213,7 +1213,12 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             callbacks: {
               label: context => {
                 const person = soloPeople[context.dataIndex];
-                return [person.name, `Age: ${person.age}`, `Country: ${person.country}`, `Visit: ${this._dateFormat.formatDate(person.visitedDateLabel)}`];
+                return [
+                  person.name,
+                  `Age: ${person.age}`,
+                  `Country: ${this._format.formatCountry(person.country)}`,
+                  `Visit: ${this._format.formatDate(person.visitedDateLabel)}`,
+                ];
               },
             },
           },
@@ -1365,8 +1370,8 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                   person.name,
                   `Age: ${person.age}`,
                   `Gender: ${person.gender}`,
-                  `Country: ${person.country}`,
-                  `Visit: ${this._dateFormat.formatDate(person.visitedDate)}`,
+                  `Country: ${this._format.formatCountry(person.country)}`,
+                  `Visit: ${this._format.formatDate(person.visitedDate)}`,
                 ];
               },
             },
@@ -1518,8 +1523,8 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                   `${point.type}: ${point.person.fullName}`,
                   `Category: ${point.person.groupType}`,
                   `Gender: ${point.person.gender}`,
-                  `Country: ${point.person.hometownCode}`,
-                  `Visit: ${this._dateFormat.formatDate(point.person.visitedDate)}`,
+                  `Country: ${this._format.formatCountry(point.person.hometownCode)}`,
+                  `Visit: ${this._format.formatDate(point.person.visitedDate)}`,
                 ];
               },
             },
@@ -1669,8 +1674,8 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                 return [
                   `${context.dataIndex === 0 ? 'First' : 'Last'}: ${person.fullName}`,
                   `Category: ${category.label}`,
-                  `Country: ${person.hometownCode}`,
-                  `Visit: ${this._dateFormat.formatDate(person.visitedDate)}`,
+                  `Country: ${this._format.formatCountry(person.hometownCode)}`,
+                  `Visit: ${this._format.formatDate(person.visitedDate)}`,
                 ];
               },
             },
@@ -1792,8 +1797,8 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                 return [
                   `${context.dataIndex === 0 ? 'First' : 'Last'}: ${person.fullName}`,
                   `Gender: ${person.gender}`,
-                  `Country: ${person.hometownCode}`,
-                  `Visit: ${this._dateFormat.formatDate(person.visitedDate)}`,
+                  `Country: ${this._format.formatCountry(person.hometownCode)}`,
+                  `Visit: ${this._format.formatDate(person.visitedDate)}`,
                 ];
               },
             },

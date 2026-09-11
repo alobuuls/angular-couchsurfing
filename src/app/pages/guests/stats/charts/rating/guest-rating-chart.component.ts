@@ -7,7 +7,7 @@ import Chart from 'chart.js/auto';
 import { IChartType, IRatingGuest, IRatingGroupType, IRatingMainView, IRatingView, IRatingsData, IRatingsDistribution } from '@interfaces/stats-interface';
 
 // Services
-import { DateFormatService } from '@services/date-format.service';
+import { FormatService } from '@services/format.service';
 
 @Component({
   selector: 'guest-rating-chart',
@@ -15,7 +15,7 @@ import { DateFormatService } from '@services/date-format.service';
   styleUrls: ['./guest-rating-chart.component.css'],
 })
 export class GuestRatingChartComponent implements AfterViewInit, OnChanges {
-  private _dateFormat = inject(DateFormatService);
+  private _format = inject(FormatService);
 
   @Input() ratings!: IRatingsData;
 
@@ -227,7 +227,12 @@ export class GuestRatingChartComponent implements AfterViewInit, OnChanges {
                 const index = context.dataIndex;
                 const guest = orderedGuests[index];
 
-                return [guest.fullName, `Rating: ${guest.rating} ⭐`, `Country: ${guest.hometownCode}`, `Visit: ${this._dateFormat.formatDate(guest.visitedDate)}`];
+                return [
+                  guest.fullName,
+                  `Rating: ${guest.rating} ⭐`,
+                  `Country: ${this._format.formatCountry(guest.hometownCode)}`,
+                  `Visit: ${this._format.formatDate(guest.visitedDate)}`,
+                ];
               },
             },
           },

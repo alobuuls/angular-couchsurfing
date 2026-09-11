@@ -15,7 +15,7 @@ import {
 } from '@interfaces/stats-interface';
 
 // Services
-import { DateFormatService } from '@services/date-format.service';
+import { FormatService } from '@services/format.service';
 
 // Constants
 import { REGION_NAMES } from '@config/world/regions';
@@ -28,7 +28,7 @@ import { WORLD } from '@config/world';
   styleUrls: ['./guest-geography-chart.component.css'],
 })
 export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
-  private _dateFormat = inject(DateFormatService);
+  private _format = inject(FormatService);
   @Input() geography!: IGeographyDistribution;
 
   @ViewChild('geographyChart')
@@ -311,6 +311,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
     const data = this.getSelectedData(this.chartConfig.countries);
     return data as IGeographyCountry[];
   }
+  
   getCountryName(code: string): string {
     const countryCode = code.toLowerCase() as CountriesCodes;
     return WORLD[countryCode]?.name ?? code;
@@ -385,7 +386,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
             callbacks: {
               label: context => {
                 const guest = guests[context.dataIndex];
-                return [guest.fullName, `Gender: ${guest.gender}`, `Group: ${guest.groupType}`, `Visit: ${this._dateFormat.formatDate(guest.visitedDate)}`];
+                return [guest.fullName, `Gender: ${guest.gender}`, `Group: ${guest.groupType}`, `Visit: ${this._format.formatDate(guest.visitedDate)}`];
               },
             },
           },

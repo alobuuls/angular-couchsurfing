@@ -11,7 +11,7 @@ Chart.register(ForceDirectedGraphController, EdgeLine, LinearScale, PointElement
 import { ILongestView, IStaysDistribution, IStaysView } from '@interfaces/stats-interface';
 
 // Services
-import { DateFormatService } from '@services/date-format.service';
+import { FormatService } from '@services/format.service';
 
 @Component({
   selector: 'guest-stays-chart',
@@ -19,7 +19,7 @@ import { DateFormatService } from '@services/date-format.service';
   styleUrls: ['./guest-stays-chart.component.css'],
 })
 export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDestroy {
-  private _dateFormat = inject(DateFormatService);
+  private _format = inject(FormatService);
 
   // Stays data received from parent
   @Input() stays!: IStaysDistribution;
@@ -318,7 +318,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
                 const selectedData = index === 0 ? overall : solo;
                 const guest = selectedData.guests[0];
 
-                return this._dateFormat.formatDate(guest.visitedDate);
+                return this._format.formatDate(guest.visitedDate);
               },
               label: context => {
                 return `Guests: ${context.parsed.y}`;
@@ -369,7 +369,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     this.chart = new Chart(this.staysChart.nativeElement, {
       type: 'bar',
       data: {
-        labels: chartData.map(item => this._dateFormat.formatDate(item.date)),
+        labels: chartData.map(item => this._format.formatDate(item.date)),
         datasets: [
           {
             label: 'Same Arrival',
@@ -550,7 +550,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
   private getTooltipLines(item: IStaysDistribution['longest']['overall'][number], selectedView: ILongestView): string[] {
     const guest = item.guest;
 
-    const lines = [`Total nights: ${item.nights}`, `Country: ${guest.hometownCode}`, `Visit: ${this._dateFormat.formatDate(guest.visitedDate)}`];
+    const lines = [`Total nights: ${item.nights}`, `Country: ${this._format.formatCountry(guest.hometownCode)}`, `Visit: ${this._format.formatDate(guest.visitedDate)}`];
 
     if (selectedView === 'overall') {
       lines.splice(1, 0, `Group: ${this.groupTypeLabels[guest.groupType] ?? guest.groupType}`);
@@ -564,8 +564,8 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     return [
       `Connections: ${connections}`,
       `Group: ${this.groupTypeLabels[guest.groupType] ?? guest.groupType}`,
-      `Country: ${guest.hometownCode}`,
-      `Visit: ${this._dateFormat.formatDate(guest.visitedDate)}`,
+      `Country: ${this._format.formatCountry(guest.hometownCode)}`,
+      `Visit: ${this._format.formatDate(guest.visitedDate)}`,
     ];
   }
 

@@ -6,7 +6,7 @@ import Chart from 'chart.js/auto';
 import { IRankingGenderView, IRankingGroupView, IRankingItem, IRankingView, IRankingsDistribution } from '@interfaces/stats-interface';
 
 // Services
-import { DateFormatService } from '@services/date-format.service';
+import { FormatService } from '@services/format.service';
 
 @Component({
   selector: 'guest-rankings-chart',
@@ -14,7 +14,7 @@ import { DateFormatService } from '@services/date-format.service';
   styleUrls: ['./guest-rankings-chart.component.css'],
 })
 export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
-  private _dateFormat = inject(DateFormatService);
+  private _format = inject(FormatService);
 
   @Input() rankings!: IRankingsDistribution;
 
@@ -271,7 +271,7 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
               label: context => {
                 const item = rankingData[context.dataIndex];
 
-                return [`Overall ranking: ${item.position}`, `Visit: ${this._dateFormat.formatDate(item.guest.visitedDate)}`];
+                return [`Overall ranking: ${item.position}`, `Visit: ${this._format.formatDate(item.guest.visitedDate)}`];
               },
             },
           },

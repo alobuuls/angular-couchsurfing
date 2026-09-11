@@ -6,7 +6,7 @@ import Chart from 'chart.js/auto';
 import { IGiftGuest, IGiftsDistribution, IGiftsView } from '@interfaces/stats-interface';
 
 // Services
-import { DateFormatService } from '@services/date-format.service';
+import { FormatService } from '@services/format.service';
 
 @Component({
   selector: 'guest-gifts-chart',
@@ -14,7 +14,7 @@ import { DateFormatService } from '@services/date-format.service';
   styleUrls: ['./guest-gifts-chart.component.css'],
 })
 export class GuestGiftsChartComponent implements AfterViewInit, OnChanges {
-  private _dateFormat = inject(DateFormatService);
+  private _format = inject(FormatService);
 
   @Input() gifts!: IGiftsDistribution;
 
@@ -165,8 +165,8 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges {
   private getTooltipLines(guest: IGiftGuest): string[] {
     return [
       `Group: ${this.formatGroupType(guest.groupType)}`,
-      `Country: ${guest.hometownCode}`,
-      `Visit: ${this._dateFormat.formatDate(guest.visitedDate)}`,
+      `Country: ${this._format.formatCountry(guest.hometownCode)}`,
+      `Visit: ${this._format.formatDate(guest.visitedDate)}`,
       'Gifts received:',
       ...guest.gifts.map(gift => `• ${gift}`),
     ];
