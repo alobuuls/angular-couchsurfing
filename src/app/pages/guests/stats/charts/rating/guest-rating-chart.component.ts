@@ -131,6 +131,7 @@ export class GuestRatingChartComponent implements AfterViewInit, OnChanges {
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         onClick: (event, elements) => {
           if (!elements.length) {
             return;
