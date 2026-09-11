@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 
 import Chart from 'chart.js/auto';
 
@@ -14,6 +14,9 @@ import {
   IGeographyView,
 } from '@interfaces/stats-interface';
 
+// Services
+import { DateFormatService } from '@services/date-format.service';
+
 // Constants
 import { REGION_NAMES } from '@config/world/regions';
 import { CountriesCodes, Regions } from '@type/word.types';
@@ -25,6 +28,7 @@ import { WORLD } from '@config/world';
   styleUrls: ['./guest-geography-chart.component.css'],
 })
 export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
+  private _dateFormat = inject(DateFormatService);
   @Input() geography!: IGeographyDistribution;
 
   @ViewChild('geographyChart')
@@ -381,12 +385,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
             callbacks: {
               label: context => {
                 const guest = guests[context.dataIndex];
-                const date = new Date(guest.visitedDate).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric',
-                });
-                return [guest.fullName, `Gender: ${guest.gender}`, `Group: ${guest.groupType}`, `Visited: ${date}`];
+                return [guest.fullName, `Gender: ${guest.gender}`, `Group: ${guest.groupType}`, `Visit: ${this._dateFormat.formatDate(guest.visitedDate)}`];
               },
             },
           },

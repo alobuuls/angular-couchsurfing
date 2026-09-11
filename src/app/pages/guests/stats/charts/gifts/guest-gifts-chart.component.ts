@@ -1,9 +1,12 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 
 import Chart from 'chart.js/auto';
 
 // Interfaces
 import { IGiftGuest, IGiftsDistribution, IGiftsView } from '@interfaces/stats-interface';
+
+// Services
+import { DateFormatService } from '@services/date-format.service';
 
 @Component({
   selector: 'guest-gifts-chart',
@@ -11,6 +14,8 @@ import { IGiftGuest, IGiftsDistribution, IGiftsView } from '@interfaces/stats-in
   styleUrls: ['./guest-gifts-chart.component.css'],
 })
 export class GuestGiftsChartComponent implements AfterViewInit, OnChanges {
+  private _dateFormat = inject(DateFormatService);
+
   @Input() gifts!: IGiftsDistribution;
 
   @ViewChild('giftsChart')
@@ -161,7 +166,7 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges {
     return [
       `Group: ${this.formatGroupType(guest.groupType)}`,
       `Country: ${guest.hometownCode}`,
-      `Visited: ${this.formatDate(guest.visitedDate)}`,
+      `Visit: ${this._dateFormat.formatDate(guest.visitedDate)}`,
       'Gifts received:',
       ...guest.gifts.map(gift => `• ${gift}`),
     ];

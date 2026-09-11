@@ -1,15 +1,17 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 
 import Chart from 'chart.js/auto';
-
-import { LinearScale, PointElement } from 'chart.js';
-
 import { ForceDirectedGraphController, EdgeLine } from 'chartjs-chart-graph';
+import { LinearScale, PointElement } from 'chart.js';
 
 // Register the network graph.
 Chart.register(ForceDirectedGraphController, EdgeLine, LinearScale, PointElement);
 
+// Interfaces
 import { ISameArrivalDay, ISameStay, ITimelineDistribution, ITimelineItem, ITimelineView } from '@interfaces/stats-interface';
+
+// Service
+import { DateFormatService } from '@services/date-format.service';
 
 @Component({
   selector: 'guest-timeline-chart',
@@ -17,6 +19,8 @@ import { ISameArrivalDay, ISameStay, ITimelineDistribution, ITimelineItem, ITime
   styleUrls: ['./guest-timeline-chart.component.css'],
 })
 export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
+  private _dateFormat = inject(DateFormatService);
+
   @Input() timeline!: ITimelineDistribution;
 
   @ViewChild('timelineChart')
@@ -137,7 +141,7 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
       data: {
         labels: data.map(item => {
           if ('date' in item) {
-            return this.formatArrivalDate(item.date);
+            return this._dateFormat.formatDate(item.date);
           }
 
           return item.period;
@@ -231,7 +235,7 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
               label: context => {
                 const node = nodes[context.dataIndex];
 
-                return [`Country: ${node.country}`, `Visited Date: ${this.formatArrivalDate(node.visitedDate)}`];
+                return [`Country: ${node.country}`, `Visit: ${this._dateFormat.formatDate(node.visitedDate)}`];
               },
             },
           },

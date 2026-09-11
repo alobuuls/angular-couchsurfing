@@ -1,9 +1,7 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 
 import Chart from 'chart.js/auto';
-
 import { LinearScale, PointElement } from 'chart.js';
-
 import { EdgeLine, ForceDirectedGraphController } from 'chartjs-chart-graph';
 
 // Register the network graph.
@@ -12,12 +10,17 @@ Chart.register(ForceDirectedGraphController, EdgeLine, LinearScale, PointElement
 // Interfaces
 import { ILongestView, IStaysDistribution, IStaysView } from '@interfaces/stats-interface';
 
+// Services
+import { DateFormatService } from '@services/date-format.service';
+
 @Component({
   selector: 'guest-stays-chart',
   templateUrl: './guest-stays-chart.component.html',
   styleUrls: ['./guest-stays-chart.component.css'],
 })
 export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDestroy {
+  private _dateFormat = inject(DateFormatService);
+
   // Stays data received from parent
   @Input() stays!: IStaysDistribution;
 
@@ -547,7 +550,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
   private getTooltipLines(item: IStaysDistribution['longest']['overall'][number], selectedView: ILongestView): string[] {
     const guest = item.guest;
 
-    const lines = [`Total nights: ${item.nights}`, `Country: ${guest.hometownCode}`, `Visited: ${this.formatDate(guest.visitedDate)}`];
+    const lines = [`Total nights: ${item.nights}`, `Country: ${guest.hometownCode}`, `Visit: ${this._dateFormat.formatDate(guest.visitedDate)}`];
 
     if (selectedView === 'overall') {
       lines.splice(1, 0, `Group: ${this.groupTypeLabels[guest.groupType] ?? guest.groupType}`);
@@ -562,7 +565,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
       `Connections: ${connections}`,
       `Group: ${this.groupTypeLabels[guest.groupType] ?? guest.groupType}`,
       `Country: ${guest.hometownCode}`,
-      `Visited: ${this.formatDate(guest.visitedDate)}`,
+      `Visit: ${this._dateFormat.formatDate(guest.visitedDate)}`,
     ];
   }
 
