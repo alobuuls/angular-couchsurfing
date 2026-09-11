@@ -318,10 +318,10 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
                 const selectedData = index === 0 ? overall : solo;
                 const guest = selectedData.guests[0];
 
-                return guest ? this.formatDate(guest.visitedDate) : '';
+                return this._dateFormat.formatDate(guest.visitedDate);
               },
               label: context => {
-                return `Maximum guests: ${context.parsed.y}`;
+                return `Guests: ${context.parsed.y}`;
               },
               afterBody: context => {
                 const index = context[0].dataIndex;
@@ -369,7 +369,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     this.chart = new Chart(this.staysChart.nativeElement, {
       type: 'bar',
       data: {
-        labels: chartData.map(item => this.formatDate(item.date)),
+        labels: chartData.map(item => this._dateFormat.formatDate(item.date)),
         datasets: [
           {
             label: 'Same Arrival',
@@ -403,7 +403,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
           tooltip: {
             callbacks: {
               label: context => {
-                return `Overlapping guests: ${context.parsed.x}`;
+                return `Guests: ${context.parsed.x}`;
               },
               afterBody: context => {
                 const item = chartData[context[0].dataIndex];
@@ -567,15 +567,6 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
       `Country: ${guest.hometownCode}`,
       `Visit: ${this._dateFormat.formatDate(guest.visitedDate)}`,
     ];
-  }
-
-  // Format dates for chart labels and tooltips.
-  private formatDate(date: string): string {
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
   }
 
   // Destroy the current chart instance.
