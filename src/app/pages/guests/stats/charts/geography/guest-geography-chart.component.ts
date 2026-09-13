@@ -56,7 +56,47 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
 
   readonly rankingViews: ICountryRanking[] = ['all', 'top', 'bottom'];
 
+  getAvailableRankingViews(): ICountryRanking[] {
+    if (this.selectedView === 'continents') {
+      return ['all'];
+    }
+
+    return this.rankingViews;
+  }
+
   private chart?: Chart;
+
+  // Colors used to identify each continent across all geography charts.
+  private readonly continentColors: Record<string, string> = {
+    america: 'rgba(53, 164, 249, 0.7)',
+    europe: 'rgba(246, 77, 77, 0.7)',
+    africa: 'rgba(75, 192, 93, 0.7)',
+    asia: 'rgba(255, 207, 96, 0.7)',
+    oceania: 'rgba(128, 96, 255, 0.7)',
+  };
+
+  private readonly continentBorderColors: Record<string, string> = {
+    america: 'rgb(86, 213, 255)',
+    europe: 'rgb(248, 114, 114)',
+    africa: 'rgb(147, 213, 145)',
+    asia: 'rgb(209, 224, 110)',
+    oceania: 'rgb(181, 153, 241)',
+  };
+
+  private getContinent(item: IGeographyContinent | IGeographyRegion | IGeographyCountry | IGeographyLocation): string {
+    if (this.selectedView === 'continents') {
+      return item.code.toLowerCase();
+    }
+
+    if (this.selectedView === 'regions') {
+      const country = Object.values(WORLD).find(country => country.region === item.code);
+      return country?.continent ?? '';
+    }
+
+    const countryCode = item.code.toLowerCase() as CountriesCodes;
+    
+    return WORLD[countryCode]?.continent ?? '';
+  }
 
   // Configuration for each geography view.
   private readonly chartConfig: Record<
@@ -65,16 +105,18 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
       label: string;
       type: IChartType;
       getAllData: (geography: IGeographyDistribution) => IGeographyContinent[] | IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[];
-      getTopData: (geography: IGeographyDistribution) => IGeographyContinent[] | IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[];
-      getBottomData: (geography: IGeographyDistribution) => IGeographyContinent[] | IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[];
+
+      getTopData: (geography: IGeographyDistribution) => IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[];
+
+      getBottomData: (geography: IGeographyDistribution) => IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[];
     }
   > = {
     continents: {
       label: 'Guests by Continent',
       type: 'pie',
       getAllData: geography => geography.continents.all,
-      getTopData: geography => geography.continents.top,
-      getBottomData: geography => geography.continents.bottom,
+      getTopData: () => [],
+      getBottomData: () => [],
     },
 
     regions: {
@@ -96,7 +138,6 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
     livingIn: {
       label: 'Guests Living In',
       type: 'bar',
-
       // The API currently provides only the top locations.
       getAllData: geography => geography.livingIn.top,
       getTopData: geography => geography.livingIn.top,
@@ -106,7 +147,6 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
     hometown: {
       label: 'Guests Hometown',
       type: 'bar',
-
       // The API currently provides only the top hometowns.
       getAllData: geography => geography.hometown.top,
       getTopData: geography => geography.hometown.top,
@@ -203,8 +243,14 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
           {
             label: datasetLabel,
             data: chartValues,
-            backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(255, 159, 64, 0.2)', 'rgba(255, 205, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(54, 162, 235, 0.2)'],
-            borderColor: ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)'],
+            backgroundColor: geographyData.map(item => {
+              const continent = this.getContinent(item);
+              return this.continentColors[continent] ?? 'rgba(128, 128, 128, 0.7)';
+            }),
+            borderColor: geographyData.map(item => {
+              const continent = this.getContinent(item);
+              return this.continentBorderColors[continent] ?? 'rgb(128, 128, 128)';
+            }),
             borderWidth: 1,
           },
         ],
@@ -242,13 +288,13 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
 
   private getSelectedData(config: {
     getAllData: (geography: IGeographyDistribution) => IGeographyContinent[] | IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[];
-    getTopData: (geography: IGeographyDistribution) => IGeographyContinent[] | IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[];
-    getBottomData: (geography: IGeographyDistribution) => IGeographyContinent[] | IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[];
+    getTopData: (geography: IGeographyDistribution) => IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[];
+    getBottomData: (geography: IGeographyDistribution) => IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[];
   }): IGeographyContinent[] | IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[] {
     const rankingData = {
       all: config.getAllData(this.geography),
-      top: config.getTopData(this.geography),
-      bottom: config.getBottomData(this.geography),
+      top: config.getTopData(this.geography) ?? [],
+      bottom: config.getBottomData(this.geography) ?? [],
       topFemale: this.selectedView === 'countries' ? this.geography.countries.topFemale : [],
       topMale: this.selectedView === 'countries' ? this.geography.countries.topMale : [],
     };
@@ -311,7 +357,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
     const data = this.getSelectedData(this.chartConfig.countries);
     return data as IGeographyCountry[];
   }
-  
+
   getCountryName(code: string): string {
     const countryCode = code.toLowerCase() as CountriesCodes;
     return WORLD[countryCode]?.name ?? code;

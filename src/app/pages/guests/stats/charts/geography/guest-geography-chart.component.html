@@ -15,16 +15,18 @@
   <!-- Ranking views -->
   <div class="ctn-ranking-buttons">
     <!-- General rankings -->
-    <button
-      type="button"
-      *ngFor="let ranking of rankingViews"
-      (click)="selectRanking(ranking)"
-      [class.active]="selectedRanking === ranking"
-      [disabled]="(selectedView === 'livingIn' || selectedView === 'hometown') && ranking === 'bottom'"
-      class="btn-ranking"
-    >
-      {{ ranking === 'all' ? 'All' : ranking === 'top' ? 'Top' : 'Bottom' }}
-    </button>
+    <ng-container *ngIf="selectedView !== 'continents'">
+      <button
+        type="button"
+        *ngFor="let ranking of rankingViews"
+        (click)="selectRanking(ranking)"
+        [class.active]="selectedRanking === ranking"
+        [disabled]="(selectedView === 'livingIn' || selectedView === 'hometown') && ranking === 'bottom'"
+        class="btn-ranking"
+      >
+        {{ ranking === 'all' ? 'All' : ranking === 'top' ? 'Top' : 'Bottom' }}
+      </button>
+    </ng-container>
 
     <!-- Country-specific rankings -->
     <ng-container *ngIf="selectedView === 'countries'">
