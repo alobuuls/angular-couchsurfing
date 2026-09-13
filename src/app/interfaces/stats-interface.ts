@@ -67,7 +67,7 @@ export interface IRankingsDistribution {
 }
 
 // Demographics
-export type IDemographicsView = 'totals' | 'mostVisitedGender' | 'oldest' | 'youngest' | 'firstLast';
+export type IDemographicsView = 'totals' | 'oldest' | 'youngest' | 'firstLast';
 export type IDemographicsGroup = 'overall' | 'solo' | 'couple' | 'friends' | 'family';
 export type IDemographicGender = 'male' | 'female' | 'trans' | 'isGay';
 export type IDemographicsTotalsView = 'groups' | 'overall';

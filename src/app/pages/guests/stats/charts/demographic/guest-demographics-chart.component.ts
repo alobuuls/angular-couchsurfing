@@ -26,11 +26,10 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
   // Currently selected main demographics view.
   selectedView: IDemographicsView = 'totals';
   // Available main views shown in the UI.
-  readonly demographicsViews: IDemographicsView[] = ['totals', 'mostVisitedGender', 'oldest', 'youngest', 'firstLast'];
+  readonly demographicsViews: IDemographicsView[] = ['totals', 'oldest', 'youngest', 'firstLast'];
 
   readonly demographicsViewLabels: Record<IDemographicsView, string> = {
     totals: 'Totals',
-    mostVisitedGender: 'Top Gender',
     oldest: 'Oldest',
     youngest: 'Youngest',
     firstLast: 'First - Last',
@@ -148,12 +147,6 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         this.chart = this.createGroupsChart();
         return;
       }
-    }
-
-    // MOST VISITED GENDER
-    if (this.selectedView === 'mostVisitedGender') {
-      this.chart = this.createMostVisitedGenderChart();
-      return;
     }
 
     // OLDEST
@@ -317,188 +310,6 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         plugins: {
           legend: {
             position: 'top',
-          },
-        },
-      },
-    });
-  }
-
-  // MOST VISITED GENDER
-
-  private createMostVisitedGenderChart(): Chart {
-    const legendGenders = new Set<IDemographicGender>();
-    const backgroundColors: string[] = [];
-    const borderColors: string[] = [];
-    // Get demographic data for each travel group.
-    const groups = this.demographics.totals.groups;
-    // Combine overall data and group data into a single structure
-    // so the same logic can be applied to every category.
-    const categories = [
-      {
-        label: 'Overall',
-        data: this.demographics.totals.overall,
-      },
-      {
-        label: 'Solo',
-        data: groups.solo,
-      },
-      {
-        label: 'Couple',
-        data: groups.couple,
-      },
-      {
-        label: 'Friends',
-        data: groups.friends,
-      },
-      {
-        label: 'Family',
-        data: groups.family,
-      },
-    ];
-
-    // Final labels and values that will be passed to Chart.js.
-    const labels: string[] = [];
-    const data: number[] = [];
-
-    // Demographic categories that should not be displayed
-    // for specific groups.
-    const hiddenGenders: Record<string, string[]> = {
-      Overall: ['Trans'],
-      Couple: ['Trans'],
-      Friends: ['Trans'],
-      Family: ['Trans', 'Gay'],
-    };
-
-    categories.forEach(category => {
-      // Build the gender list for the current category.
-      const genders = [
-        {
-          label: 'Female',
-          value: category.data.female,
-        },
-        {
-          label: 'Male',
-          value: category.data.male,
-        },
-        {
-          label: 'Trans',
-          value: category.data.trans,
-        },
-        {
-          label: 'Gay',
-          value: category.data.isGay,
-        },
-      ]
-        // Remove genders that are not applicable to the current category.
-        .filter(gender => !hiddenGenders[category.label]?.includes(gender.label))
-
-        // Remove genders with no registered guests.
-        .filter(gender => gender.value > 0)
-
-        // Sort from highest value to lowest value.
-        .sort((a, b) => b.value - a.value);
-      genders.forEach(gender => {
-        // Create a label such as "Overall - Female".
-        labels.push(`${category.label} - ${gender.label}`);
-
-        // Add the corresponding value.
-        data.push(gender.value);
-
-        // Assign the color according to the gender category.
-        const genderKey = {
-          Female: 'female',
-          Male: 'male',
-          Trans: 'trans',
-          Gay: 'isGay',
-        }[gender.label] as IDemographicGender;
-
-        backgroundColors.push(this.genderColors[genderKey].background);
-        borderColors.push(this.genderColors[genderKey].border);
-
-        // Store the gender for the dynamic legend.
-        legendGenders.add(genderKey);
-      });
-    });
-
-    return new Chart(this.demographicsChart.nativeElement, {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [
-          {
-            label: 'Most Visited Gender',
-            data,
-            // Colors are assigned according to the gender categories.
-            backgroundColor: backgroundColors,
-            borderColor: borderColors,
-            borderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        // Display the bars horizontally.
-        indexAxis: 'y',
-        scales: {
-          x: {
-            beginAtZero: true,
-          },
-          y: {
-            reverse: false,
-          },
-        },
-        plugins: {
-          // The dataset label is not needed because the bars already have labels.
-          legend: {
-            display: true,
-            labels: {
-              generateLabels: () => {
-                const labels: {
-                  text: string;
-                  fillStyle: string;
-                  strokeStyle: string;
-                  lineWidth: number;
-                }[] = [];
-
-                if (legendGenders.has('male')) {
-                  labels.push({
-                    text: 'Male',
-                    fillStyle: this.genderColors.male.background,
-                    strokeStyle: this.genderColors.male.border,
-                    lineWidth: 1,
-                  });
-                }
-
-                if (legendGenders.has('female')) {
-                  labels.push({
-                    text: 'Female',
-                    fillStyle: this.genderColors.female.background,
-                    strokeStyle: this.genderColors.female.border,
-                    lineWidth: 1,
-                  });
-                }
-
-                if (legendGenders.has('trans')) {
-                  labels.push({
-                    text: 'Trans',
-                    fillStyle: this.genderColors.trans.background,
-                    strokeStyle: this.genderColors.trans.border,
-                    lineWidth: 1,
-                  });
-                }
-
-                if (legendGenders.has('isGay')) {
-                  labels.push({
-                    text: 'Gay',
-                    fillStyle: this.genderColors.isGay.background,
-                    strokeStyle: this.genderColors.isGay.border,
-                    lineWidth: 1,
-                  });
-                }
-
-                return labels;
-              },
-            },
           },
         },
       },
