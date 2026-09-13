@@ -94,8 +94,79 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
     }
 
     const countryCode = item.code.toLowerCase() as CountriesCodes;
-    
+
     return WORLD[countryCode]?.continent ?? '';
+  }
+
+  private readonly rankingColors = {
+    gold: {
+      background: 'rgba(255, 215, 0, 0.75)',
+      border: 'rgb(218, 165, 32)',
+    },
+    silver: {
+      background: 'rgba(192, 192, 192, 0.75)',
+      border: 'rgb(128, 128, 128)',
+    },
+    bronze: {
+      background: 'rgba(205, 127, 50, 0.75)',
+      border: 'rgb(166, 88, 32)',
+    },
+    neutral: {
+      background: 'rgba(128, 128, 128, 0.25)',
+      border: 'rgba(128, 128, 128, 0.5)',
+    },
+  };
+
+  private isRankingView(): boolean {
+    return ['top', 'bottom', 'topFemale', 'topMale'].includes(this.selectedRanking);
+  }
+
+  private getRankingColors(data: (IGeographyRegion | IGeographyCountry | IGeographyLocation)[]): { background: string[]; border: string[] } {
+    if (!this.isRankingView()) {
+      return {
+        background: data.map(item => {
+          const continent = this.getContinent(item);
+          return this.continentColors[continent] ?? 'rgba(128, 128, 128, 0.7)';
+        }),
+        border: data.map(item => {
+          const continent = this.getContinent(item);
+          return this.continentBorderColors[continent] ?? 'rgb(128, 128, 128)';
+        }),
+      };
+    }
+
+    const values = data.map(item =>
+      this.selectedRanking === 'topFemale' ? (item as IGeographyCountry).female : this.selectedRanking === 'topMale' ? (item as IGeographyCountry).male : item.total
+    );
+    return {
+      background: values.map((value, index) => {
+        const firstIndex = values.indexOf(value);
+        if (firstIndex === 0) {
+          return this.rankingColors.gold.background;
+        }
+        if (firstIndex === 1) {
+          return this.rankingColors.silver.background;
+        }
+        if (firstIndex === 2) {
+          return this.rankingColors.bronze.background;
+        }
+        return this.rankingColors.neutral.background;
+      }),
+
+      border: values.map((value, index) => {
+        const firstIndex = values.indexOf(value);
+        if (firstIndex === 0) {
+          return this.rankingColors.gold.border;
+        }
+        if (firstIndex === 1) {
+          return this.rankingColors.silver.border;
+        }
+        if (firstIndex === 2) {
+          return this.rankingColors.bronze.border;
+        }
+        return this.rankingColors.neutral.border;
+      }),
+    };
   }
 
   // Configuration for each geography view.
@@ -222,6 +293,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
           ? geographyData.map(item => (item as IGeographyCountry).male)
           : geographyData.map(item => item.total);
 
+    const colors = this.getRankingColors(geographyData);
     const datasetLabel = this.selectedRanking === 'topFemale' ? 'Female Guests' : this.selectedRanking === 'topMale' ? 'Male Guests' : config.label;
     this.chart = new Chart(this.geographyChart.nativeElement, {
       type: config.type,
@@ -243,14 +315,8 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
           {
             label: datasetLabel,
             data: chartValues,
-            backgroundColor: geographyData.map(item => {
-              const continent = this.getContinent(item);
-              return this.continentColors[continent] ?? 'rgba(128, 128, 128, 0.7)';
-            }),
-            borderColor: geographyData.map(item => {
-              const continent = this.getContinent(item);
-              return this.continentBorderColors[continent] ?? 'rgb(128, 128, 128)';
-            }),
+            backgroundColor: colors.background,
+            borderColor: colors.border,
             borderWidth: 1,
           },
         ],
