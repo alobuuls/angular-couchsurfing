@@ -15,13 +15,12 @@
   <!-- Ranking views -->
   <div class="ctn-ranking-buttons">
     <!-- General rankings -->
-    <ng-container *ngIf="selectedView !== 'continents'">
+    <ng-container *ngIf="selectedView !== 'continents' && selectedView !== 'livingIn' && selectedView !== 'hometown'">
       <button
         type="button"
         *ngFor="let ranking of rankingViews"
         (click)="selectRanking(ranking)"
         [class.active]="selectedRanking === ranking"
-        [disabled]="(selectedView === 'livingIn' || selectedView === 'hometown') && ranking === 'bottom'"
         class="btn-ranking"
       >
         {{ ranking === 'all' ? 'All' : ranking === 'top' ? 'Top' : 'Bottom' }}

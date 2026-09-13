@@ -57,7 +57,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
   readonly rankingViews: ICountryRanking[] = ['all', 'top', 'bottom'];
 
   getAvailableRankingViews(): ICountryRanking[] {
-    if (this.selectedView === 'continents') {
+    if (this.selectedView === 'continents' || this.selectedView === 'livingIn' || this.selectedView === 'hometown') {
       return ['all'];
     }
 
@@ -177,9 +177,9 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
       type: IChartType;
       getAllData: (geography: IGeographyDistribution) => IGeographyContinent[] | IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[];
 
-      getTopData: (geography: IGeographyDistribution) => IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[];
+      getTopData: (geography: IGeographyDistribution) => IGeographyRegion[] | IGeographyCountry[];
 
-      getBottomData: (geography: IGeographyDistribution) => IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[];
+      getBottomData: (geography: IGeographyDistribution) => IGeographyRegion[] | IGeographyCountry[];
     }
   > = {
     continents: {
@@ -209,18 +209,16 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
     livingIn: {
       label: 'Guests Living In',
       type: 'bar',
-      // The API currently provides only the top locations.
       getAllData: geography => geography.livingIn.top,
-      getTopData: geography => geography.livingIn.top,
+      getTopData: () => [],
       getBottomData: () => [],
     },
 
     hometown: {
       label: 'Guests Hometown',
       type: 'bar',
-      // The API currently provides only the top hometowns.
       getAllData: geography => geography.hometown.top,
-      getTopData: geography => geography.hometown.top,
+      getTopData: () => [],
       getBottomData: () => [],
     },
   };
@@ -354,8 +352,8 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
 
   private getSelectedData(config: {
     getAllData: (geography: IGeographyDistribution) => IGeographyContinent[] | IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[];
-    getTopData: (geography: IGeographyDistribution) => IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[];
-    getBottomData: (geography: IGeographyDistribution) => IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[];
+    getTopData: (geography: IGeographyDistribution) => IGeographyRegion[] | IGeographyCountry[];
+    getBottomData: (geography: IGeographyDistribution) => IGeographyRegion[] | IGeographyCountry[];
   }): IGeographyContinent[] | IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[] {
     const rankingData = {
       all: config.getAllData(this.geography),
