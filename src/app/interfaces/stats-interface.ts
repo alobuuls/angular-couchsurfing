@@ -1,7 +1,7 @@
 import { CountriesCodes } from '@type/word.types';
 
 // View Chart
-export type ICurrentChart = 'summary' | 'ranking' | 'demographics' | 'geography' | 'timeline' | 'rating' | 'gifts' | 'stays';
+export type ICurrentChart = 'summary' | 'rankings' | 'demographics' | 'geography' | 'timeline' | 'ratings' | 'gifts' | 'stays';
 export type IChartType = 'bar' | 'doughnut' | 'pie';
 
 // Summary

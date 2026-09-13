@@ -17,7 +17,6 @@ import { ICurrentChart } from '@interfaces/stats-interface';
   styleUrls: ['./guests-stats.component.css'],
 })
 export class GuestsStatsComponent implements OnInit {
-
   currentChart: ICurrentChart = 'summary';
 
   private _stats = inject(StatsService);
@@ -35,5 +34,40 @@ export class GuestsStatsComponent implements OnInit {
 
   changeChart(chart: ICurrentChart): void {
     this.currentChart = chart;
+  }
+
+  hasCurrentChartData(data: any): boolean {
+    const chartData = data?.[this.currentChart];
+
+    return this.hasData(chartData);
+  }
+
+  private hasData(data: any): boolean {
+    // No data exists
+    if (data === null || data === undefined) {
+      return false;
+    }
+    // Arrays: contain information if they have elements
+    if (Array.isArray(data)) {
+      return data.length > 0;
+    }
+    // Numbers: consider 0 as not representing data
+    if (typeof data === 'number') {
+      return data > 0;
+    }
+    // Strings: contain information if they are not empty
+    if (typeof data === 'string') {
+      return data.trim().length > 0;
+    }
+    // Booleans
+    if (typeof data === 'boolean') {
+      return data;
+    }
+    // Objects: recursively check their properties
+    if (typeof data === 'object') {
+      const values = Object.values(data);
+      return values.some(value => this.hasData(value));
+    }
+    return false;
   }
 }
