@@ -52,6 +52,11 @@
     <button matTooltip="See Stays" mat-icon-button class="btn-stays" (click)="changeChart('stays')">
       <mat-icon class="material-symbols-outlined">hotel</mat-icon>
     </button>
+
+    <!-- Birthdays -->
+    <button matTooltip="See Birthdays" mat-icon-button class="btn-birthdays" (click)="changeChart('birthdays')">
+      <mat-icon class="material-symbols-outlined">cake</mat-icon>
+    </button>
   </div>
 
   <ng-container *ngIf="vm.status === 'success'">
@@ -65,6 +70,7 @@
         <guest-timeline-chart *ngIf="currentChart === 'timeline'" [timeline]="vm.data.timeline" />
         <guest-gifts-chart *ngIf="currentChart === 'gifts'" [gifts]="vm.data.gifts" />
         <guest-stays-chart *ngIf="currentChart === 'stays'" [stays]="vm.data.stays" />
+        <guest-birthdays-chart *ngIf="currentChart === 'birthdays'" [birthdays]="vm.data.birthdays" />
       </ng-container>
 
       <ng-template #noData>

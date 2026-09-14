@@ -1,7 +1,7 @@
 import { CountriesCodes } from '@type/word.types';
 
 // View Chart
-export type ICurrentChart = 'summary' | 'rankings' | 'demographics' | 'geography' | 'timeline' | 'ratings' | 'gifts' | 'stays';
+export type ICurrentChart = 'summary' | 'rankings' | 'demographics' | 'geography' | 'timeline' | 'ratings' | 'gifts' | 'stays' | 'birthdays';
 export type IChartType = 'bar' | 'doughnut' | 'pie';
 
 // Summary
@@ -385,4 +385,37 @@ export interface IMaxPeopleTogetherItem {
 export interface IMaxPeopleTogetherDistribution {
   overall: IMaxPeopleTogetherItem;
   solo: IMaxPeopleTogetherItem;
+}
+
+// Birthdays
+export type IBirthdaysView = 'calendar' | 'repeated' | 'unusual';
+
+export interface IBirthdayGuest {
+  guestId: string;
+  fullName: string;
+  gender: string;
+  groupId: string | null;
+  groupType: string;
+  hometownCode: string;
+  continent: string;
+  region: string;
+  visitedDate: string;
+  birthDate: string;
+}
+
+export interface IBirthdayItem {
+  month: number;
+  day: number;
+  total: number;
+  guests: IBirthdayGuest[];
+}
+
+export interface IUnusualBirthday extends IBirthdayItem {
+  reason: string;
+}
+
+export interface IBirthdaysDistribution {
+  calendar: IBirthdayItem[];
+  repeated: IBirthdayItem[];
+  unusual: IUnusualBirthday[];
 }

@@ -24,6 +24,7 @@ import { GuestGeographyChartComponent } from '@pages/guests/stats/charts/geograp
 import { GuestTimelineChartComponent } from '@pages/guests/stats/charts/timeline/guest-timeline-chart.component';
 import { GuestGiftsChartComponent } from '@pages/guests/stats/charts/gifts/guest-gifts-chart.component';
 import { GuestStaysChartComponent } from '@pages/guests/stats/charts/stays/guest-stays-chart.component';
+import { GuestBirthdaysChartComponent } from '@pages/guests/stats/charts/birthdays/guest-birthdays-chart.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { GuestStaysChartComponent } from '@pages/guests/stats/charts/stays/guest
     GuestTimelineChartComponent,
     GuestGiftsChartComponent,
     GuestStaysChartComponent,
+    GuestBirthdaysChartComponent,
   ],
   imports: [SharedModule, GuestsRoutingModule],
 })
