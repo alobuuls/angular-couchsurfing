@@ -6,6 +6,9 @@ import 'chartjs-adapter-date-fns';
 // Interfaces
 import { IDemographicsDistribution, IDemographicsView, IDemographicsTotalsView, IDemographicGender, IDemographicsOldestView } from '@interfaces/stats-interface';
 
+// Helpers
+import { getRankingColors } from '@helpers/chart-colors';
+
 // Services
 import { FormatService } from '@services/format.service';
 
@@ -321,12 +324,10 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
     // Get people belonging to the overall demographic group.
     const people = this.demographics.oldest.overall.people;
 
-    // Prepare the data required by Chart.js.
+    // Only people with a registered birth date can have their age calculated.
+    // Convert each person containing name, age, gender and country.
     const oldestPeople = people
-      // Only people with a registered birth date can have their age calculated.
       .filter(person => person.birthDate)
-
-      // Convert each person containing name, age, gender and country.
       .map(person => ({
         name: person.fullName,
         age: this.calculateAge(person.birthDate!),
@@ -335,8 +336,10 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         country: person.hometownCode,
       }))
 
-      // Sort from youngest to oldest.
-      .sort((a, b) => a.age - b.age);
+      // Sort from oldest to youngest
+      .sort((a, b) => b.age - a.age);
+    //  Get ranking colors based on the sorted ages.
+    const colors = getRankingColors(oldestPeople.map(person => person.age));
     return new Chart(this.demographicsChart.nativeElement, {
       type: 'bar',
       data: {
@@ -347,8 +350,9 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             label: 'Age',
             // Each bar represents the person's calculated age.
             data: oldestPeople.map(person => person.age),
-            backgroundColor: oldestPeople.map(person => this.genderColors[person.gender].background),
-            borderColor: oldestPeople.map(person => this.genderColors[person.gender].border),
+            //  Apply ranking colors
+            backgroundColor: colors.background,
+            borderColor: colors.border,
             borderWidth: 1,
           },
         ],
@@ -366,46 +370,48 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
               text: 'Age',
             },
           },
-          // Reverse the Y axis so the oldest person appears first.
           y: {
-            reverse: true,
+            //  The data is already sorted from oldest to youngest, so the axis does not need to be reversed.
+            reverse: false,
           },
         },
         plugins: {
-          // Person names on the Y axis already identify the data.
           legend: {
             display: true,
             labels: {
-              // Generate fixed labels to identify the data.
-              generateLabels: () => {
-                const labels = [];
-
-                if (oldestPeople.some(person => person.gender === 'male')) {
-                  labels.push({
-                    text: 'Male',
-                    fillStyle: 'rgba(54, 162, 235, 0.5)',
-                    strokeStyle: 'rgb(54, 162, 235)',
-                    lineWidth: 1,
-                  });
-                }
-
-                if (oldestPeople.some(person => person.gender === 'female')) {
-                  labels.push({
-                    text: 'Female',
-                    fillStyle: 'rgba(255, 99, 132, 0.5)',
-                    strokeStyle: 'rgb(255, 99, 132)',
-                    lineWidth: 1,
-                  });
-                }
-                return labels;
-              },
+              // Generate fixed labels to identify the ranking colors.
+              generateLabels: () => [
+                {
+                  text: 'Oldest',
+                  fillStyle: 'rgba(255, 215, 0, 0.5)',
+                  strokeStyle: 'rgb(255, 215, 0)',
+                  lineWidth: 1,
+                },
+                {
+                  text: 'Second oldest',
+                  fillStyle: 'rgba(192, 192, 192, 0.5)',
+                  strokeStyle: 'rgb(192, 192, 192)',
+                  lineWidth: 1,
+                },
+                {
+                  text: 'Third oldest',
+                  fillStyle: 'rgba(205, 127, 50, 0.5)',
+                  strokeStyle: 'rgb(205, 127, 50)',
+                  lineWidth: 1,
+                },
+              ],
             },
           },
           tooltip: {
             callbacks: {
               label: context => {
                 const person = oldestPeople[context.dataIndex];
-                return [`Visit: ${this._format.formatDate(person.visitedDate)}`, `Country: ${this._format.formatCountry(person.country)}`];
+                return [
+                  `Age: ${person.age}`,
+                  `Gender: ${person.gender}`,
+                  `Country: ${this._format.formatCountry(person.country)}`,
+                  `Visit: ${this._format.formatDate(person.visitedDate)}`,
+                ];
               },
             },
           },
@@ -816,8 +822,10 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         visitedDate: person.visitedDate,
         country: person.hometownCode,
       }))
-      // Sort from oldest to youngest.
-      .sort((a, b) => b.age - a.age);
+      // Sort from youngest to oldest
+      .sort((a, b) => a.age - b.age);
+    //  Get ranking colors based on the sorted ages.
+    const colors = getRankingColors(youngestPeople.map(person => person.age));
 
     return new Chart(this.demographicsChart.nativeElement, {
       type: 'bar',
@@ -829,8 +837,9 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             label: 'Age',
             // Each bar represents the person's calculated age.
             data: youngestPeople.map(person => person.age),
-            backgroundColor: youngestPeople.map(person => this.genderColors[person.gender].background),
-            borderColor: youngestPeople.map(person => this.genderColors[person.gender].border),
+            // Apply ranking colors
+            backgroundColor: colors.background,
+            borderColor: colors.border,
             borderWidth: 1,
           },
         ],
@@ -852,7 +861,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
           // Youngest person appears first.
           y: {
-            reverse: true,
+            reverse: false,
           },
         },
         plugins: {
@@ -860,36 +869,39 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
           legend: {
             display: true,
             labels: {
-              // Generate fixed labels to identify the data.
-              generateLabels: () => {
-                const labels = [];
-
-                if (youngestPeople.some(person => person.gender === 'male')) {
-                  labels.push({
-                    text: 'Male',
-                    fillStyle: 'rgba(54, 162, 235, 0.5)',
-                    strokeStyle: 'rgb(54, 162, 235)',
-                    lineWidth: 1,
-                  });
-                }
-
-                if (youngestPeople.some(person => person.gender === 'female')) {
-                  labels.push({
-                    text: 'Female',
-                    fillStyle: 'rgba(255, 99, 132, 0.5)',
-                    strokeStyle: 'rgb(255, 99, 132)',
-                    lineWidth: 1,
-                  });
-                }
-                return labels;
-              },
+              // Generate fixed labels to identify the ranking colors.
+              generateLabels: () => [
+                {
+                  text: 'Youngest',
+                  fillStyle: 'rgba(255, 215, 0, 0.5)',
+                  strokeStyle: 'rgb(255, 215, 0)',
+                  lineWidth: 1,
+                },
+                {
+                  text: 'Second youngest',
+                  fillStyle: 'rgba(192, 192, 192, 0.5)',
+                  strokeStyle: 'rgb(192, 192, 192)',
+                  lineWidth: 1,
+                },
+                {
+                  text: 'Third youngest',
+                  fillStyle: 'rgba(205, 127, 50, 0.5)',
+                  strokeStyle: 'rgb(205, 127, 50)',
+                  lineWidth: 1,
+                },
+              ],
             },
           },
           tooltip: {
             callbacks: {
               label: context => {
                 const person = youngestPeople[context.dataIndex];
-                return [`Country: ${this._format.formatCountry(person.country)}`, `Visit: ${this._format.formatDate(person.visitedDate)}`];
+                return [
+                  `Age: ${person.age}`,
+                  `Gender: ${person.gender}`,
+                  `Country: ${this._format.formatCountry(person.country)}`,
+                  `Visit: ${this._format.formatDate(person.visitedDate)}`,
+                ];
               },
             },
           },
