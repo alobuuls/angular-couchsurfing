@@ -168,8 +168,8 @@ export class GuestRatingChartComponent implements AfterViewInit, OnChanges {
             })),
             pointRadius: 8,
             pointHoverRadius: 11,
-            backgroundColor: this.selectedMainView === 'highest' ? 'rgba(54, 162, 235, 0.8)' : 'rgba(255, 99, 132, 0.8)',
-            borderColor: this.selectedMainView === 'highest' ? 'rgb(54, 162, 235)' : 'rgb(255, 99, 132)',
+            backgroundColor: this.selectedMainView === 'highest' ? 'rgba(75, 192, 75, 0.8)' : 'rgb(228, 20, 65)',
+            borderColor: this.selectedMainView === 'highest' ? 'rgb(75, 192, 75)' : 'rgb(238, 40, 83)',
             borderWidth: 2,
           },
         ],
@@ -230,6 +230,7 @@ export class GuestRatingChartComponent implements AfterViewInit, OnChanges {
                 return [
                   guest.fullName,
                   `Rating: ${guest.rating} ⭐`,
+                  `Gender: ${guest.gender}`,
                   `Country: ${this._format.formatCountry(guest.hometownCode)}`,
                   `Visit: ${this._format.formatDate(guest.visitedDate)}`,
                 ];
