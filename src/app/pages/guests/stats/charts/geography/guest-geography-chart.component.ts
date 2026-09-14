@@ -22,6 +22,9 @@ import { REGION_NAMES } from '@config/world/regions';
 import { CountriesCodes, Regions } from '@type/word.types';
 import { WORLD } from '@config/world';
 
+// Helpers
+import { CONTINENT_COLORS, GENDER_COLORS, getGenderColor, getRankingColors, RANKING_COLORS } from '../../../../../utils/helpers/chart-colors';
+
 @Component({
   selector: 'guest-geography-chart',
   templateUrl: './guest-geography-chart.component.html',
@@ -29,6 +32,7 @@ import { WORLD } from '@config/world';
 })
 export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
   private _format = inject(FormatService);
+
   @Input() geography!: IGeographyDistribution;
 
   @ViewChild('geographyChart')
@@ -56,117 +60,26 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
 
   readonly rankingViews: ICountryRanking[] = ['all', 'top', 'bottom'];
 
-  getAvailableRankingViews(): ICountryRanking[] {
-    if (this.selectedView === 'continents' || this.selectedView === 'livingIn' || this.selectedView === 'hometown') {
-      return ['all'];
-    }
-
-    return this.rankingViews;
-  }
-
   private chart?: Chart;
 
-  // Colors used to identify each continent across all geography charts.
-  private readonly continentColors: Record<string, string> = {
-    america: 'rgba(53, 164, 249, 0.7)',
-    europe: 'rgba(246, 77, 77, 0.7)',
-    africa: 'rgba(75, 192, 93, 0.7)',
-    asia: 'rgba(255, 207, 96, 0.7)',
-    oceania: 'rgba(128, 96, 255, 0.7)',
-  };
-
-  private readonly continentBorderColors: Record<string, string> = {
-    america: 'rgb(86, 213, 255)',
-    europe: 'rgb(248, 114, 114)',
-    africa: 'rgb(147, 213, 145)',
-    asia: 'rgb(209, 224, 110)',
-    oceania: 'rgb(181, 153, 241)',
-  };
-
   private getContinent(item: IGeographyContinent | IGeographyRegion | IGeographyCountry | IGeographyLocation): string {
+    const code = item.code.toLowerCase();
+    // When the item is already a continent.
     if (this.selectedView === 'continents') {
-      return item.code.toLowerCase();
+      return code;
     }
-
+    // When the item is a region.
     if (this.selectedView === 'regions') {
-      const country = Object.values(WORLD).find(country => country.region === item.code);
-      return country?.continent ?? '';
+      const country = Object.values(WORLD).find(country => country.region.toLowerCase() === code);
+      return country?.continent?.toLowerCase() ?? '';
     }
-
-    const countryCode = item.code.toLowerCase() as CountriesCodes;
-
-    return WORLD[countryCode]?.continent ?? '';
+    // When the item is a country, livingIn or hometown location.
+    const country = WORLD[code as CountriesCodes];
+    return country?.continent?.toLowerCase() ?? '';
   }
-
-  private readonly rankingColors = {
-    gold: {
-      background: 'rgba(255, 215, 0, 0.75)',
-      border: 'rgb(218, 165, 32)',
-    },
-    silver: {
-      background: 'rgba(192, 192, 192, 0.75)',
-      border: 'rgb(128, 128, 128)',
-    },
-    bronze: {
-      background: 'rgba(205, 127, 50, 0.75)',
-      border: 'rgb(166, 88, 32)',
-    },
-    neutral: {
-      background: 'rgba(128, 128, 128, 0.25)',
-      border: 'rgba(128, 128, 128, 0.5)',
-    },
-  };
 
   private isRankingView(): boolean {
-    return ['top', 'bottom', 'topFemale', 'topMale'].includes(this.selectedRanking);
-  }
-
-  private getRankingColors(data: (IGeographyRegion | IGeographyCountry | IGeographyLocation)[]): { background: string[]; border: string[] } {
-    if (!this.isRankingView()) {
-      return {
-        background: data.map(item => {
-          const continent = this.getContinent(item);
-          return this.continentColors[continent] ?? 'rgba(128, 128, 128, 0.7)';
-        }),
-        border: data.map(item => {
-          const continent = this.getContinent(item);
-          return this.continentBorderColors[continent] ?? 'rgb(128, 128, 128)';
-        }),
-      };
-    }
-
-    const values = data.map(item =>
-      this.selectedRanking === 'topFemale' ? (item as IGeographyCountry).female : this.selectedRanking === 'topMale' ? (item as IGeographyCountry).male : item.total
-    );
-    return {
-      background: values.map((value, index) => {
-        const firstIndex = values.indexOf(value);
-        if (firstIndex === 0) {
-          return this.rankingColors.gold.background;
-        }
-        if (firstIndex === 1) {
-          return this.rankingColors.silver.background;
-        }
-        if (firstIndex === 2) {
-          return this.rankingColors.bronze.background;
-        }
-        return this.rankingColors.neutral.background;
-      }),
-
-      border: values.map((value, index) => {
-        const firstIndex = values.indexOf(value);
-        if (firstIndex === 0) {
-          return this.rankingColors.gold.border;
-        }
-        if (firstIndex === 1) {
-          return this.rankingColors.silver.border;
-        }
-        if (firstIndex === 2) {
-          return this.rankingColors.bronze.border;
-        }
-        return this.rankingColors.neutral.border;
-      }),
-    };
+    return ['top', 'bottom', 'topFemale', 'topMale'].includes(this.selectedRanking) || this.selectedView === 'livingIn' || this.selectedView === 'hometown';
   }
 
   // Configuration for each geography view.
@@ -176,9 +89,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
       label: string;
       type: IChartType;
       getAllData: (geography: IGeographyDistribution) => IGeographyContinent[] | IGeographyRegion[] | IGeographyCountry[] | IGeographyLocation[];
-
       getTopData: (geography: IGeographyDistribution) => IGeographyRegion[] | IGeographyCountry[];
-
       getBottomData: (geography: IGeographyDistribution) => IGeographyRegion[] | IGeographyCountry[];
     }
   > = {
@@ -291,7 +202,24 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
           ? geographyData.map(item => (item as IGeographyCountry).male)
           : geographyData.map(item => item.total);
 
-    const colors = this.getRankingColors(geographyData);
+    const isRankingChart = this.selectedRanking !== 'all' || this.selectedView === 'livingIn' || this.selectedView === 'hometown';
+
+    const colors = isRankingChart
+      ? getRankingColors(chartValues)
+      : {
+          background: geographyData.map(item => {
+            const continent = this.getContinent(item);
+
+            return CONTINENT_COLORS[continent as keyof typeof CONTINENT_COLORS]?.background;
+          }),
+
+          border: geographyData.map(item => {
+            const continent = this.getContinent(item);
+
+            return CONTINENT_COLORS[continent as keyof typeof CONTINENT_COLORS]?.border;
+          }),
+        };
+
     const datasetLabel = this.selectedRanking === 'topFemale' ? 'Female Guests' : this.selectedRanking === 'topMale' ? 'Male Guests' : config.label;
     this.chart = new Chart(this.geographyChart.nativeElement, {
       type: config.type,
@@ -327,8 +255,214 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
             display: true,
             text: this.getChartTitle(config.label),
           },
+
           legend: {
-            display: this.selectedView === 'continents',
+            display: true,
+
+            labels:
+              this.selectedView === 'regions' || this.selectedView === 'countries' || this.selectedView === 'livingIn' || this.selectedView === 'hometown'
+                ? {
+                    generateLabels: () => {
+                      const labels = [];
+                      // REGIONS
+                      if (this.selectedView === 'regions') {
+                        // Regions - All
+                        if (this.selectedRanking === 'all') {
+                          const regions = this.getSelectedData(this.chartConfig.regions) as IGeographyRegion[];
+
+                          if (regions.some(region => this.getContinent(region) === 'america')) {
+                            labels.push({
+                              text: 'America',
+                              fillStyle: CONTINENT_COLORS.america.background,
+                              strokeStyle: CONTINENT_COLORS.america.border,
+                              lineWidth: 1,
+                            });
+                          }
+
+                          if (regions.some(region => this.getContinent(region) === 'europe')) {
+                            labels.push({
+                              text: 'Europe',
+                              fillStyle: CONTINENT_COLORS.europe.background,
+                              strokeStyle: CONTINENT_COLORS.europe.border,
+                              lineWidth: 1,
+                            });
+                          }
+
+                          if (regions.some(region => this.getContinent(region) === 'africa')) {
+                            labels.push({
+                              text: 'Africa',
+                              fillStyle: CONTINENT_COLORS.africa.background,
+                              strokeStyle: CONTINENT_COLORS.africa.border,
+                              lineWidth: 1,
+                            });
+                          }
+
+                          if (regions.some(region => this.getContinent(region) === 'asia')) {
+                            labels.push({
+                              text: 'Asia',
+                              fillStyle: CONTINENT_COLORS.asia.background,
+                              strokeStyle: CONTINENT_COLORS.asia.border,
+                              lineWidth: 1,
+                            });
+                          }
+
+                          if (regions.some(region => this.getContinent(region) === 'oceania')) {
+                            labels.push({
+                              text: 'Oceania',
+                              fillStyle: CONTINENT_COLORS.oceania.background,
+                              strokeStyle: CONTINENT_COLORS.oceania.border,
+                              lineWidth: 1,
+                            });
+                          }
+                        }
+
+                        // Regions - Top / Bottom
+                        if (this.selectedRanking === 'top' || this.selectedRanking === 'bottom') {
+                          labels.push(
+                            {
+                              text: '1st',
+                              fillStyle: RANKING_COLORS.gold.background,
+                              strokeStyle: RANKING_COLORS.gold.border,
+                              lineWidth: 1,
+                            },
+                            {
+                              text: '2nd',
+                              fillStyle: RANKING_COLORS.silver.background,
+                              strokeStyle: RANKING_COLORS.silver.border,
+                              lineWidth: 1,
+                            },
+                            {
+                              text: '3rd',
+                              fillStyle: RANKING_COLORS.bronze.background,
+                              strokeStyle: RANKING_COLORS.bronze.border,
+                              lineWidth: 1,
+                            },
+                            {
+                              text: 'Others',
+                              fillStyle: RANKING_COLORS.neutral.background,
+                              strokeStyle: RANKING_COLORS.neutral.border,
+                              lineWidth: 1,
+                            }
+                          );
+                        }
+                      }
+                      // COUNTRIES
+                      if (this.selectedView === 'countries') {
+                        // Countries - All
+                        if (this.selectedRanking === 'all') {
+                          const countries = this.getSelectedData(this.chartConfig.countries) as IGeographyCountry[];
+
+                          if (countries.some(country => this.getContinent(country) === 'america')) {
+                            labels.push({
+                              text: 'America',
+                              fillStyle: CONTINENT_COLORS.america.background,
+                              strokeStyle: CONTINENT_COLORS.america.border,
+                              lineWidth: 1,
+                            });
+                          }
+
+                          if (countries.some(country => this.getContinent(country) === 'europe')) {
+                            labels.push({
+                              text: 'Europe',
+                              fillStyle: CONTINENT_COLORS.europe.background,
+                              strokeStyle: CONTINENT_COLORS.europe.border,
+                              lineWidth: 1,
+                            });
+                          }
+
+                          if (countries.some(country => this.getContinent(country) === 'africa')) {
+                            labels.push({
+                              text: 'Africa',
+                              fillStyle: CONTINENT_COLORS.africa.background,
+                              strokeStyle: CONTINENT_COLORS.africa.border,
+                              lineWidth: 1,
+                            });
+                          }
+
+                          if (countries.some(country => this.getContinent(country) === 'asia')) {
+                            labels.push({
+                              text: 'Asia',
+                              fillStyle: CONTINENT_COLORS.asia.background,
+                              strokeStyle: CONTINENT_COLORS.asia.border,
+                              lineWidth: 1,
+                            });
+                          }
+
+                          if (countries.some(country => this.getContinent(country) === 'oceania')) {
+                            labels.push({
+                              text: 'Oceania',
+                              fillStyle: CONTINENT_COLORS.oceania.background,
+                              strokeStyle: CONTINENT_COLORS.oceania.border,
+                              lineWidth: 1,
+                            });
+                          }
+                        }
+
+                        // Countries - Top / Bottom / Top Female / Top Male
+                        if (this.selectedRanking === 'top' || this.selectedRanking === 'bottom' || this.selectedRanking === 'topFemale' || this.selectedRanking === 'topMale') {
+                          labels.push(
+                            {
+                              text: '1st',
+                              fillStyle: RANKING_COLORS.gold.background,
+                              strokeStyle: RANKING_COLORS.gold.border,
+                              lineWidth: 1,
+                            },
+                            {
+                              text: '2nd',
+                              fillStyle: RANKING_COLORS.silver.background,
+                              strokeStyle: RANKING_COLORS.silver.border,
+                              lineWidth: 1,
+                            },
+                            {
+                              text: '3rd',
+                              fillStyle: RANKING_COLORS.bronze.background,
+                              strokeStyle: RANKING_COLORS.bronze.border,
+                              lineWidth: 1,
+                            },
+                            {
+                              text: 'Others',
+                              fillStyle: RANKING_COLORS.neutral.background,
+                              strokeStyle: RANKING_COLORS.neutral.border,
+                              lineWidth: 1,
+                            }
+                          );
+                        }
+                      }
+
+                      // LIVING IN / HOMETOWN
+                      if (this.selectedView === 'livingIn' || this.selectedView === 'hometown') {
+                        labels.push(
+                          {
+                            text: '1st',
+                            fillStyle: RANKING_COLORS.gold.background,
+                            strokeStyle: RANKING_COLORS.gold.border,
+                            lineWidth: 1,
+                          },
+                          {
+                            text: '2nd',
+                            fillStyle: RANKING_COLORS.silver.background,
+                            strokeStyle: RANKING_COLORS.silver.border,
+                            lineWidth: 1,
+                          },
+                          {
+                            text: '3rd',
+                            fillStyle: RANKING_COLORS.bronze.background,
+                            strokeStyle: RANKING_COLORS.bronze.border,
+                            lineWidth: 1,
+                          },
+                          {
+                            text: 'Others',
+                            fillStyle: RANKING_COLORS.neutral.background,
+                            strokeStyle: RANKING_COLORS.neutral.border,
+                            lineWidth: 1,
+                          }
+                        );
+                      }
+
+                      return labels;
+                    },
+                  }
+                : undefined,
           },
         },
         scales:
@@ -373,6 +507,9 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
         }
         if (this.selectedRanking === 'topMale') {
           return (b as IGeographyCountry).male - (a as IGeographyCountry).male;
+        }
+        if (this.selectedRanking === 'bottom') {
+          return a.total - b.total;
         }
         return b.total - a.total;
       }) as IGeographyRegion[] | IGeographyCountry[];
@@ -447,15 +584,6 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
 
     this.geographyChart.nativeElement.style.height = `${Math.max(250, guests.length * 70)}px`;
 
-    const genderColors: Record<string, string> = {
-      female: 'rgb(255, 99, 132)',
-      male: 'rgb(54, 162, 235)',
-      gay: 'rgb(255, 205, 86)',
-      trans: 'rgb(153, 102, 255)',
-    };
-
-    const getGenderColor = (gender: string): string => genderColors[gender.toLowerCase()] ?? 'rgb(128, 128, 128)';
-
     this.chart = new Chart(this.geographyChart.nativeElement, {
       type: 'scatter',
       data: {
@@ -490,7 +618,50 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
             text: `${countryName} — ${consecutive.streak} Consecutive Visits`,
           },
           legend: {
-            display: false,
+            display: true,
+            labels: {
+              generateLabels: () => {
+                const labels = [];
+
+                if (guests.some(guest => guest.gender.toLowerCase() === 'female')) {
+                  labels.push({
+                    text: 'Female',
+                    fillStyle: GENDER_COLORS.female.background,
+                    strokeStyle: GENDER_COLORS.female.border,
+                    lineWidth: 1,
+                  });
+                }
+
+                if (guests.some(guest => guest.gender.toLowerCase() === 'male')) {
+                  labels.push({
+                    text: 'Male',
+                    fillStyle: GENDER_COLORS.male.background,
+                    strokeStyle: GENDER_COLORS.male.border,
+                    lineWidth: 1,
+                  });
+                }
+
+                if (guests.some(guest => guest.gender.toLowerCase() === 'gay')) {
+                  labels.push({
+                    text: 'Gay',
+                    fillStyle: GENDER_COLORS.gay.background,
+                    strokeStyle: GENDER_COLORS.gay.border,
+                    lineWidth: 1,
+                  });
+                }
+
+                if (guests.some(guest => guest.gender.toLowerCase() === 'trans')) {
+                  labels.push({
+                    text: 'Trans',
+                    fillStyle: GENDER_COLORS.trans.background,
+                    strokeStyle: GENDER_COLORS.trans.border,
+                    lineWidth: 1,
+                  });
+                }
+
+                return labels;
+              },
+            },
           },
           tooltip: {
             callbacks: {
