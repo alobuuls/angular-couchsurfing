@@ -12,6 +12,7 @@ import { ILongestView, IStaysDistribution, IStaysView } from '@interfaces/stats-
 
 // Services
 import { FormatService } from '@services/format.service';
+import { GENDER_COLORS, getGenderColor, getRankingColors } from '@helpers/chart-colors';
 
 @Component({
   selector: 'guest-stays-chart',
@@ -71,30 +72,6 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
       label: 'Shortest Stays',
       getData: stays => stays.shortest,
     },
-  };
-
-  // Gender colors
-  private readonly genderColors: Record<string, string> = {
-    female: 'rgba(255, 99, 132, 0.5)',
-    male: 'rgba(54, 162, 235, 0.5)',
-    trans: 'rgba(153, 102, 255, 0.5)',
-    isGay: 'rgba(255, 193, 7, 0.5)',
-  };
-
-  // Gender border colors
-  private readonly genderBorderColors: Record<string, string> = {
-    female: 'rgb(255, 99, 132)',
-    male: 'rgb(54, 162, 235)',
-    trans: 'rgb(153, 102, 255)',
-    isGay: 'rgb(255, 193, 7)',
-  };
-
-  // Gender labels for tooltip
-  private readonly genderLabels: Record<string, string> = {
-    female: 'Female',
-    male: 'Male',
-    trans: 'Trans',
-    isGay: 'Gay',
   };
 
   // Group type labels for tooltip
@@ -223,8 +200,11 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
             data: people.map(item => item.nights),
 
             // Use guest gender for section colors
-            backgroundColor: people.map(item => this.genderColors[item.guest.gender] ?? 'rgba(100, 100, 100, 0.5)'),
-            borderColor: people.map(item => this.genderBorderColors[item.guest.gender] ?? 'rgb(100, 100, 100)'),
+            backgroundColor: people.map(item => {
+              const gender = GENDER_COLORS[item.guest.gender.toLowerCase() as keyof typeof GENDER_COLORS];
+              return gender?.background ?? 'rgba(100, 100, 100, 0.5)';
+            }),
+            borderColor: people.map(item => getGenderColor(item.guest.gender)),
             borderWidth: 1,
           },
         ],
@@ -364,6 +344,9 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
       return;
     }
 
+    // Get ranking colors based on the number of guests.
+    const rankingColors = getRankingColors(chartData.map(item => item.total));
+
     this.destroyChart();
 
     this.chart = new Chart(this.staysChart.nativeElement, {
@@ -375,15 +358,9 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
             label: 'Same Arrival',
             // Number of guests determines bar length.
             data: chartData.map(item => item.total),
-            // Use the first guest gender for the bar color.
-            backgroundColor: chartData.map(item => {
-              const gender = item.guests[0]?.gender;
-              return this.genderColors[gender] ?? 'rgba(100, 100, 100, 0.5)';
-            }),
-            borderColor: chartData.map(item => {
-              const gender = item.guests[0]?.gender;
-              return this.genderBorderColors[gender] ?? 'rgb(100, 100, 100)';
-            }),
+            // Color bars according to their ranking.
+            backgroundColor: rankingColors.background,
+            borderColor: rankingColors.border,
             borderWidth: 1,
           },
         ],
@@ -398,7 +375,35 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
             text: 'Guests with Same Arrival Date',
           },
           legend: {
-            display: false,
+            display: true,
+            labels: {
+              generateLabels: () => [
+                {
+                  text: '1st',
+                  fillStyle: getRankingColors([1]).background[0],
+                  strokeStyle: getRankingColors([1]).border[0],
+                  lineWidth: 1,
+                },
+                {
+                  text: '2nd',
+                  fillStyle: getRankingColors([1, 2]).background[1],
+                  strokeStyle: getRankingColors([1, 2]).border[1],
+                  lineWidth: 1,
+                },
+                {
+                  text: '3rd',
+                  fillStyle: getRankingColors([1, 2, 3]).background[2],
+                  strokeStyle: getRankingColors([1, 2, 3]).border[2],
+                  lineWidth: 1,
+                },
+                {
+                  text: 'Others',
+                  fillStyle: getRankingColors([1, 2, 3, 4]).background[3],
+                  strokeStyle: getRankingColors([1, 2, 3, 4]).border[3],
+                  lineWidth: 1,
+                },
+              ],
+            },
           },
           tooltip: {
             callbacks: {
@@ -482,8 +487,12 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
             pointHoverRadius: 13,
 
             // Use guest gender for node colors.
-            pointBackgroundColor: nodes.map(node => this.genderColors[node.gender] ?? 'rgba(100, 100, 100, 0.5)'),
-            pointBorderColor: nodes.map(node => this.genderBorderColors[node.gender] ?? 'rgb(100, 100, 100)'),
+            pointBackgroundColor: nodes.map(node => {
+              const gender = GENDER_COLORS[node.gender.toLowerCase() as keyof typeof GENDER_COLORS];
+
+              return gender?.background ?? 'rgba(100, 100, 100, 0.5)';
+            }),
+            pointBorderColor: nodes.map(node => getGenderColor(node.gender)),
             borderColor: 'rgba(100, 100, 100, 0.4)',
             borderWidth: 2,
           },
@@ -499,7 +508,25 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
             text: `Same Dates - Group ${this.selectedSameDatesGroup + 1}`,
           },
           legend: {
-            display: false,
+            display: true,
+            labels: {
+              generateLabels: () => {
+                const genders = [...new Set(nodes.map(node => node.gender.toLowerCase()))];
+
+                return genders
+                  .filter(gender => gender in GENDER_COLORS)
+                  .map(gender => {
+                    const color = GENDER_COLORS[gender as keyof typeof GENDER_COLORS];
+
+                    return {
+                      text: gender.charAt(0).toUpperCase() + gender.slice(1),
+                      fillStyle: color.background,
+                      strokeStyle: color.border,
+                      lineWidth: 1,
+                    };
+                  });
+              },
+            },
           },
           tooltip: {
             callbacks: {
