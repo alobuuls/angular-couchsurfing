@@ -2,8 +2,12 @@ import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnDestr
 
 import Chart from 'chart.js/auto';
 
+// Register matrix to heatmap
+import { MatrixController, MatrixElement } from 'chartjs-chart-matrix';
+Chart.register(MatrixController, MatrixElement);
+
 // Interfaces
-import { IBirthdayItem, IBirthdaysDistribution, IBirthdaysView } from '@interfaces/stats-interface';
+import { IBirthdaysDistribution, IBirthdaysView } from '@interfaces/stats-interface';
 
 // Services
 import { FormatService } from '@services/format.service';
@@ -74,10 +78,12 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
       this.createRepeatedBubbleChart();
       return;
     }
-    // Calendar chart will be implemented later.
+    // Calendar birthdays use a Matrix heatmap.
     if (this.selectedView === 'calendar') {
+      this.createCalendarHeatmap();
       return;
     }
+    // Unusual birthdays use a Line chart.
     if (this.selectedView === 'unusual') {
       this.createUnusualLineChart();
       return;
@@ -110,8 +116,8 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
               r: Math.max(10, item.total * 6),
             })),
             // Use one color for repeated birthday dates.
-            backgroundColor: 'rgba(153, 102, 255, 0.5)',
-            borderColor: 'rgb(153, 102, 255)',
+            backgroundColor: 'rgba(102, 204, 255, 0.5)',
+            borderColor: 'rgb(102, 222, 255)',
             borderWidth: 1,
           },
         ],
@@ -217,8 +223,8 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
               x: item.month,
               y: item.day,
             })),
-            borderColor: 'rgb(255, 159, 64)',
-            backgroundColor: 'rgba(255, 159, 64, 0.5)',
+            borderColor: 'rgb(48, 159, 37)',
+            backgroundColor: 'rgba(37, 162, 83, 0.5)',
             borderWidth: 2,
             pointRadius: 8,
             pointHoverRadius: 11,
@@ -305,6 +311,179 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
               callback: value => {
                 return value === 0 || value === 32 ? '' : value;
               },
+            },
+            title: {
+              display: true,
+              text: 'Day',
+            },
+          },
+        },
+      },
+    });
+  }
+
+  // CALENDAR
+  private createCalendarHeatmap(): void {
+    if (!this.birthdaysChart || !this.birthdays) {
+      return;
+    }
+    const calendar = this.birthdays.calendar;
+    if (!calendar || calendar.length === 0) {
+      return;
+    }
+
+    // Destroy previous chart.
+    this.destroyChart();
+
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const days = Array.from({ length: 31 }, (_, index) => String(index + 1));
+    // Store birthday information by month and day.
+    const birthdayMap = new Map(calendar.map(item => [`${item.month}-${item.day}`, item]));
+    // Create all 12 × 31 calendar cells.
+    const calendarData = months.flatMap((month, monthIndex) =>
+      days.map(day => {
+        const monthNumber = monthIndex + 1;
+        const dayNumber = Number(day);
+        const item = birthdayMap.get(`${monthNumber}-${dayNumber}`);
+
+        return {
+          x: month,
+          y: day,
+          v: item?.total ?? 0,
+        };
+      })
+    );
+
+    this.chart = new Chart(this.birthdaysChart.nativeElement, {
+      type: 'matrix',
+      data: {
+        datasets: [
+          {
+            label: 'Birthdays Calendar',
+            data: calendarData,
+            backgroundColor: context => {
+              const value = context.dataset.data[context.dataIndex] as {
+                x: string;
+                y: string;
+                v: number;
+              };
+
+              const total = value.v;
+
+              if (total === 0) {
+                return 'rgba(238, 238, 238, 0.2)';
+              }
+              if (total === 1) {
+                return 'rgba(153, 102, 255, 0.35)';
+              }
+              if (total === 2) {
+                return 'rgba(153, 102, 255, 0.6)';
+              }
+              return 'rgba(153, 102, 255, 0.95)';
+            },
+            borderColor: 'rgba(255, 255, 255, 0.8)',
+            borderWidth: 1,
+
+            width: ({ chart }) => {
+              const area = chart.chartArea;
+
+              if (!area) {
+                return 20;
+              }
+              return (area.right - area.left) / 12 - 2;
+            },
+
+            height: ({ chart }) => {
+              const area = chart.chartArea;
+
+              if (!area) {
+                return 20;
+              }
+              return (area.bottom - area.top) / 31 - 2;
+            },
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        layout: {
+          padding: {
+            top: 30,
+            right: 40,
+            bottom: 30,
+            left: 40,
+          },
+        },
+        plugins: {
+          title: {
+            display: true,
+            text: 'Birthdays Calendar',
+          },
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            callbacks: {
+              title: context => {
+                const value = context[0].raw as {
+                  x: string;
+                  y: string;
+                  v: number;
+                };
+
+                const monthIndex = months.indexOf(value.x) + 1;
+                const day = Number(value.y);
+
+                return this._format.formatBirthday(monthIndex, day);
+              },
+              label: context => {
+                const value = context.raw as {
+                  x: string;
+                  y: string;
+                  v: number;
+                };
+                return `Guests: ${value.v}`;
+              },
+              afterBody: context => {
+                const value = context[0].raw as {
+                  x: string;
+                  y: string;
+                  v: number;
+                };
+
+                const monthIndex = months.indexOf(value.x) + 1;
+                const day = Number(value.y);
+                const item = birthdayMap.get(`${monthIndex}-${day}`);
+
+                if (!item) {
+                  return [];
+                }
+                return ['', ...item.guests.map(guest => `• ${guest.fullName}`)];
+              },
+            },
+          },
+        },
+        scales: {
+          x: {
+            type: 'category',
+            labels: months,
+            offset: true,
+            grid: {
+              display: false,
+            },
+            title: {
+              display: true,
+              text: 'Month',
+            },
+          },
+          y: {
+            type: 'category',
+            labels: days,
+            reverse: true,
+            offset: true,
+            grid: {
+              display: false,
             },
             title: {
               display: true,
