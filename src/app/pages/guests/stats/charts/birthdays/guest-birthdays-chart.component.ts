@@ -78,8 +78,8 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
     if (this.selectedView === 'calendar') {
       return;
     }
-    // Unusual chart will be implemented later.
     if (this.selectedView === 'unusual') {
+      this.createUnusualLineChart();
       return;
     }
   }
@@ -193,7 +193,129 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
       },
     });
   }
-  
+
+  // UNUSUAL
+  private createUnusualLineChart(): void {
+    if (!this.birthdaysChart || !this.birthdays) {
+      return;
+    }
+    const unusual = this.birthdays.unusual;
+    if (!unusual || unusual.length === 0) {
+      return;
+    }
+
+    // Destroy previous chart.
+    this.destroyChart();
+
+    this.chart = new Chart(this.birthdaysChart.nativeElement, {
+      type: 'line',
+      data: {
+        datasets: [
+          {
+            label: 'Unusual Birthdays',
+            data: unusual.map(item => ({
+              x: item.month,
+              y: item.day,
+            })),
+            borderColor: 'rgb(255, 159, 64)',
+            backgroundColor: 'rgba(255, 159, 64, 0.5)',
+            borderWidth: 2,
+            pointRadius: 8,
+            pointHoverRadius: 11,
+            tension: 0,
+            // Connect the unusual birthday dates.
+            showLine: true,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        layout: {
+          padding: {
+            top: 30,
+            right: 40,
+            bottom: 30,
+            left: 40,
+          },
+        },
+        plugins: {
+          title: {
+            display: true,
+            text: 'Unusual Birthdays',
+          },
+          legend: {
+            display: true,
+          },
+          tooltip: {
+            callbacks: {
+              title: context => {
+                const item = unusual[context[0].dataIndex];
+                return this._format.formatBirthday(item.month, item.day);
+              },
+              label: context => {
+                const item = unusual[context.dataIndex];
+                return `Reason: ${item.reason}`;
+              },
+              afterBody: context => {
+                const item = unusual[context[0].dataIndex];
+                return [`Guests: ${item.total}`, '', ...item.guests.map(guest => `• ${guest.fullName}`)];
+              },
+            },
+          },
+        },
+        scales: {
+          x: {
+            type: 'linear',
+            min: 0,
+            max: 13,
+            position: 'bottom',
+            ticks: {
+              stepSize: 1,
+              callback: value => {
+                const months: Record<number, string> = {
+                  1: 'January',
+                  2: 'February',
+                  3: 'March',
+                  4: 'April',
+                  5: 'May',
+                  6: 'June',
+                  7: 'July',
+                  8: 'August',
+                  9: 'September',
+                  10: 'October',
+                  11: 'November',
+                  12: 'December',
+                };
+                return months[value as number] ?? '';
+              },
+            },
+            title: {
+              display: true,
+              text: 'Month',
+            },
+          },
+          y: {
+            type: 'linear',
+            min: 0,
+            max: 32,
+            ticks: {
+              stepSize: 1,
+              precision: 0,
+              callback: value => {
+                return value === 0 || value === 32 ? '' : value;
+              },
+            },
+            title: {
+              display: true,
+              text: 'Day',
+            },
+          },
+        },
+      },
+    });
+  }
+
   // Destroy the current chart instance.
   private destroyChart(): void {
     this.chart?.destroy();
