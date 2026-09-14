@@ -17,6 +17,15 @@ export class FormatService {
     return this.datePipe.transform(isoDate, 'MMMM d, y') ?? isoDate;
   }
 
+  formatMonth(isoMonth: string): string {
+    return this.datePipe.transform(`${isoMonth}-01`, 'MMMM y') ?? isoMonth;
+  }
+
+  formatDay(period: string): string {
+    const [year, day] = period.split('-');
+    return `Day ${day}, ${year}`;
+  }
+
   formatCountry(code: string): string {
     const countryCode = code.toLowerCase() as CountriesCodes;
     return WORLD[countryCode]?.name ?? code;

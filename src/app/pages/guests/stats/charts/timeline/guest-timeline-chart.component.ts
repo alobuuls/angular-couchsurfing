@@ -12,6 +12,7 @@ import { ISameArrivalDay, ISameStay, ITimelineDistribution, ITimelineItem, ITime
 
 // Service
 import { FormatService } from '@services/format.service';
+import { getRankingColors, RANKING_COLORS } from '@helpers/chart-colors';
 
 @Component({
   selector: 'guest-timeline-chart',
@@ -56,25 +57,21 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
       type: 'bar',
       getData: timeline => timeline.years,
     },
-
     months: {
       label: 'Guests by Month',
       type: 'bar',
       getData: timeline => timeline.months,
     },
-
     days: {
       label: 'Guests by Day of Month',
       type: 'bar',
       getData: timeline => timeline.days,
     },
-
     sameArrivalDay: {
       label: 'Guests Arriving on the Same Day',
       type: 'bar',
       getData: timeline => timeline.sameArrivalDay,
     },
-
     sameStay: {
       label: 'Guests Sharing the Same Stay',
       type: 'network',
@@ -98,10 +95,8 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
 
   selectView(view: ITimelineView): void {
     this.selectedView = view;
-
     // Remove the previous chart.
     this.destroyChart();
-
     // Wait for Angular to update the canvas.
     setTimeout(() => {
       this.createChart();
@@ -112,9 +107,7 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
     if (!this.timelineChart || !this.timeline) {
       return;
     }
-
     const config = this.chartConfig[this.selectedView];
-
     // Get data for the selected view.
     const timelineData = config.getData(this.timeline);
 
@@ -136,29 +129,25 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
   private createBarChart(data: ITimelineItem[] | ISameArrivalDay[], label: string): void {
     // Give the chart more space when needed.
     this.setChartHeight(data.length);
+    // Get ranking colors based on the number of guests.
+    const rankingColors = getRankingColors(data.map(item => item.total));
+
     this.chart = new Chart(this.timelineChart.nativeElement, {
       type: 'bar',
       data: {
-        labels: data.map(item => {
-          if ('date' in item) {
-            return this._format.formatDate(item.date);
-          }
-
-          return item.period;
-        }),
+        labels: data.map(item => this.formatTimelineLabel(item)),
         datasets: [
           {
             label,
-
             // Use the total number of guests.
             data: data.map(item => item.total),
-            backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(255, 159, 64, 0.2)', 'rgba(255, 205, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(54, 162, 235, 0.2)'],
-            borderColor: ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)'],
+            // Color bars according to their ranking.
+            backgroundColor: rankingColors.background,
+            borderColor: rankingColors.border,
             borderWidth: 1,
           },
         ],
       },
-
       options: {
         responsive: true,
         // Horizontal bars improve text readability.
@@ -167,6 +156,38 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
           title: {
             display: true,
             text: this.getChartTitle(label),
+          },
+          legend: {
+            display: true,
+
+            labels: {
+              generateLabels: () => [
+                {
+                  text: '1st',
+                  fillStyle: RANKING_COLORS.gold.background,
+                  strokeStyle: RANKING_COLORS.gold.border,
+                  lineWidth: 1,
+                },
+                {
+                  text: '2nd',
+                  fillStyle: RANKING_COLORS.silver.background,
+                  strokeStyle: RANKING_COLORS.silver.border,
+                  lineWidth: 1,
+                },
+                {
+                  text: '3rd',
+                  fillStyle: RANKING_COLORS.bronze.background,
+                  strokeStyle: RANKING_COLORS.bronze.border,
+                  lineWidth: 1,
+                },
+                {
+                  text: 'Other',
+                  fillStyle: RANKING_COLORS.neutral.background,
+                  strokeStyle: RANKING_COLORS.neutral.border,
+                  lineWidth: 1,
+                },
+              ],
+            },
           },
         },
         scales: {
@@ -188,10 +209,8 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
   private createNetworkChart(data: ISameStay[]): void {
     // Convert guests into network nodes.
     const nodes = this.getNetworkNodes(data);
-
     // Create an index for each node.
     const nodeIndexes = new Map(nodes.map((node, index) => [node.id, index]));
-
     // Convert shared stays into connections.
     const edges = this.getNetworkEdges(data, nodeIndexes);
 
@@ -234,8 +253,7 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
             callbacks: {
               label: context => {
                 const node = nodes[context.dataIndex];
-
-                return [`Country: ${this._format.formatCountry(node.country)}`, `Visit: ${this._format.formatDate(node.visitedDate)}`];
+                return [`Country: ${this._format.formatCountry(node.country)}`, `Gender: ${node.gender}`, `Visit: ${this._format.formatDate(node.visitedDate)}`];
               },
             },
           },
@@ -249,6 +267,7 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
     label: string;
     country: string;
     visitedDate: string;
+    gender: string;
   }[] {
     const nodes = new Map<
       string,
@@ -257,6 +276,7 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
         label: string;
         country: string;
         visitedDate: string;
+        gender: string;
       }
     >();
 
@@ -267,8 +287,8 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
         label: item.guest.fullName,
         country: item.guest.hometownCode,
         visitedDate: item.guest.visitedDate,
+        gender: item.guest.gender,
       });
-
       // Add every overlapping guest as a node.
       item.guests.forEach(guest => {
         nodes.set(guest.guestId, {
@@ -276,10 +296,10 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
           label: guest.fullName,
           country: guest.hometownCode,
           visitedDate: guest.visitedDate,
+          gender: guest.gender,
         });
       });
     });
-
     return Array.from(nodes.values());
   }
 
@@ -297,7 +317,6 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
 
     data.forEach(item => {
       const source = nodeIndexes.get(item.guest.guestId);
-
       // Skip invalid source nodes.
       if (source === undefined) {
         return;
@@ -305,12 +324,10 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
 
       item.guests.forEach(guest => {
         const target = nodeIndexes.get(guest.guestId);
-
         // Skip invalid target nodes.
         if (target === undefined) {
           return;
         }
-
         edges.push({
           source,
           target,
@@ -352,18 +369,16 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
     this.chart = undefined;
   }
 
-  // DATE
-  private formatArrivalDate(date: string): string {
-    const parsedDate = new Date(`${date}T00:00:00`);
-    const parts = new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    }).formatToParts(parsedDate);
-    const year = parts.find(part => part.type === 'year')?.value;
-    const month = parts.find(part => part.type === 'month')?.value;
-    const day = parts.find(part => part.type === 'day')?.value;
-
-    return `${year}, ${month} ${day}`;
+  private formatTimelineLabel(item: ITimelineItem | ISameArrivalDay): string {
+    if ('date' in item) {
+      return this._format.formatDate(item.date);
+    }
+    if (this.selectedView === 'months') {
+      return this._format.formatMonth(item.period);
+    }
+    if (this.selectedView === 'days') {
+      return this._format.formatDay(item.period);
+    }
+    return item.period;
   }
 }
