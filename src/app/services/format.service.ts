@@ -26,6 +26,11 @@ export class FormatService {
     return `Day ${day}, ${year}`;
   }
 
+  formatBirthday(month: number, day: number): string {
+    const date = new Date(2000, month - 1, day);
+    return this.datePipe.transform(date, 'MMMM d') ?? `${month}/${day}`;
+  }
+
   formatCountry(code: string): string {
     const countryCode = code.toLowerCase() as CountriesCodes;
     return WORLD[countryCode]?.name ?? code;
