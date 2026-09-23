@@ -123,13 +123,21 @@ export interface IQueryParamsGuests {
   country?: string;
   from?: string;
   to?: string;
-  groupType?: 'solo' | 'family' | 'friends' | 'couple';
+  groupType?: 'solo' | 'family' | 'friends' | 'couple' | 'all-groups';
   continent?: Continents;
   isFirstTime?: boolean;
   rating?: number;
   region?: Regions;
   ambassador?: boolean;
   didTheyReq?: boolean;
+  gift?: boolean;
+  gender?: 'female' | 'male' | 'trans';
+  gay?: boolean;
+  hometown?: string;
+  livingIn?: string;
+  year?: number;
+  day?: number;
+  birthDate?: number;
 }
 
 export interface IGuestsFormSubmit {

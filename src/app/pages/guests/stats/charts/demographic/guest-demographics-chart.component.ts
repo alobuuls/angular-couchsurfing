@@ -1,10 +1,12 @@
 import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
 import Chart from 'chart.js/auto';
 import 'chartjs-adapter-date-fns';
 
 // Interfaces
 import { IDemographicsDistribution, IDemographicsView, IDemographicsTotalsView, IDemographicGender, IDemographicsOldestView } from '@interfaces/stats-interface';
+import { IQueryParamsGuests } from '@interfaces/guests.interface';
 
 // Helpers
 import { getRankingColors } from '@helpers/chart-colors';
@@ -19,6 +21,7 @@ import { FormatService } from '@services/format.service';
 })
 export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   private _format = inject(FormatService);
+  private _router = inject(Router);
   // Demographic data received from the parent component.
   @Input() demographics!: IDemographicsDistribution;
 
@@ -220,16 +223,16 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
   private createOverallTotalsChart(): Chart {
     // Get the aggregated demographic data.
     const overall = this.demographics.totals.overall;
+    const labels = ['Male', 'Female', 'Trans', 'Gay'];
     return new Chart(this.demographicsChart.nativeElement, {
       // Doughnut chart is used to show the overall distribution.
       type: 'doughnut',
       data: {
         // Each label represents one demographic category.
-        labels: ['Male', 'Female', 'Trans', 'Gay'],
+        labels,
         datasets: [
           {
             label: 'Overall Demographics',
-
             // Values used to calculate each section of the doughnut.
             data: [overall.male, overall.female, overall.trans, overall.isGay],
             backgroundColor: ['rgba(54, 162, 235, 0.2)', 'rgba(255, 99, 132, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)'],
@@ -240,6 +243,15 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       },
       options: {
         responsive: true,
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+          const index = elements[0].index;
+          const label = labels[index];
+
+          this.navigateToGenderGuests(label);
+        },
         plugins: {
           // Place the legend below the chart.
           legend: {
@@ -251,7 +263,6 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
   }
 
   // TOTALS - GROUPS
-
   private createGroupsChart(): Chart {
     // Get demographic data separated by travel group.
     const groups = this.demographics.totals.groups;
@@ -297,6 +308,33 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       },
       options: {
         responsive: true,
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+
+          const datasetIndex = elements[0].datasetIndex;
+          const groupIndex = elements[0].index;
+
+          const genderLabels = ['Male', 'Female', 'Trans', 'Gay'];
+          const groupLabels = ['Solo', 'Couple', 'Friends', 'Family'];
+
+          const gender = genderLabels[datasetIndex];
+          const groupType = this.groupNavigation[groupLabels[groupIndex]];
+
+          const genderFilters = this.genderNavigation[gender];
+
+          if (!genderFilters || !groupType) {
+            return;
+          }
+          this._router.navigate(['/guests'], {
+            queryParams: {
+              view: 'cards',
+              ...genderFilters,
+              groupType,
+            },
+          });
+        },
         // Use horizontal bars instead of vertical bars.
         indexAxis: 'y',
         scales: {
@@ -330,6 +368,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       .filter(person => person.birthDate)
       .map(person => ({
         name: person.fullName,
+        guestId: person.guestId,
         age: this.calculateAge(person.birthDate!),
         gender: person.gender,
         visitedDate: person.visitedDate,
@@ -359,6 +398,18 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       },
       options: {
         responsive: true,
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+          const index = elements[0].index;
+          const person = oldestPeople[index];
+
+          if (!person) {
+            return;
+          }
+          this.navigateToGuest(person.guestId);
+        },
         // Display horizontal bars.
         indexAxis: 'y',
         scales: {
@@ -483,6 +534,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       .filter(person => person.birthDate)
       .map(person => ({
         name: person.fullName,
+        guestId: person.guestId,
         age: this.calculateAge(person.birthDate!),
         visitedDate: new Date(person.visitedDate),
         visitedDateLabel: person.visitedDate,
@@ -531,6 +583,18 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       },
       options: {
         responsive: true,
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+          const index = elements[0].index;
+          const person = oldestPeople[index];
+
+          if (!person) {
+            return;
+          }
+          this.navigateToGuest(person.guestId);
+        },
         scales: {
           x: {
             type: 'time',
@@ -663,6 +727,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       .filter(person => person.birthDate)
       .map(person => ({
         name: person.fullName,
+        guestId: person.guestId,
         age: this.calculateAge(person.birthDate!),
         group: person.group,
         gender: person.gender,
@@ -701,6 +766,18 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       },
       options: {
         responsive: true,
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+          const index = elements[0].index;
+          const person = groupsPeople[index];
+
+          if (!person) {
+            return;
+          }
+          this.navigateToGuest(person.guestId);
+        },
         scales: {
           // X axis represents the guest's age.
           x: {
@@ -817,6 +894,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       // Convert each person object containing name, gender and country.
       .map(person => ({
         name: person.fullName,
+        guestId: person.guestId,
         age: this.calculateAge(person.birthDate!),
         gender: person.gender,
         visitedDate: person.visitedDate,
@@ -846,6 +924,18 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       },
       options: {
         responsive: true,
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+          const index = elements[0].index;
+          const person = youngestPeople[index];
+
+          if (!person) {
+            return;
+          }
+          this.navigateToGuest(person.guestId);
+        },
         // Display horizontal bars.
         indexAxis: 'y',
         scales: {
@@ -939,6 +1029,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       .filter(person => person.birthDate)
       .map(person => ({
         name: person.fullName,
+        guestId: person.guestId,
         age: this.calculateAge(person.birthDate!),
         visitedDate: new Date(person.visitedDate),
         visitedDateLabel: person.visitedDate,
@@ -966,6 +1057,18 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       },
       options: {
         responsive: true,
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+          const index = elements[0].index;
+          const person = soloPeople[index];
+
+          if (!person) {
+            return;
+          }
+          this.navigateToGuest(person.guestId);
+        },
         scales: {
           // X axis represents the guest's visit date.
           x: {
@@ -1077,6 +1180,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       .filter(person => person.birthDate)
       .map(person => ({
         name: person.fullName,
+        guestId: person.guestId,
         age: this.calculateAge(person.birthDate!),
         group: person.group,
         gender: person.gender,
@@ -1115,6 +1219,18 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       },
       options: {
         responsive: true,
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+          const index = elements[0].index;
+          const person = groupsPeople[index];
+
+          if (!person) {
+            return;
+          }
+          this.navigateToGuest(person.guestId);
+        },
         scales: {
           // X axis represents the guest's age.
           x: {
@@ -1254,6 +1370,18 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       },
       options: {
         responsive: true,
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+          const point = elements[0];
+          const data = this.chart?.data.datasets[point.datasetIndex].data[point.index] as any;
+
+          if (!data?.person?.guestId) {
+            return;
+          }
+          this.navigateToGuest(data.person.guestId);
+        },
         scales: {
           // X axis represents the visit date.
           x: {
@@ -1335,6 +1463,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                   type: 'First' | 'Last';
                   person: {
                     fullName: string;
+                    guestId: string;
                     visitedDate: string;
                     groupType: string;
                     gender: IDemographicGender;
@@ -1389,33 +1518,48 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
     ];
 
     const validCategories = categories.filter(category => category.first || category.last);
+    const chartCategories = validCategories.filter(category => category.first && category.last);
+
     return new Chart(this.demographicsChart.nativeElement, {
       type: 'scatter',
       data: {
-        datasets: validCategories
-          .filter(category => category.first && category.last)
-          .map(category => ({
-            label: category.label,
-            data: [
-              {
-                x: new Date(category.first!.visitedDate),
-                y: validCategories.indexOf(category) + 1,
-              },
-              {
-                x: new Date(category.last!.visitedDate),
-                y: validCategories.indexOf(category) + 1,
-              },
-            ],
-            showLine: true,
-            backgroundColor: category.color.background,
-            borderColor: category.color.border,
-            borderWidth: 2,
-            pointRadius: 7,
-            pointHoverRadius: 10,
-          })),
+        datasets: chartCategories.map((category, index) => ({
+          label: category.label,
+          data: [
+            {
+              x: new Date(category.first!.visitedDate),
+              y: index + 1,
+              person: category.first,
+            },
+            {
+              x: new Date(category.last!.visitedDate),
+              y: index + 1,
+              person: category.last,
+            },
+          ],
+          showLine: true,
+          backgroundColor: category.color.background,
+          borderColor: category.color.border,
+          borderWidth: 2,
+          pointRadius: 7,
+          pointHoverRadius: 10,
+        })),
       },
       options: {
         responsive: true,
+
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+          const point = elements[0];
+          const data = this.chart?.data.datasets[point.datasetIndex].data[point.index] as any;
+
+          if (!data?.person?.guestId) {
+            return;
+          }
+          this.navigateToGuest(data.person.guestId);
+        },
         scales: {
           x: {
             type: 'time',
@@ -1426,11 +1570,11 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
           },
           y: {
             min: 0.5,
-            max: validCategories.length + 0.5,
+            max: chartCategories.length + 0.5,
             ticks: {
               stepSize: 1,
               callback: value => {
-                return validCategories[(value as number) - 1]?.label ?? '';
+                return chartCategories[(value as number) - 1]?.label ?? '';
               },
             },
             title: {
@@ -1481,7 +1625,6 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                     lineWidth: 1,
                   });
                 }
-
                 return labels;
               },
             },
@@ -1489,7 +1632,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
           tooltip: {
             callbacks: {
               label: context => {
-                const category = validCategories[context.datasetIndex];
+                const category = chartCategories[context.datasetIndex];
                 const person = context.dataIndex === 0 ? category.first : category.last;
                 if (!person) {
                   return '';
@@ -1532,33 +1675,47 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         color: this.firstLastGroupColors.Family,
       },
     ];
+    const chartCategories = categories.filter(category => category.first && category.last);
     return new Chart(this.demographicsChart.nativeElement, {
       type: 'scatter',
       data: {
-        datasets: categories
-          .filter(category => category.first && category.last)
-          .map((category, index) => ({
-            label: category.label,
-            data: [
-              {
-                x: new Date(category.first!.visitedDate),
-                y: index + 1,
-              },
-              {
-                x: new Date(category.last!.visitedDate),
-                y: index + 1,
-              },
-            ],
-            showLine: true,
-            backgroundColor: category.color.background,
-            borderColor: category.color.border,
-            borderWidth: 2,
-            pointRadius: 8,
-            pointHoverRadius: 11,
-          })),
+        datasets: chartCategories.map((category, index) => ({
+          label: category.label,
+          data: [
+            {
+              x: new Date(category.first!.visitedDate),
+              y: index + 1,
+              person: category.first,
+            },
+            {
+              x: new Date(category.last!.visitedDate),
+              y: index + 1,
+              person: category.last,
+            },
+          ],
+          showLine: true,
+          backgroundColor: category.color.background,
+          borderColor: category.color.border,
+          borderWidth: 2,
+          pointRadius: 8,
+          pointHoverRadius: 11,
+        })),
       },
       options: {
         responsive: true,
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+          const point = elements[0];
+          const data = this.chart?.data.datasets[point.datasetIndex].data[point.index] as any;
+
+          if (!data?.person?.guestId) {
+            return;
+          }
+          this.navigateToGuest(data.person.guestId);
+        },
+
         scales: {
           x: {
             type: 'time',
@@ -1569,11 +1726,12 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
           },
           y: {
             min: 0.5,
-            max: categories.length + 0.5,
+            max: chartCategories.length + 0.5,
+
             ticks: {
               stepSize: 1,
               callback: value => {
-                return categories[(value as number) - 1]?.label ?? '';
+                return chartCategories[(value as number) - 1]?.label ?? '';
               },
             },
             title: {
@@ -1612,7 +1770,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
           tooltip: {
             callbacks: {
               label: context => {
-                const category = categories[context.datasetIndex];
+                const category = chartCategories[context.datasetIndex];
                 const person = context.dataIndex === 0 ? category.first : category.last;
                 if (!person) {
                   return '';
@@ -1664,8 +1822,42 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       border: 'rgb(255, 159, 64)',
     },
   };
+
   ngOnDestroy(): void {
     // Destroy the Chart.js instance when the component is removed to prevent memory leaks and duplicated charts
     this.chart?.destroy();
+  }
+
+  // Click on chart
+  private readonly genderNavigation: Record<string, Partial<IQueryParamsGuests>> = {
+    Female: { gender: 'female' },
+    Male: { gender: 'male' },
+    Gay: { gay: true },
+    Trans: { gender: 'trans' },
+  };
+
+  private readonly groupNavigation: Record<string, IQueryParamsGuests['groupType']> = {
+    Solo: 'solo',
+    Couple: 'couple',
+    Friends: 'friends',
+    Family: 'family',
+  };
+
+  private navigateToGenderGuests(label: string): void {
+    const filters = this.genderNavigation[label];
+
+    if (!filters) {
+      return;
+    }
+    this._router.navigate(['/guests'], {
+      queryParams: {
+        view: 'cards',
+        ...filters,
+      },
+    });
+  }
+
+  private navigateToGuest(guestId: string): void {
+    this._router.navigate(['/guests', guestId]);
   }
 }

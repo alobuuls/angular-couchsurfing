@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
 import Chart from 'chart.js/auto';
 
@@ -15,6 +16,7 @@ import { FormatService } from '@services/format.service';
 })
 export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
   private _format = inject(FormatService);
+  private _router = inject(Router);
 
   @Input() rankings!: IRankingsDistribution;
 
@@ -264,6 +266,20 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
       },
       options: {
         responsive: true,
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+
+          const index = elements[0].index;
+          const item = rankingData[index];
+
+          if (!item?.guest?.guestId) {
+            return;
+          }
+
+          this.navigateToGuest(item.guest.guestId);
+        },
         indexAxis: 'y',
         plugins: {
           tooltip: {
@@ -298,5 +314,9 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
         },
       },
     });
+  }
+
+  private navigateToGuest(guestId: string): void {
+    this._router.navigate(['/guests', guestId]);
   }
 }

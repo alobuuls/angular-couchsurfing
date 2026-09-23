@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
 import Chart from 'chart.js/auto';
 
@@ -15,6 +16,7 @@ import { FormatService } from '@services/format.service';
 })
 export class GuestGiftsChartComponent implements AfterViewInit, OnChanges {
   private _format = inject(FormatService);
+  private _router = inject(Router);
 
   @Input() gifts!: IGiftsDistribution;
 
@@ -108,6 +110,18 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges {
       },
       options: {
         responsive: true,
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+          const index = elements[0].index;
+          const guest = giftsData[index];
+
+          if (!guest?.guestId) {
+            return;
+          }
+          this.navigateToGuest(guest.guestId);
+        },
         plugins: {
           title: {
             display: true,
@@ -193,5 +207,9 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges {
   private destroyChart(): void {
     this.chart?.destroy();
     this.chart = undefined;
+  }
+
+  private navigateToGuest(guestId: string): void {
+    this._router.navigate(['/guests', guestId]);
   }
 }
