@@ -227,6 +227,77 @@
       </mat-select>
     </mat-form-field>
 
+    <!-- COUNTRY WE MET -->
+    <mat-form-field appearance="outline">
+      <mat-label>Country We Met</mat-label>
+
+      <mat-icon class="material-symbols-outlined" matPrefix>public</mat-icon>
+
+      <mat-icon class="material-symbols-outlined" class="icon-success" matSuffix *ngIf="isValid('countryCodeWeMet')">
+        check_circle
+      </mat-icon>
+
+      <mat-icon class="material-symbols-outlined" class="icon-warning" matSuffix *ngIf="isInvalid('countryCodeWeMet')">
+        error
+      </mat-icon>
+
+      <input
+        matInput
+        formControlName="countryCodeWeMet"
+        [matAutocomplete]="autoCountryWeMet"
+        (input)="filterCountryWeMet($event)"
+      />
+
+      <mat-autocomplete #autoCountryWeMet="matAutocomplete" [displayWith]="displayCountryCode">
+        <mat-option *ngFor="let country of filteredCountryWeMet" [value]="country.countryCode">
+          <span [class]="country.countryCode | flag"></span>
+          {{ country.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <!-- CITY WE MET -->
+    <mat-form-field appearance="outline">
+      <mat-label>City We Met</mat-label>
+
+      <mat-icon class="material-symbols-outlined" matPrefix>location_city</mat-icon>
+
+      <mat-icon class="material-symbols-outlined" class="icon-success" matSuffix *ngIf="isValid('cityWeMet')">
+        check_circle
+      </mat-icon>
+
+      <mat-icon class="material-symbols-outlined" class="icon-warning" matSuffix *ngIf="isInvalid('cityWeMet')">
+        error
+      </mat-icon>
+
+      <input matInput formControlName="cityWeMet" maxlength="100" />
+
+      <mat-hint align="end"> {{ f['cityWeMet'].value?.length || 0 }}/100 </mat-hint>
+
+      <mat-error *ngIf="f['cityWeMet'].hasError('maxlength')"> Maximum 100 characters </mat-error>
+    </mat-form-field>
+
+    <!-- LOCATION WE MET -->
+    <mat-form-field appearance="outline">
+      <mat-label>Location We Met</mat-label>
+
+      <mat-icon class="material-symbols-outlined" matPrefix>place</mat-icon>
+
+      <mat-icon class="material-symbols-outlined" class="icon-success" matSuffix *ngIf="isValid('locationWeMet')">
+        check_circle
+      </mat-icon>
+
+      <mat-icon class="material-symbols-outlined" class="icon-warning" matSuffix *ngIf="isInvalid('locationWeMet')">
+        error
+      </mat-icon>
+
+      <input matInput formControlName="locationWeMet" maxlength="100" />
+
+      <mat-hint align="end"> {{ f['locationWeMet'].value?.length || 0 }}/100 </mat-hint>
+
+      <mat-error *ngIf="f['locationWeMet'].hasError('maxlength')"> Maximum 100 characters </mat-error>
+    </mat-form-field>
+
     <!-- PREFIX -->
     <div class="phone-row">
       <!-- PREFIX -->

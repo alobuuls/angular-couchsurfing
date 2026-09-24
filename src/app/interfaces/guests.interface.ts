@@ -17,6 +17,9 @@ export interface IGuestDetail extends ITripDetail {
   gender: 'female' | 'male' | 'trans';
   guestId: string;
   livingIn: string;
+  countryCodeWeMet?: CountriesCodes;
+  cityWeMet?: string;
+  locationWeMet?: string;
   nights: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15;
   prefixCode: string;
   rating: 1 | 2 | 3 | 4 | 5;

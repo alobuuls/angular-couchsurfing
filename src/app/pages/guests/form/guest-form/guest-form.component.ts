@@ -84,6 +84,7 @@ export class GuestFormComponent implements OnInit {
   // Autocomplete Countries
   filteredCountries: typeof this.countries = [];
   filteredLiving: typeof this.countries = [];
+  filteredCountryWeMet: typeof this.countries = [];
 
   // States
   hometownStates: IState[] = [];
@@ -133,6 +134,7 @@ export class GuestFormComponent implements OnInit {
     setTimeout(() => {
       this.filteredCountries = this.countries;
       this.filteredLiving = this.countries;
+      this.filteredCountryWeMet = this.countries;
     });
 
     this.formCreateGuest.patchValue({ groupType: this.selectedGroupType });
@@ -161,6 +163,9 @@ export class GuestFormComponent implements OnInit {
       livingInCode: ['', Validators.required],
       livingInState: [''],
       livingInCity: [''],
+      countryCodeWeMet: [''],
+      cityWeMet: ['', Validators.maxLength(100)],
+      locationWeMet: ['', Validators.maxLength(100)],
       prefixCode: ['', Validators.required],
       whatsapp: ['', [Validators.required, Validators.maxLength(16), Validators.pattern(/^\+?[1-9]\d{7,14}$/)]],
       occupationArea: [[], Validators.required],
@@ -198,6 +203,9 @@ export class GuestFormComponent implements OnInit {
       livingInCode: this.guest.livingInCode,
       // livingInState: this.guest.livingInState,
       // livingInCity: this.guest.livingInCity,
+      countryCodeWeMet: this.guest.countryCodeWeMet,
+      cityWeMet: this.guest.cityWeMet,
+      locationWeMet: this.guest.locationWeMet,
       prefixCode: this.guest.prefixCode,
       whatsapp: this.guest.whatsapp,
       // occupationArea: this.guest.occupationArea,
@@ -565,5 +573,10 @@ export class GuestFormComponent implements OnInit {
   isInvalid(controlName: string): boolean {
     const control = this.f[controlName];
     return !!(control.invalid && (control.dirty || control.touched));
+  }
+
+  filterCountryWeMet(event: Event): void {
+    const value = (event.target as HTMLInputElement).value.toLowerCase();
+    this.filteredCountryWeMet = this.countries.filter(country => country.name.toLowerCase().includes(value));
   }
 }
