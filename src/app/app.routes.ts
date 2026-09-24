@@ -8,11 +8,6 @@ export const globalRoutes: Routes = [
   },
 
   {
-    path: 'hosted',
-    loadChildren: () => import('@pages/hosted/hosted.module').then(m => m.HostedModule),
-  },
-
-  {
     path: '404',
     component: NotFoundComponent,
   },
