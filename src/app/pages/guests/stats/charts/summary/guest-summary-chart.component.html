@@ -14,9 +14,11 @@
   <!-- Total -->
   <div *ngIf="selectedView === 'total'">
     <div class="summary-cards">
-      <div class="summary-card" *ngFor="let card of cards">
+      <div class="summary-card" *ngFor="let card of cards; trackBy: trackById" (click)="navigateToCard(card.label)">
         <button mat-icon-button class="icon-summary-card">
-          <mat-icon class="material-symbols-outlined">{{ card.icon }}</mat-icon>
+          <mat-icon class="material-symbols-outlined">
+            {{ card.icon }}
+          </mat-icon>
         </button>
 
         <div class="ctn-summary-card">

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
@@ -86,15 +86,13 @@ export class GuestsComponent implements OnInit {
     direction: '',
   });
 
-  constructor(
-    private fb: FormBuilder,
-    private _router: Router,
-    private _route: ActivatedRoute,
-    private _guests: GuestsService,
-    private _sortService: GuestSortService,
-    private _deleteService: GuestDeleteService,
-    private _errH: ErrorHandlerService
-  ) {}
+  private fb = inject(FormBuilder);
+  private _router = inject(Router);
+  private _route = inject(ActivatedRoute);
+  private _guests = inject(GuestsService);
+  private _sortService = inject(GuestSortService);
+  private _deleteService = inject(GuestDeleteService);
+  private _errH = inject(ErrorHandlerService);
 
   ngOnInit(): void {
     this.initFiltersForm();
@@ -514,22 +512,50 @@ export class GuestsComponent implements OnInit {
   // To see cards from stats
   private listenQueryParams(): void {
     this._route.queryParams.subscribe(params => {
-      const rating = params['rating'];
       const view = params['view'];
+      const rating = params['rating'];
       const groupType = params['groupType'];
+      const gift = params['gift'];
+      const gender = params['gender'];
+      const gay = params['gay'];
+      const continent = params['continent'];
+      const region = params['region'];
+      const country = params['country'];
+      const hometown = params['hometown'];
+      const livingIn = params['livingIn'];
+      const from = params['from'];
+      const to = params['to'];
+      const day = params['day'];
+      const birthDate = params['birthDate'];
 
       if (view) {
         this.currentView = view;
       }
 
-      if (rating || groupType) {
-        const currentFilters = this.filters$.value;
-
+      if (groupType || rating || gift !== undefined || gender || gay !== undefined || continent || region || country || hometown || livingIn || from || to || day || birthDate) {
         this.filters$.next({
-          ...currentFilters,
-          rating: rating ? Number(rating) : undefined,
+          ...this.filters$.value,
           groupType: groupType || undefined,
+          rating: rating ? Number(rating) : undefined,
+          gift: gift !== undefined ? gift === 'true' : undefined,
+          gender: gender || undefined,
+          gay: gay !== undefined ? gay === 'true' : undefined,
+          continent: continent || undefined,
+          region: region || undefined,
+          country: country || undefined,
+          hometown: hometown || undefined,
+          livingIn: livingIn || undefined,
+          from: from || undefined,
+          to: to || undefined,
+          day: day || undefined,
+          birthDate: birthDate || undefined,
         });
+
+        this.resetCards();
+      }
+
+      if (this.currentView === 'cards' && !this.cardsData.length) {
+        this.loadMoreCards();
       }
     });
   }

@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
 import Chart from 'chart.js/auto';
 import { ForceDirectedGraphController, EdgeLine } from 'chartjs-chart-graph';
@@ -10,9 +11,11 @@ Chart.register(ForceDirectedGraphController, EdgeLine, LinearScale, PointElement
 // Interfaces
 import { ISameArrivalDay, ISameStay, ITimelineDistribution, ITimelineItem, ITimelineView } from '@interfaces/stats-interface';
 
+// Helpers
+import { getRankingColors, RANKING_COLORS } from '@helpers/chart-colors';
+
 // Service
 import { FormatService } from '@services/format.service';
-import { getRankingColors, RANKING_COLORS } from '@helpers/chart-colors';
 
 @Component({
   selector: 'guest-timeline-chart',
@@ -21,6 +24,7 @@ import { getRankingColors, RANKING_COLORS } from '@helpers/chart-colors';
 })
 export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
   private _format = inject(FormatService);
+  private _router = inject(Router);
 
   @Input() timeline!: ITimelineDistribution;
 
@@ -152,6 +156,37 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
         responsive: true,
         // Horizontal bars improve text readability.
         indexAxis: 'y',
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+
+          const index = elements[0].index;
+          const item = data[index];
+
+          if (!item) {
+            return;
+          }
+
+          if (this.selectedView === 'years') {
+            const yearItem = item as ITimelineItem;
+            this.navigateToYear(yearItem.period);
+          }
+          if (this.selectedView === 'months') {
+            const monthItem = item as ITimelineItem;
+            this.navigateToMonth(monthItem.period);
+          }
+          if (this.selectedView === 'days') {
+            const dayItem = item as ITimelineItem;
+            this.navigateToDay(dayItem.period);
+            return;
+          }
+          if (this.selectedView === 'sameArrivalDay') {
+            const arrivalItem = item as ISameArrivalDay;
+            this.navigateToSameArrivalDay(arrivalItem.date);
+            return;
+          }
+        },
         plugins: {
           title: {
             display: true,
@@ -241,6 +276,21 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
       },
       options: {
         responsive: true,
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+
+          const index = elements[0].index;
+          const nodes = this.getNetworkNodes(data);
+          const node = nodes[index];
+
+          if (!node?.guestId) {
+            return;
+          }
+
+          this.navigateToGuest(node.guestId);
+        },
         plugins: {
           title: {
             display: true,
@@ -267,6 +317,7 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
     label: string;
     country: string;
     visitedDate: string;
+    guestId: string;
     gender: string;
   }[] {
     const nodes = new Map<
@@ -277,6 +328,7 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
         country: string;
         visitedDate: string;
         gender: string;
+        guestId: string;
       }
     >();
 
@@ -288,6 +340,7 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
         country: item.guest.hometownCode,
         visitedDate: item.guest.visitedDate,
         gender: item.guest.gender,
+        guestId: item.guest.guestId,
       });
       // Add every overlapping guest as a node.
       item.guests.forEach(guest => {
@@ -296,6 +349,7 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
           label: guest.fullName,
           country: guest.hometownCode,
           visitedDate: guest.visitedDate,
+          guestId: guest.guestId,
           gender: guest.gender,
         });
       });
@@ -380,5 +434,51 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
       return this._format.formatDay(item.period);
     }
     return item.period;
+  }
+
+  private navigateToYear(year: string): void {
+    this._router.navigate(['/guests'], {
+      queryParams: {
+        view: 'cards',
+        from: `${year}-01-01`,
+        to: `${year}-12-31`,
+      },
+    });
+  }
+
+  private navigateToMonth(month: string): void {
+    const [year, monthNumber] = month.split('-');
+    const lastDay = new Date(Number(year), Number(monthNumber), 0).getDate();
+
+    this._router.navigate(['/guests'], {
+      queryParams: {
+        view: 'cards',
+        from: `${month}-01`,
+        to: `${month}-${String(lastDay).padStart(2, '0')}`,
+      },
+    });
+  }
+
+  private navigateToDay(period: string): void {
+    this._router.navigate(['/guests'], {
+      queryParams: {
+        view: 'cards',
+        day: period,
+      },
+    });
+  }
+
+  private navigateToSameArrivalDay(date: string): void {
+    this._router.navigate(['/guests'], {
+      queryParams: {
+        view: 'cards',
+        from: date,
+        to: date,
+      },
+    });
+  }
+
+  private navigateToGuest(guestId: string): void {
+    this._router.navigate(['/guests', guestId]);
   }
 }

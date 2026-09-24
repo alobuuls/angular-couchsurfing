@@ -1,7 +1,9 @@
-import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
 import Chart from 'chart.js/auto';
 
+// Interfaces
 import { ISummaryCard, ISummaryDistribution, ISummaryView } from '@interfaces/stats-interface';
 
 @Component({
@@ -63,6 +65,8 @@ export class GuestSummaryChartComponent implements OnChanges {
       getData: summary => [summary.giftsReceived, summary.guestsWithoutGift],
     },
   };
+
+  private _router = inject(Router);
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['summary']) {
@@ -132,15 +136,12 @@ export class GuestSummaryChartComponent implements OnChanges {
 
     this.chart = new Chart(this.summaryChart.nativeElement, {
       type: config.type,
-
       data: {
         labels: config.labels,
-
         datasets: [
           {
             label: config.label,
             data: config.getData(this.summary),
-
             backgroundColor: [
               'rgba(255, 99, 132, 0.2)',
               'rgba(255, 159, 64, 0.2)',
@@ -150,34 +151,38 @@ export class GuestSummaryChartComponent implements OnChanges {
               'rgba(153, 102, 255, 0.2)',
               'rgba(201, 203, 207, 0.2)',
             ],
-
             borderColor: ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(201, 203, 207)'],
-
             borderWidth: 1,
-
             // Different color for each radar point.
             pointBackgroundColor: [
               'rgb(230, 99, 127)', // General
               'rgb(58, 98, 219)', // Solo
               'rgb(154, 230, 159)', // Groups
             ],
-
             pointBorderColor: ['rgb(204, 0, 44)', 'rgb(0, 19, 127)', 'rgb(0, 82, 35)'],
-
             // Slightly larger points.
             pointRadius: 8,
             pointHoverRadius: 10,
           },
         ],
       },
-
       options: {
         responsive: true,
+        onClick: (_event, elements) => {
+          if (!elements.length) return;
 
+          const index = elements[0].index;
+
+          if (index === 0) {
+            this.navigateToGiftGuests(true);
+          }
+          if (index === 1) {
+            this.navigateToGiftGuests(false);
+          }
+        },
         // Apply axis configuration only to bar charts.
         ...(config.type === 'bar' && {
           indexAxis: config.indexAxis ?? 'x',
-
           scales: {
             x: {
               beginAtZero: true,
@@ -185,7 +190,6 @@ export class GuestSummaryChartComponent implements OnChanges {
                 max: config.max,
               }),
             },
-
             y: {
               beginAtZero: true,
               ...(config.max !== undefined && {
@@ -194,23 +198,60 @@ export class GuestSummaryChartComponent implements OnChanges {
             },
           },
         }),
-
         // Apply radial scale configuration only to radar charts.
         ...(config.type === 'radar' && {
           scales: {
             r: {
               beginAtZero: true,
-
               ...(config.max !== undefined && {
                 max: config.max,
               }),
-
               ticks: {
                 precision: 0,
               },
             },
           },
         }),
+      },
+    });
+  }
+
+  private navigateToCards(groupType: string): void {
+    this._router.navigate(['/guests'], {
+      queryParams: {
+        view: 'cards',
+        groupType: groupType || undefined,
+      },
+    });
+  }
+
+  private readonly cardNavigation: Record<string, string> = {
+    'Total Guests': '',
+    'Solo Guests': 'solo',
+    'Group Guests': 'all-groups',
+    'Total Visits': '',
+    'Total Nights': '',
+    default: 'solo',
+  };
+
+  navigateToCard(label: string): void {
+    this.navigateToCards(this.cardNavigation[label] ?? this.cardNavigation['default']);
+  }
+
+  trackById(index: number, item: ISummaryCard): string {
+    return item.label;
+  }
+
+  private readonly giftNavigation: Record<string, boolean> = {
+    Received: true,
+    'Without Gift': false,
+  };
+
+  private navigateToGiftGuests(hasGift: boolean): void {
+    this._router.navigate(['/guests'], {
+      queryParams: {
+        view: 'cards',
+        gift: hasGift,
       },
     });
   }

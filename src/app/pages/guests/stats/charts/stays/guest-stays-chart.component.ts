@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
 import Chart from 'chart.js/auto';
 import { LinearScale, PointElement } from 'chart.js';
@@ -12,6 +13,8 @@ import { ILongestView, IStaysDistribution, IStaysView } from '@interfaces/stats-
 
 // Services
 import { FormatService } from '@services/format.service';
+
+// Helpers
 import { GENDER_COLORS, getGenderColor, getRankingColors } from '@helpers/chart-colors';
 
 @Component({
@@ -21,6 +24,7 @@ import { GENDER_COLORS, getGenderColor, getRankingColors } from '@helpers/chart-
 })
 export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   private _format = inject(FormatService);
+  private _router = inject(Router);
 
   // Stays data received from parent
   @Input() stays!: IStaysDistribution;
@@ -211,6 +215,18 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
       },
       options: {
         responsive: true,
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+          const index = elements[0].index;
+          const guest = people[index].guest;
+
+          if (!guest?.guestId) {
+            return;
+          }
+          this.navigateToGuest(guest.guestId);
+        },
         maintainAspectRatio: false,
         plugins: {
           title: {
@@ -282,6 +298,16 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
       },
       options: {
         responsive: true,
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+
+          const index = elements[0].index;
+          const selectedData = index === 0 ? overall : solo;
+
+          this.navigateToPeopleTogether(selectedData.guests);
+        },
         maintainAspectRatio: false,
         plugins: {
           title: {
@@ -463,6 +489,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
       id: guest.guestId,
       label: guest.fullName,
       gender: guest.gender,
+      guestId: guest.guestId,
     }));
 
     // Connect every guest with the other guests in the same group.
@@ -501,6 +528,18 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
 
       options: {
         responsive: true,
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+          const index = elements[0].index;
+          const node = nodes[index];
+
+          if (!node?.guestId) {
+            return;
+          }
+          this.navigateToGuest(node.guestId);
+        },
         maintainAspectRatio: false,
         plugins: {
           title: {
@@ -605,5 +644,27 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
   // Clean up chart when the component is destroyed.
   ngOnDestroy(): void {
     this.destroyChart();
+  }
+
+  private navigateToGuest(guestId: string): void {
+    this._router.navigate(['/guests', guestId]);
+  }
+
+  private navigateToPeopleTogether(guests: typeof this.stays.maxPeopleTogether.overall.guests): void {
+    if (!guests.length) {
+      return;
+    }
+
+    const dates = guests.map(guest => guest.visitedDate);
+    const from = dates.reduce((earliest, date) => (date < earliest ? date : earliest));
+    const to = dates.reduce((latest, date) => (date > latest ? date : latest));
+
+    this._router.navigate(['/guests'], {
+      queryParams: {
+        view: 'cards',
+        from,
+        to,
+      },
+    });
   }
 }

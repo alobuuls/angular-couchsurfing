@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
 import Chart from 'chart.js/auto';
 
@@ -19,6 +20,7 @@ import { FormatService } from '@services/format.service';
 })
 export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   private _format = inject(FormatService);
+  private _router = inject(Router);
 
   // Birthdays data received from parent
   @Input() birthdays!: IBirthdaysDistribution;
@@ -124,6 +126,18 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
       },
       options: {
         responsive: true,
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+          const index = elements[0].index;
+          const item = repeated[index];
+
+          if (!item) {
+            return;
+          }
+          this.navigateToBirthday(item.month, item.day);
+        },
         maintainAspectRatio: false,
         plugins: {
           title: {
@@ -236,6 +250,18 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
       },
       options: {
         responsive: true,
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+          const index = elements[0].index;
+          const item = unusual[index];
+
+          if (!item) {
+            return;
+          }
+          this.navigateToBirthday(item.month, item.day);
+        },
         maintainAspectRatio: false,
         layout: {
           padding: {
@@ -406,6 +432,20 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
       },
       options: {
         responsive: true,
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+          const index = elements[0].index;
+          const cell = calendarData[index];
+          if (!cell || cell.v === 0) {
+            return;
+          }
+          const monthIndex = months.indexOf(cell.x) + 1;
+          const day = Number(cell.y);
+
+          this.navigateToBirthday(monthIndex, day);
+        },
         maintainAspectRatio: false,
         layout: {
           padding: {
@@ -504,5 +544,16 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
   // Clean up chart when the component is destroyed.
   ngOnDestroy(): void {
     this.destroyChart();
+  }
+
+  private navigateToBirthday(month: number, day: number): void {
+    const birthDate = `${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+    this._router.navigate(['/guests'], {
+      queryParams: {
+        view: 'cards',
+        birthDate,
+      },
+    });
   }
 }

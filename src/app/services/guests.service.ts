@@ -27,18 +27,41 @@ export class GuestsService {
     region,
     ambassador,
     didTheyReq,
+    gift,
+    gender,
+    gay,
+    hometown,
+    livingIn,
+    year,
+    day,
+    birthDate,
   }: IQueryParamsGuests): Observable<IGuestsResp> {
     let params = new HttpParams().set('limit', String(limit)).set('page', String(page));
-    if (country) params = params.set('country', String(country));
-    if (from) params = params.set('from', String(from));
-    if (to) params = params.set('to', String(to));
-    if (groupType) params = params.set('groupType', String(groupType));
-    if (continent) params = params.set('continent', String(continent));
+
+    if (country) params = params.set('country', country);
+    if (from) params = params.set('from', from);
+    if (to) params = params.set('to', to);
+    if (continent) params = params.set('continent', continent);
     if (isFirstTime !== undefined) params = params.set('isFirstTime', String(isFirstTime));
     if (rating !== undefined) params = params.set('rating', String(rating));
     if (region !== undefined) params = params.set('region', String(region));
     if (ambassador !== undefined) params = params.set('ambassador', String(ambassador));
     if (didTheyReq !== undefined) params = params.set('didTheyReq', String(didTheyReq));
+    if (groupType !== undefined && groupType !== 'all-groups') params = params.set('groupType', String(groupType));
+    if (gift !== undefined) params = params.set('gift', String(gift));
+    if (gender !== undefined) params = params.set('gender', String(gender));
+    if (gay !== undefined) params = params.set('gay', String(gay));
+    if (hometown !== undefined) params = params.set('hometown', hometown);
+    if (livingIn !== undefined) params = params.set('livingIn', livingIn);
+    if (year !== undefined) params = params.set('year', String(year));
+    if (day !== undefined) params = params.set('day', String(day));
+    if (birthDate !== undefined) params = params.set('birthDate', String(birthDate));
+
+    if (groupType === 'all-groups') {
+      params = params.append('groupType', 'friends');
+      params = params.append('groupType', 'couple');
+      params = params.append('groupType', 'family');
+    }
     return this.http.get<IGuestsResp>(this.urlGuests, { params });
   }
 

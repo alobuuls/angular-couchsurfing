@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
 import Chart from 'chart.js/auto';
 
@@ -13,6 +14,7 @@ import {
   IGeographyRegion,
   IGeographyView,
 } from '@interfaces/stats-interface';
+import { IQueryParamsGuests } from '@interfaces/guests.interface';
 
 // Services
 import { FormatService } from '@services/format.service';
@@ -32,6 +34,7 @@ import { CONTINENT_COLORS, GENDER_COLORS, getGenderColor, getRankingColors, RANK
 })
 export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
   private _format = inject(FormatService);
+  private _router = inject(Router);
 
   @Input() geography!: IGeographyDistribution;
 
@@ -100,7 +103,6 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
       getTopData: () => [],
       getBottomData: () => [],
     },
-
     regions: {
       label: 'Guests by Region',
       type: 'bar',
@@ -108,7 +110,6 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
       getTopData: geography => geography.regions.top,
       getBottomData: geography => geography.regions.bottom,
     },
-
     countries: {
       label: 'Guests by Country',
       type: 'bar',
@@ -116,7 +117,6 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
       getTopData: geography => geography.countries.top,
       getBottomData: geography => geography.countries.bottom,
     },
-
     livingIn: {
       label: 'Guests Living In',
       type: 'bar',
@@ -124,7 +124,6 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
       getTopData: () => [],
       getBottomData: () => [],
     },
-
     hometown: {
       label: 'Guests Hometown',
       type: 'bar',
@@ -203,7 +202,6 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
           : geographyData.map(item => item.total);
 
     const isRankingChart = this.selectedRanking !== 'all' || this.selectedView === 'livingIn' || this.selectedView === 'hometown';
-
     const colors = isRankingChart
       ? getRankingColors(chartValues)
       : {
@@ -249,16 +247,50 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
       },
       options: {
         responsive: true,
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+
+          const index = elements[0].index;
+          const item = geographyData[index];
+
+          if (!item) {
+            return;
+          }
+
+          if (this.selectedView === 'continents') {
+            const continent = item as IGeographyContinent;
+            this.navigateToContinent(continent.code.toLowerCase());
+          }
+
+          if (this.selectedView === 'regions') {
+            const region = item as IGeographyRegion;
+            this.navigateToRegion(region.code);
+          }
+
+          if (this.selectedView === 'countries') {
+            const country = item as IGeographyCountry;
+            this.navigateToCountry(country.code);
+          }
+          if (this.selectedView === 'livingIn') {
+            const location = item as IGeographyLocation;
+            this.navigateToLivingIn(location.name);
+          }
+
+          if (this.selectedView === 'hometown') {
+            const location = item as IGeographyLocation;
+            this.navigateToHometown(location.name);
+          }
+        },
         indexAxis: config.type === 'bar' ? 'y' : 'x',
         plugins: {
           title: {
             display: true,
             text: this.getChartTitle(config.label),
           },
-
           legend: {
             display: true,
-
             labels:
               this.selectedView === 'regions' || this.selectedView === 'countries' || this.selectedView === 'livingIn' || this.selectedView === 'hometown'
                 ? {
@@ -604,6 +636,20 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
       },
       options: {
         responsive: true,
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+
+          const index = elements[0].index;
+          const guest = guests[index];
+
+          if (!guest?.guestId) {
+            return;
+          }
+
+          this.navigateToGuest(guest.guestId);
+        },
         layout: {
           padding: {
             left: 15,
@@ -701,5 +747,115 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
         },
       },
     });
+  }
+
+  // Click on chart
+  private readonly continentNavigation: Record<string, IQueryParamsGuests['continent']> = {
+    america: 'america',
+    asia: 'asia',
+    africa: 'africa',
+    europe: 'europe',
+    oceania: 'oceania',
+  };
+
+  private navigateToContinent(continent: string): void {
+    const filters = this.continentNavigation[continent];
+
+    if (!filters) {
+      return;
+    }
+
+    this._router.navigate(['/guests'], {
+      queryParams: {
+        view: 'cards',
+        continent: filters,
+      },
+    });
+  }
+
+  private readonly regionNavigation: Record<string, IQueryParamsGuests['region']> = {
+    northern_africa: 'northern_africa',
+    western_africa: 'western_africa',
+    central_africa: 'central_africa',
+    eastern_africa: 'eastern_africa',
+    southern_africa: 'southern_africa',
+
+    north_america: 'north_america',
+    south_america: 'south_america',
+    caribbean: 'caribbean',
+    central_america: 'central_america',
+
+    central_asia: 'central_asia',
+    east_asia: 'east_asia',
+    south_asia: 'south_asia',
+    southeast_asia: 'southeast_asia',
+    west_asia: 'west_asia',
+
+    northern_europe: 'northern_europe',
+    scandinavia: 'scandinavia',
+    baltics: 'baltics',
+    central_europe: 'central_europe',
+    western_europe: 'western_europe',
+    eastern_europe: 'eastern_europe',
+    southern_europe: 'southern_europe',
+
+    melanesia: 'melanesia',
+    micronesia: 'micronesia',
+    polinesia: 'polinesia',
+    oceania: 'oceania',
+  };
+
+  private navigateToRegion(region: string): void {
+    const filters = this.regionNavigation[region];
+
+    if (!filters) {
+      return;
+    }
+
+    this._router.navigate(['/guests'], {
+      queryParams: {
+        view: 'cards',
+        region: filters,
+      },
+    });
+  }
+
+  private navigateToCountry(country: string): void {
+    this._router.navigate(['/guests'], {
+      queryParams: {
+        view: 'cards',
+        country,
+      },
+    });
+  }
+
+  private navigateToLivingIn(location: string): void {
+    if (!location) {
+      return;
+    }
+
+    this._router.navigate(['/guests'], {
+      queryParams: {
+        view: 'cards',
+        livingIn: location.toLowerCase().replace(/\s+/g, '-'),
+      },
+    });
+  }
+
+  private navigateToHometown(location: string): void {
+    if (!location) {
+      return;
+    }
+
+    this._router.navigate(['/guests'], {
+      queryParams: {
+        view: 'cards',
+        hometown: location.toLowerCase().replace(/\s+/g, '-'),
+      },
+    });
+  }
+
+  private navigateToGuest(guestId: string): void {
+    this._router.navigate(['/guests', guestId]);
   }
 }
