@@ -17,6 +17,7 @@ import { IBodyGuest, IGroupDetail, IGroupEdit, IGuestDetail, IGuestsFormSubmit }
 export class GuestsEditComponent implements OnInit {
   guest?: IGuestDetail;
   group?: IGroupEdit;
+  groupId?: string;
 
   constructor(
     private _guests: GuestsService,
@@ -34,6 +35,7 @@ export class GuestsEditComponent implements OnInit {
     const groupId = this.route.snapshot.paramMap.get('groupId');
 
     if (groupId) {
+      this.groupId = groupId;
       this._guests.getGroupById(groupId).subscribe(resp => {
         this.group = resp.data;
       });
@@ -61,30 +63,46 @@ export class GuestsEditComponent implements OnInit {
 
       this._guests.updateGuestById(this.guest.guestId, payload).subscribe({
         next: () => {
-          this._alerts.showToast({ icon: 'success', title: 'Guest updated successfully' });
+          this._alerts.showToast({
+            icon: 'success',
+            title: 'Guest updated successfully',
+          });
           this.router.navigateByUrl('/guests');
         },
-        error: () => this._alerts.showToast({ icon: 'error', title: 'Error updating guest' }),
+        error: () =>
+          this._alerts.showToast({
+            icon: 'error',
+            title: 'Error updating guest',
+          }),
       });
       return;
     }
 
     // Group
-    if (!this.group) return;
+    if (!this.group || !this.groupId) {
+      return;
+    }
 
     const payload: IGroupDetail = {
-      groupId: this.group[0].groupId,
+      groupId: this.groupId,
       groupType: data.groupType,
       ...data.trip,
       members: data.guests,
     };
 
-    this._guests.updateGroupById(this.group[0].guestId, payload).subscribe({
+    this._guests.updateGroupById(this.groupId, payload).subscribe({
       next: () => {
-        this._alerts.showToast({ icon: 'success', title: 'Guest updated successfully' });
+        this._alerts.showToast({
+          icon: 'success',
+          title: 'Guest updated successfully',
+        });
         this.router.navigateByUrl('/guests');
       },
-      error: () => this._alerts.showToast({ icon: 'error', title: 'Error updating guest' }),
+      error: () =>
+        this._alerts.showToast({
+          icon: 'error',
+          title: 'Error updating guest',
+        }),
     });
   }
 }
