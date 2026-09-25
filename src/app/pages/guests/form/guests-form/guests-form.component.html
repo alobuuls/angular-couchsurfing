@@ -29,10 +29,11 @@
   <!-- EDIT -->
   <ng-container *ngIf="mode === 'edit'">
     <!-- Solo -->
-    <app-guest-form *ngIf="guest" [guest]="guest"> </app-guest-form>
+    <app-guest-form *ngIf="guest" [guest]="guest" [selectedGroupType]="selectedGroupType"> </app-guest-form>
 
     <!-- Group -->
-    <app-guest-form *ngFor="let member of group" [guest]="member"> </app-guest-form>
+    <app-guest-form *ngFor="let member of group" [guest]="member" [selectedGroupType]="selectedGroupType">
+    </app-guest-form>
   </ng-container>
 
   <!-- Add Guest -->

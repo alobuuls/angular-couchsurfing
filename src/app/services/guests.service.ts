@@ -90,8 +90,8 @@ export class GuestsService {
     return this.http.post<IGuestCreateResp>(this.urlGuestsGroups, payload);
   }
 
-  updateGroupById(guestId: string, group: IGroupDetail): Observable<IGuestCreateResp> {
-    return this.http.put<IGuestCreateResp>(`${this.urlGuestsGroups}/guests/${guestId}`, group);
+  updateGroupById(groupId: string, group: IGroupDetail): Observable<IGuestCreateResp> {
+    return this.http.put<IGuestCreateResp>(`${this.urlGuestsGroups}/${groupId}`, group);
   }
 
   removeGroupById(groupId: string): Observable<IGuestDeleteResp> {
