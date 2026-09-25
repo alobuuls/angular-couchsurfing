@@ -114,6 +114,7 @@ export class GuestsComponent implements OnInit {
       from: [new Date(2023, 0, 1)],
       to: [new Date()],
       isFirstTime: [''],
+      hangOut: [''],
       ambassador: [''],
       didTheyReq: [''],
     });
@@ -132,6 +133,7 @@ export class GuestsComponent implements OnInit {
       isFirstTime: this.getBooleanFilter(formValue.isFirstTime),
       ambassador: this.getBooleanFilter(formValue.ambassador),
       didTheyReq: this.getBooleanFilter(formValue.didTheyReq),
+      hangOut: this.getBooleanFilter(formValue.hangOut),
     };
 
     this.filters$.next(filters);
@@ -152,7 +154,7 @@ export class GuestsComponent implements OnInit {
   }
 
   clearFilters(): void {
-    this.filtersForm.reset({ country: '', continent: '', groupType: '', from: '', to: '', isFirstTime: '', region: '', ambassador: '', didTheyReq: '' });
+    this.filtersForm.reset({ country: '', continent: '', groupType: '', from: '', to: '', isFirstTime: '', region: '', ambassador: '', didTheyReq: '', hangOut: '' });
 
     // Show all countries again to autocomplete
     this.filteredCountries = [...this.countries];
