@@ -25,6 +25,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Create .env
+        run: |
+          echo "NG_APP_KEY_CITIES=${{ secrets.NG_APP_KEY_CITIES }}" >> .env
+          echo "NG_APP_KEY_CARTO=${{ secrets.NG_APP_KEY_CARTO }}" >> .env
+
       - name: Build Angular
         run: npm run build -- --configuration production --base-href /angular-couchsurfing/
 
