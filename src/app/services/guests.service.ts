@@ -23,6 +23,7 @@ export class GuestsService {
     groupType,
     continent,
     isFirstTime,
+    hangOut,
     rating,
     region,
     ambassador,
@@ -43,6 +44,7 @@ export class GuestsService {
     if (to) params = params.set('to', to);
     if (continent) params = params.set('continent', continent);
     if (isFirstTime !== undefined) params = params.set('isFirstTime', String(isFirstTime));
+    if (hangOut !== undefined) params = params.set('hangOut', String(hangOut));
     if (rating !== undefined) params = params.set('rating', String(rating));
     if (region !== undefined) params = params.set('region', String(region));
     if (ambassador !== undefined) params = params.set('ambassador', String(ambassador));

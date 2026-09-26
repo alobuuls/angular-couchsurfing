@@ -129,6 +129,7 @@ export interface IQueryParamsGuests {
   groupType?: 'solo' | 'family' | 'friends' | 'couple' | 'all-groups';
   continent?: Continents;
   isFirstTime?: boolean;
+  hangOut?: boolean;
   rating?: number;
   region?: Regions;
   ambassador?: boolean;

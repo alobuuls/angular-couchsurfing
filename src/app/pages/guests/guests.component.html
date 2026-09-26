@@ -108,6 +108,17 @@
       </mat-select>
     </mat-form-field>
 
+    <!-- HANG OUT -->
+    <mat-form-field appearance="outline">
+      <mat-label>Hang Out</mat-label>
+      <mat-icon class="material-symbols-outlined" matPrefix>door_open</mat-icon>
+      <mat-select formControlName="hangOut">
+        <mat-option value=""> <mat-icon class="material-symbols-outlined">door_open</mat-icon>All</mat-option>
+        <mat-option [value]="true"> <mat-icon class="material-symbols-outlined">check_circle</mat-icon>Yes</mat-option>
+        <mat-option [value]="false"> <mat-icon class="material-symbols-outlined">cancel</mat-icon>No</mat-option>
+      </mat-select>
+    </mat-form-field>
+
     <!-- AMBASSADOR -->
     <mat-form-field appearance="outline">
       <mat-label>Ambassador</mat-label>
