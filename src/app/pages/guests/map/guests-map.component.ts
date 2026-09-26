@@ -17,6 +17,7 @@ import { ICountry } from '@type/word.types';
 
 import { union } from '@turf/union';
 import { featureCollection } from '@turf/helpers';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'guests-map',
@@ -347,7 +348,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     });
 
     // TILE LAYER
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    L.tileLayer(`https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=${environment.apiKeyCarto}`, {
       attribution: '&copy; OpenStreetMap &copy; CARTO',
       subdomains: 'abcd',
       maxZoom: 19,
@@ -367,11 +368,11 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
     // INVALIDATE SIZE
     requestAnimationFrame(() => {
-      this.map?.invalidateSize({animate: false });
+      this.map?.invalidateSize({ animate: false });
     });
 
     setTimeout(() => {
-      this.map?.invalidateSize({ animate: false,});
+      this.map?.invalidateSize({ animate: false });
     }, 100);
   }
 
@@ -422,7 +423,6 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
       });
     });
   }
-
 
   // COUNTRY STYLE
   private getCountryStyle(feature: any): L.PathOptions {
