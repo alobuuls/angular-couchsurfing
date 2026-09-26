@@ -12,13 +12,39 @@ export const collapseIfSame = <T, R>(items: T[], getValue: (item: T) => R): R[] 
   return allEqual ? [first] : values;
 };
 
-export const getAge = (birthDate?: string): number | '?' => {
-  if (!birthDate) return '?';
-  const birth = new Date(birthDate);
-  const today = new Date();
-  let age = today.getFullYear() - birth.getFullYear();
-  if (today.getMonth() < birth.getMonth() || (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate())) {
-    age--;
+const parseBirthDate = (dateString: string): Date => {
+  const [year, month = 1, day = 1] = dateString.split('-').map(Number);
+  return new Date(year, month - 1, day);
+};
+
+const parseDate = (dateString: string): Date => {
+  const [year, month = 1, day = 1] = dateString.split('-').map(Number);
+  return new Date(year, month - 1, day);
+};
+
+export const getAges = (visitedDate: string, birthDate?: string | null): { ageWhenVisited: number | '?'; currentAge: number | '?'; birthDate: string } => {
+  if (!visitedDate || !birthDate) {
+    return {
+      ageWhenVisited: '?',
+      currentAge: '?',
+      birthDate: '?',
+    };
   }
-  return age;
+
+  const birth = parseBirthDate(birthDate);
+  const visited = parseDate(visitedDate);
+  const today = new Date();
+
+  const calculateAge = (date: Date): number => {
+    let age = date.getFullYear() - birth.getFullYear();
+    const birthdayHasNotHappened = date.getMonth() < birth.getMonth() || (date.getMonth() === birth.getMonth() && date.getDate() < birth.getDate());
+    if (birthdayHasNotHappened) age--;
+    return age;
+  };
+
+  return {
+    currentAge: calculateAge(today),
+    ageWhenVisited: calculateAge(visited),
+    birthDate,
+  };
 };

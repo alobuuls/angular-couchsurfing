@@ -1,6 +1,6 @@
 import { IGuestListItem } from '@interfaces/guests.interface';
 import { IGuestTableRow } from '@interfaces/data-structure-api';
-import { getAge, isGroup } from '@helpers/guests-table.utils';
+import { getAges, isGroup } from '@helpers/guests-table.utils';
 
 export const mapGuestTable = (guests: IGuestListItem[]): IGuestTableRow[] => {
   return guests.map(guest => {
@@ -21,7 +21,7 @@ export const mapGuestTable = (guests: IGuestListItem[]): IGuestTableRow[] => {
           fullName: m.fullName,
           guestId: m.guestId,
           gender: m.gender,
-          age: getAge(m.birthDate),
+          age: getAges(guest.visitedDate, m.birthDate),
           continent: m.continent,
           whatsapp: m.prefixCode == null || m.whatsapp == null ? null : m.prefixCode + m.whatsapp,
 
@@ -29,12 +29,12 @@ export const mapGuestTable = (guests: IGuestListItem[]): IGuestTableRow[] => {
 
           hometown: {
             code: m.hometownCode,
-            city: m.hometown,
+            city: m.hometown ?? 'Unknown City',
           },
 
           livingIn: {
             code: m.livingInCode,
-            city: m.livingIn,
+            city: m.livingIn ?? 'Unknown City',
           },
 
           hangOut: m.hangOut,
@@ -59,18 +59,18 @@ export const mapGuestTable = (guests: IGuestListItem[]): IGuestTableRow[] => {
           groupId: guest.groupId,
           fullName: guest.fullName,
           gender: guest.gender,
-          age: getAge(guest.birthDate),
+          age: getAges(guest.visitedDate, guest.birthDate),
           continent: guest.continent,
           whatsapp: guest.prefixCode == null || guest.whatsapp == null ? null : guest.prefixCode + guest.whatsapp,
           couchsurfing: guest.urlProfileCs ?? null,
           hometown: {
             code: guest.hometownCode,
-            city: guest.hometown,
+            city: guest.hometown ?? 'Unknown City',
           },
 
           livingIn: {
             code: guest.livingInCode,
-            city: guest.livingIn,
+            city: guest.livingIn ?? 'Unknown City',
           },
 
           hangOut: guest.hangOut,

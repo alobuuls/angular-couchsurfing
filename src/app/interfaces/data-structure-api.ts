@@ -22,10 +22,15 @@ export interface GuestsVM {
   error?: IErrResp;
 }
 
+interface IAge {
+  ageWhenVisited: number | '?';
+  currentAge: number | '?';
+}
+
 export interface IGuestTableMember {
   fullName: string;
   gender: string;
-  age: number | '?';
+  age: IAge;
   continent: string;
 
   whatsapp: string | null;
