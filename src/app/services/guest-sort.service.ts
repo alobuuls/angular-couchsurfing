@@ -61,21 +61,11 @@ export class GuestSortService {
       const hasGender = (gender: string) => guest.people?.some(p => p.gender?.toLowerCase() === gender);
 
       if (asc) {
-        if (hasGender('female') && !isGroup) {
-          return 0;
-        }
-
-        if (hasGender('female') && isGroup) {
-          return 1;
-        }
+        if (hasGender('female') && !isGroup) return 0;
+        if (hasGender('female') && isGroup) return 1;
       } else {
-        if (hasGender('male') && !isGroup) {
-          return 0;
-        }
-
-        if (hasGender('male') && isGroup) {
-          return 1;
-        }
+        if (hasGender('male') && !isGroup) return 0;
+        if (hasGender('male') && isGroup) return 1;
       }
 
       return 2;
@@ -93,7 +83,7 @@ export class GuestSortService {
     }
 
     if (field === 'birth_date') {
-      const ages = guest.people?.map(p => Number(p.age)).filter(age => !isNaN(age)) ?? [];
+      const ages = guest.people?.map(p => p.age?.ageWhenVisited).filter((age): age is number => typeof age === 'number') ?? [];
       if (!ages.length) return 2;
       return guest.people?.length === 1 ? 0 : 1;
     }
@@ -102,16 +92,16 @@ export class GuestSortService {
   }
 
   private getSortValue(guest: IGuestTableRow, field: string, asc: boolean): string | number {
+    // birth_date se calcula directamente desde ageWhenVisited
+    if (field === 'birth_date') return this.sortAccessors['birth_date'](guest);
+
     const values =
       guest.people
         ?.map(person => this.personAccessors[field]?.(person))
         .filter(value => value !== undefined && value !== '')
         .sort() ?? [];
 
-    if (values.length) {
-      return asc ? values[0] : values[values.length - 1];
-    }
-
+    if (values.length) return asc ? values[0] : values[values.length - 1];
     return this.sortAccessors[field]?.(guest) ?? guest[field as keyof IGuestTableRow];
   }
 
@@ -127,7 +117,7 @@ export class GuestSortService {
   private sortAccessors: Record<string, (guest: IGuestTableRow) => string | number> = {
     nights: guest => guest.nights ?? 0,
     visitedDate: guest => new Date(guest.visitedDate ?? 0).getTime(),
-    birth_date: guest => Math.min(...(guest.people?.map(p => (p.age === '?' || p.age == null ? 999 : Number(p.age))) ?? [999])),
+    birth_date: guest => Math.min(...(guest.people?.map(p => (typeof p.age?.ageWhenVisited === 'number' ? p.age.ageWhenVisited : Infinity)) ?? [Infinity])),
     hangOut: guest => (guest.people?.some(p => p.hangOut) ? 1 : 0),
   };
 

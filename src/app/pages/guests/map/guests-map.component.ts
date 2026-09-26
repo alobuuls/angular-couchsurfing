@@ -448,8 +448,8 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     // HAS GUESTS
     return {
       color: '#ffffff',
-      weight: 2,
-      opacity: 0.85,
+      weight: 0.5,
+      opacity: 1,
       fillColor: this.getCountryColor(count),
       fillOpacity: 0.75,
       interactive: true,
@@ -505,8 +505,8 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
         if (layer instanceof L.Path) {
           layer.setStyle({
             color: '#ffffff',
-            weight: 1,
-            opacity: 0.85,
+            weight: 0.5,
+            opacity: 1,
             fillColor: count > 0 ? this.getCountryColor(count) : '#000000',
             fillOpacity: count > 0 ? 0.85 : 0.35,
           });
@@ -529,7 +529,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
       layer.bindTooltip(`<strong>${countryName}</strong>`, {
         sticky: true,
         direction: 'top',
-        opacity: 0.95,
+        opacity: 1,
         className: 'country-zero-tooltip',
       });
 
@@ -540,7 +540,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     layer.bindTooltip(`<strong>${countryName}</strong>`, {
       sticky: true,
       direction: 'top',
-      opacity: 0.95,
+      opacity: 1,
       className: 'country-hover-tooltip',
     });
 
@@ -549,7 +549,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
       mouseover: (event: any) => {
         const target = event.target;
         target.setStyle({
-          weight: 2,
+          weight: 1.5,
           color: '#ffffff',
           fillOpacity: 0.95,
         });
@@ -751,8 +751,8 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
           return {
             color: '#ffffff',
-            weight: count > 0 ? 2 : 1,
-            opacity: count > 0 ? 0.9 : 0.45,
+            weight: count > 0 ? 0.5 : 1,
+            opacity: count > 0 ? 1 : 1,
             fillColor: count > 0 ? this.getCountryColor(count) : '#000000',
             fillOpacity: count > 0 ? 0.85 : 0.35,
             interactive: true,
@@ -790,7 +790,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     layer.bindTooltip(`<strong>${countryName}</strong>`, {
       sticky: true,
       direction: 'top',
-      opacity: 0.95,
+      opacity: 1,
       className: count > 0 ? 'country-hover-tooltip' : 'country-zero-tooltip',
     });
 
@@ -818,7 +818,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
         target.setStyle({
           weight: currentCount > 0 ? 2 : 1,
           color: '#ffffff',
-          opacity: currentCount > 0 ? 0.9 : 0.45,
+          opacity: currentCount > 0 ? 1 : 0.45,
           fillColor: currentCount > 0 ? this.getCountryColor(currentCount) : '#000000',
           fillOpacity: currentCount > 0 ? 0.85 : 0.35,
         });

@@ -1,3 +1,7 @@
+::ng-deep .mat-mdc-tooltip {
+  white-space: pre-line;
+}
+
 .ctn-guests {
   margin-top: 2.5rem;
   text-align: center;
