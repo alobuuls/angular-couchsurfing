@@ -232,64 +232,48 @@
       <mat-label>Country We Met</mat-label>
 
       <mat-icon class="material-symbols-outlined" matPrefix>public</mat-icon>
+      <mat-icon class="material-symbols-outlined icon-success" matSuffix *ngIf="isValid('countryCodeWeMet')">check_circle</mat-icon>
+      <mat-icon class="material-symbols-outlined icon-warning" matSuffix *ngIf="isInvalid('countryCodeWeMet')">error</mat-icon>
 
-      <mat-icon class="material-symbols-outlined" class="icon-success" matSuffix *ngIf="isValid('countryCodeWeMet')">
-        check_circle
-      </mat-icon>
-
-      <mat-icon class="material-symbols-outlined" class="icon-warning" matSuffix *ngIf="isInvalid('countryCodeWeMet')">
-        error
-      </mat-icon>
-
-      <input
-        matInput
-        formControlName="countryCodeWeMet"
-        [matAutocomplete]="autoCountryWeMet"
-        (input)="filterCountryWeMet($event)"
-      />
+      <input matInput formControlName="countryCodeWeMet" [matAutocomplete]="autoCountryWeMet" (input)="filterCountryWeMet($event)"/>
 
       <mat-autocomplete #autoCountryWeMet="matAutocomplete" [displayWith]="displayCountryCode">
         <mat-option *ngFor="let country of filteredCountryWeMet" [value]="country.countryCode">
-          <span [class]="country.countryCode | flag"></span>
-          {{ country.name }}
-        </mat-option>
+          <span [class]="country.countryCode | flag"></span>{{ country.name }}</mat-option>
       </mat-autocomplete>
+
+      <mat-error *ngIf="f['countryCodeWeMet'].hasError('required')">Country is required</mat-error>
+    </mat-form-field>
+
+    <!-- STATE WE MET -->
+    <mat-form-field appearance="outline" *ngIf="f['countryCodeWeMet'].value" class="select-field">
+      <mat-label>State We Met</mat-label>
+
+      <mat-icon class="material-symbols-outlined" matPrefix>map</mat-icon>
+
+      <mat-select formControlName="stateWeMet">
+        <mat-option *ngFor="let state of weMetStates" [value]="state">{{ state.name }}</mat-option>
+      </mat-select>
     </mat-form-field>
 
     <!-- CITY WE MET -->
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" *ngIf="f['stateWeMet'].value" class="select-field">
       <mat-label>City We Met</mat-label>
 
       <mat-icon class="material-symbols-outlined" matPrefix>location_city</mat-icon>
 
-      <mat-icon class="material-symbols-outlined" class="icon-success" matSuffix *ngIf="isValid('cityWeMet')">
-        check_circle
-      </mat-icon>
-
-      <mat-icon class="material-symbols-outlined" class="icon-warning" matSuffix *ngIf="isInvalid('cityWeMet')">
-        error
-      </mat-icon>
-
-      <input matInput formControlName="cityWeMet" maxlength="100" />
-
-      <mat-hint align="end"> {{ f['cityWeMet'].value?.length || 0 }}/100 </mat-hint>
-
-      <mat-error *ngIf="f['cityWeMet'].hasError('maxlength')"> Maximum 100 characters </mat-error>
+      <mat-select formControlName="cityWeMet">
+        <mat-option *ngFor="let city of weMetCities" [value]="city">{{ city.name }}</mat-option>
+      </mat-select>
     </mat-form-field>
 
     <!-- LOCATION WE MET -->
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" *ngIf="f['cityWeMet'].value">
       <mat-label>Location We Met</mat-label>
 
       <mat-icon class="material-symbols-outlined" matPrefix>place</mat-icon>
-
-      <mat-icon class="material-symbols-outlined" class="icon-success" matSuffix *ngIf="isValid('locationWeMet')">
-        check_circle
-      </mat-icon>
-
-      <mat-icon class="material-symbols-outlined" class="icon-warning" matSuffix *ngIf="isInvalid('locationWeMet')">
-        error
-      </mat-icon>
+      <mat-icon class="material-symbols-outlined" class="icon-success" matSuffix *ngIf="isValid('locationWeMet')">check_circle</mat-icon>
+      <mat-icon class="material-symbols-outlined" class="icon-warning" matSuffix *ngIf="isInvalid('locationWeMet')">error</mat-icon>
 
       <input matInput formControlName="locationWeMet" maxlength="100" />
 
@@ -301,17 +285,20 @@
     <!-- PREFIX -->
     <div class="phone-row">
       <!-- PREFIX -->
-      <mat-form-field appearance="outline" class="prefix-field select-field">
+      <mat-form-field appearance="outline" class="prefix-field">
         <mat-label>Prefix</mat-label>
 
-        <mat-icon class="material-symbols-outlined" matPrefix>dialpad</mat-icon>
+        <span matPrefix *ngIf="selectedPrefixCountry">
+          <span [class]="selectedPrefixCountry.countryCode | flag"></span>
+        </span>
 
-        <mat-select formControlName="prefixCode">
-          <mat-option *ngFor="let country of countries" [value]="country.prefix">
-            <span [class]="country.countryCode | flag"></span>
-            {{ country.prefix }}
+        <input matInput formControlName="prefixCode" [matAutocomplete]="autoPrefix" (input)="filterPrefixes($event)"autocomplete="tel"/>
+
+        <mat-autocomplete #autoPrefix="matAutocomplete" [displayWith]="displayPrefix" (optionSelected)="selectPrefix($event)">
+          <mat-option *ngFor="let country of filteredPrefixCountries" [value]="country">
+            <span [class]="country.countryCode | flag"></span>{{ country.prefix }}
           </mat-option>
-        </mat-select>
+        </mat-autocomplete>
 
         <mat-error *ngIf="f['prefixCode'].hasError('required')"> Prefix is required </mat-error>
       </mat-form-field>
@@ -319,23 +306,14 @@
       <!-- WHATSAPP -->
       <mat-form-field appearance="outline" class="phone-field">
         <mat-label>Whatsapp</mat-label>
-
         <mat-icon class="material-symbols-outlined" matPrefix>phone</mat-icon>
+        <mat-icon class="material-symbols-outlined" class="icon-success" matSuffix *ngIf="isValid('whatsapp')">check_circle</mat-icon>
+        <mat-icon class="material-symbols-outlined" class="icon-warning" matSuffix *ngIf="isInvalid('whatsapp')">error</mat-icon>
 
-        <mat-icon class="material-symbols-outlined" class="icon-success" matSuffix *ngIf="isValid('whatsapp')">
-          check_circle
-        </mat-icon>
-
-        <mat-icon class="material-symbols-outlined" class="icon-warning" matSuffix *ngIf="isInvalid('whatsapp')">
-          error
-        </mat-icon>
-
-        <input type="tel" matInput formControlName="whatsapp" maxlength="16" />
+        <input type="tel" matInput formControlName="whatsapp" maxlength="16" autocomplete="tel" />
 
         <mat-error *ngIf="f['whatsapp'].hasError('required')"> Whatsapp is required </mat-error>
-
         <mat-error *ngIf="f['whatsapp'].hasError('pattern')"> Invalid phone number </mat-error>
-
         <mat-error *ngIf="f['whatsapp'].hasError('maxlength')"> Maximum 16 characters </mat-error>
       </mat-form-field>
     </div>
