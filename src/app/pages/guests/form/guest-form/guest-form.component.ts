@@ -9,6 +9,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 // Material
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 // Services
 import { AlertsService } from '@services/alerts.service';
@@ -17,9 +18,8 @@ import { CityService, ICity, IState } from '@services/city.service';
 // Interfaces
 import { IBodyGuest, IGuestDetail } from '@interfaces/guests.interface';
 
-//Types
-import { ICountry } from '@type/word.types';
-import { CountriesCodes } from '@type/word.types';
+// Types
+import { ICountry, CountriesCodes } from '@type/word.types';
 
 // Const
 import { WORLD } from '@config/world';
@@ -86,13 +86,19 @@ export class GuestFormComponent implements OnInit {
   filteredLiving: typeof this.countries = [];
   filteredCountryWeMet: typeof this.countries = [];
 
+  // Autocomplete Prefix
+  filteredPrefixCountries: typeof this.countries = [];
+  selectedPrefixCountry?: ICountry & { countryCode: CountriesCodes };
+
   // States
   hometownStates: IState[] = [];
   livingInStates: IState[] = [];
+  weMetStates: IState[] = [];
 
   // Cities
   hometownCities: ICity[] = [];
   livingInCities: ICity[] = [];
+  weMetCities: ICity[] = [];
 
   private readonly destroyRef = inject(DestroyRef);
 
@@ -120,6 +126,14 @@ export class GuestFormComponent implements OnInit {
     return this.formCreateGuest.get('prefixCode');
   }
 
+  private get weMetCountryCtrl() {
+    return this.formCreateGuest.get('countryCodeWeMet');
+  }
+
+  private get weMetStateCtrl() {
+    return this.formCreateGuest.get('stateWeMet');
+  }
+
   constructor(
     private fb: FormBuilder,
     private _alerts: AlertsService,
@@ -131,11 +145,12 @@ export class GuestFormComponent implements OnInit {
     this.initForm();
     this.loadDataCountries();
 
-    setTimeout(() => {
-      this.filteredCountries = this.countries;
-      this.filteredLiving = this.countries;
-      this.filteredCountryWeMet = this.countries;
-    });
+    this.filteredCountries = this.countries;
+    this.filteredLiving = this.countries;
+    this.filteredCountryWeMet = this.countries;
+    this.filteredPrefixCountries = this.countries;
+    
+    this.selectedPrefixCountry = this.countries.find(country => country.prefix === this.prefixCodeCtrl?.value);
 
     this.formCreateGuest.patchValue({ groupType: this.selectedGroupType });
 
@@ -146,6 +161,10 @@ export class GuestFormComponent implements OnInit {
 
     this.listenLivingCountry();
     this.listenLivingState();
+
+    this.listenWeMetCountry();
+    this.listenWeMetState();
+    this.initializeWeMetEdit();
   }
 
   initForm(): void {
@@ -163,8 +182,9 @@ export class GuestFormComponent implements OnInit {
       livingInCode: ['', Validators.required],
       livingInState: [''],
       livingInCity: [''],
-      countryCodeWeMet: [''],
-      cityWeMet: ['', Validators.maxLength(100)],
+      countryCodeWeMet: ['', Validators.required],
+      stateWeMet: [''],
+      cityWeMet: [''],
       locationWeMet: ['', Validators.maxLength(100)],
       prefixCode: ['', Validators.required],
       whatsapp: ['', [Validators.required, Validators.maxLength(16), Validators.pattern(/^\+?[1-9]\d{7,14}$/)]],
@@ -204,7 +224,6 @@ export class GuestFormComponent implements OnInit {
       // livingInState: this.guest.livingInState,
       // livingInCity: this.guest.livingInCity,
       countryCodeWeMet: this.guest.countryCodeWeMet,
-      cityWeMet: this.guest.cityWeMet,
       locationWeMet: this.guest.locationWeMet,
       prefixCode: this.guest.prefixCode,
       whatsapp: this.guest.whatsapp,
@@ -255,7 +274,7 @@ export class GuestFormComponent implements OnInit {
   }
 
   private buildGuestPayload(): IBodyGuest {
-    const { occupationArea, otherOccupation, hometownState, hometownCity, livingInState, livingInCity, ...guest } = this.formCreateGuest.getRawValue();
+    const { occupationArea, otherOccupation, hometownState, hometownCity, livingInState, livingInCity, stateWeMet, cityWeMet, ...guest } = this.formCreateGuest.getRawValue();
 
     const occupation = [...guest.occupation];
     const otherOccupationIndex = occupation.indexOf('Write another occupation');
@@ -274,6 +293,7 @@ export class GuestFormComponent implements OnInit {
       birthDate: this.formatDate(guest.birthDate),
       hometown: [hometownCity?.name, hometownState?.name].filter(Boolean).join(', '),
       livingIn: [livingInCity?.name, livingInState?.name].filter(Boolean).join(', '),
+      cityWeMet: [stateWeMet?.name, cityWeMet?.name].filter(Boolean).join(', '),
     };
 
     if (!guest.rating) {
@@ -297,10 +317,21 @@ export class GuestFormComponent implements OnInit {
     return errors?.['maxlength']?.['requiredLength'] || 0;
   }
 
+  // Display Autocomplete Country & Prefix
   displayCountryCode = (countryCode: string | null): string => {
     if (!countryCode) return '';
     const country = this.countries.find(country => country.countryCode === countryCode);
     return country?.name ?? '';
+  };
+
+  displayPrefix = (value: string | (ICountry & { countryCode: CountriesCodes }) | null): string => {
+    if (!value) {
+      return '';
+    }
+    if (typeof value === 'string') {
+      return value;
+    }
+    return value.prefix;
   };
 
   private onOccupation(): void {
@@ -408,6 +439,103 @@ export class GuestFormComponent implements OnInit {
     });
   }
 
+  private listenWeMetCountry(): void {
+    this.weMetCountryCtrl?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(countryCode => {
+      if (!countryCode) {
+        this.weMetStates = [];
+        this.weMetCities = [];
+        this.formCreateGuest.patchValue({
+          stateWeMet: '',
+          cityWeMet: '',
+        });
+        return;
+      }
+
+      const apiCountryCode = WORLD[countryCode as keyof typeof WORLD]?.flag;
+
+      if (!apiCountryCode) return;
+
+      this._city
+        .getStates(apiCountryCode)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((states: IState[]) => {
+          this.weMetStates = states;
+          this.weMetCities = [];
+          this.formCreateGuest.patchValue({
+            stateWeMet: '',
+            cityWeMet: '',
+          });
+        });
+    });
+  }
+
+  private listenWeMetState(): void {
+    this.weMetStateCtrl?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state: IState) => {
+      if (!state?.iso2) {
+        this.weMetCities = [];
+        return;
+      }
+
+      const countryCode = this.weMetCountryCtrl?.value;
+
+      if (!countryCode) return;
+
+      const apiCountryCode = WORLD[countryCode as keyof typeof WORLD]?.flag;
+
+      if (!apiCountryCode) return;
+
+      this._city
+        .getCities(apiCountryCode, state.iso2)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((cities: ICity[]) => {
+          this.weMetCities = cities;
+          this.formCreateGuest.patchValue({
+            cityWeMet: '',
+          });
+        });
+    });
+  }
+
+  private initializeWeMetEdit(): void {
+    if (!this.guest?.countryCodeWeMet) {
+      return;
+    }
+    const combinedCity = this.guest.cityWeMet?.trim();
+
+    if (!combinedCity) return;
+
+    const [stateName, ...cityParts] = combinedCity.split(',');
+    const cityName = cityParts.join(',').trim();
+    const apiCountryCode = WORLD[this.guest.countryCodeWeMet as keyof typeof WORLD]?.flag;
+
+    if (!apiCountryCode) return;
+
+    this._city
+      .getStates(apiCountryCode)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((states: IState[]) => {
+        this.weMetStates = states;
+
+        const state = states.find(item => item.name.toLowerCase() === stateName.trim().toLowerCase());
+
+        if (!state) return;
+
+        this.formCreateGuest.patchValue({ stateWeMet: state }, { emitEvent: false });
+        this._city
+          .getCities(apiCountryCode, state.iso2)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((cities: ICity[]) => {
+            this.weMetCities = cities;
+
+            const city = cities.find(item => item.name.toLowerCase() === cityName.toLowerCase());
+
+            if (!city) return;
+
+            this.formCreateGuest.patchValue({ cityWeMet: city }, { emitEvent: false });
+          });
+      });
+  }
+
   private findCountry(countryCode: string): (ICountry & { countryCode: CountriesCodes }) | undefined {
     return this.countries.find(country => country.countryCode === countryCode);
   }
@@ -451,9 +579,28 @@ export class GuestFormComponent implements OnInit {
       });
   }
 
+  // PREFIX
   private setDefaultPrefix(prefix: string): void {
     if (this.prefixCodeCtrl?.value) return;
     this.formCreateGuest.patchValue({ prefixCode: prefix });
+    this.selectedPrefixCountry = this.countries.find(country => country.prefix === prefix);
+  }
+
+  filterPrefixes(event: Event): void {
+    const value = (event.target as HTMLInputElement).value.toLowerCase().trim();
+
+    this.filteredPrefixCountries = this.countries.filter(country => country.name.toLowerCase().includes(value) || country.prefix.includes(value));
+  }
+
+  selectPrefix(event: MatAutocompleteSelectedEvent): void {
+    const country = event.option.value as ICountry & {
+      countryCode: CountriesCodes;
+    };
+
+    this.selectedPrefixCountry = country;
+    this.formCreateGuest.patchValue({
+      prefixCode: country.prefix,
+    });
   }
 
   private resetHometownLocation(): void {
@@ -472,6 +619,11 @@ export class GuestFormComponent implements OnInit {
     const value = (event.target as HTMLInputElement).value.toLowerCase();
 
     this.filteredLiving = this.countries.filter(country => country.name.toLowerCase().includes(value));
+  }
+
+  filterCountryWeMet(event: Event): void {
+    const value = (event.target as HTMLInputElement).value.toLowerCase();
+    this.filteredCountryWeMet = this.countries.filter(country => country.name.toLowerCase().includes(value));
   }
 
   // GIFTS
@@ -573,10 +725,5 @@ export class GuestFormComponent implements OnInit {
   isInvalid(controlName: string): boolean {
     const control = this.f[controlName];
     return !!(control.invalid && (control.dirty || control.touched));
-  }
-
-  filterCountryWeMet(event: Event): void {
-    const value = (event.target as HTMLInputElement).value.toLowerCase();
-    this.filteredCountryWeMet = this.countries.filter(country => country.name.toLowerCase().includes(value));
   }
 }
