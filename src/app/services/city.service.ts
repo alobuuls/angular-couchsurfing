@@ -16,7 +16,7 @@ export interface ICity {
 })
 export class CityService {
   private enpoint: string = environment.endpointApiCities;
-  private API_KEY: string = environment.API_KEY_CITIES;
+  private API_KEY: string = environment.apiKeyCities;
 
   constructor(private http: HttpClient) {}
 
