@@ -50,6 +50,7 @@ export class GuestsService {
     if (ambassador !== undefined) params = params.set('ambassador', String(ambassador));
     if (didTheyReq !== undefined) params = params.set('didTheyReq', String(didTheyReq));
     if (groupType !== undefined && groupType !== 'all-groups') params = params.set('groupType', String(groupType));
+    if (groupType === 'all-groups') params = params.set('groupType', 'couple,family,friends');
     if (gift !== undefined) params = params.set('gift', String(gift));
     if (gender !== undefined) params = params.set('gender', String(gender));
     if (gay !== undefined) params = params.set('gay', String(gay));
@@ -59,11 +60,6 @@ export class GuestsService {
     if (day !== undefined) params = params.set('day', String(day));
     if (birthDate !== undefined) params = params.set('birthDate', String(birthDate));
 
-    if (groupType === 'all-groups') {
-      params = params.append('groupType', 'friends');
-      params = params.append('groupType', 'couple');
-      params = params.append('groupType', 'family');
-    }
     return this.http.get<IGuestsResp>(this.urlGuests, { params });
   }
 

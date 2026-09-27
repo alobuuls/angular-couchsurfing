@@ -289,7 +289,7 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
             return;
           }
 
-          this.navigateToGuest(node.guestId);
+          this.navigateToGuest(node.guestId, node.groupType, node.groupId);
         },
         plugins: {
           title: {
@@ -303,7 +303,8 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
             callbacks: {
               label: context => {
                 const node = nodes[context.dataIndex];
-                return [`Country: ${this._format.formatCountry(node.country)}`, `Gender: ${node.gender}`, `Visit: ${this._format.formatDate(node.visitedDate)}`];
+
+                return [node.label, `Country: ${this._format.formatCountry(node.country)}`, `Gender: ${node.gender}`, `Visit: ${this._format.formatDate(node.visitedDate)}`];
               },
             },
           },
@@ -319,6 +320,8 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
     visitedDate: string;
     guestId: string;
     gender: string;
+    groupType: string | null;
+    groupId: string | null;
   }[] {
     const nodes = new Map<
       string,
@@ -329,6 +332,8 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
         visitedDate: string;
         gender: string;
         guestId: string;
+        groupType: string | null;
+        groupId: string | null;
       }
     >();
 
@@ -336,25 +341,48 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
       // Add the main guest as a node.
       nodes.set(item.guest.guestId, {
         id: item.guest.guestId,
-        label: item.guest.fullName,
+
+        label: this.getGuestDisplayName(item.guest.fullName, item.guest.groupType),
+
         country: item.guest.hometownCode,
         visitedDate: item.guest.visitedDate,
         gender: item.guest.gender,
         guestId: item.guest.guestId,
+        groupType: item.guest.groupType,
+        groupId: item.guest.groupId,
       });
       // Add every overlapping guest as a node.
       item.guests.forEach(guest => {
         nodes.set(guest.guestId, {
           id: guest.guestId,
-          label: guest.fullName,
+
+          label: this.getGuestDisplayName(guest.fullName, guest.groupType),
+
           country: guest.hometownCode,
           visitedDate: guest.visitedDate,
           guestId: guest.guestId,
           gender: guest.gender,
+          groupType: guest.groupType,
+          groupId: guest.groupId,
         });
       });
     });
     return Array.from(nodes.values());
+  }
+
+  private getGuestDisplayName(fullName: string, groupType: string | null): string {
+    if (groupType === 'solo') {
+      return fullName;
+    }
+
+    const groupLabels: Record<string, string> = {
+      couple: 'Couple',
+      friends: 'Friend',
+      family: 'Family',
+    };
+
+    const groupLabel = groupType ? groupLabels[groupType] : undefined;
+    return groupLabel ? `${fullName} and ${groupLabel}` : fullName;
   }
 
   private getNetworkEdges(
@@ -388,7 +416,6 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
         });
       });
     });
-
     return edges;
   }
 
@@ -478,7 +505,11 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
     });
   }
 
-  private navigateToGuest(guestId: string): void {
+  private navigateToGuest(guestId: string, groupType?: string | null, groupId?: string | null): void {
+    if (groupType !== 'solo' && groupId) {
+      this._router.navigate(['/guests/groups', groupId]);
+      return;
+    }
     this._router.navigate(['/guests', guestId]);
   }
 }

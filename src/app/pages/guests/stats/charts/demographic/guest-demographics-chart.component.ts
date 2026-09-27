@@ -29,6 +29,12 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
   @ViewChild('demographicsChart')
   demographicsChart!: ElementRef<HTMLCanvasElement>;
 
+  groupLabels: Record<string, string> = {
+    couple: 'Couple',
+    friends: 'Friend',
+    family: 'Family',
+  };
+
   // Currently selected main demographics view.
   selectedView: IDemographicsView = 'totals';
   // Available main views shown in the UI.
@@ -1370,17 +1376,13 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       },
       options: {
         responsive: true,
-        onClick: (_event, elements) => {
-          if (!elements.length) {
-            return;
-          }
-          const point = elements[0];
-          const data = this.chart?.data.datasets[point.datasetIndex].data[point.index] as any;
+        onClick: (_, elements) => {
+          const element = elements[0];
 
-          if (!data?.person?.guestId) {
-            return;
-          }
-          this.navigateToGuest(data.person.guestId);
+          if (!element) return;
+
+          const data = this.chart?.data.datasets[element.datasetIndex].data[element.index] as any;
+          this.navigateToGuest(data.person.guestId, data.person.groupType, data.person.groupId);
         },
         scales: {
           // X axis represents the visit date.
@@ -1471,9 +1473,10 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                   };
                 };
 
+                const groupLabel = point.person.groupType === 'solo' ? '' : ` and ${this.groupLabels[point.person.groupType]}`;
+
                 return [
-                  `${point.type}: ${point.person.fullName}`,
-                  `Category: ${point.person.groupType}`,
+                  `${point.type}: ${point.person.fullName}${groupLabel}`,
                   `Gender: ${point.person.gender}`,
                   `Country: ${this._format.formatCountry(point.person.hometownCode)}`,
                   `Visit: ${this._format.formatDate(point.person.visitedDate)}`,
@@ -1703,17 +1706,13 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       },
       options: {
         responsive: true,
-        onClick: (_event, elements) => {
-          if (!elements.length) {
-            return;
-          }
-          const point = elements[0];
-          const data = this.chart?.data.datasets[point.datasetIndex].data[point.index] as any;
+        onClick: (_, elements) => {
+          const element = elements[0];
 
-          if (!data?.person?.guestId) {
-            return;
-          }
-          this.navigateToGuest(data.person.guestId);
+          if (!element) return;
+
+          const data = this.chart?.data.datasets[element.datasetIndex].data[element.index] as any;
+          this.navigateToGuest(data.person.guestId, data.person.groupType, data.person.groupId);
         },
 
         scales: {
@@ -1775,8 +1774,11 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                 if (!person) {
                   return '';
                 }
+
+                const groupLabel = person.groupType === 'solo' ? '' : ` and ${this.groupLabels[person.groupType]}`;
+
                 return [
-                  `${context.dataIndex === 0 ? 'First' : 'Last'}: ${person.fullName}`,
+                  `${context.dataIndex === 0 ? 'First' : 'Last'}: ${person.fullName} ${groupLabel}`,
                   `Gender: ${person.gender}`,
                   `Country: ${this._format.formatCountry(person.hometownCode)}`,
                   `Visit: ${this._format.formatDate(person.visitedDate)}`,
@@ -1788,7 +1790,6 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       },
     });
   }
-
   private readonly firstLastGenderColors: Record<IDemographicGender, { background: string; border: string }> = {
     female: {
       background: 'rgba(255, 99, 132, 0.7)',
@@ -1857,7 +1858,12 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
     });
   }
 
-  private navigateToGuest(guestId: string): void {
+  private navigateToGuest(guestId: string, groupType?: string, groupId?: string): void {
+    if (groupType !== 'solo' && groupId) {
+      this._router.navigate(['/guests/groups', groupId]);
+      return;
+    }
+
     this._router.navigate(['/guests', guestId]);
   }
 }
