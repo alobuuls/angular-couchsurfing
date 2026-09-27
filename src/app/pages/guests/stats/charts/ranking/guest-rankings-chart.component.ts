@@ -68,17 +68,14 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
       label: 'People Ranking',
       getData: rankings => rankings.people.overall,
     },
-
     women: {
       label: 'Women Ranking',
       getData: rankings => rankings.women.overall,
     },
-
     men: {
       label: 'Men Ranking',
       getData: rankings => rankings.men.overall,
     },
-
     groups: {
       label: 'Groups Ranking',
       getData: rankings => rankings.groups.overall,
@@ -233,10 +230,9 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
 
     this.chart = new Chart(this.rankingChart.nativeElement, {
       type: 'bar',
-
       data: {
-        labels: rankingData.map(item => item.guest.fullName),
-
+        // Use the formatted guest name in the chart labels.
+        labels: rankingData.map(item => this.getGuestDisplayName(item)),
         datasets: [
           {
             label:
@@ -277,8 +273,7 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
           if (!item?.guest?.guestId) {
             return;
           }
-
-          this.navigateToGuest(item.guest.guestId);
+          this.navigateToGuest(item.guest.guestId, item.guest.groupType, item.guest.groupId);
         },
         indexAxis: 'y',
         plugins: {
@@ -316,7 +311,28 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
     });
   }
 
-  private navigateToGuest(guestId: string): void {
+  private getGuestDisplayName(item: IRankingItem): string {
+    const guest = item.guest;
+
+    if (guest.groupType === 'solo') {
+      return guest.fullName;
+    }
+
+    const groupLabels: Record<string, string> = {
+      couple: 'Couple',
+      friends: 'Friend',
+      family: 'Family',
+    };
+
+    const groupLabel = groupLabels[guest.groupType];
+    return groupLabel ? `${guest.fullName} and ${groupLabel}` : guest.fullName;
+  }
+
+  private navigateToGuest(guestId: string, groupType?: string | null, groupId?: string | null): void {
+    if (groupType !== 'solo' && groupId) {
+      this._router.navigate(['/guests/groups', groupId]);
+      return;
+    }
     this._router.navigate(['/guests', guestId]);
   }
 }

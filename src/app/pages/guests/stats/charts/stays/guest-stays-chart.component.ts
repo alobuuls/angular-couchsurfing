@@ -195,7 +195,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     this.chart = new Chart(this.staysChart.nativeElement, {
       type: 'polarArea',
       data: {
-        labels: people.map(item => item.guest.fullName),
+        labels: people.map(item => this.getGuestDisplayName(item.guest.fullName, item.guest.groupType)),
         datasets: [
           {
             label: chartLabel,
@@ -203,7 +203,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
             // Number of nights determines the section size.
             data: people.map(item => item.nights),
 
-            // Use guest gender for section colors
+            // Use guest gender for section colors.
             backgroundColor: people.map(item => {
               const gender = GENDER_COLORS[item.guest.gender.toLowerCase() as keyof typeof GENDER_COLORS];
               return gender?.background ?? 'rgba(100, 100, 100, 0.5)';
@@ -225,7 +225,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
           if (!guest?.guestId) {
             return;
           }
-          this.navigateToGuest(guest.guestId);
+          this.navigateToGuest(guest.guestId, guest.groupType, guest.groupId);
         },
         maintainAspectRatio: false,
         plugins: {
@@ -240,7 +240,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
             callbacks: {
               title: context => {
                 const guest = people[context[0].dataIndex];
-                return guest.guest.fullName;
+                return this.getGuestDisplayName(guest.guest.fullName, guest.guest.groupType);
               },
               label: () => '',
               afterBody: context => {
@@ -394,6 +394,24 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
       options: {
         indexAxis: 'y',
         responsive: true,
+        onClick: (_event, elements) => {
+          if (!elements.length) {
+            return;
+          }
+          const index = elements[0].index;
+          const item = chartData[index];
+
+          if (!item?.date) {
+            return;
+          }
+          this._router.navigate(['/guests'], {
+            queryParams: {
+              view: 'cards',
+              from: item.date,
+              to: item.date,
+            },
+          });
+        },
         maintainAspectRatio: false,
         plugins: {
           title: {
@@ -487,9 +505,11 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     // Create one node for every guest in the group.
     const nodes = group.guests.map(guest => ({
       id: guest.guestId,
-      label: guest.fullName,
+      label: this.getGuestDisplayName(guest.fullName, guest.groupType),
       gender: guest.gender,
       guestId: guest.guestId,
+      groupType: guest.groupType,
+      groupId: guest.groupId,
     }));
 
     // Connect every guest with the other guests in the same group.
@@ -591,6 +611,8 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
       id: string;
       label: string;
       gender: string;
+      groupType: string | null;
+      groupId: string | null;
     }[]
   ): {
     source: number;
@@ -610,6 +632,21 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
       }
     }
     return edges;
+  }
+
+  private getGuestDisplayName(fullName: string, groupType: string | null): string {
+    if (groupType === 'solo') {
+      return fullName;
+    }
+
+    const groupLabels: Record<string, string> = {
+      couple: 'Couple',
+      friends: 'Friend',
+      family: 'Family',
+    };
+
+    const groupLabel = groupType ? groupLabels[groupType] : undefined;
+    return groupLabel ? `${fullName} and ${groupLabel}` : fullName;
   }
 
   // Build tooltip information for stay charts.
@@ -646,7 +683,11 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     this.destroyChart();
   }
 
-  private navigateToGuest(guestId: string): void {
+  private navigateToGuest(guestId: string, groupType?: string | null, groupId?: string | null): void {
+    if (groupType !== 'solo' && groupId) {
+      this._router.navigate(['/guests/groups', groupId]);
+      return;
+    }
     this._router.navigate(['/guests', guestId]);
   }
 

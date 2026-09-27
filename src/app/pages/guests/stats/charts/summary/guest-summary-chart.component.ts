@@ -169,7 +169,9 @@ export class GuestSummaryChartComponent implements OnChanges {
       options: {
         responsive: true,
         onClick: (_event, elements) => {
-          if (!elements.length) return;
+          if (!elements.length || this.selectedView !== 'gifts') {
+            return;
+          }
 
           const index = elements[0].index;
 
@@ -241,11 +243,6 @@ export class GuestSummaryChartComponent implements OnChanges {
   trackById(index: number, item: ISummaryCard): string {
     return item.label;
   }
-
-  private readonly giftNavigation: Record<string, boolean> = {
-    Received: true,
-    'Without Gift': false,
-  };
 
   private navigateToGiftGuests(hasGift: boolean): void {
     this._router.navigate(['/guests'], {
