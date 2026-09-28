@@ -1,6 +1,11 @@
-import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, Output, inject } from '@angular/core';
 
+// Interfaces
 import { IGuestTableRow, IGuestYearGroup } from '@interfaces/data-structure-api';
+import { ICardGuest } from '@interfaces/guests.interface';
+
+// Services
+import { GuestsService } from '@services/guests.service';
 
 @Component({
   selector: 'guests-cards',
@@ -8,6 +13,7 @@ import { IGuestTableRow, IGuestYearGroup } from '@interfaces/data-structure-api'
   styleUrls: ['./guests-cards.component.css'],
 })
 export class GuestsCardsComponent {
+  private _guests = inject(GuestsService);
   private _data: IGuestTableRow[] = [];
 
   @Input()
@@ -41,6 +47,8 @@ export class GuestsCardsComponent {
     }
   }
 
+  // Cards
+  cardDetails = new Map<string, ICardGuest[]>();
   cardsGuest: IGuestYearGroup[] = [];
 
   // Cards that are currently open
@@ -69,16 +77,24 @@ export class GuestsCardsComponent {
 
     this.cardsGuest = [...years.entries()]
       .sort(([yearA], [yearB]) => yearB - yearA)
-      .map(([year, months]) => ({
-        year,
-        months: [...months.entries()]
+      .map(([year, months]) => {
+        const monthGroups = [...months.entries()]
           .sort(([monthA], [monthB]) => monthB - monthA)
           .map(([month, guests]) => ({
             month,
             monthName: this.getMonthName(month),
             guests,
-          })),
-      }));
+            totalGuests: guests.reduce((total, guest) => total + guest.people.length, 0),
+            totalVisits: guests.length,
+          }));
+
+        return {
+          year,
+          totalGuests: monthGroups.reduce((total, month) => total + month.totalGuests, 0),
+          totalVisits: monthGroups.reduce((total, month) => total + month.totalVisits, 0),
+          months: monthGroups,
+        };
+      });
   }
 
   private getMonthName(month: number): string {
@@ -88,20 +104,51 @@ export class GuestsCardsComponent {
   }
 
   // Open / close a card
-  toggleCard(guest: any): void {
-    const cardId = guest.groupId ?? guest.guestId;
+  private getCardId(guest: IGuestTableRow): string | undefined {
+    if ('groupId' in guest) {
+      return guest.groupId;
+    }
+
+    if ('guestId' in guest) {
+      return guest.guestId;
+    }
+
+    return undefined;
+  }
+
+  toggleCard(guest: IGuestTableRow): void {
+    const cardId = this.getCardId(guest);
 
     if (!cardId) return;
 
     if (this.openCards.has(cardId)) {
       this.openCards.delete(cardId);
-    } else {
-      this.openCards.add(cardId);
+      return;
+    }
+
+    this.openCards.add(cardId);
+
+    if (this.cardDetails.has(cardId)) {
+      return;
+    }
+
+    if (guest.groupType === 'solo') {
+      this._guests.getGuestById(guest.guestId).subscribe(response => {
+        this.cardDetails.set(cardId, [response.data]);
+      });
+
+      return;
+    }
+
+    if ('groupId' in guest) {
+      this._guests.getGroupById(guest.groupId).subscribe(response => {
+        this.cardDetails.set(cardId, response.data);
+      });
     }
   }
 
-  isCardOpen(guest: any): boolean {
-    const cardId = guest.groupId ?? guest.guestId;
+  isCardOpen(guest: IGuestTableRow): boolean {
+    const cardId = this.getCardId(guest);
 
     if (!cardId) return false;
 

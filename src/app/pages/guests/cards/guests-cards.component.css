@@ -20,11 +20,29 @@
 }
 
 .month-title {
-  color: #4f585e;
-  font-size: 1.5rem;
+  color: #5e4f4f;
+  font-size: 2rem;
   font-weight: 600;
-  margin: 0 0 1rem;
-  text-align: left;
+}
+
+.month-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.month-stats {
+  color: #4f585e;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.month-stats span {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.month-stats mat-icon {
+  font-size: 1.25rem;
 }
 
 .cards {

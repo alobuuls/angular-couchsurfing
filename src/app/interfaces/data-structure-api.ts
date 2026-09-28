@@ -80,15 +80,19 @@ export type IGuestsTableVM = Omit<GuestsVM, 'data'> & {
 
 export type DataStatePag<T> = Pick<DataState<T>, 'data'> & IApiCsPag;
 
+export interface IGuestYearGroup {
+  year: number;
+  totalGuests: number;
+  totalVisits: number;
+  months: IGuestMonthGroup[];
+}
+
 export interface IGuestMonthGroup {
   month: number;
   monthName: string;
   guests: IGuestTableRow[];
-}
-
-export interface IGuestYearGroup {
-  year: number;
-  months: IGuestMonthGroup[];
+  totalGuests: number;
+  totalVisits: number;
 }
 
 export type ICurrentView = 'table' | 'cards' | 'map';
