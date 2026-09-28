@@ -1,5 +1,8 @@
 export const environment = {
+  production: false,
+
   endpointUrlApiCs: 'http://localhost:3001/api/v1',
+
   exampleEndpoint400: 'https://httpbin.org/status/400',
   exampleEndpoint404: 'https://httpbin.org/status/404',
   exampleEndpoint401: 'https://httpbin.org/status/401',
@@ -7,9 +10,11 @@ export const environment = {
   exampleEndpoint500: 'https://httpbin.org/status/500',
   exampleEndpoint502: 'https://httpbin.org/status/502',
   exampleEndpointDelay: 'https://httpbin.org/delay/5',
+
   endpointApiCities: 'https://api.countrystatecity.in/v1',
   apiKeyCities: process.env['NG_APP_KEY_CITIES'],
   apiKeyCarto: process.env['NG_APP_KEY_CARTO'],
+
   endpointBaseCountryMap: 'https://raw.githubusercontent.com',
   endpointNaturalEarthAdmin1: 'https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson',
 };
