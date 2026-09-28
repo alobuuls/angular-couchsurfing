@@ -5,7 +5,21 @@
 
     <!-- MONTHS -->
     <div *ngFor="let month of year.months" class="month-group">
-      <h3 class="month-title">{{ month.monthName | uppercase }}</h3>
+      <div class="month-header">
+        <h3 class="month-title">{{ month.monthName | uppercase }}</h3>
+
+        <div class="month-stats">
+          <span>
+            <mat-icon class="material-symbols-outlined">person</mat-icon>
+            {{ month.totalGuests }} guests
+          </span>
+
+          <span>
+            <mat-icon class="material-symbols-outlined">night_shelter</mat-icon>
+            {{ month.totalVisits }} visits
+          </span>
+        </div>
+      </div>
 
       <div class="cards">
         <!-- ONE CARD PER GUEST/TRIP -->
@@ -16,6 +30,7 @@
             <div *ngFor="let p of guest.people" class="person">
               <div class="person-info">
                 <h2>
+                  <span *ngIf="p.hometown.code" [class]="p.hometown.code | flag"></span>
                   {{ p.fullName }}
                   <mat-icon
                     class="material-symbols-outlined"

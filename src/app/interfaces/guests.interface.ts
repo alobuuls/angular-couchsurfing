@@ -41,6 +41,8 @@ export interface IGuestDetail extends ITripDetail {
   didTheyReq?: boolean;
 }
 
+export type ICardGuest = IGuestDetail | IBodyGuest;
+
 export interface IGuestFormData extends IGuestDetail {
   hometownState?: IState;
   hometownCity?: ICity;

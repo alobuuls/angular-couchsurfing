@@ -8,7 +8,7 @@ import { WORLD } from '@config/world';
 
 @Pipe({ name: 'flag' })
 export class FlagPipe implements PipeTransform {
-  transform(countryCode?: CountriesCodes | null): string {
+  transform(countryCode?: string | null): string {
     if (!countryCode) return '';
 
     const key = countryCode.toLowerCase() as keyof typeof WORLD;
