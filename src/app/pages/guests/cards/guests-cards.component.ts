@@ -41,7 +41,7 @@ export class GuestsCardsComponent {
     const pageHeight = document.documentElement.scrollHeight;
 
     // Start loading more cards when 300px remain before reaching the bottom.
-    const threshold = 300;
+    const threshold = 800;
 
     // Emit the event when the user is close to the bottom of the page.
     if (scrollPosition >= pageHeight - threshold) {
