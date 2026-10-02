@@ -80,6 +80,13 @@ export class GuestsComponent implements OnInit {
   cardsPageSize = 10;
   cardsLoading = false;
   cardsHasMore = true;
+
+  // Map
+  mapData: IGuestTableRow[] = [];
+  mapLimit = 200;
+  mapLoading = false;
+  mapLimitOptions = [10, 20, 30, 50, 100, 200];
+
   // Sort
   private sort$ = new BehaviorSubject<Sort>({
     active: '',
@@ -150,6 +157,11 @@ export class GuestsComponent implements OnInit {
     // Reload cards if the current view is cards
     if (this.currentView === 'cards') {
       this.loadMoreCards();
+    }
+
+    // Reload map if the current view is map
+    if (this.currentView === 'map') {
+      this.loadMapData();
     }
   }
 
@@ -493,6 +505,10 @@ export class GuestsComponent implements OnInit {
     if (view === 'cards' && !this.cardsData.length) {
       this.loadMoreCards();
     }
+
+    if (view === 'map' && !this.mapData.length) {
+      this.loadMapData();
+    }
   }
 
   get nextViewIcon(): string {
@@ -508,6 +524,10 @@ export class GuestsComponent implements OnInit {
     // if we change cards view, it starts the load
     if (this.currentView === 'cards' && !this.cardsData.length) {
       this.loadMoreCards();
+    }
+
+    if (this.currentView === 'map' && !this.mapData.length) {
+      this.loadMapData();
     }
   }
 
@@ -559,6 +579,10 @@ export class GuestsComponent implements OnInit {
       if (this.currentView === 'cards' && !this.cardsData.length) {
         this.loadMoreCards();
       }
+
+      if (this.currentView === 'map' && !this.mapData.length) {
+        this.loadMapData();
+      }
     });
   }
 
@@ -603,5 +627,32 @@ export class GuestsComponent implements OnInit {
     this.cardsPage = 1;
     this.cardsHasMore = true;
     this.cardsLoading = false;
+  }
+
+  // MAP
+  loadMapData(): void {
+    this.mapLoading = true;
+
+    this._guests
+      .getAllGuests({
+        limit: this.mapLimit,
+        page: 1,
+        ...this.filters$.value,
+      })
+      .subscribe({
+        next: response => {
+          this.mapData = mapGuestTable(response.data);
+          this.mapLoading = false;
+        },
+        error: () => {
+          this.mapData = [];
+          this.mapLoading = false;
+        },
+      });
+  }
+
+  onMapLimitChange(limit: number): void {
+    this.mapLimit = limit;
+    this.loadMapData();
   }
 }

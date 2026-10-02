@@ -184,7 +184,19 @@
   </div>
 
   <!-- MAP -->
-  <guests-map *ngIf="vm.status === 'success' && currentView === 'map'" [data]="vm.data"> </guests-map>
+  <div *ngIf="currentView === 'map'" class="map-view">
+    <guests-map [data]="mapData"></guests-map>
+
+    <div class="map-limit">
+      <mat-form-field appearance="outline">
+        <mat-label>Guests to display</mat-label>
+
+        <mat-select [value]="mapLimit" (selectionChange)="onMapLimitChange($event.value)">
+          <mat-option *ngFor="let limit of mapLimitOptions" [value]="limit"> {{ limit }} guests </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
 
   <!-- ERROR -->
   <h1 *ngIf="vm.status === 'error'">
