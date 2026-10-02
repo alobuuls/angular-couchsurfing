@@ -61,7 +61,233 @@
 
             <!-- DETAILS -->
             <div *ngIf="isCardOpen(guest)" class="card-details">
-              <p>Visited: {{ guest.visitedDate }}</p>
+              <ng-container *ngIf="getCardDetails(guest).length > 0; else loading">
+                <!-- TRIP -->
+                <ng-container *ngIf="getCardDetails(guest)[0] as trip">
+                  <h3>TRIP</h3>
+
+                  <ul>
+                    <li *ngIf="trip.visitedDate">
+                      <strong>Visited Date: </strong>{{ trip.visitedDate | date: 'yyyy MMMM d' }}
+                    </li>
+
+                    <li *ngIf="trip.nights !== null && trip.nights !== undefined">
+                      <strong>Nights: </strong>{{ trip.nights }}
+                    </li>
+
+                    <li *ngIf="trip.stayed !== null && trip.stayed !== undefined">
+                      <strong>Stayed: </strong>
+
+                      <mat-icon
+                        class="material-symbols-outlined"
+                        [fontIcon]="trip.stayed ? 'check' : 'close'"
+                        [class.success]="trip.stayed"
+                        [class.danger]="!trip.stayed"
+                      ></mat-icon>
+                    </li>
+
+                    <li *ngIf="trip.hangOut !== null && trip.hangOut !== undefined">
+                      <strong>Hang Out: </strong>
+
+                      <mat-icon
+                        class="material-symbols-outlined"
+                        [fontIcon]="trip.hangOut ? 'check' : 'close'"
+                        [class.success]="trip.hangOut"
+                        [class.danger]="!trip.hangOut"
+                      ></mat-icon>
+                    </li>
+
+                    <li *ngIf="trip.isFirstTime !== null && trip.isFirstTime !== undefined">
+                      <strong>First Time: </strong>
+
+                      <mat-icon
+                        class="material-symbols-outlined"
+                        [fontIcon]="trip.isFirstTime ? 'check' : 'close'"
+                        [class.success]="trip.isFirstTime"
+                        [class.danger]="!trip.isFirstTime"
+                      ></mat-icon>
+                    </li>
+
+                    <li *ngIf="trip.groupType">
+                      <strong>Group Type: </strong>
+
+                      <span class="gap-icons">
+                        <mat-icon
+                          class="material-symbols-outlined"
+                          [fontIcon]="
+                            trip.groupType === 'solo'
+                              ? 'person'
+                              : trip.groupType === 'couple'
+                                ? 'favorite'
+                                : trip.groupType === 'friends'
+                                  ? 'groups'
+                                  : 'family_restroom'
+                          "
+                        >
+                        </mat-icon>
+                        {{ trip.groupType | titlecase }}
+                      </span>
+                    </li>
+                  </ul>
+                </ng-container>
+
+                <!-- MEMBERS -->
+                <h3 *ngIf="getCardDetails(guest).length > 1">MEMBERS ({{ getCardDetails(guest).length }})</h3>
+
+                <section *ngFor="let member of getCardDetails(guest)" class="card-member">
+                  <!-- MEMBER NAME / GROUPS -->
+                  <h2 *ngIf="guest.groupType !== 'solo' && member.fullName">
+                    {{ member.fullName }}
+                    <mat-icon class="material-symbols-outlined" *ngIf="member.ambassador" matTooltip="Ambassador"
+                      >badge</mat-icon
+                    >
+                  </h2>
+
+                  <!-- PERSONAL INFORMATION -->
+                  <ng-container
+                    *ngIf="
+                      member.fullName ||
+                      member.birthDate ||
+                      member.prefixCode ||
+                      member.whatsapp ||
+                      member.instagram ||
+                      member.urlProfileCs ||
+                      (member.isGay !== null && member.isGay !== undefined)
+                    "
+                  >
+                    <h4>PERSONAL INFORMATION</h4>
+
+                    <ul>
+                      <li *ngIf="member.fullName"><strong>Full Name: </strong>{{ member.fullName }}</li>
+
+                      <li *ngIf="member.birthDate">
+                        <strong>Birth Date: </strong>{{ member.birthDate | date: 'yyyy MMMM d' }}
+                      </li>
+
+                      <li *ngIf="member.whatsapp">
+                        <strong>WhatsApp: </strong>{{ member.prefixCode }}{{ member.whatsapp }}
+                      </li>
+
+                      <li *ngIf="member.instagram"><strong>Instagram: </strong>{{ member.instagram }}</li>
+
+                      <li *ngIf="member.urlProfileCs"><strong>Couchsurfing: </strong>{{ member.urlProfileCs }}</li>
+
+                      <li *ngIf="member.isGay !== null && member.isGay !== undefined">
+                        <strong>Gay: </strong>
+
+                        <mat-icon
+                          class="material-symbols-outlined"
+                          [fontIcon]="member.isGay ? 'check' : 'close'"
+                          [class.success]="member.isGay"
+                          [class.danger]="!member.isGay"
+                        ></mat-icon>
+                      </li>
+
+                      <li *ngIf="member.didTheyReq !== null && member.didTheyReq !== undefined">
+                        <ng-container *ngIf="member.didTheyReq; else memberRequestSent">
+                          <strong> Did they request a stay? </strong>
+
+                          <mat-icon class="material-symbols-outlined success" fontIcon="check"> </mat-icon>
+                        </ng-container>
+
+                        <ng-template #memberRequestSent>
+                          <strong>I sent the request</strong>
+                        </ng-template>
+                      </li>
+                    </ul>
+                  </ng-container>
+
+                  <!-- LOCATION -->
+                  <ng-container
+                    *ngIf="
+                      member.continent ||
+                      member.region ||
+                      member.hometownCode ||
+                      member.hometown ||
+                      member.livingInCode ||
+                      member.livingIn
+                    "
+                  >
+                    <h4>LOCATION</h4>
+
+                    <ul>
+                      <li *ngIf="member.continent"><strong>Continent: </strong>{{ member.continent | titlecase }}</li>
+                      <li *ngIf="member.region"><strong>Region: </strong>{{ member.region | titlecase }}</li>
+                      <li *ngIf="member.hometownCode || member.hometown">
+                        <strong>Hometown: </strong>
+
+                        <span class="gap-icons">
+                          <span *ngIf="member.hometownCode" [class]="member.hometownCode | flag"></span
+                          >{{ member.hometown }}
+                        </span>
+                      </li>
+
+                      <li *ngIf="member.livingInCode || member.livingIn">
+                        <strong>Living In: </strong>
+
+                        <span class="gap-icons">
+                          <span *ngIf="member.livingInCode" [class]="member.livingInCode | flag"></span
+                          >{{ member.livingIn }}
+                        </span>
+                      </li>
+
+                      <li *ngIf="member.countryCodeWeMet || member.cityWeMet || member.locationWeMet">
+                        <strong>We Met: </strong>
+
+                        <span class="gap-icons">
+                          <span *ngIf="member.countryCodeWeMet" [class]="member.countryCodeWeMet | flag"></span>
+
+                          <span *ngIf="member.countryCodeWeMet">
+                            {{ _format.formatCountry(member.countryCodeWeMet) }}
+                          </span>
+
+                          <span *ngIf="member.cityWeMet"> , {{ member.cityWeMet }} </span>
+
+                          <span *ngIf="member.locationWeMet"> ({{ member.locationWeMet }}) </span>
+                        </span>
+                      </li>
+                    </ul>
+                  </ng-container>
+
+                  <!-- OCCUPATION -->
+                  <ng-container *ngIf="member.occupation?.length">
+                    <h4>OCCUPATION</h4>
+
+                    <ul>
+                      <li *ngFor="let occupation of member.occupation">{{ occupation }}</li>
+                    </ul>
+                  </ng-container>
+
+                  <!-- GIFT -->
+                  <ng-container *ngIf="member.gift?.length">
+                    <h4>GIFT</h4>
+
+                    <ul>
+                      <li *ngFor="let gift of member.gift">{{ gift }}</li>
+                    </ul>
+                  </ng-container>
+
+                  <!-- COMMENTS -->
+                  <ng-container *ngIf="member.comments">
+                    <h4>COMMENTS</h4>
+
+                    <p>{{ member.comments }}</p>
+                  </ng-container>
+
+                  <!-- REFERENCES -->
+                  <ng-container *ngIf="member.theirReference || member.myReference">
+                    <h4>REFERENCES</h4>
+
+                    <p *ngIf="member.theirReference"><strong>Their Reference: </strong>{{ member.theirReference }}</p>
+                    <p *ngIf="member.myReference"><strong>My Reference: </strong>{{ member.myReference }}</p>
+                  </ng-container>
+                </section>
+              </ng-container>
+
+              <!-- LOADING -->
+              <ng-template #loading>
+                <p>Loading guest...</p>
+              </ng-template>
             </div>
           </div>
         </div>
