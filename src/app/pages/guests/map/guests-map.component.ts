@@ -521,22 +521,10 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     const country = config.country;
     const countryName =
       country?.name ?? feature?.properties?.name ?? feature?.properties?.ADMIN ?? feature?.properties?.NAME_EN ?? feature?.properties?.NAME ?? 'Unknown country';
+
     const iso3 = config.iso3;
-    const count = iso3 ? (this.guestCounts[iso3] ?? 0) : 0;
 
-    // 0 GUESTS
-    if (count === 0) {
-      layer.bindTooltip(`<strong>${countryName}</strong>`, {
-        sticky: true,
-        direction: 'top',
-        opacity: 1,
-        className: 'country-zero-tooltip',
-      });
-
-      return;
-    }
-
-    // HOVER
+    // TOOLTIP
     layer.bindTooltip(`<strong>${countryName}</strong>`, {
       sticky: true,
       direction: 'top',
@@ -548,27 +536,36 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     layer.on({
       mouseover: (event: any) => {
         const target = event.target;
+        const currentCount = iso3 ? (this.guestCounts[iso3] ?? 0) : 0;
+
         target.setStyle({
           weight: 1.5,
           color: '#ffffff',
-          fillOpacity: 0.95,
+          fillOpacity: currentCount > 0 ? 0.95 : 0.35,
         });
+
         target.bringToFront();
       },
+
       mouseout: (event: any) => {
         if (!this.geoLayer) {
           return;
         }
+
         this.geoLayer.resetStyle(event.target);
       },
     });
 
     // CLICK
-    if (!country) {
-      return;
-    }
     layer.on('click', () => {
-      this.showCountryPopup(layer, countryName, country, count, iso3);
+      const currentCount = iso3 ? (this.guestCounts[iso3] ?? 0) : 0;
+
+      // If there are not guest, the popup is not
+      if (currentCount === 0 || !country) {
+        return;
+      }
+
+      this.showCountryPopup(layer, countryName, country, currentCount, iso3);
     });
   }
 
@@ -781,31 +778,25 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     };
 
     const countryName = names[code] ?? 'United Kingdom';
-    const count = this.guestCounts[code] ?? 0;
 
-    // =========================================================
     // HOVER
-    // =========================================================
-
     layer.bindTooltip(`<strong>${countryName}</strong>`, {
       sticky: true,
       direction: 'top',
       opacity: 1,
-      className: count > 0 ? 'country-hover-tooltip' : 'country-zero-tooltip',
+      className: 'country-hover-tooltip',
     });
 
-    // =========================================================
     // MOUSE EVENTS
-    // =========================================================
-
     layer.on({
       mouseover: (event: any) => {
         const target = event.target;
+        const currentCount = this.guestCounts[code] ?? 0;
 
         target.setStyle({
           weight: 2,
           color: '#ffffff',
-          fillOpacity: count > 0 ? 0.95 : 0.45,
+          fillOpacity: currentCount > 0 ? 0.95 : 0.45,
         });
 
         target.bringToFront();
@@ -825,18 +816,15 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
       },
     });
 
-    // =========================================================
     // CLICK
-    // =========================================================
-
-    // Si NO tiene guests → no hacemos nada
-    if (count === 0) {
-      return;
-    }
-
-    // Si tiene guests → popup
     layer.on('click', () => {
-      this.showAdminRegionPopup(layer, countryName, code, count);
+      const currentCount = this.guestCounts[code] ?? 0;
+
+      if (currentCount === 0) {
+        return;
+      }
+
+      this.showAdminRegionPopup(layer, countryName, code, currentCount);
     });
   }
 

@@ -4,6 +4,11 @@
   padding: 1rem;
 }
 
+.map-limit {
+  margin-top: 1rem;
+  padding: 0 8px;
+}
+
 .ctn-buttons {
   margin-top: 3rem;
   display: flex;
