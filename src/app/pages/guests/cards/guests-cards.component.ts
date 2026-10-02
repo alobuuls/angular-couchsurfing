@@ -6,6 +6,7 @@ import { ICardGuest } from '@interfaces/guests.interface';
 
 // Services
 import { GuestsService } from '@services/guests.service';
+import { FormatService } from '@services/format.service';
 
 @Component({
   selector: 'guests-cards',
@@ -14,6 +15,7 @@ import { GuestsService } from '@services/guests.service';
 })
 export class GuestsCardsComponent {
   private _guests = inject(GuestsService);
+  _format = inject(FormatService);
   private _data: IGuestTableRow[] = [];
 
   @Input()
@@ -155,13 +157,15 @@ export class GuestsCardsComponent {
     return this.openCards.has(cardId);
   }
 
+  getCardDetails(guest: IGuestTableRow): ICardGuest[] {
+    const cardId = this.getCardId(guest);
+
+    if (!cardId) return [];
+    return this.cardDetails.get(cardId) ?? [];
+  }
+
   //  Get the names of the people in the guest/trip
   getGuestNames(guest: IGuestTableRow): string {
     return guest.people.map(person => person.fullName).join(' & ');
-  }
-
-  // Get guest details
-  getDetailGuest(guest: IGuestTableRow): void {
-    console.log(guest);
   }
 }

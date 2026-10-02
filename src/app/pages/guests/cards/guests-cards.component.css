@@ -80,12 +80,39 @@
   background-color: #111111;
   color: #ffffff;
   display: flex;
-  height: 400px;
+  min-height: 400px;
+  height: auto;
   justify-content: center;
   margin: 20px 30px;
   position: relative;
   transition: transform 0.5s ease;
   width: 320px;
+}
+
+/* Card Details */
+.card-details {
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  text-align: left;
+}
+
+.detail-person {
+  margin-top: 1rem;
+}
+
+.detail-person h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+}
+
+.detail-person p {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.detail-person strong {
+  margin-right: 0.25rem;
 }
 
 .card:after {
@@ -126,8 +153,11 @@
 }
 
 .card .content {
+  max-height: 100%;
+  overflow: hidden;
   padding: 20px 40px;
   position: relative;
+  width: 100%;
   z-index: 2;
 }
 
