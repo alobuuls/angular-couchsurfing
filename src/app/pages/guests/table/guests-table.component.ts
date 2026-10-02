@@ -1,10 +1,13 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 
+// Interfaces
 import { IGuestListItem, IApiCsPag } from '@interfaces/guests.interface';
 import { IGuestTableRow } from '@interfaces/data-structure-api';
+
+// Services
+import { FormatService } from '@services/format.service';
 
 @Component({
   selector: 'guests-table',
@@ -12,6 +15,8 @@ import { IGuestTableRow } from '@interfaces/data-structure-api';
   styleUrls: ['./guests-table.component.css'],
 })
 export class GuestsTableComponent {
+  _format = inject(FormatService);
+
   @Input() pagination?: IApiCsPag;
 
   @Input() offset = 0;

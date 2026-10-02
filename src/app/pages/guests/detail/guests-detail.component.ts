@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 // Services
@@ -7,6 +7,7 @@ import { GuestsService } from '@services/guests.service';
 // Interfaces
 import { IGroupMember, IGuestDetail } from '@interfaces/guests.interface';
 import { IErrResp, ReqStatus } from '@interfaces/data-structure-api';
+import { FormatService } from '@services/format.service';
 
 @Component({
   selector: 'guests-detail',
@@ -20,10 +21,9 @@ export class GuestsDetailComponent implements OnInit {
   guest?: IGuestDetail;
   group?: IGroupMember[];
 
-  constructor(
-    private route: ActivatedRoute,
-    private _guests: GuestsService
-  ) {}
+  _format = inject(FormatService);
+  private route = inject(ActivatedRoute);
+  private _guests = inject(GuestsService);
 
   ngOnInit(): void {
     this.getById();

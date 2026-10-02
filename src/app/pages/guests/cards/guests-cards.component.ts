@@ -14,8 +14,8 @@ import { FormatService } from '@services/format.service';
   styleUrls: ['./guests-cards.component.css'],
 })
 export class GuestsCardsComponent {
-  private _guests = inject(GuestsService);
   _format = inject(FormatService);
+  private _guests = inject(GuestsService);
   private _data: IGuestTableRow[] = [];
 
   @Input()
