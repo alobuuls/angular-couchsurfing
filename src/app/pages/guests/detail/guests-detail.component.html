@@ -204,14 +204,16 @@
           <li *ngIf="guest.hometownCode || guest.hometown">
             <strong>Hometown:</strong>
             <span class="gap-icons">
-              <span *ngIf="guest.hometownCode" [class]="guest.hometownCode | flag"></span> {{ guest.hometown }}
+              <span *ngIf="guest.hometownCode" [class]="guest.hometownCode | flag" [matTooltip]="_format.formatCountry(guest.hometownCode)"></span>
+              {{ guest.hometown }}
             </span>
           </li>
 
           <li *ngIf="guest.livingInCode || guest.livingIn">
             <strong>Living In:</strong>
             <span class="gap-icons">
-              <span *ngIf="guest.livingInCode" [class]="guest.livingInCode | flag"></span> {{ guest.livingIn }}
+              <span *ngIf="guest.livingInCode" [class]="guest.livingInCode | flag" [matTooltip]="_format.formatCountry(guest.livingInCode)"></span>
+              {{ guest.livingIn }}
             </span>
           </li>
         </ul>
@@ -458,14 +460,16 @@
             <li *ngIf="member.hometownCode || member.hometown">
               <strong>Hometown:</strong>
               <span class="gap-icons">
-                <span *ngIf="member.hometownCode" [class]="member.hometownCode | flag"></span> {{ member.hometown }}
+                <span *ngIf="member.hometownCode" [class]="member.hometownCode | flag" [matTooltip]="_format.formatCountry(member.hometownCode)"></span>
+                {{ member.hometown }}
               </span>
             </li>
 
             <li *ngIf="member.livingInCode || member.livingIn">
               <strong>Living In:</strong>
               <span class="gap-icons">
-                <span *ngIf="member.livingInCode" [class]="member.livingInCode | flag"></span> {{ member.livingIn }}
+                <span *ngIf="member.livingInCode" [class]="member.livingInCode | flag" [matTooltip]="_format.formatCountry(member.livingInCode)"></span>
+                {{ member.livingIn }}
               </span>
             </li>
           </ul>

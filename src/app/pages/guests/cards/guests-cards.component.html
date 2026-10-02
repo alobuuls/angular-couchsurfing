@@ -30,7 +30,7 @@
             <div *ngFor="let p of guest.people" class="person">
               <div class="person-info">
                 <h2>
-                  <span *ngIf="p.hometown.code" [class]="p.hometown.code | flag"></span>
+                  <span *ngIf="p.hometown.code" [class]="p.hometown.code | flag" [matTooltip]="_format.formatCountry(p.hometown.code)"></span>
                   {{ p.fullName }}
                   <mat-icon
                     class="material-symbols-outlined"
@@ -235,8 +235,8 @@
                         <strong>We Met: </strong>
 
                         <span class="gap-icons">
-                          <span *ngIf="member.countryCodeWeMet" [class]="member.countryCodeWeMet | flag"></span>
-
+                          <span *ngIf="member.countryCodeWeMet" [class]="member.countryCodeWeMet | flag" [matTooltip]="_format.formatCountry(member.countryCodeWeMet)"></span>
+                          
                           <span *ngIf="member.countryCodeWeMet">
                             {{ _format.formatCountry(member.countryCodeWeMet) }}
                           </span>
