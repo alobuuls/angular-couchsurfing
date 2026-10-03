@@ -25,6 +25,9 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 // Pipes
 import { FlagPipe } from '@shared/pipes/three-code-letters-flag.pipe';
 
+// Components
+import { LoadingComponent } from '@shared/components/loading/loading.component';
+
 const MATERIAL_MODULES = [
   MatBadgeModule,
   MatButtonModule,
@@ -49,8 +52,8 @@ const MATERIAL_MODULES = [
 const PIPES = [FlagPipe];
 
 @NgModule({
-  declarations: [...PIPES],
+  declarations: [...PIPES, LoadingComponent],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, ...MATERIAL_MODULES],
-  exports: [CommonModule, FormsModule, ReactiveFormsModule, ...MATERIAL_MODULES, ...PIPES],
+  exports: [CommonModule, FormsModule, ReactiveFormsModule, ...MATERIAL_MODULES, ...PIPES, LoadingComponent],
 })
 export class SharedModule {}

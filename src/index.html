@@ -38,13 +38,42 @@
 
   <body class="mat-typography">
     <app-root class="app-stl">
+      <!-- Initial loading shown while Angular starts -->
       <div class="loading-container">
         <div class="logo-container">
           <i class="fa fa-spin fa-sync"></i>
         </div>
 
-        <h4 class="loading-title">Loading...</h4>
+        <h4 id="loading-title" class="loading-title">Loading...</h4>
       </div>
     </app-root>
+
+    <!-- Rotate loading messages while the app is starting -->
+    <script>
+      const messages = [
+        'Loading...',
+        'Almost there...',
+        'Getting things ready...',
+        'Starting the app...',
+        'Almost ready...',
+      ];
+
+      let index = 0;
+
+      const loadingTitle = document.getElementById('loading-title');
+
+      if (loadingTitle) {
+        const messageInterval = setInterval(() => {
+          // Stop the interval once Angular replaces the initial loading
+          if (!document.getElementById('loading-title')) {
+            clearInterval(messageInterval);
+            return;
+          }
+
+          index = (index + 1) % messages.length;
+          loadingTitle.textContent = messages[index];
+        }, 2000);
+      }
+    </script>
   </body>
 </html>
