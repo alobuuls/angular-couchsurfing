@@ -236,7 +236,7 @@
 
                         <span class="gap-icons">
                           <span *ngIf="member.countryCodeWeMet" [class]="member.countryCodeWeMet | flag" [matTooltip]="_format.formatCountry(member.countryCodeWeMet)"></span>
-                          
+
                           <span *ngIf="member.countryCodeWeMet">
                             {{ _format.formatCountry(member.countryCodeWeMet) }}
                           </span>
@@ -286,7 +286,7 @@
 
               <!-- LOADING -->
               <ng-template #loading>
-                <app-loading></app-loading>
+                <app-loading [compact]="true" [messages]="['Loading details', 'Getting more information', 'Almost there']"></app-loading>
               </ng-template>
             </div>
           </div>

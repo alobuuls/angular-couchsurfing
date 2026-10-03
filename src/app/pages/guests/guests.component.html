@@ -176,7 +176,7 @@
   <guests-cards *ngIf="currentView === 'cards'" [data]="cardsData" (loadMore)="loadMoreCards()"> </guests-cards>
 
   <!-- cards loading -->
-  <app-loading *ngIf="currentView === 'cards' && cardsLoading" class="cards-loading"></app-loading>
+  <app-loading *ngIf="currentView === 'cards' && cardsLoading" class="cards-loading" [messages]="['Loading your guests', 'Getting your guests ready', 'Almost there', 'Your cards are coming']"></app-loading>
 
   <!-- cards end -->
   <div *ngIf="currentView === 'cards' && !cardsHasMore && cardsData.length" class="cards-end">
@@ -185,9 +185,14 @@
 
   <!-- MAP -->
   <div *ngIf="currentView === 'map'" class="map-view">
-    <guests-map [data]="mapData"></guests-map>
+    <!-- MAP LOADING -->
+    <app-loading *ngIf="mapLoading" [messages]="['Loading the map', 'Finding your guests', 'Preparing your map', 'Almost ready']"></app-loading>
 
-    <div class="map-limit">
+    <!-- MAP -->
+    <guests-map *ngIf="!mapLoading" [data]="mapData"></guests-map>
+
+    <!-- MAP LIMIT -->
+    <div *ngIf="!mapLoading" class="map-limit">
       <mat-form-field appearance="outline">
         <mat-label>Guests to display</mat-label>
 
@@ -198,13 +203,8 @@
     </div>
   </div>
 
-  <!-- ERROR -->
-  <h1 *ngIf="vm.status === 'error'">
-    {{ vm?.error?.message }}
-  </h1>
-
   <!-- LOADING -->
-  <app-loading *ngIf="vm.status === 'loading'"></app-loading>
+  <app-loading *ngIf="vm.status === 'loading' && currentView === 'table'" [messages]="['Loading guests', 'Searching your guests', 'Getting the results', 'Almost there']"></app-loading>
 
   <!-- EMPTY -->
   <div *ngIf="vm.status === 'success' && !vm.data.length">

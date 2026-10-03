@@ -1,11 +1,7 @@
 <div *ngIf="vm$ | async as vm">
   <h1 class="title-stats">Stats</h1>
 
-  <app-loading *ngIf="vm.status === 'loading'"></app-loading>
-
-  <h1 *ngIf="vm.status === 'error'">
-    {{ vm.error.message }}
-  </h1>
+  <h1 *ngIf="vm.status === 'error'">{{ vm.error.message }}</h1>
 
   <div class="ctn-buttons">
     <!-- Summary -->
@@ -58,6 +54,8 @@
       <mat-icon class="material-symbols-outlined">cake</mat-icon>
     </button>
   </div>
+
+  <app-loading *ngIf="vm.status === 'loading'" [messages]="['Loading your statistics', 'Analyzing your guest data', 'Preparing your charts', 'Almost ready']"></app-loading>
 
   <ng-container *ngIf="vm.status === 'success'">
     <div class="ctn-content">

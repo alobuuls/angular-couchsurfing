@@ -8,6 +8,8 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 export class LoadingComponent implements OnInit, OnDestroy {
   @Input() messages: string[] = ['Loading', 'Almost there', 'We’re working on it', 'Almost ready', 'Just a moment'];
 
+  @Input() compact = false;
+
   currentMessage = '';
   private messageIndex = 0;
   private messageInterval?: ReturnType<typeof setInterval>;

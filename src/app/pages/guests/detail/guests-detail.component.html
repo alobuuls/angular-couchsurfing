@@ -3,7 +3,7 @@
 
   <!-- LOADING -->
   <div *ngIf="status === 'loading'">
-    <app-loading></app-loading>
+    <app-loading [messages]="['Loading guest details', 'Getting everything ready', 'Almost there', 'Preparing the guest profile']"></app-loading>
   </div>
 
   <!-- ERROR -->
