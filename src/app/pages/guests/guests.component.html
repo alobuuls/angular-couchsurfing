@@ -176,7 +176,7 @@
   <guests-cards *ngIf="currentView === 'cards'" [data]="cardsData" (loadMore)="loadMoreCards()"> </guests-cards>
 
   <!-- cards loading -->
-  <div *ngIf="currentView === 'cards' && cardsLoading" class="cards-loading">Loading guests...</div>
+  <app-loading *ngIf="currentView === 'cards' && cardsLoading" class="cards-loading"></app-loading>
 
   <!-- cards end -->
   <div *ngIf="currentView === 'cards' && !cardsHasMore && cardsData.length" class="cards-end">
@@ -204,7 +204,7 @@
   </h1>
 
   <!-- LOADING -->
-  <h1 *ngIf="vm.status === 'loading'">Loading...</h1>
+  <app-loading *ngIf="vm.status === 'loading'"></app-loading>
 
   <!-- EMPTY -->
   <div *ngIf="vm.status === 'success' && !vm.data.length">

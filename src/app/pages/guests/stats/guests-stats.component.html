@@ -1,7 +1,7 @@
 <div *ngIf="vm$ | async as vm">
   <h1 class="title-stats">Stats</h1>
 
-  <h1 *ngIf="vm.status === 'loading'">Loading...</h1>
+  <app-loading *ngIf="vm.status === 'loading'"></app-loading>
 
   <h1 *ngIf="vm.status === 'error'">
     {{ vm.error.message }}
