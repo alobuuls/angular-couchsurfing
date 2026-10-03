@@ -14,13 +14,42 @@
 
   <body class="mat-typography">
     <app-root class="app-stl">
+      <!-- Initial loading shown while Angular starts -->
       <div class="loading-container">
         <div class="logo-container">
           <i class="fa fa-spin fa-sync"></i>
         </div>
 
-        <h4 class="loading-title">Loading...</h4>
+        <h4 id="loading-title" class="loading-title">Loading...</h4>
       </div>
     </app-root>
-  <script src="runtime.46906fafdd5e0a04.js" type="module"></script><script src="polyfills.f4459ebca9899f1b.js" type="module"></script><script src="main.2669d7924da96d49.js" type="module"></script></body>
+
+    <!-- Rotate loading messages while the app is starting -->
+    <script>
+      const messages = [
+        'Loading...',
+        'Almost there...',
+        'Getting things ready...',
+        'Starting the app...',
+        'Almost ready...',
+      ];
+
+      let index = 0;
+
+      const loadingTitle = document.getElementById('loading-title');
+
+      if (loadingTitle) {
+        const messageInterval = setInterval(() => {
+          // Stop the interval once Angular replaces the initial loading
+          if (!document.getElementById('loading-title')) {
+            clearInterval(messageInterval);
+            return;
+          }
+
+          index = (index + 1) % messages.length;
+          loadingTitle.textContent = messages[index];
+        }, 2000);
+      }
+    </script>
+  <script src="runtime.d03cbc1246925eb8.js" type="module"></script><script src="polyfills.f4459ebca9899f1b.js" type="module"></script><script src="main.6eaacd5eda161939.js" type="module"></script></body>
 </html>
