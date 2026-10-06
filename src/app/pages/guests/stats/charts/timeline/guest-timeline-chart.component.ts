@@ -12,7 +12,7 @@ Chart.register(ForceDirectedGraphController, EdgeLine, LinearScale, PointElement
 import { ISameArrivalDay, ISameStay, ITimelineDistribution, ITimelineItem, ITimelineView } from '@interfaces/stats-interface';
 
 // Helpers
-import { getRankingColors, RANKING_COLORS } from '@helpers/chart-colors';
+import { getRankingColors, RANKING_COLORS } from '@utils';
 
 // Service
 import { FormatService } from '@services/format.service';

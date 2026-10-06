@@ -9,7 +9,7 @@ import { IDemographicsDistribution, IDemographicsView, IDemographicsTotalsView, 
 import { IQueryParamsGuests } from '@interfaces/guests.interface';
 
 // Helpers
-import { getRankingColors } from '@helpers/chart-colors';
+import { getRankingColors } from '@utils';
 
 // Services
 import { FormatService } from '@services/format.service';

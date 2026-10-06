@@ -5,7 +5,7 @@ import { Sort } from '@angular/material/sort';
 import { IGuestTableMember, IGuestTableRow, IGuestTableRowWithIndex } from '@interfaces/data-structure-api';
 
 // Utils
-import { compare } from '@helpers/sort.utils';
+import { compare } from '@utils';
 
 @Injectable({
   providedIn: 'root',

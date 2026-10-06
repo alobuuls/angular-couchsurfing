@@ -9,6 +9,9 @@ import { IGuestTableRow } from '@interfaces/data-structure-api';
 // Services
 import { FormatService } from '@services/format.service';
 
+// Helpers
+import { isGroup } from '@utils';
+
 @Component({
   selector: 'guests-table',
   templateUrl: './guests-table.component.html',
@@ -16,6 +19,7 @@ import { FormatService } from '@services/format.service';
 })
 export class GuestsTableComponent {
   _format = inject(FormatService);
+  csUrl: string = 'https://www.couchsurfing.com/c/users/';
 
   @Input() pagination?: IApiCsPag;
 
@@ -31,11 +35,7 @@ export class GuestsTableComponent {
     return this._data;
   }
 
-  @Output() detail = new EventEmitter<IGuestListItem>();
-  @Output() edit = new EventEmitter<IGuestListItem>();
   @Output() remove = new EventEmitter<IGuestListItem>();
-  @Output() whatsapp = new EventEmitter<string>();
-  @Output() couchsurfing = new EventEmitter<string>();
   @Output() detailGuest = new EventEmitter<string>();
 
   @Output() page = new EventEmitter<PageEvent>();
@@ -55,6 +55,24 @@ export class GuestsTableComponent {
     'rating',
     'actions',
   ];
+
+  openCouchsurfing(profileId: string): void {
+    window.open(`${profileId}`, '_blank');
+  }
+
+  openWhatsapp(whatsapp: string): void {
+    window.open(`https://wa.me/${whatsapp}`, '_blank');
+  }
+
+  getDetailRoute(guest: IGuestListItem): string[] {
+    if (isGroup(guest)) return ['/guests/groups', guest.groupId];
+    return ['/guests', guest.guestId];
+  }
+
+  getEditRoute(guest: IGuestListItem): string[] {
+    if (isGroup(guest)) return ['/guests/groups/edit', guest.groupId];
+    return ['/guests/edit', guest.guestId];
+  }
 
   trackByIndexPhone(index: number): number {
     return index;

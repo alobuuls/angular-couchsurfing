@@ -30,7 +30,7 @@
       "@components/*": ["src/app/components/*"],
       "@shared/*": ["src/app/shared/*"],
       "@const/*": ["src/app/shared/constants/*"],
-      "@helpers/*": ["src/app/utils/helpers/*"],
+      "@utils": ["src/app/utils/index.ts"],
       "@pages/*": ["src/app/pages/*"],
       "@interfaces/*": ["src/app/interfaces/*"],
       "@type/*": ["src/app/types/*"]

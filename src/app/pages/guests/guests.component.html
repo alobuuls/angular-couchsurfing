@@ -1,4 +1,4 @@
-<ng-container *ngIf="vm$ | async as vm">
+<main *ngIf="vm$ | async as vm">
   <!-- FILTERS -->
   <form [formGroup]="filtersForm" class="filters-form" (ngSubmit)="onFiltersSubmit()">
     <!-- CONTINENT -->
@@ -157,26 +157,42 @@
 
   <div class="ctn-btns">
     <!-- TOGGLE BUTTON -->
-    <button class="btn-toggle" mat-icon-button (click)="changeView()" [matTooltip]="nextViewTooltip">
+    <button
+      class="btn-toggle"
+      mat-icon-button
+      [attr.aria-label]="nextViewTooltip"
+      (click)="changeView()"
+      [matTooltip]="nextViewTooltip"
+    >
       <mat-icon class="material-symbols-outlined" [fontIcon]="nextViewIcon"></mat-icon>
     </button>
 
     <!-- STATS BUTTON -->
-    <button [routerLink]="['/guests/stats']" class="btn-stats" mat-icon-button matTooltip="See stats">
+    <a [routerLink]="['/guests/stats']" class="btn-stats" mat-icon-button aria-label="See stats" matTooltip="See stats">
       <mat-icon class="material-symbols-outlined" fontIcon="leaderboard"></mat-icon>
-    </button>
+    </a>
 
     <!-- ADD BUTTON -->
-    <button [routerLink]="['/guests/add']" class="btn-add" mat-icon-button matTooltip="Create Guest">
+    <a
+      [routerLink]="['/guests/add']"
+      class="btn-add"
+      mat-icon-button
+      aria-label="Create Guest"
+      matTooltip="Create Guest"
+    >
       <mat-icon class="material-symbols-outlined" fontIcon="add"></mat-icon>
-    </button>
+    </a>
   </div>
 
   <!-- CARDS -->
   <guests-cards *ngIf="currentView === 'cards'" [data]="cardsData" (loadMore)="loadMoreCards()"> </guests-cards>
 
   <!-- cards loading -->
-  <app-loading *ngIf="currentView === 'cards' && cardsLoading" class="cards-loading" [messages]="['Loading your guests', 'Getting your guests ready', 'Almost there', 'Your cards are coming']"></app-loading>
+  <app-loading
+    *ngIf="currentView === 'cards' && cardsLoading"
+    class="cards-loading"
+    [messages]="['Loading your guests', 'Getting your guests ready', 'Almost there', 'Your cards are coming']"
+  ></app-loading>
 
   <!-- cards end -->
   <div *ngIf="currentView === 'cards' && !cardsHasMore && cardsData.length" class="cards-end">
@@ -186,7 +202,10 @@
   <!-- MAP -->
   <div *ngIf="currentView === 'map'" class="map-view">
     <!-- MAP LOADING -->
-    <app-loading *ngIf="mapLoading" [messages]="['Loading the map', 'Finding your guests', 'Preparing your map', 'Almost ready']"></app-loading>
+    <app-loading
+      *ngIf="mapLoading"
+      [messages]="['Loading the map', 'Finding your guests', 'Preparing your map', 'Almost ready']"
+    ></app-loading>
 
     <!-- MAP -->
     <guests-map *ngIf="!mapLoading" [data]="mapData"></guests-map>
@@ -204,7 +223,10 @@
   </div>
 
   <!-- LOADING -->
-  <app-loading *ngIf="vm.status === 'loading' && currentView === 'table'" [messages]="['Loading guests', 'Searching your guests', 'Getting the results', 'Almost there']"></app-loading>
+  <app-loading
+    *ngIf="vm.status === 'loading' && currentView === 'table'"
+    [messages]="['Loading guests', 'Searching your guests', 'Getting the results', 'Almost there']"
+  ></app-loading>
 
   <!-- EMPTY -->
   <div *ngIf="vm.status === 'success' && !vm.data.length">
@@ -218,14 +240,10 @@
     [data]="vm.data"
     [pagination]="vm.pagination"
     [offset]="vm.offset"
-    (detail)="openDetail($event)"
-    (edit)="editGuest($event)"
     (remove)="removeGuestConfirmation($event)"
-    (whatsapp)="openWhatsapp($event)"
-    (couchsurfing)="openCouchsurfing($event)"
     (detailGuest)="getDetailForShowingMore($event)"
     (sort)="onSortChange($event)"
     (page)="onPageChange($event)"
   >
   </guests-table>
-</ng-container>
+</main>
