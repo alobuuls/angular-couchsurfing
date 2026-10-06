@@ -16,9 +16,7 @@ import { ErrorHandlerService } from '@services/err-handler.service';
 import { GuestSortService } from '@services/guest-sort.service';
 
 // Helpers
-import { withReqState } from 'src/app/utils/operators/with-state-operator';
-import { mapGuestTable } from 'src/app/utils/mappers/guest-table.mapper';
-import { isGroup } from 'src/app/utils/helpers/guests-table.utils';
+import { withReqState, isGroup, mapGuestTable } from '@utils';
 
 // Interfaces
 import { IGuestListItem, IQueryParamsGuests } from '@interfaces/guests.interface';
@@ -276,24 +274,6 @@ export class GuestsComponent implements OnInit {
     this.filteredCountries = [...this.countries];
   }
 
-  // NAVIGATION
-  openDetail(guest: IGuestListItem): void {
-    const group = isGroup(guest);
-    if (group) {
-      this._router.navigate(['/guests/groups', guest.groupId]);
-      return;
-    }
-    this._router.navigate(['/guests', guest.guestId]);
-  }
-
-  openCouchsurfing(profileId: string): void {
-    window.open(`https://www.couchsurfing.com/c/users/${profileId}`, '_blank');
-  }
-
-  openWhatsapp(whatsapp: string): void {
-    window.open(`https://wa.me/${whatsapp}`, '_blank');
-  }
-
   // DELETE
   async removeGuestConfirmation(guest: IGuestListItem): Promise<void> {
     const deleted = await this._deleteService.confirmAndDelete(guest, item => {
@@ -303,14 +283,6 @@ export class GuestsComponent implements OnInit {
     });
     if (!deleted) return;
     this.page$.next({ ...this.page$.value });
-  }
-  // EDIT
-  editGuest(item: IGuestListItem): void {
-    if (isGroup(item)) {
-      this._router.navigate(['/guests/groups/edit', item.groupId]);
-      return;
-    }
-    this._router.navigate(['/guests/edit', item.guestId]);
   }
 
   // AUTOCOMPLETE

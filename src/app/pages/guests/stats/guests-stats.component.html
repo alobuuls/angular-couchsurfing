@@ -1,16 +1,23 @@
-<div *ngIf="vm$ | async as vm">
+<main *ngIf="vm$ | async as vm">
   <h1 class="title-stats">Stats</h1>
 
   <h1 *ngIf="vm.status === 'error'">{{ vm.error.message }}</h1>
 
   <div class="ctn-buttons">
     <!-- Summary -->
-    <button matTooltip="See Summary" mat-icon-button class="btn-summary" (click)="changeChart('summary')">
+    <button
+      aria-label="See Summary"
+      matTooltip="See Summary"
+      mat-icon-button
+      class="btn-summary"
+      (click)="changeChart('summary')"
+    >
       <mat-icon class="material-symbols-outlined">bar_chart</mat-icon>
     </button>
 
     <!-- Demographics -->
     <button
+      aria-label="See Demographics"
       matTooltip="See Demographics"
       mat-icon-button
       class="btn-demographics"
@@ -20,37 +27,79 @@
     </button>
 
     <!-- Geography -->
-    <button matTooltip="See Geography" mat-icon-button class="btn-geography" (click)="changeChart('geography')">
+    <button
+      aria-label="See Geography"
+      matTooltip="See Geography"
+      mat-icon-button
+      class="btn-geography"
+      (click)="changeChart('geography')"
+    >
       <mat-icon class="material-symbols-outlined">globe_location_pin</mat-icon>
     </button>
 
     <!-- Gifts -->
-    <button matTooltip="See Gifts" mat-icon-button class="btn-gifts" (click)="changeChart('gifts')">
+    <button
+      aria-label="See Gifts"
+      matTooltip="See Gifts"
+      mat-icon-button
+      class="btn-gifts"
+      (click)="changeChart('gifts')"
+    >
       <mat-icon class="material-symbols-outlined">featured_seasonal_and_gifts</mat-icon>
     </button>
 
     <!-- Rankings -->
-    <button matTooltip="See Rankings" mat-icon-button class="btn-ranking" (click)="changeChart('rankings')">
+    <button
+      aria-label="See Rankings"
+      matTooltip="See Rankings"
+      mat-icon-button
+      class="btn-ranking"
+      (click)="changeChart('rankings')"
+    >
       <mat-icon class="material-symbols-outlined">leaderboard</mat-icon>
     </button>
 
     <!-- Ratings -->
-    <button matTooltip="See Ratings" mat-icon-button class="btn-rating" (click)="changeChart('ratings')">
+    <button
+      aria-label="See Ratings"
+      matTooltip="See Ratings"
+      mat-icon-button
+      class="btn-rating"
+      (click)="changeChart('ratings')"
+    >
       <mat-icon class="material-symbols-outlined">star</mat-icon>
     </button>
 
     <!-- Timeline -->
-    <button matTooltip="See Timeline" mat-icon-button class="btn-timeline" (click)="changeChart('timeline')">
+    <button
+      aria-label="See Timeline"
+      matTooltip="See Timeline"
+      mat-icon-button
+      class="btn-timeline"
+      (click)="changeChart('timeline')"
+    >
       <mat-icon class="material-symbols-outlined">timeline</mat-icon>
     </button>
 
     <!-- Stays -->
-    <button matTooltip="See Stays" mat-icon-button class="btn-stays" (click)="changeChart('stays')">
+    <button
+      aria-label="See Stays"
+      matTooltip="See Stays"
+      mat-icon-button
+      class="btn-stays"
+      (click)="changeChart('stays')"
+    >
       <mat-icon class="material-symbols-outlined">hotel</mat-icon>
     </button>
 
     <!-- Birthdays -->
-    <button matTooltip="See Birthdays" mat-icon-button class="btn-birthdays" (click)="changeChart('birthdays')">
+    <button
+      aria-label="See Birthdays"
+      matTooltip="See Birthdays"
+      mat-icon-button
+      class="btn-birthdays"
+      (click)="changeChart('birthdays')"
+    >
       <mat-icon class="material-symbols-outlined">cake</mat-icon>
     </button>
   </div>
@@ -79,4 +128,4 @@
       </ng-template>
     </div>
   </ng-container>
-</div>
+</main>

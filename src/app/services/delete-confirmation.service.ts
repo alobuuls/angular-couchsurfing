@@ -9,7 +9,7 @@ import { AlertsService } from '@services/alerts.service';
 import { IGuestListItem } from '@interfaces/guests.interface';
 
 // Utils
-import { isGroup } from '@helpers/guests-table.utils';
+import { isGroup } from '@utils';
 
 // Const
 import { ALERT_MESSAGES } from '@const/alerts';
@@ -18,9 +18,7 @@ import { ALERT_MESSAGES } from '@const/alerts';
   providedIn: 'root',
 })
 export class GuestDeleteService {
-  constructor(
-    private _alerts: AlertsService
-  ) {}
+  constructor(private _alerts: AlertsService) {}
 
   async confirmAndDelete(guest: IGuestListItem, deleteFn: (guest: IGuestListItem) => Observable<unknown>): Promise<boolean> {
     const group = isGroup(guest);

@@ -15,7 +15,7 @@ import { ILongestView, IStaysDistribution, IStaysView } from '@interfaces/stats-
 import { FormatService } from '@services/format.service';
 
 // Helpers
-import { GENDER_COLORS, getGenderColor, getRankingColors } from '@helpers/chart-colors';
+import { GENDER_COLORS, getGenderColor, getRankingColors } from '@utils';
 
 @Component({
   selector: 'guest-stays-chart',

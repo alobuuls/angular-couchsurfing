@@ -1,6 +1,6 @@
 import { IGuestListItem } from '@interfaces/guests.interface';
 import { IGuestTableRow } from '@interfaces/data-structure-api';
-import { getAges, isGroup } from '@helpers/guests-table.utils';
+import { getAges, isGroup } from '@utils';
 
 export const mapGuestTable = (guests: IGuestListItem[]): IGuestTableRow[] => {
   return guests.map(guest => {

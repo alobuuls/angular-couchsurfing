@@ -89,24 +89,42 @@
       </th>
       <td mat-cell *matCellDef="let guest">
         <div class="ctn-fullname-btns" *ngFor="let person of guest.people">
-          <button
-            [disabled]="!person.couchsurfing"
+          <a
+            *ngIf="person.couchsurfing"
+            [href]="csUrl + person.couchsurfing"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="View Couchsurfing profile"
             matTooltip="View Couchsurfing profile"
             class="btn-cs"
             mat-icon-button
-            (click)="couchsurfing.emit(person.couchsurfing)"
+          >
+            <mat-icon class="material-symbols-outlined" fontIcon="chair"></mat-icon>
+          </a>
+
+          <button
+            *ngIf="!person.couchsurfing"
+            type="button"
+            disabled
+            aria-label="Couchsurfing profile unavailable"
+            class="btn-cs"
+            mat-icon-button
           >
             <mat-icon class="material-symbols-outlined" fontIcon="chair"></mat-icon>
           </button>
-          <button
-            [disabled]="!person.whatsapp"
+
+          <a
+            *ngIf="person.whatsapp"
+            [href]="'https://wa.me/' + person.whatsapp"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Send WhatsApp message"
             matTooltip="Send message"
             class="btn-whatsapp"
             mat-icon-button
-            (click)="whatsapp.emit(person.whatsapp)"
           >
             <i class="fa-brands fa-whatsapp"></i>
-          </button>
+          </a>
 
           <div class="ctn-first">
             <span>{{ person.fullName }}</span>
@@ -153,7 +171,11 @@
 
         <ng-template #hometownList>
           <div *ngFor="let person of guest.people">
-            <span class="flag-gap" [class]="person.hometown.code | flag" [matTooltip]="_format.formatCountry(person.hometown.code)"></span>
+            <span
+              class="flag-gap"
+              [class]="person.hometown.code | flag"
+              [matTooltip]="_format.formatCountry(person.hometown.code)"
+            ></span>
             {{ person.hometown.city }}
           </div>
         </ng-template>
@@ -169,14 +191,22 @@
       <td mat-cell *matCellDef="let guest">
         <div *ngIf="guest.isLivingInUnique; else livingList">
           <span class="badge-single">
-            <span class="flag-gap" [class]="guest.people[0].livingIn.code | flag" [matTooltip]="_format.formatCountry(guest.people[0].livingIn.code)"></span>
+            <span
+              class="flag-gap"
+              [class]="guest.people[0].livingIn.code | flag"
+              [matTooltip]="_format.formatCountry(guest.people[0].livingIn.code)"
+            ></span>
             {{ guest.people[0].livingIn.city }}
           </span>
         </div>
 
         <ng-template #livingList>
           <div *ngFor="let person of guest.people">
-            <span class="flag-gap" [class]="person.livingIn.code | flag" [matTooltip]="_format.formatCountry(person.livingIn.code)"></span>
+            <span
+              class="flag-gap"
+              [class]="person.livingIn.code | flag"
+              [matTooltip]="_format.formatCountry(person.livingIn.code)"
+            ></span>
             {{ person.livingIn.city }}
           </div>
         </ng-template>
@@ -217,15 +247,33 @@
       <th mat-header-cell *matHeaderCellDef><mat-icon class="material-symbols-outlined">settings</mat-icon> Actions</th>
       <td mat-cell *matCellDef="let guest">
         <div class="actions">
-          <button matTooltip="View guest" class="btn-detail" mat-icon-button (click)="detail.emit(guest)">
+          <a
+            matTooltip="View guest"
+            aria-label="View guest"
+            mat-icon-button
+            class="btn-detail"
+            [routerLink]="getDetailRoute(guest)"
+          >
             <mat-icon class="material-symbols-outlined" fontIcon="visibility" />
-          </button>
+          </a>
 
-          <button matTooltip="Edit guest" class="btn-edit" mat-icon-button (click)="edit.emit(guest)">
+          <a
+            matTooltip="Edit guest"
+            aria-label="Edit guest"
+            mat-icon-button
+            class="btn-edit"
+            [routerLink]="getEditRoute(guest)"
+          >
             <mat-icon class="material-symbols-outlined" fontIcon="edit" />
-          </button>
+          </a>
 
-          <button matTooltip="Delete guest" class="btn-delete" mat-icon-button (click)="remove.emit(guest)">
+          <button
+            matTooltip="Delete guest"
+            aria-label="Delete guest"
+            class="btn-delete"
+            mat-icon-button
+            (click)="remove.emit(guest)"
+          >
             <mat-icon class="material-symbols-outlined" fontIcon="delete" />
           </button>
         </div>
