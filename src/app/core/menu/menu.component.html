@@ -48,6 +48,61 @@
         ></mat-icon>
         Personal
       </a>
+
+      <!-- THEME -->
+      <button class="links-menu btn-theme" (click)="toggleTheme()" [attr.aria-label]="themeLabel">
+        <mat-icon class="material-symbols-outlined icon-theme" aria-hidden="true" [fontIcon]="themeIcon"></mat-icon>
+      </button>
+
+      <!-- THEME SELECTION -->
+      <div class="ctn-selection-theme">
+        <button class="links-menu btn-tint" aria-label="Select color palette" (click)="toggleThemeSelection()">
+          <mat-icon
+            class="material-symbols-outlined icon-palette"
+            [class.active]="showThemeSelection"
+            aria-hidden="true"
+            fontIcon="palette"
+          ></mat-icon>
+        </button>
+
+        <div class="tints" [class.active]="showThemeSelection">
+          <!-- Coastal Nomad -->
+          <button
+            class="btn-tint coastal"
+            aria-label="Coastal Nomad palette"
+            title="Coastal Nomad"
+            [class.selected]="currentPalette === 'coastal'"
+            (click)="selectPalette('coastal')"
+          ></button>
+
+          <!-- Ocean Blue -->
+          <button
+            class="btn-tint ocean"
+            aria-label="Ocean Blue palette"
+            title="Ocean Blue"
+            [class.selected]="currentPalette === 'ocean'"
+            (click)="selectPalette('ocean')"
+          ></button>
+
+          <!-- Pink Blossom -->
+          <button
+            class="btn-tint pink"
+            aria-label="Pink Blossom palette"
+            title="Pink Blossom"
+            [class.selected]="currentPalette === 'pink'"
+            (click)="selectPalette('pink')"
+          ></button>
+
+          <!-- Lavender Nomad -->
+          <button
+            class="btn-tint lavender"
+            aria-label="Lavender Nomad palette"
+            title="Lavender Nomad"
+            [class.selected]="currentPalette === 'lavender'"
+            (click)="selectPalette('lavender')"
+          ></button>
+        </div>
+      </div>
     </div>
   </nav>
 </header>

@@ -1,6 +1,10 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject } from '@angular/core';
+import { environment } from '@env/environment';
 
+// Library
 import * as L from 'leaflet';
+import { union } from '@turf/union';
+import { featureCollection } from '@turf/helpers';
 
 // Services
 import { MapService } from '@services/map.service';
@@ -14,10 +18,6 @@ import { WORLD } from '@config/world';
 
 // Types
 import { ICountry } from '@type/word.types';
-
-import { union } from '@turf/union';
-import { featureCollection } from '@turf/helpers';
-import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'guests-map',
@@ -34,6 +34,10 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
   private map?: L.Map;
   private geoLayer?: L.GeoJSON;
+
+  private tileLayer?: L.TileLayer;
+  private themeObserver?: MutationObserver;
+  private isDarkMap?: boolean;
 
   // Regions GeoJson
   private adminRegionsGeoJsonData?: IAdminRegionsGeoJson;
@@ -123,6 +127,8 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     this.geoJsonData = undefined;
     this.adminRegionsGeoJsonData = undefined;
     this.mapContainer = undefined;
+
+    this.themeObserver?.disconnect();
   }
 
   // COUNTRY LOOKUPS
@@ -347,15 +353,8 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
       attributionControl: true,
     });
 
-    // TILE LAYER
-    L.tileLayer(`https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=${environment.apiKeyCarto}`, {
-      attribution: '&copy; OpenStreetMap &copy; CARTO',
-      subdomains: 'abcd',
-      maxZoom: 19,
-      keepBuffer: 3,
-      updateWhenZooming: true,
-      updateWhenIdle: true,
-    }).addTo(this.map);
+    this.updateMapTheme();
+    this.watchThemeChanges();
 
     // GUEST COUNTS
     this.guestCounts = this.getGuestCounts();
@@ -868,5 +867,42 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
       maxWidth: 280,
     });
     layer.openPopup();
+  }
+
+  // Color theme
+  private updateMapTheme(): void {
+    if (!this.map) return;
+
+    const isDark = document.documentElement.classList.contains('dark-theme') || document.body.classList.contains('dark-theme');
+
+    if (this.isDarkMap === isDark && this.tileLayer) return;
+
+    this.isDarkMap = isDark;
+    this.tileLayer?.remove();
+
+    const mapTheme = isDark ? 'dark_all' : 'light_all';
+
+    this.tileLayer = L.tileLayer(`https://{s}.basemaps.cartocdn.com/${mapTheme}/{z}/{x}/{y}{r}.png?key=${environment.apiKeyCarto}`, {
+      attribution: '&copy; OpenStreetMap &copy; CARTO',
+      subdomains: 'abcd',
+      maxZoom: 19,
+      keepBuffer: 3,
+      updateWhenZooming: true,
+      updateWhenIdle: true,
+    }).addTo(this.map);
+  }
+
+  private watchThemeChanges(): void {
+    this.themeObserver = new MutationObserver(() => {
+      this.updateMapTheme();
+    });
+
+    const options = {
+      attributes: true,
+      attributeFilter: ['class'],
+    };
+
+    this.themeObserver.observe(document.documentElement, options);
+    this.themeObserver.observe(document.body, options);
   }
 }

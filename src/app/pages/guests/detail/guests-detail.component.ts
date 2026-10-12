@@ -72,6 +72,10 @@ export class GuestsDetailComponent implements OnInit {
     window.open(`https://www.instagram.com/${username}`, '_blank');
   }
 
+  openWhatsapp(whatsapp: string): void {
+    window.open(`https://wa.me/${whatsapp}`, '_blank');
+  }
+
   formatRegion(region: string): string {
     return region.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
   }

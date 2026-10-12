@@ -1,7 +1,9 @@
+/* GUESTS TABLE */
 ::ng-deep .mat-mdc-tooltip {
   white-space: pre-line;
 }
 
+/* TABLE CONTAINER */
 .ctn-guests {
   margin-top: 2.5rem;
   text-align: center;
@@ -12,24 +14,15 @@ table {
   width: 100%;
 }
 
+/* COLUMNS */
 .mat-column-actions {
   width: 150px;
 }
 
-.actions {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
+/* FULL NAME  */
 .ctn-first {
   display: flex;
   gap: 0 5px;
-}
-
-.btn-edit {
-  background-color: #0e6ca2;
-  color: white;
 }
 
 .ctn-fullname-btns {
@@ -41,6 +34,20 @@ table {
   }
 }
 
+/* ACTION BUTTONS */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-edit,
+.btn-delete,
+.btn-detail {
+  color: #ffffff;
+}
+
+/* Couchsurfing / WhatsApp buttons */
 .btn-whatsapp,
 .btn-cs {
   display: flex;
@@ -53,103 +60,141 @@ table {
   & > mat-icon {
     line-height: 1.5rem;
     font-size: 1rem;
+    color: #ffffff;
   }
 
   &[disabled] {
-    background-color: #cdcdcd;
-    color: #1c1c1c;
+    background-color: var(--color-border);
     cursor: no-drop;
     pointer-events: none;
 
     & > i {
-      color: #1c1c1c;
+      color: var(--color-text-muted);
+    }
+
+    & > mat-icon {
+      color: var(--color-text-muted);
     }
   }
 
   &.btn-whatsapp {
-    color: white;
+    color: #ffffff;
     font-size: 1rem;
   }
 
   &.btn-cs {
-    color: white;
+    color: #ffffff;
     font-size: 1rem;
   }
 }
 
 .btn-whatsapp {
-  background-color: #16b751;
-}
-
-.btn-delete {
-  background-color: #9b2108;
-  color: white;
-}
-
-.btn-detail {
-  background-color: #3e089b;
-  color: white;
+  background-color: var(--color-whatsapp);
 }
 
 .btn-cs {
-  background-color: #ff7043;
-  color: white;
-
-  &[disabled] {
-    background-color: #8f8c8c;
-    color: #1c1c1c;
-    cursor: no-drop;
-    pointer-events: none;
-  }
+  background-color: var(--color-couchsurfing);
 }
 
-.ctn-stars {
-  color: goldenrod;
-  display: flex;
-  gap: 0 0.25rem;
-
-  & > mat-icon {
-    color: transparent;
-    /* -webkit-text-stroke: 0.1mm #c51010; */
-    -webkit-text-fill-color: #fefb24;
-    opacity: 0.2;
-    transition: -webkit-text-fill-color 0.3s ease-in-out;
-
-    &.filled {
-      opacity: 1;
-      -webkit-text-fill-color: #fefb24;
-    }
-  }
+/* Edit /  Detail /  Delete */
+.btn-edit {
+  background-color: var(--color-primary);
 }
 
+.btn-detail {
+  background-color: var(--color-secondary);
+}
+
+.btn-delete {
+  background-color: var(--color-danger);
+}
+
+/* GENDER */
+.male,
+.female {
+  font-size: 1.5rem;
+}
+
+.male {
+  color: var(--color-male);
+}
+
+.female {
+  color: var(--color-female);
+}
+
+.nights-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background-color: color-mix(in srgb, var(--color-secondary) 80%, #ffffff);
+  color: #ffffff;
+  font-size: 0.75rem;
+}
+
+.no-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  font-size: 0.75rem;
+}
+
+/* TABLE INTERACTION */
 th {
   cursor: pointer;
 }
 
-.male {
-  font-size: 1.5rem;
-  color: #5a94bf;
-}
-
-.female {
-  font-size: 1.5rem;
-  color: #eaa5be;
-}
-
-td,
-th {
-  color: white;
-}
-
+/* TABLE HEADER  */
 .mat-mdc-header-row {
-  background-color: rgb(1, 31, 55);
+  background-color: var(--color-primary-dark);
+}
+
+th,
+th mat-icon {
+  color: var(--color-primary-light);
+}
+
+th,
+th i {
+  color: var(--color-primary-light);
+}
+
+/* TABLE ROWS  */
+th {
+  color: #ffffff;
+}
+
+td {
+  color: var(--color-text);
+}
+
+.mat-mdc-row {
+  background-color: var(--color-surface);
+  transition: ease-in-out 0.1s ease-in-out;
 }
 
 tr:nth-of-type(even) {
-  background-color: #1a1e21;
+  background-color: color-mix(in srgb, var(--color-primary) 5%, var(--color-surface));
 }
 
-th mat-icon,
-th {
-  color: #fff;
+.ctn-stars .material-symbols-outlined {
+  transition: -webkit-text-stroke 0.2s ease;
+}
+
+.mat-mdc-row:hover {
+  background-color: color-mix(in srgb, var(--color-primary-light) 70%, #ffffff);
+
+  .ctn-stars .material-symbols-outlined {
+    -webkit-text-fill-color: var(--color-primary-dark);
+  }
 }

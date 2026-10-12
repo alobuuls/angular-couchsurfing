@@ -9,7 +9,7 @@ import { IDemographicsDistribution, IDemographicsView, IDemographicsTotalsView, 
 import { IQueryParamsGuests } from '@interfaces/guests.interface';
 
 // Helpers
-import { getRankingColors } from '@utils';
+import { CHART_NEUTRAL_COLOR, CHART_UNKNOWN_COLOR, GENDER_COLORS, getColorWithOpacity, getRankingColors, GROUP_COLORS, RANKING_COLORS } from '@utils';
 
 // Services
 import { FormatService } from '@services/format.service';
@@ -22,6 +22,7 @@ import { FormatService } from '@services/format.service';
 export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   private _format = inject(FormatService);
   private _router = inject(Router);
+
   // Demographic data received from the parent component.
   @Input() demographics!: IDemographicsDistribution;
 
@@ -45,6 +46,14 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
     oldest: 'Oldest',
     youngest: 'Youngest',
     firstLast: 'First - Last',
+  };
+
+  // References color
+  private readonly genderColors = {
+    male: GENDER_COLORS.male,
+    female: GENDER_COLORS.female,
+    trans: GENDER_COLORS.trans,
+    isGay: GENDER_COLORS.gay,
   };
 
   // Currently selected totals sub-view.
@@ -241,8 +250,15 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             label: 'Overall Demographics',
             // Values used to calculate each section of the doughnut.
             data: [overall.male, overall.female, overall.trans, overall.isGay],
-            backgroundColor: ['rgba(54, 162, 235, 0.2)', 'rgba(255, 99, 132, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)'],
-            borderColor: ['rgb(54, 162, 235)', 'rgb(255, 99, 132)', 'rgb(153, 102, 255)', 'rgb(255, 159, 64)'],
+
+            backgroundColor: [
+              getColorWithOpacity(GENDER_COLORS.male),
+              getColorWithOpacity(GENDER_COLORS.female),
+              getColorWithOpacity(GENDER_COLORS.trans),
+              getColorWithOpacity(GENDER_COLORS.gay),
+            ],
+            borderColor: [GENDER_COLORS.male.border, GENDER_COLORS.female.border, GENDER_COLORS.trans.border, GENDER_COLORS.gay.border],
+
             borderWidth: 1,
           },
         ],
@@ -280,34 +296,31 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         datasets: [
           {
             label: 'Male',
-            // Male values for each travel group.
             data: [groups.solo.male, groups.couple.male, groups.friends.male, groups.family.male],
-            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            borderColor: 'rgb(54, 162, 235)',
+            backgroundColor: getColorWithOpacity(GENDER_COLORS.male),
+            borderColor: GENDER_COLORS.male.border,
             borderWidth: 1,
           },
+
           {
             label: 'Female',
-            // Female values for each travel group.
             data: [groups.solo.female, groups.couple.female, groups.friends.female, groups.family.female],
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            borderColor: 'rgb(255, 99, 132)',
+            backgroundColor: getColorWithOpacity(GENDER_COLORS.female),
+            borderColor: GENDER_COLORS.female.border,
             borderWidth: 1,
           },
           {
             label: 'Trans',
-            // Trans values for each travel group.
             data: [groups.solo.trans, groups.couple.trans, groups.friends.trans, groups.family.trans],
-            backgroundColor: 'rgba(153, 102, 255, 0.2)',
-            borderColor: 'rgb(153, 102, 255)',
+            backgroundColor: getColorWithOpacity(GENDER_COLORS.trans),
+            borderColor: GENDER_COLORS.trans.border,
             borderWidth: 1,
           },
           {
-            label: 'Gay',
-            // Gay values for each travel group.
+            label: 'gay',
             data: [groups.solo.isGay, groups.couple.isGay, groups.friends.isGay, groups.family.isGay],
-            backgroundColor: 'rgba(255, 159, 64, 0.2)',
-            borderColor: 'rgb(255, 159, 64)',
+            backgroundColor: getColorWithOpacity(GENDER_COLORS.gay),
+            borderColor: GENDER_COLORS.gay.border,
             borderWidth: 1,
           },
         ],
@@ -440,21 +453,31 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
               generateLabels: () => [
                 {
                   text: 'Oldest',
-                  fillStyle: 'rgba(255, 215, 0, 0.5)',
-                  strokeStyle: 'rgb(255, 215, 0)',
+                  fillStyle: getColorWithOpacity(RANKING_COLORS.gold),
+                  strokeStyle: RANKING_COLORS.gold.border,
                   lineWidth: 1,
+                  fontColor: CHART_UNKNOWN_COLOR,
                 },
                 {
                   text: 'Second oldest',
-                  fillStyle: 'rgba(192, 192, 192, 0.5)',
-                  strokeStyle: 'rgb(192, 192, 192)',
+                  fillStyle: getColorWithOpacity(RANKING_COLORS.silver),
+                  strokeStyle: RANKING_COLORS.silver.border,
                   lineWidth: 1,
+                  fontColor: CHART_UNKNOWN_COLOR,
                 },
                 {
                   text: 'Third oldest',
-                  fillStyle: 'rgba(205, 127, 50, 0.5)',
-                  strokeStyle: 'rgb(205, 127, 50)',
+                  fillStyle: getColorWithOpacity(RANKING_COLORS.bronze),
+                  strokeStyle: RANKING_COLORS.bronze.border,
                   lineWidth: 1,
+                  fontColor: CHART_UNKNOWN_COLOR,
+                },
+                {
+                  text: 'Other',
+                  fillStyle: RANKING_COLORS.neutral.background,
+                  strokeStyle: RANKING_COLORS.neutral.border,
+                  lineWidth: 1,
+                  fontColor: CHART_UNKNOWN_COLOR,
                 },
               ],
             },
@@ -630,6 +653,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                     fillStyle: this.genderColors.male.background,
                     strokeStyle: this.genderColors.male.border,
                     lineWidth: 1,
+                    fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
 
@@ -639,6 +663,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                     fillStyle: this.genderColors.female.background,
                     strokeStyle: this.genderColors.female.border,
                     lineWidth: 1,
+                    fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
 
@@ -648,6 +673,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                     fillStyle: this.genderColors.isGay.background,
                     strokeStyle: this.genderColors.isGay.border,
                     lineWidth: 1,
+                    fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
 
@@ -657,6 +683,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                     fillStyle: this.genderColors.trans.background,
                     strokeStyle: this.genderColors.trans.border,
                     lineWidth: 1,
+                    fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
 
@@ -685,25 +712,6 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       },
     });
   }
-
-  private readonly genderColors: Record<IDemographicGender, { background: string; border: string }> = {
-    female: {
-      background: 'rgba(255, 99, 132, 0.5)',
-      border: 'rgb(255, 99, 132)',
-    },
-    male: {
-      background: 'rgba(54, 162, 235, 0.5)',
-      border: 'rgb(54, 162, 235)',
-    },
-    isGay: {
-      background: 'rgba(255, 193, 7, 0.5)',
-      border: 'rgb(255, 193, 7)',
-    },
-    trans: {
-      background: 'rgba(153, 102, 255, 0.5)',
-      border: 'rgb(153, 102, 255)',
-    },
-  };
 
   // OLDEST - GROUPS
   private createGroupsOldestChart(): Chart {
@@ -750,7 +758,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       Family: 3,
     };
 
-    return new Chart(this.demographicsChart.nativeElement, {
+    const chart = new Chart(this.demographicsChart.nativeElement, {
       type: 'bubble',
       data: {
         datasets: [
@@ -764,8 +772,8 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             })),
 
             // Apply the color according to the guest's demographic.
-            backgroundColor: groupsPeople.map(person => this.groupColors[person.group].background),
-            borderColor: groupsPeople.map(person => this.groupColors[person.group].border),
+            backgroundColor: groupsPeople.map(person => getColorWithOpacity(GROUP_COLORS[person.group])),
+            borderColor: groupsPeople.map(person => GROUP_COLORS[person.group].border),
             borderWidth: 1,
           },
         ],
@@ -819,33 +827,37 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
           legend: {
             display: true,
             labels: {
+              color: '#f9eaf0',
               generateLabels: () => {
                 const labels = [];
 
                 if (groupsPeople.some(person => person.group === 'Couple')) {
                   labels.push({
                     text: 'Couple',
-                    fillStyle: 'rgba(255, 99, 132, 0.5)',
-                    strokeStyle: 'rgb(255, 99, 132)',
+                    fillStyle: getColorWithOpacity(GROUP_COLORS.Couple),
+                    strokeStyle: GROUP_COLORS.Couple.border,
                     lineWidth: 1,
+                    fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
 
                 if (groupsPeople.some(person => person.group === 'Friends')) {
                   labels.push({
                     text: 'Friends',
-                    fillStyle: 'rgba(75, 192, 192, 0.5)',
-                    strokeStyle: 'rgb(75, 192, 192)',
+                    fillStyle: getColorWithOpacity(GROUP_COLORS.Friends),
+                    strokeStyle: GROUP_COLORS.Friends.border,
                     lineWidth: 1,
+                    fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
 
                 if (groupsPeople.some(person => person.group === 'Family')) {
                   labels.push({
                     text: 'Family',
-                    fillStyle: 'rgba(255, 193, 7, 0.5)',
-                    strokeStyle: 'rgb(255, 193, 7)',
+                    fillStyle: getColorWithOpacity(GROUP_COLORS.Family),
+                    strokeStyle: GROUP_COLORS.Family.border,
                     lineWidth: 1,
+                    fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
                 return labels;
@@ -871,22 +883,32 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         },
       },
     });
-  }
+    console.log('Color de labels:', chart.options.plugins?.legend?.labels?.color);
 
-  private readonly groupColors: Record<string, { background: string; border: string }> = {
-    Couple: {
-      background: 'rgba(255, 99, 132, 0.5)',
-      border: 'rgb(255, 99, 132)',
-    },
-    Friends: {
-      background: 'rgba(75, 192, 192, 0.5)',
-      border: 'rgb(75, 192, 192)',
-    },
-    Family: {
-      background: 'rgba(255, 193, 7, 0.5)',
-      border: 'rgb(255, 193, 7)',
-    },
-  };
+    console.log('Color CSS actual:', getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim());
+
+    console.log('Color global Chart.js:', Chart.defaults.color);
+
+    console.log('Color efectivo de la leyenda:', chart.options.plugins?.legend?.labels?.color);
+
+    console.log('Leyenda activada:', chart.options.plugins?.legend?.display);
+
+    console.log('Canvas:', chart.canvas);
+
+    console.log('Instancia de la leyenda:', chart.legend);
+
+    console.log('Color de las etiquetas:', chart.options.plugins?.legend?.labels?.color);
+
+    console.log(
+      'Elementos de la leyenda:',
+      chart.legend?.legendItems?.map(item => ({
+        text: item.text,
+        fontColor: item.fontColor,
+        fillStyle: item.fillStyle,
+      }))
+    );
+    return chart;
+  }
 
   // YOUNGEST - OVERALL
   private createOverallYoungestChart(): Chart {
@@ -969,21 +991,24 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
               generateLabels: () => [
                 {
                   text: 'Youngest',
-                  fillStyle: 'rgba(255, 215, 0, 0.5)',
-                  strokeStyle: 'rgb(255, 215, 0)',
+                  fillStyle: getColorWithOpacity(RANKING_COLORS.gold),
+                  strokeStyle: RANKING_COLORS.gold.border,
                   lineWidth: 1,
+                  fontColor: CHART_UNKNOWN_COLOR,
                 },
                 {
-                  text: 'Second youngest',
-                  fillStyle: 'rgba(192, 192, 192, 0.5)',
-                  strokeStyle: 'rgb(192, 192, 192)',
+                  text: 'Second Youngest',
+                  fillStyle: getColorWithOpacity(RANKING_COLORS.silver),
+                  strokeStyle: RANKING_COLORS.silver.border,
                   lineWidth: 1,
+                  fontColor: CHART_UNKNOWN_COLOR,
                 },
                 {
-                  text: 'Third youngest',
-                  fillStyle: 'rgba(205, 127, 50, 0.5)',
-                  strokeStyle: 'rgb(205, 127, 50)',
+                  text: 'Third Youngest',
+                  fillStyle: getColorWithOpacity(RANKING_COLORS.bronze),
+                  strokeStyle: RANKING_COLORS.bronze.border,
                   lineWidth: 1,
+                  fontColor: CHART_UNKNOWN_COLOR,
                 },
               ],
             },
@@ -1104,39 +1129,42 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                 if (soloPeople.some(person => person.demographic === 'male')) {
                   labels.push({
                     text: 'Male',
-                    fillStyle: 'rgba(54, 162, 235, 0.5)',
-                    strokeStyle: 'rgb(54, 162, 235)',
+                    fillStyle: getColorWithOpacity(this.genderColors.male),
+                    strokeStyle: this.genderColors.male.border,
                     lineWidth: 1,
+                    fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
 
                 if (soloPeople.some(person => person.demographic === 'female')) {
                   labels.push({
                     text: 'Female',
-                    fillStyle: 'rgba(255, 99, 132, 0.5)',
-                    strokeStyle: 'rgb(255, 99, 132)',
+                    fillStyle: getColorWithOpacity(this.genderColors.female),
+                    strokeStyle: this.genderColors.female.border,
                     lineWidth: 1,
+                    fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
 
                 if (soloPeople.some(person => person.demographic === 'trans')) {
                   labels.push({
                     text: 'Trans',
-                    fillStyle: 'rgba(153, 102, 255, 0.5)',
-                    strokeStyle: 'rgb(153, 102, 255)',
+                    fillStyle: getColorWithOpacity(this.genderColors.trans),
+                    strokeStyle: this.genderColors.trans.border,
                     lineWidth: 1,
+                    fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
 
                 if (soloPeople.some(person => person.demographic === 'isGay')) {
                   labels.push({
                     text: 'Gay',
-                    fillStyle: 'rgba(255, 193, 7, 0.5)',
-                    strokeStyle: 'rgb(255, 193, 7)',
+                    fillStyle: getColorWithOpacity(this.genderColors.isGay),
+                    strokeStyle: this.genderColors.isGay.border,
                     lineWidth: 1,
+                    fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
-
                 return labels;
               },
             },
@@ -1217,8 +1245,8 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
               r: 20,
             })),
             // Apply the color according to the group.
-            backgroundColor: groupsPeople.map(person => this.groupColors[person.group].background),
-            borderColor: groupsPeople.map(person => this.groupColors[person.group].border),
+            backgroundColor: groupsPeople.map(person => getColorWithOpacity(GROUP_COLORS[person.group])),
+            borderColor: groupsPeople.map(person => GROUP_COLORS[person.group].border),
             borderWidth: 1,
           },
         ],
@@ -1278,27 +1306,30 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                 if (groupsPeople.some(person => person.group === 'Couple')) {
                   labels.push({
                     text: 'Couple',
-                    fillStyle: 'rgba(255, 99, 132, 0.5)',
-                    strokeStyle: 'rgb(255, 99, 132)',
+                    fillStyle: getColorWithOpacity(GROUP_COLORS.Couple),
+                    strokeStyle: GROUP_COLORS.Couple.border,
                     lineWidth: 1,
+                    fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
 
                 if (groupsPeople.some(person => person.group === 'Friends')) {
                   labels.push({
                     text: 'Friends',
-                    fillStyle: 'rgba(75, 192, 192, 0.5)',
-                    strokeStyle: 'rgb(75, 192, 192)',
+                    fillStyle: getColorWithOpacity(GROUP_COLORS.Friends),
+                    strokeStyle: GROUP_COLORS.Friends.border,
                     lineWidth: 1,
+                    fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
 
                 if (groupsPeople.some(person => person.group === 'Family')) {
                   labels.push({
                     text: 'Family',
-                    fillStyle: 'rgba(255, 193, 7, 0.5)',
-                    strokeStyle: 'rgb(255, 193, 7)',
+                    fillStyle: getColorWithOpacity(GROUP_COLORS.Family),
+                    strokeStyle: GROUP_COLORS.Family.border,
                     lineWidth: 1,
+                    fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
                 return labels;
@@ -1362,13 +1393,10 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             ],
             // Connect First and Last.
             showLine: true,
-            borderColor: 'rgba(100, 100, 100, 0.5)',
+            borderColor: CHART_NEUTRAL_COLOR,
             borderWidth: 2,
-            pointBackgroundColor: [
-              first ? this.firstLastGenderColors[first.gender].background : undefined,
-              last ? this.firstLastGenderColors[last.gender].background : undefined,
-            ],
-            pointBorderColor: [first ? this.firstLastGenderColors[first.gender].border : undefined, last ? this.firstLastGenderColors[last.gender].border : undefined],
+            pointBackgroundColor: [first ? this.genderColors[first.gender].background : undefined, last ? this.genderColors[last.gender].background : undefined],
+            pointBorderColor: [first ? this.genderColors[first.gender].border : undefined, last ? this.genderColors[last.gender].border : undefined],
             pointRadius: 8,
             pointHoverRadius: 11,
           },
@@ -1414,46 +1442,27 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                   fillStyle: string;
                   strokeStyle: string;
                   lineWidth: number;
+                  fontColor: string;
                 }[] = [];
 
                 const genders = [
-                  {
-                    key: 'male' as const,
-                    text: 'Male',
-                    background: 'rgba(54, 162, 235, 0.7)',
-                    border: 'rgb(54, 162, 235)',
-                  },
-                  {
-                    key: 'female' as const,
-                    text: 'Female',
-                    background: 'rgba(255, 99, 132, 0.7)',
-                    border: 'rgb(255, 99, 132)',
-                  },
-                  {
-                    key: 'trans' as const,
-                    text: 'Trans',
-                    background: 'rgba(153, 102, 255, 0.7)',
-                    border: 'rgb(153, 102, 255)',
-                  },
-                  {
-                    key: 'isGay' as const,
-                    text: 'Gay',
-                    background: 'rgba(255, 193, 7, 0.7)',
-                    border: 'rgb(255, 193, 7)',
-                  },
+                  { key: 'male' as const, text: 'Male', color: this.genderColors.male },
+                  { key: 'female' as const, text: 'Female', color: this.genderColors.female },
+                  { key: 'trans' as const, text: 'Trans', color: this.genderColors.trans },
+                  { key: 'isGay' as const, text: 'Gay', color: this.genderColors.isGay },
                 ];
 
                 genders.forEach(gender => {
                   if (first?.gender === gender.key || last?.gender === gender.key) {
                     labels.push({
                       text: gender.text,
-                      fillStyle: gender.background,
-                      strokeStyle: gender.border,
+                      fillStyle: getColorWithOpacity(gender.color),
+                      strokeStyle: gender.color.border,
                       lineWidth: 1,
+                      fontColor: CHART_UNKNOWN_COLOR,
                     });
                   }
                 });
-
                 return labels;
               },
             },
@@ -1498,25 +1507,25 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         label: 'Solo Female',
         first: solo.female.first,
         last: solo.female.last,
-        color: this.firstLastGenderColors.female,
+        color: this.genderColors.female,
       },
       {
         label: 'Solo Male',
         first: solo.male.first,
         last: solo.male.last,
-        color: this.firstLastGenderColors.male,
+        color: this.genderColors.male,
       },
       {
         label: 'Solo Trans',
         first: solo.trans.first,
         last: solo.trans.last,
-        color: this.firstLastGenderColors.trans,
+        color: this.genderColors.trans,
       },
       {
         label: 'Solo Gay',
         first: solo.isGay.first,
         last: solo.isGay.last,
-        color: this.firstLastGenderColors.isGay,
+        color: this.genderColors.isGay,
       },
     ];
 
@@ -1596,36 +1605,40 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                 if (validCategories.some(category => category.label === 'Solo Female')) {
                   labels.push({
                     text: 'Female',
-                    fillStyle: 'rgba(255, 99, 132, 0.7)',
-                    strokeStyle: 'rgb(255, 99, 132)',
+                    fillStyle: getColorWithOpacity(this.genderColors.female),
+                    strokeStyle: this.genderColors.female.border,
                     lineWidth: 1,
+                    fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
 
                 if (validCategories.some(category => category.label === 'Solo Male')) {
                   labels.push({
                     text: 'Male',
-                    fillStyle: 'rgba(54, 162, 235, 0.7)',
-                    strokeStyle: 'rgb(54, 162, 235)',
+                    fillStyle: getColorWithOpacity(this.genderColors.male),
+                    strokeStyle: this.genderColors.male.border,
                     lineWidth: 1,
+                    fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
 
                 if (validCategories.some(category => category.label === 'Solo Trans')) {
                   labels.push({
                     text: 'Trans',
-                    fillStyle: 'rgba(153, 102, 255, 0.7)',
-                    strokeStyle: 'rgb(153, 102, 255)',
+                    fillStyle: getColorWithOpacity(this.genderColors.trans),
+                    strokeStyle: this.genderColors.trans.border,
                     lineWidth: 1,
+                    fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
 
                 if (validCategories.some(category => category.label === 'Solo Gay')) {
                   labels.push({
                     text: 'Gay',
-                    fillStyle: 'rgba(255, 193, 7, 0.7)',
-                    strokeStyle: 'rgb(255, 193, 7)',
+                    fillStyle: getColorWithOpacity(this.genderColors.isGay),
+                    strokeStyle: this.genderColors.isGay.border,
                     lineWidth: 1,
+                    fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
                 return labels;
@@ -1663,19 +1676,19 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         label: 'Couple',
         first: firstLast.couple.first,
         last: firstLast.couple.last,
-        color: this.firstLastGroupColors.Couple,
+        color: GROUP_COLORS.Couple,
       },
       {
         label: 'Friends',
         first: firstLast.friends.first,
         last: firstLast.friends.last,
-        color: this.firstLastGroupColors.Friends,
+        color: GROUP_COLORS.Friends,
       },
       {
         label: 'Family',
         first: firstLast.family.first,
         last: firstLast.family.last,
-        color: this.firstLastGroupColors.Family,
+        color: GROUP_COLORS.Family,
       },
     ];
     const chartCategories = categories.filter(category => category.first && category.last);
@@ -1749,6 +1762,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                   fillStyle: string;
                   strokeStyle: string;
                   lineWidth: number;
+                  fontColor: string;
                 }[] = [];
 
                 categories.forEach(category => {
@@ -1758,6 +1772,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                       fillStyle: category.color.background,
                       strokeStyle: category.color.border,
                       lineWidth: 1,
+                      fontColor: CHART_UNKNOWN_COLOR,
                     });
                   }
                 });
@@ -1790,39 +1805,6 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       },
     });
   }
-  private readonly firstLastGenderColors: Record<IDemographicGender, { background: string; border: string }> = {
-    female: {
-      background: 'rgba(255, 99, 132, 0.7)',
-      border: 'rgb(255, 99, 132)',
-    },
-    male: {
-      background: 'rgba(54, 162, 235, 0.7)',
-      border: 'rgb(54, 162, 235)',
-    },
-    isGay: {
-      background: 'rgba(255, 193, 7, 0.7)',
-      border: 'rgb(255, 193, 7)',
-    },
-    trans: {
-      background: 'rgba(153, 102, 255, 0.7)',
-      border: 'rgb(153, 102, 255)',
-    },
-  };
-
-  private readonly firstLastGroupColors: Record<'Couple' | 'Friends' | 'Family', { background: string; border: string }> = {
-    Couple: {
-      background: 'rgba(255, 99, 71, 0.7)',
-      border: 'rgb(255, 99, 71)',
-    },
-    Friends: {
-      background: 'rgba(75, 192, 120, 0.7)',
-      border: 'rgb(75, 192, 120)',
-    },
-    Family: {
-      background: 'rgba(255, 159, 64, 0.7)',
-      border: 'rgb(255, 159, 64)',
-    },
-  };
 
   ngOnDestroy(): void {
     // Destroy the Chart.js instance when the component is removed to prevent memory leaks and duplicated charts

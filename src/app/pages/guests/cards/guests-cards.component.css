@@ -1,15 +1,17 @@
+/* GUEST CARDS — COASTAL NOMAD */
 .ctn-cards {
   margin-top: 5rem;
   padding: 3rem;
   text-align: center;
 }
 
+/* YEAR / MONTH GROUPS */
 .year-group {
   margin-bottom: 3.75rem;
 }
 
 .year-title {
-  color: #4f585e;
+  color: var(--color-secondary);
   font-size: 3.5rem;
   font-weight: 700;
   margin: 0 0 1.75rem;
@@ -20,7 +22,7 @@
 }
 
 .month-title {
-  color: #5e4f4f;
+  color: color-mix(in srgb, var(--color-primary) 90%, #ffffff);
   font-size: 2rem;
   font-weight: 600;
 }
@@ -31,7 +33,7 @@
 }
 
 .month-stats {
-  color: #4f585e;
+  color: color-mix(in srgb, var(--color-primary) 90%, #ffffff);
   font-size: 1rem;
   font-weight: 600;
 }
@@ -45,18 +47,19 @@
   font-size: 1.25rem;
 }
 
+/* CARDS GRID */
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
   gap: 3rem 1rem;
   max-width: 95%;
   margin: 2rem auto;
   place-items: center;
 }
 
+/* CARD GLOW */
 .card:before,
 .card:after {
-  background-image: linear-gradient(45deg, #ffbc00, #ff0058);
   content: '';
   height: 100%;
   left: 0;
@@ -65,31 +68,33 @@
   width: 100%;
 }
 
-.card:nth-child(2):before,
-.card:nth-child(2):after {
-  background-image: linear-gradient(315deg, #03a9f4, #ff0058);
+.card:nth-of-type(odd):before,
+.card:nth-of-type(odd):after {
+  background-image: linear-gradient(45deg, var(--color-primary), color-mix(var(--color-primary) 50%, var(--color-surface)));
 }
 
-.card:nth-child(3):before,
-.card:nth-child(3):after {
-  background-image: linear-gradient(315deg, #4dff03, #00d0ff);
+.card:nth-of-type(even):before,
+.card:nth-of-type(even):after {
+  background-image: linear-gradient(45deg, var(--color-secondary), color-mix(var(--color-secondary) 50%, var(--color-surface)));
 }
 
 .card {
   align-items: center;
-  background-color: #111111;
-  color: #ffffff;
+  background-color: var(--color-surface);
+  color: var(--color-text);
   display: flex;
   min-height: 400px;
   height: auto;
   justify-content: center;
   margin: 20px 30px;
   position: relative;
-  transition: transform 0.5s ease;
+  transition:
+    transform 0.5s ease,
+    box-shadow 0.3s ease;
   width: 320px;
 }
 
-/* Card Details */
+/* CARD DETAILS */
 .card-details {
   max-height: 250px;
   overflow-y: auto;
@@ -115,18 +120,22 @@
   margin-right: 0.25rem;
 }
 
+/* CARD GLOW */
 .card:after {
-  filter: blur(30px);
+  filter: blur(25px);
+  opacity: 0.65;
 }
 
-.card:hover,
-.card:focus,
-.card:active {
-  transform: translateY(-20px);
+/* CARD LAYER */
+.card:nth-of-type(odd) .layover::before {
+  background-color: color-mix(in srgb, var(--color-primary-light) 8%, transparent);
+}
+
+.card:nth-of-type(even) .layover:before {
+  background-color: color-mix(in srgb, color-mix(in srgb, var(--color-secondary) 50%, #ffffff) 8%, transparent);
 }
 
 .card .layover:before {
-  background-color: rgba(255, 255, 255, 0.1);
   content: '';
   height: 100%;
   left: 0;
@@ -137,7 +146,8 @@
 }
 
 .card .layover {
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: color-mix(in srgb, var(--color-surface) 94%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 18%, transparent);
   bottom: 6px;
   left: 6px;
   position: absolute;
@@ -146,6 +156,7 @@
   z-index: 1;
 }
 
+/* CARD CONTENT */
 .content {
   display: flex;
   flex-direction: column;
@@ -162,27 +173,30 @@
 }
 
 .card .content h2 {
-  color: #ffffff;
+  color: var(--color-text);
   font-size: 2em;
   margin-bottom: 10px;
 }
 
 .card .content p {
-  color: #ffffff;
+  color: var(--color-text);
   font-size: 1.1em;
   line-height: 1.4em;
   margin-bottom: 10px;
 }
 
-.card .content a {
-  background-color: #ffffff;
-  color: #111111;
+.card .content button {
+  background-color: transparent;
+  border-style: none;
+  box-shadow: 0 0 0 3px var(--color-accent);
+  color: var(--color-text);
   display: inline-block;
   font-size: 1.1em;
   font-weight: 700;
   padding: 10px;
 }
 
+/* GUEST INFORMATION */
 .guest-info {
   display: flex;
   flex-direction: column;
@@ -199,8 +213,16 @@
   display: inline-block;
 }
 
+/* CARD INTERACTION */
 .card:hover {
-  box-shadow: 0 8px 20px #000001;
+  box-shadow:
+    0 8px 20px color-mix(in srgb, var(--color-primary) 22%, transparent),
+    0 2px 8px color-mix(in srgb, var(--color-text) 10%, transparent);
+  transform: translateY(-3px);
+}
+
+.card:focus,
+.card:active {
   transform: translateY(-3px);
 }
 
@@ -216,7 +238,9 @@
 }
 
 .card.show {
-  box-shadow: 0 12px 30px #000010;
+  box-shadow:
+    0 12px 30px color-mix(in srgb, var(--color-primary) 28%, transparent),
+    0 4px 12px color-mix(in srgb, var(--color-accent) 18%, transparent);
   opacity: 1;
   transform: scale(1);
   z-index: 10;
@@ -227,32 +251,21 @@
   transform: scale(1);
 }
 
+/* GENDER */
 .male {
+  color: var(--color-male);
   font-size: 1.5rem;
-  color: #5a94bf;
 }
 
 .female {
+  color: var(--color-female);
   font-size: 1.5rem;
-  color: #eaa5be;
 }
 
+/* RATING */
 .ctn-stars {
   align-items: center;
-  color: goldenrod;
   display: flex;
   gap: 0 0.25rem;
   justify-content: center;
-
-  & > mat-icon {
-    color: transparent;
-    -webkit-text-fill-color: #fefb24;
-    opacity: 0.2;
-    transition: -webkit-text-fill-color 0.3s ease-in-out;
-
-    &.filled {
-      opacity: 1;
-      -webkit-text-fill-color: #fefb24;
-    }
-  }
 }

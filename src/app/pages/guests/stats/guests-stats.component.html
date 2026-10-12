@@ -1,5 +1,5 @@
 <main *ngIf="vm$ | async as vm">
-  <h1 class="title-stats">Stats</h1>
+  <h1 class="title-component">STATS</h1>
 
   <h1 *ngIf="vm.status === 'error'">{{ vm.error.message }}</h1>
 
@@ -9,6 +9,7 @@
       aria-label="See Summary"
       matTooltip="See Summary"
       mat-icon-button
+      [class.active]="currentChart === 'summary'"
       class="btn-summary"
       (click)="changeChart('summary')"
     >
@@ -20,8 +21,10 @@
       aria-label="See Demographics"
       matTooltip="See Demographics"
       mat-icon-button
+      [class.active]="currentChart === 'demographics'"
       class="btn-demographics"
       (click)="changeChart('demographics')"
+      [class.active]="currentChart === 'demographics'"
     >
       <mat-icon class="material-symbols-outlined">groups</mat-icon>
     </button>
@@ -31,6 +34,7 @@
       aria-label="See Geography"
       matTooltip="See Geography"
       mat-icon-button
+      [class.active]="currentChart === 'geography'"
       class="btn-geography"
       (click)="changeChart('geography')"
     >
@@ -42,6 +46,7 @@
       aria-label="See Gifts"
       matTooltip="See Gifts"
       mat-icon-button
+      [class.active]="currentChart === 'gifts'"
       class="btn-gifts"
       (click)="changeChart('gifts')"
     >
@@ -53,6 +58,7 @@
       aria-label="See Rankings"
       matTooltip="See Rankings"
       mat-icon-button
+      [class.active]="currentChart === 'rankings'"
       class="btn-ranking"
       (click)="changeChart('rankings')"
     >
@@ -64,6 +70,7 @@
       aria-label="See Ratings"
       matTooltip="See Ratings"
       mat-icon-button
+      [class.active]="currentChart === 'ratings'"
       class="btn-rating"
       (click)="changeChart('ratings')"
     >
@@ -75,6 +82,7 @@
       aria-label="See Timeline"
       matTooltip="See Timeline"
       mat-icon-button
+      [class.active]="currentChart === 'timeline'"
       class="btn-timeline"
       (click)="changeChart('timeline')"
     >
@@ -86,6 +94,7 @@
       aria-label="See Stays"
       matTooltip="See Stays"
       mat-icon-button
+      [class.active]="currentChart === 'stays'"
       class="btn-stays"
       (click)="changeChart('stays')"
     >
@@ -97,6 +106,7 @@
       aria-label="See Birthdays"
       matTooltip="See Birthdays"
       mat-icon-button
+      [class.active]="currentChart === 'birthdays'"
       class="btn-birthdays"
       (click)="changeChart('birthdays')"
     >
@@ -104,7 +114,10 @@
     </button>
   </div>
 
-  <app-loading *ngIf="vm.status === 'loading'" [messages]="['Loading your statistics', 'Analyzing your guest data', 'Preparing your charts', 'Almost ready']"></app-loading>
+  <app-loading
+    *ngIf="vm.status === 'loading'"
+    [messages]="['Loading your statistics', 'Analyzing your guest data', 'Preparing your charts', 'Almost ready']"
+  ></app-loading>
 
   <ng-container *ngIf="vm.status === 'success'">
     <div class="ctn-content">

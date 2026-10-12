@@ -6,7 +6,7 @@
       *ngFor="let view of rankingViews"
       (click)="selectView(view)"
       [class.active]="selectedView === view"
-      class="btn-ranking"
+      class="stats-nav-btns"
     >
       {{ view }}
     </button>
@@ -19,7 +19,7 @@
       *ngFor="let view of peopleRankingViews"
       (click)="selectPeopleView(view)"
       [class.active]="selectedPeopleView === view"
-      class="btn-ranking"
+      class="stats-nav-btns-small"
     >
       {{ view }}
     </button>
@@ -32,7 +32,7 @@
       *ngFor="let view of womenRankingViews"
       (click)="selectWomenView(view)"
       [class.active]="selectedWomenView === view"
-      class="btn-ranking"
+      class="stats-nav-btns-small"
     >
       {{ view }}
     </button>
@@ -45,7 +45,7 @@
       *ngFor="let view of menRankingViews"
       (click)="selectMenView(view)"
       [class.active]="selectedMenView === view"
-      class="btn-ranking"
+      class="stats-nav-btns-small"
     >
       {{ view }}
     </button>
@@ -58,7 +58,7 @@
       *ngFor="let view of groupRankingViews"
       (click)="selectGroupView(view)"
       [class.active]="selectedGroupView === view"
-      class="btn-ranking"
+      class="stats-nav-btns-small"
     >
       {{ view }}
     </button>

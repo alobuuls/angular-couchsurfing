@@ -1,37 +1,111 @@
+/* FILTERS */
 .filters-form {
-  margin-top: 2.5rem;
+  margin-top: 5rem;
   text-align: center;
   padding: 1rem;
 }
 
+/* MAP */
 .map-limit {
   margin-top: 1rem;
   padding: 0 8px;
 }
 
-.ctn-buttons {
-  margin-top: 3rem;
+/* ACTION BUTTONS */
+.ctn-btns {
+  margin-block: 3rem;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 1rem;
 }
 
+.btn-add,
+.btn-stats,
+.btn-toggle,
+.btn-search,
+.btn-clear {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* ADD */
 .btn-add {
-  background-color: #c04d10;
-  color: white;
+  background-color: var(--color-secondary);
+  color: #ffffff;
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--color-secondary) 85%, black);
+  }
+
+  &:active {
+    background-color: color-mix(in srgb, var(--color-secondary) 75%, black);
+  }
 }
 
+/* STATS */
 .btn-stats {
-  background-color: #2295dc;
-  color: white;
+  background-color: var(--color-primary);
+  color: #ffffff;
+
+  &:hover {
+    background-color: var(--color-primary-hover);
+  }
+
+  &:active {
+    background-color: var(--color-primary-active);
+  }
 }
 
+/* TOGGLE */
 .btn-toggle {
-  background-color: #c01097;
-  color: white;
+  background-color: var(--color-accent);
+  color: var(--color-text);
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--color-accent) 85%, black);
+  }
+
+  &:active {
+    background-color: color-mix(in srgb, var(--color-accent) 75%, black);
+  }
 }
 
-.filters-form {
-  margin-top: 5rem;
+/* SEARCH */
+.btn-search {
+  background-color: var(--color-primary) !important;
+  color: #ffffff !important;
+
+  &:hover,
+  &:focus {
+    background-color: var(--color-primary-hover) !important;
+  }
+
+  &:disabled {
+    background-color: var(--color-border) !important;
+    color: var(--color-text-muted) !important;
+    cursor: not-allowed;
+  }
+}
+
+/* CLEAR */
+.btn-clear {
+  background-color: transparent;
+  color: var(--color-text);
+  border-color: var(--color-border);
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--color-card-hover) 30%, #ffffff);
+    border-color: var(--color-primary-light);
+    color: var(--color-primary-dark);
+  }
+
+  &:active {
+    background-color: color-mix(in srgb, var(--color-primary-light) 20%, var(--color-surface));
+    border-color: var(--color-primary);
+    color: var(--color-text);
+  }
 }

@@ -1,0 +1,345 @@
+@use '@angular/material' as mat;
+
+//  COLOR PALETTES
+$coastal-primary: (
+  50: #e0f2f1,
+  100: #b2dfdb,
+  200: #80cbc4,
+  300: #69aaa4,
+  400: #4d9792,
+  500: #277c7a,
+  600: #236f6d,
+  700: #1f625f,
+  800: #1a5552,
+  900: #185957,
+  contrast: (
+    50: #263634,
+    100: #263634,
+    200: #263634,
+    300: #263634,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+  ),
+);
+
+$coastal-secondary: (
+  50: #f9ebe5,
+  100: #f0d1c5,
+  200: #e5b3a0,
+  300: #d9967e,
+  400: #d18468,
+  500: #c97855,
+  600: #b86648,
+  700: #a55c43,
+  800: #914f3a,
+  900: #7d4331,
+  contrast: (
+    50: #263634,
+    100: #263634,
+    200: #263634,
+    300: #263634,
+    400: #263634,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+  ),
+);
+
+// OCEAN BLUE PALETTES
+$ocean-primary: (
+  50: #e3edf9,
+  100: #c4d8f1,
+  200: #a0c0e7,
+  300: #7ba7dc,
+  400: #5e95d4,
+  500: #2457a7,
+  600: #204e96,
+  700: #1b4380,
+  800: #16386b,
+  900: #102c55,
+  contrast: (
+    50: #233448,
+    100: #233448,
+    200: #233448,
+    300: #233448,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+  ),
+);
+
+$ocean-secondary: (
+  50: #e5f2fb,
+  100: #c7e2f5,
+  200: #a5d0ed,
+  300: #82bee5,
+  400: #63aadd,
+  500: #438dca,
+  600: #387bb3,
+  700: #2e699a,
+  800: #255780,
+  900: #1c4567,
+  contrast: (
+    50: #233448,
+    100: #233448,
+    200: #233448,
+    300: #233448,
+    400: #233448,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+  ),
+);
+
+// PINK BLOSSOM PALETTES
+$pink-primary: (
+  50: #fce4ec,
+  100: #f8bbd0,
+  200: #f48fb1,
+  300: #f06292,
+  400: #ec407a,
+  500: #d95785,
+  600: #c54876,
+  700: #ad3c66,
+  800: #963354,
+  900: #7d2946,
+  contrast: (
+    50: #3d2630,
+    100: #3d2630,
+    200: #3d2630,
+    300: #3d2630,
+    400: #3d2630,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+  ),
+);
+
+$pink-secondary: (
+  50: #fbe9e7,
+  100: #ffccbc,
+  200: #ffab91,
+  300: #ff8a65,
+  400: #ff7043,
+  500: #e98268,
+  600: #d76e56,
+  700: #bf5d47,
+  800: #a64e3a,
+  900: #8c4030,
+  contrast: (
+    50: #3d2630,
+    100: #3d2630,
+    200: #3d2630,
+    300: #3d2630,
+    400: #3d2630,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+  ),
+);
+
+/* LAVENDER NOMAD PALETTES */
+$lavender-primary: (
+  50: #f5effa,
+  100: #e8ddf3,
+  200: #d5c2e7,
+  300: #bfa3d8,
+  400: #a487c1,
+  500: #8064a2,
+  600: #70548f,
+  700: #594273,
+  800: #46345b,
+  900: #392f46,
+  contrast: (
+    50: #392f46,
+    100: #392f46,
+    200: #392f46,
+    300: #392f46,
+    400: #392f46,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+  ),
+);
+
+$lavender-secondary: (
+  50: #f8f1fc,
+  100: #eedff6,
+  200: #dfc6ed,
+  300: #d0afe2,
+  400: #b995d0,
+  500: #a982c5,
+  600: #9670b2,
+  700: #805d9a,
+  800: #6a4b80,
+  900: #533a66,
+  contrast: (
+    50: #392f46,
+    100: #392f46,
+    200: #392f46,
+    300: #392f46,
+    400: #392f46,
+    500: #392f46,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+  ),
+);
+
+//  PALETTE CONFIGURATION
+// coastal nomad
+$primary: mat.define-palette($coastal-primary, 500);
+$accent: mat.define-palette($coastal-secondary, 500);
+
+// occean blue
+$ocean-primary-color: mat.define-palette($ocean-primary, 400);
+$ocean-accent-color: mat.define-palette($ocean-secondary, 400);
+
+// pink blossom
+$pink-primary-color: mat.define-palette($pink-primary, 500);
+$pink-accent-color: mat.define-palette($pink-secondary, 500);
+
+// lavender nomad
+$lavender-primary-color: mat.define-palette($lavender-primary, 400);
+$lavender-accent-color: mat.define-palette($lavender-secondary, 400);
+
+// FONT
+$coastal-typography: mat.define-typography-config(
+  $font-family: 'Roboto, Helvetica Neue, sans-serif',
+);
+
+// COASTAL NOMAD
+$coastal-light-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $primary,
+      accent: $accent,
+    ),
+    typography: $coastal-typography,
+  )
+);
+
+$coastal-dark-theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: $primary,
+      accent: $accent,
+    ),
+    typography: $coastal-typography,
+  )
+);
+
+//  OCEAN BLUE
+$ocean-light-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $ocean-primary-color,
+      accent: $ocean-accent-color,
+    ),
+    typography: $coastal-typography,
+  )
+);
+
+$ocean-dark-theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: $ocean-primary-color,
+      accent: $ocean-accent-color,
+    ),
+    typography: $coastal-typography,
+  )
+);
+
+// PINK BLOSSOM
+$pink-light-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $pink-primary-color,
+      accent: $pink-accent-color,
+    ),
+    typography: $coastal-typography,
+  )
+);
+
+$pink-dark-theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: $pink-primary-color,
+      accent: $pink-accent-color,
+    ),
+    typography: $coastal-typography,
+  )
+);
+
+// LAVENDER NOMAD
+$lavender-light-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $lavender-primary-color,
+      accent: $lavender-accent-color,
+    ),
+    typography: $coastal-typography,
+  )
+);
+
+$lavender-dark-theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: $lavender-primary-color,
+      accent: $lavender-accent-color,
+    ),
+    typography: $coastal-typography,
+  )
+);
+
+//  MATERIAL CORE
+@include mat.core();
+
+//  COASTAL NOMAD
+@include mat.all-component-themes($coastal-light-theme);
+
+.dark-theme {
+  @include mat.all-component-colors($coastal-dark-theme);
+}
+
+// OCEAN BLUE
+:root.theme-ocean:not(.dark-theme) {
+  @include mat.all-component-colors($ocean-light-theme);
+}
+:root.theme-ocean.dark-theme {
+  @include mat.all-component-colors($ocean-dark-theme);
+}
+
+// PINK BLOSSOM
+:root.theme-pink:not(.dark-theme) {
+  @include mat.all-component-colors($pink-light-theme);
+}
+:root.theme-pink.dark-theme {
+  @include mat.all-component-colors($pink-dark-theme);
+}
+
+// LAVENDER NOMAD
+:root.theme-lavender:not(.dark-theme) {
+  @include mat.all-component-colors($lavender-light-theme);
+}
+:root.theme-lavender.dark-theme {
+  @include mat.all-component-colors($lavender-dark-theme);
+}

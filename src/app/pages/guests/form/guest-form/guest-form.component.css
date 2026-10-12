@@ -1,143 +1,356 @@
 .mat-typography {
-  background-color: #05173f;
+  background-color: var(--color-background);
 }
 
 .ctn-form {
+  width: 100%;
   display: flex;
   justify-content: center;
+  padding: clamp(0.75rem, 2vw, 2rem);
+}
+
+.ctn-form form {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.75rem, 3vw, 2.5rem);
   width: 100%;
+  max-width: 1180px;
+  min-width: 0;
+  padding: clamp(1rem, 3vw, 2.5rem);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 1.25rem;
+  box-shadow:
+    0 8px 24px color-mix(in srgb, var(--color-text) 5%, transparent),
+    0 2px 6px color-mix(in srgb, var(--color-text) 3%, transparent);
+}
+
+/* FORM SECTIONS */
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.title-form {
+  position: relative;
+  margin: 0 0 0.25rem;
+  padding-bottom: 0.75rem;
+  color: var(--color-text);
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.title-form::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 3rem;
+  height: 3px;
+  background-color: var(--color-primary);
+  border-radius: 999px;
+}
+
+.subtitle {
+  margin: 0 0 0.75rem;
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+/* RESPONSIVE AUTO-FIT GRIDS */
+.fields-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 1rem 1.25rem;
+  align-items: start;
+  min-width: 0;
+}
+
+/* Personal information */
+.personal-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+}
+
+/* Birth date + gender */
+.birth-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.birth-grid > * {
+  min-width: 0;
+}
+
+/* Location: hometown, living in and meeting place */
+.location-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+}
+
+/* Occupation */
+.occupation-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+}
+
+/* TWO-COLUMN SECTIONS */
+.two-section-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  min-width: 0;
+}
+
+.two-section-grid > * {
+  min-width: 0;
+}
+
+/* CONTACT INFORMATION: PREFIX + WHATSAPP */
+.contact-grid {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.contact-grid .phone-row {
+  display: grid;
+  grid-template-columns: minmax(110px, 0.8fr) minmax(0, 1.6fr);
+  gap: 0.75rem;
+  align-items: start;
+  width: 100%;
+  min-width: 0;
+}
+
+.contact-grid .prefix-field,
+.contact-grid .phone-field {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+/* Prevent Material fields from overflowing */
+.contact-grid .prefix-field .prefix-country {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: 100%;
+  line-height: 1;
+  vertical-align: middle;
+  flex-shrink: 0;
   padding: 1rem;
 }
 
-form {
-  width: 100%;
-  max-width: 1100px;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+/* Mobile: keep both fields side by side */
+@media (max-width: 600px) {
+  .contact-grid .phone-row {
+    grid-template-columns: minmax(90px, 0.75fr) minmax(0, 1.5fr);
+    gap: 0.5rem;
+  }
+}
+
+.references-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.25rem;
-  padding: 2rem;
+  align-items: start;
 }
 
-mat-form-field {
-  width: 100%;
-}
-
-.card-section,
-.rating,
-.example-chip-list,
-.checkbox-group,
-.country-info,
-.full-row {
+.comments-field {
   grid-column: 1 / -1;
-}
-
-.select-field {
-  .mat-mdc-text-field-wrapper {
-    background-color: #ffffff08;
-  }
-
-  .mat-mdc-select-arrow {
-    color: #64b5f6;
-  }
-}
-
-.country-field {
-  grid-column: span 1;
-}
-
-.phone-row {
-  grid-column: 1 / -1;
-
-  display: flex;
-  gap: 1rem;
-  align-items: flex-start;
-}
-
-.prefix-field {
-  flex: 0 0 140px;
-}
-
-.phone-field {
-  flex: 1 1 auto;
   min-width: 0;
+}
+
+/* ANGULAR MATERIAL FIELDS */
+mat-form-field {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Prevent long values from breaking the grid */
+.mat-mdc-form-field-infix,
+.mat-mdc-select-value,
+.mat-mdc-input-element {
+  min-width: 0;
+}
+
+.select-field .mat-mdc-text-field-wrapper {
+  background-color: color-mix(in srgb, var(--color-primary) 4%, var(--color-surface));
+  border-radius: 6px;
+}
+
+.select-field .mat-mdc-select-arrow {
+  color: var(--color-primary);
+}
+
+/* Textareas */
+textarea[matInput] {
+  min-height: 110px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+/* BIRTH DATE & GENDER */
+.card-section {
+  min-width: 0;
+}
+
+.birth-grid .card-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 56px;
+  padding: 0.25rem 0;
+}
+
+.birth-grid mat-radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: center;
+}
+
+.birth-grid mat-radio-button {
+  margin: 0;
+}
+
+/* CHECKBOXES */
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.875rem 1.25rem;
+  min-width: 0;
+}
+
+.form-section > .checkbox-group {
+  padding: 0.25rem 0;
+}
+
+.checkbox-group mat-checkbox {
+  max-width: 100%;
+}
+
+/* RATING & GIFTS */
+.rating-gifts-grid {
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  align-items: start;
+  gap: 1.5rem;
 }
 
 .rating {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 1rem;
+  min-width: 0;
 }
+
 .rating-content {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 1rem;
+  max-width: 100%;
   padding: 0.75rem 1.25rem;
-  background-color: #5d8dac;
-  border-radius: 0.75rem;
+  background-color: color-mix(in srgb, var(--color-primary) 4%, var(--color-surface));
+  border: 1px solid color-mix(in srgb, var(--color-primary) 20%, var(--color-surface));
+  border-radius: 0.875rem;
 }
+
+.rating-stars {
+  display: flex;
+
+  align-items: center;
+  gap: 0.125rem;
+}
+
 .rating-msg {
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
   font-weight: 500;
+  line-height: 1.5;
 }
 
 .gift-row {
-  grid-column: 1/-1;
-
   display: flex;
-  gap: 1rem;
   align-items: flex-start;
-
-  .btn-clear-gifts {
-    margin-top: 0.5rem;
-    color: #e91111;
-  }
+  gap: 0.75rem;
+  min-width: 0;
 }
+
+.gift-row > .gift-row {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 .gift-row mat-form-field {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.gift-row .btn-clear-gifts {
+  flex: 0 0 auto;
+  margin-top: 0.5rem;
+  color: var(--color-danger);
 }
 
 .gift-row button {
-  margin-top: 0.5rem;
   height: 56px;
-  white-space: nowrap;
 }
 
+.gift-row .mat-mdc-chip {
+  --mdc-chip-elevated-container-color: color-mix(in srgb, var(--color-primary) 15%, var(--color-surface));
+}
+
+.gift-row .mat-mdc-chip-remove .mat-icon {
+  color: var(--color-text);
+}
+
+.gift-row .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) .mdc-evolution-chip__text-label {
+  color: var(--color-text);
+}
+
+/* STARS */
 .star {
   width: 2rem;
   height: 2rem;
   font-size: 2rem;
+  line-height: 2rem;
   cursor: pointer;
-  color: #fefb24;
-  opacity: 0.2;
-  -webkit-text-stroke: 1px #000;
+  color: var(--color-accent);
+  opacity: 0.55;
   font-variation-settings: 'FILL' 0;
   transition:
-    opacity 0.25s,
-    font-variation-settings 0.25s;
-
-  &.active {
-    opacity: 1;
-    font-variation-settings: 'FILL' 1;
-  }
+    opacity 0.2s ease,
+    color 0.2s ease,
+    font-variation-settings 0.2s ease;
 }
 
-.checkbox-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
+.star.active {
+  opacity: 1;
+  color: color-mix(in srgb, #fff200 15%, var(--color-accent));
+  font-variation-settings: 'FILL' 1;
 }
 
+/* STATUS & VALIDATION */
 .icon-success {
-  color: #22c55e;
+  color: var(--color-success);
 }
 
-.icon-warning {
-  color: #ef4444;
+.icon-warning,
+.error-msg {
+  color: var(--color-danger);
 }
 
-#btn-create-guest:disabled {
-  cursor: not-allowed;
-}
-
+/* ANIMATED INPUTS */
 .ctn-input {
   overflow: hidden;
   max-height: 100px;
@@ -145,34 +358,128 @@ mat-form-field {
     max-height 0.4s ease,
     opacity 0.4s ease,
     margin 0.4s ease;
+}
 
-  &.hide {
-    max-height: 0;
-    opacity: 0;
+.ctn-input.hide {
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* DARK THEME */
+.dark-theme .gift-row .mat-mdc-chip {
+  --mdc-chip-elevated-container-color: var(--color-primary);
+  --mdc-chip-label-text-color: #ffffff;
+}
+
+.dark-theme .gift-row .mat-mdc-chip-remove {
+  color: #ffffff;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .ctn-form form {
+    max-width: 100%;
+  }
+
+  .two-section-grid,
+  .rating-gifts-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contact-grid,
+  .contact-grid .phone-row {
+    grid-template-columns: minmax(100px, 0.7fr) minmax(0, 1.5fr);
   }
 }
 
-.error-msg {
-  color: red;
-}
-
-@media (max-width: 1100px) {
-  form {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 700px) {
-  form {
-    grid-template-columns: 1fr;
+@media (max-width: 600px) {
+  .ctn-form {
+    padding: 0.5rem;
   }
 
-  .phone-row {
+  .ctn-form form {
+    padding: 1rem;
+    gap: 1.75rem;
+    border-radius: 0.875rem;
+  }
+
+  .form-section {
+    gap: 1rem;
+  }
+
+  .title-form {
+    font-size: 1rem;
+  }
+
+  .fields-grid,
+  .personal-grid,
+  .birth-grid,
+  .location-grid,
+  .occupation-grid,
+  .references-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .birth-grid .card-section {
+    padding: 0.5rem 0;
+  }
+
+  .checkbox-group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .rating-content {
+    padding: 0.625rem 0.75rem;
+  }
+
+  .rating-gifts-grid {
+    gap: 1rem;
+  }
+
+  .gift-row {
+    flex-wrap: wrap;
+  }
+
+  .gift-row > .gift-row {
     flex-direction: column;
   }
 
-  .prefix-field,
-  .phone-field {
-    width: 100%;
+  .gift-row .btn-clear-gifts {
+    margin-top: 0;
+  }
+
+  .comments-field {
+    grid-column: auto;
+  }
+
+  .star {
+    width: 1.75rem;
+    height: 1.75rem;
+    font-size: 1.75rem;
+  }
+
+  .contact-grid,
+  .contact-grid .phone-row {
+    grid-template-columns: minmax(95px, 0.7fr) minmax(0, 1.5fr);
+    gap: 0.5rem;
+  }
+}
+
+/* SMALL SCREENS */
+@media (max-width: 360px) {
+  .ctn-form form {
+    padding: 0.75rem;
+  }
+
+  .birth-grid mat-radio-group {
+    gap: 0.5rem;
+  }
+
+  .gift-row button {
+    max-width: 100%;
   }
 }

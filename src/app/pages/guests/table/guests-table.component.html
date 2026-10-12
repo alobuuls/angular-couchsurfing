@@ -7,7 +7,7 @@
         <mat-icon class="material-symbols-outlined">tag</mat-icon> No
       </th>
       <td mat-cell *matCellDef="let guest; let i = index">
-        <span [matBadge]="offset + i + 1" matBadgeColor="warn"></span>
+        <span class="no-badge"> {{ offset + i + 1 }} </span>
       </td>
     </ng-container>
 
@@ -43,7 +43,7 @@
         <mat-icon class="material-symbols-outlined">hotel</mat-icon> Nights
       </th>
       <td mat-cell *matCellDef="let guest">
-        <span [matBadge]="guest.nights" matBadgeColor="primary"></span>
+        <span class="nights-badge"> {{ guest.nights }} </span>
       </td>
     </ng-container>
 
@@ -119,12 +119,23 @@
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Send WhatsApp message"
-            matTooltip="Send message"
+            matTooltip="Send WhatsApp message"
             class="btn-whatsapp"
             mat-icon-button
           >
             <i class="fa-brands fa-whatsapp"></i>
           </a>
+
+          <button
+            *ngIf="!person.whatsapp"
+            type="button"
+            disabled
+            aria-label="Whatsapp unavailable"
+            class="btn-whatsapp"
+            mat-icon-button
+          >
+            <i class="fa-brands fa-whatsapp"></i>
+          </button>
 
           <div class="ctn-first">
             <span>{{ person.fullName }}</span>

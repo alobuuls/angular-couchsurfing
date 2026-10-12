@@ -6,7 +6,7 @@ import { StatsService } from '@services/stats.service';
 import { ErrorHandlerService } from '@services/err-handler.service';
 
 // Helpers
-import { withReqState } from '../../../utils/operators/with-state-operator';
+import { withReqState } from '@utils';
 
 // Ineterfaces
 import { ICurrentChart } from '@interfaces/stats-interface';

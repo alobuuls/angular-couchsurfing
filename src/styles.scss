@@ -1,0 +1,887 @@
+@use './material-theme';
+
+/* =========================================================
+  1. FONTS
+   ========================================================= */
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url('assets/fonts/material-icons/material-icons.woff2') format('woff2');
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  font-weight: 400;
+  src: url('assets/fonts/material-icons/material-symbols-outlined.woff2') format('woff2');
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Poiret One';
+  src: url('assets/fonts/poiret-one/poiret-one-variable.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+000-5FF;
+}
+
+@font-face {
+  font-family: 'Dancing Script';
+  src: url('assets/fonts/dancing-script/dancing-script-variable.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+000-5FF;
+}
+
+/* =========================================================
+  2. MATERIAL ICONS
+   ========================================================= */
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: 400;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'liga';
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+/* =========================================================
+  3. THEME COLORS
+   ========================================================= */
+
+//  Coastal Nomad — Light
+:root {
+  /* Brand */
+  --color-primary: #277c7a;
+  --color-primary-light: color-mix(in srgb, var(--color-primary) 60%, #ffffff);
+  --color-primary-dark: color-mix(in srgb, var(--color-primary) 75%, #000000);
+  --color-secondary: #c97855;
+  --color-accent: #e5b85c;
+
+  /* Backgrounds & Surfaces */
+  --color-background: #f5f1e8;
+  --color-surface: #ffffff;
+
+  /* Text */
+  --color-text: #2b2d2f;
+  --color-text-secondary: color-mix(in srgb, var(--color-text) 70%, var(--color-surface));
+  --color-text-muted: color-mix(in srgb, var(--color-text) 50%, var(--color-surface));
+
+  /* Borders */
+  --color-border: color-mix(in srgb, var(--color-text) 15%, var(--color-surface));
+
+  /* Interaction */
+  --color-primary-hover: color-mix(in srgb, var(--color-primary) 85%, var(--color-primary-dark));
+  --color-primary-active: var(--color-primary-dark);
+
+  /* Feedback */
+  --color-success: #4f8f67;
+  --color-danger: #c95c52;
+  --color-warning: var(--color-accent);
+  --color-info: var(--color-primary);
+
+  /* Social Media */
+  --color-couchsurfing: #ff7043;
+  --color-instagram: #fa006f;
+  --color-whatsapp: #16b751;
+
+  /* Cards */
+  --color-card-hover: color-mix(in srgb, var(--color-primary) 5%, var(--color-surface));
+
+  /* Styles */
+  --color-rating: #e7ad00;
+  --color-female: #bd6db1;
+  --color-male: #4e90b6;
+}
+
+//  Coastal Nomad — Dark
+.dark-theme {
+  /* Brand */
+  --color-primary: #2f7773;
+  --color-primary-light: color-mix(in srgb, var(--color-primary) 70%, #ffffff);
+  --color-primary-dark: color-mix(in srgb, var(--color-primary) 70%, #000000);
+  --color-secondary: #cb623b;
+  --color-accent: #d8ae57;
+
+  /* Backgrounds & Surfaces */
+  --color-background: color-mix(in srgb, #101214 94%, var(--color-primary));
+  --color-surface: color-mix(in srgb, #191d1f 90%, var(--color-primary));
+
+  /* Text */
+  --color-text: #e8efec;
+  --color-text-secondary: color-mix(in srgb, var(--color-text) 72%, var(--color-background));
+  --color-text-muted: color-mix(in srgb, var(--color-text) 50%, var(--color-background));
+
+  /* Borders */
+  --color-border: color-mix(in srgb, var(--color-text) 15%, var(--color-surface));
+
+  /* Interaction */
+  --color-primary-hover: color-mix(in srgb, var(--color-primary) 75%, var(--color-primary-light));
+  --color-primary-active: var(--color-primary-dark);
+
+  /* Feedback */
+  --color-success: #69a87d;
+  --color-danger: #d8756b;
+  --color-warning: var(--color-accent);
+  --color-info: var(--color-primary-light);
+
+  /* Cards */
+  --color-card-hover: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface));
+
+  /* Styles */
+  --color-rating: #e7ad00;
+  --color-female: #bd6db1;
+  --color-male: #4e90b6;
+
+  /* Angular Material */
+  --mat-paginator-container-background-color: var(--color-surface);
+  --mat-paginator-container-text-color: var(--color-text);
+  --mdc-filled-text-field-container-color: var(--color-surface);
+  --mat-select-panel-background-color: var(--color-surface);
+  --mat-option-label-text-color: var(--color-text);
+  --mat-autocomplete-background-color: var(--color-surface);
+  --mat-datepicker-calendar-container-background-color: var(--color-surface);
+  --mat-datepicker-calendar-date-text-color: var(--color-text);
+  --mat-datepicker-calendar-body-label-text-color: var(--color-text-secondary);
+  --mat-datepicker-calendar-header-text-color: var(--color-text-secondary);
+}
+
+//  Ocean Blue — Light
+.theme-ocean {
+  /* Brand */
+  --color-primary: #2457a7;
+  --color-primary-light: color-mix(in srgb, var(--color-primary) 60%, #ffffff);
+  --color-primary-dark: color-mix(in srgb, var(--color-primary) 75%, #000000);
+  --color-secondary: #438dca;
+  --color-accent: #e5bd63;
+
+  /* Backgrounds & Surfaces */
+  --color-background: #eaf5fc;
+  --color-surface: #ffffff;
+
+  /* Text */
+  --color-text: #233448;
+  --color-text-secondary: color-mix(in srgb, var(--color-text) 70%, var(--color-surface));
+  --color-text-muted: color-mix(in srgb, var(--color-text) 50%, var(--color-surface));
+
+  /* Borders */
+  --color-border: color-mix(in srgb, var(--color-text) 15%, var(--color-surface));
+
+  /* Interaction */
+  --color-primary-hover: color-mix(in srgb, var(--color-primary) 85%, var(--color-primary-dark));
+  --color-primary-active: var(--color-primary-dark);
+
+  /* Feedback */
+  --color-success: #4f8f67;
+  --color-danger: #c95c52;
+  --color-warning: var(--color-accent);
+  --color-info: var(--color-primary);
+
+  /* Cards */
+  --color-card-hover: color-mix(in srgb, var(--color-primary) 5%, var(--color-surface));
+
+  /* Styles */
+  --color-rating: #e7ad00;
+  --color-female: #bd6db1;
+  --color-male: #4e90b6;
+}
+
+//  Ocean Blue — Dark
+.theme-ocean.dark-theme {
+  /* Brand */
+  --color-primary: #438dca;
+  --color-primary-light: color-mix(in srgb, var(--color-primary) 70%, #ffffff);
+  --color-primary-dark: color-mix(in srgb, var(--color-primary) 70%, #000000);
+  --color-secondary: #96acd8;
+  --color-accent: #e5bd63;
+
+  /* Backgrounds & Surfaces */
+  --color-background: color-mix(in srgb, #101c2b 94%, var(--color-primary));
+  --color-surface: color-mix(in srgb, #192a3d 90%, var(--color-primary));
+
+  /* Text */
+  --color-text: #eaf3fb;
+  --color-text-secondary: color-mix(in srgb, var(--color-text) 72%, var(--color-background));
+  --color-text-muted: color-mix(in srgb, var(--color-text) 50%, var(--color-background));
+
+  /* Borders */
+  --color-border: color-mix(in srgb, var(--color-text) 15%, var(--color-surface));
+
+  /* Interaction */
+  --color-primary-hover: color-mix(in srgb, var(--color-primary) 75%, var(--color-primary-light));
+  --color-primary-active: var(--color-primary-dark);
+
+  /* Feedback */
+  --color-success: #69a87d;
+  --color-danger: #d8756b;
+  --color-warning: var(--color-accent);
+  --color-info: var(--color-primary-light);
+
+  /* Cards */
+  --color-card-hover: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface));
+
+  /* Styles */
+  --color-rating: #e7ad00;
+  --color-female: #bd6db1;
+  --color-male: #4e90b6;
+
+  /* Angular Material */
+  --mat-paginator-container-background-color: var(--color-surface);
+  --mat-paginator-container-text-color: var(--color-text);
+  --mdc-filled-text-field-container-color: var(--color-surface);
+  --mat-select-panel-background-color: var(--color-surface);
+  --mat-option-label-text-color: var(--color-text);
+  --mat-autocomplete-background-color: var(--color-surface);
+  --mat-datepicker-calendar-container-background-color: var(--color-surface);
+  --mat-datepicker-calendar-date-text-color: var(--color-text);
+  --mat-datepicker-calendar-body-label-text-color: var(--color-text-secondary);
+  --mat-datepicker-calendar-header-text-color: var(--color-text-secondary);
+}
+
+//  Pink Blossom — Light
+.theme-pink {
+  /* Brand */
+  --color-primary: #d95785;
+  --color-primary-light: color-mix(in srgb, var(--color-primary) 60%, #ffffff);
+  --color-primary-dark: color-mix(in srgb, var(--color-primary) 75%, #000000);
+  --color-secondary: #e98268;
+  --color-accent: #e5b85c;
+
+  /* Backgrounds & Surfaces */
+  --color-background: #fff1f5;
+  --color-surface: #ffffff;
+
+  /* Text */
+  --color-text: #3d2630;
+  --color-text-secondary: color-mix(in srgb, var(--color-text) 70%, var(--color-surface));
+  --color-text-muted: color-mix(in srgb, var(--color-text) 50%, var(--color-surface));
+
+  /* Borders */
+  --color-border: color-mix(in srgb, var(--color-text) 15%, var(--color-surface));
+
+  /* Interaction */
+  --color-primary-hover: color-mix(in srgb, var(--color-primary) 85%, var(--color-primary-dark));
+  --color-primary-active: var(--color-primary-dark);
+
+  /* Feedback */
+  --color-success: #4f8f67;
+  --color-danger: #c95c52;
+  --color-warning: var(--color-accent);
+  --color-info: var(--color-primary);
+
+  /* Cards */
+  --color-card-hover: color-mix(in srgb, var(--color-primary) 5%, var(--color-surface));
+
+  /* Styles */
+  --color-rating: #e7ad00;
+  --color-female: #bd6db1;
+  --color-male: #4e90b6;
+}
+
+//  Pink Blossom — Dark
+.theme-pink.dark-theme {
+  /* Brand */
+  --color-primary: #c95d83;
+  --color-primary-light: color-mix(in srgb, var(--color-primary) 70%, #ffffff);
+  --color-primary-dark: color-mix(in srgb, var(--color-primary) 70%, #000000);
+  --color-secondary: #d97861;
+  --color-accent: #d8ae57;
+
+  /* Backgrounds & Surfaces */
+  --color-background: color-mix(in srgb, #21151c 94%, var(--color-primary));
+  --color-surface: color-mix(in srgb, #30202a 90%, var(--color-primary));
+
+  /* Text */
+  --color-text: #f9eaf0;
+  --color-text-secondary: color-mix(in srgb, var(--color-text) 72%, var(--color-background));
+  --color-text-muted: color-mix(in srgb, var(--color-text) 50%, var(--color-background));
+
+  /* Borders */
+  --color-border: color-mix(in srgb, var(--color-text) 15%, var(--color-surface));
+
+  /* Interaction */
+  --color-primary-hover: color-mix(in srgb, var(--color-primary) 75%, var(--color-primary-light));
+  --color-primary-active: var(--color-primary-dark);
+
+  /* Feedback */
+  --color-success: #69a87d;
+  --color-danger: #d8756b;
+  --color-warning: var(--color-accent);
+  --color-info: var(--color-primary-light);
+
+  /* Styles */
+  --color-rating: #e7ad00;
+  --color-female: #bd6db1;
+  --color-male: #4e90b6;
+
+  /* Cards */
+  --color-card-hover: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface));
+
+  --mat-paginator-container-background-color: var(--color-surface);
+}
+
+//  Lavender Nomad — Light
+.theme-lavender {
+  /* Brand */
+  --color-primary: #8064a2;
+  --color-primary-light: color-mix(in srgb, var(--color-primary) 60%, #ffffff);
+  --color-primary-dark: color-mix(in srgb, var(--color-primary) 75%, #000000);
+  --color-secondary: #7896c8;
+  --color-accent: #d9b878;
+
+  /* Backgrounds & Surfaces */
+  --color-background: #ede5f5;
+  --color-surface: #ffffff;
+
+  /* Text */
+  --color-text: #392f46;
+  --color-text-secondary: color-mix(in srgb, var(--color-text) 70%, var(--color-surface));
+  --color-text-muted: color-mix(in srgb, var(--color-text) 50%, var(--color-surface));
+
+  /* Borders */
+  --color-border: color-mix(in srgb, var(--color-text) 15%, var(--color-surface));
+
+  /* Interaction */
+  --color-primary-hover: color-mix(in srgb, var(--color-primary) 85%, var(--color-primary-dark));
+  --color-primary-active: var(--color-primary-dark);
+
+  /* Feedback */
+  --color-success: #4f8f67;
+  --color-danger: #c95c52;
+  --color-warning: var(--color-accent);
+  --color-info: var(--color-primary);
+
+  /* Cards */
+  --color-card-hover: color-mix(in srgb, var(--color-primary) 5%, var(--color-surface));
+
+  /* Styles */
+  --color-rating: #e7ad00;
+  --color-female: #bd6db1;
+  --color-male: #4e90b6;
+}
+
+//  Lavender Nomad — Dark
+.theme-lavender.dark-theme {
+  /* Brand */
+  --color-primary: #a58bc5;
+  --color-primary-light: color-mix(in srgb, var(--color-primary) 70%, #ffffff);
+  --color-primary-dark: color-mix(in srgb, var(--color-primary) 70%, #000000);
+  --color-secondary: #96acd8;
+  --color-accent: #e2c98d;
+
+  /* Backgrounds & Surfaces */
+  --color-background: color-mix(in srgb, #201929 94%, var(--color-primary));
+  --color-surface: color-mix(in srgb, #2c2338 90%, var(--color-primary));
+
+  /* Text */
+  --color-text: #f0eaf7;
+  --color-text-secondary: color-mix(in srgb, var(--color-text) 72%, var(--color-background));
+  --color-text-muted: color-mix(in srgb, var(--color-text) 50%, var(--color-background));
+
+  /* Borders */
+  --color-border: color-mix(in srgb, var(--color-text) 15%, var(--color-surface));
+
+  /* Interaction */
+  --color-primary-hover: color-mix(in srgb, var(--color-primary) 75%, var(--color-primary-light));
+  --color-primary-active: var(--color-primary-dark);
+
+  /* Feedback */
+  --color-success: #69a87d;
+  --color-danger: #d8756b;
+  --color-warning: var(--color-accent);
+  --color-info: var(--color-primary-light);
+
+  /* Cards */
+  --color-card-hover: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface));
+
+  /* Styles */
+  --color-rating: #e7ad00;
+  --color-female: #bd6db1;
+  --color-male: #4e90b6;
+}
+
+/* =========================================================
+  4. PRELOADER
+   ========================================================= */
+
+.loading-container {
+  align-items: center;
+  background-color: var(--color-background);
+  background-image: linear-gradient(45deg, var(--color-primary-dark), var(--color-primary));
+  color: var(--color-surface);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  overflow: auto;
+  position: absolute;
+  text-align: center;
+  top: 0;
+  width: 100%;
+  z-index: 6;
+}
+
+.logo-container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.logo-container > i {
+  font-size: 7rem;
+  font-weight: 600;
+  text-shadow: 0 0 5px color-mix(in srgb, #000000 60%, transparent);
+}
+
+.loading-title {
+  font:
+    400 clamp(2rem, calc(7vw + 1rem), 10rem) 'Dancing Script',
+    sans-serif !important;
+  letter-spacing: 2px;
+  padding-top: 2rem;
+  text-shadow: 0 0 10px color-mix(in srgb, #000000 60%, transparent);
+}
+
+/* =========================================================
+  5. RESET
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+*:focus {
+  outline: 0;
+}
+
+/* =========================================================
+  6. GLOBAL ELEMENTS
+   ========================================================= */
+
+html {
+  background-color: var(--color-background);
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-background);
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Open Sans',
+    'Helvetica Neue',
+    sans-serif;
+  color: var(--color-text);
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  background-color: transparent;
+  cursor: pointer;
+  border-style: none;
+}
+
+/* =========================================================
+  7. SELECTION
+   ========================================================= */
+
+::selection {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+/* =========================================================
+  8. UTILITY CLASSES
+   ========================================================= */
+
+.success {
+  color: var(--color-success);
+}
+
+.danger {
+  color: var(--color-danger);
+}
+
+.loading-animation {
+  animation: spinner 1s infinite linear;
+  display: inline-block;
+}
+
+.flag-gap {
+  margin-right: 0.3rem;
+}
+
+.title-component {
+  color: var(--color-primary-dark);
+  font-family: 'Poiret One', sans-serif;
+  font-size: 3rem;
+  margin-top: 8rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  text-shadow: 0 0 2px var(--color-text);
+}
+
+/* =========================================================
+  9. STATISTICS BUTTONS
+   ========================================================= */
+
+.ctn-buttons {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin: 3rem 0;
+}
+
+.stats-nav-btns,
+.stats-nav-btns-small {
+  color: var(--color-primary);
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 45px;
+  min-width: 160px;
+  padding: 0 1.5rem;
+  position: relative;
+  text-transform: uppercase;
+  background: transparent;
+  border-style: none;
+  box-shadow: inset 0 0 20px color-mix(in srgb, #ffffff 35%, transparent);
+  outline: 1px solid var(--color-primary-dark);
+  outline-offset: 0;
+  text-shadow: none;
+  transition: all 1.3s cubic-bezier(0.19, 1, 0.22, 1);
+
+  &:hover,
+  &:active,
+  &.active {
+    box-shadow:
+      0px 10px 10px 0px color-mix(in srgb, var(--color-primary-dark) 50%, transparent),
+      0 0 20px color-mix(in srgb, var(--color-primary-dark) 20%, transparent);
+    outline-color: transparent;
+    outline-offset: 10px;
+    color: var(--color-text);
+  }
+
+  &:active {
+    scale: 1.2;
+  }
+
+  &.active {
+    outline: 1px solid var(--color-primary-dark);
+    outline-offset: 0;
+    background-color: color-mix(in srgb, var(--color-primary-light) 50%, var(--color-surface));
+    box-shadow: inset 0 0 20px color-mix(in srgb, #ffffff 35%, transparent);
+  }
+}
+
+/* Solo cambia el tamaño */
+.stats-nav-btns-small {
+  font-size: 13px;
+  line-height: 35px;
+  min-width: 100px;
+  padding: 0 1rem;
+}
+
+/* =========================================================
+  10. RATING
+   ========================================================= */
+
+.ctn-stars {
+  & > mat-icon {
+    color: transparent;
+    /* -webkit-text-stroke: 0.1mm #000000; */
+    -webkit-text-fill-color: var(--color-accent);
+    opacity: 0.5;
+    transition: -webkit-text-fill-color 0.3s ease-in-out;
+
+    &.filled {
+      opacity: 1;
+      -webkit-text-fill-color: var(--color-rating);
+    }
+  }
+}
+
+/* =========================================================
+  11. SWEETALERT2
+   ========================================================= */
+
+.custom-swal,
+.custom-swal-toast {
+  background-color: color-mix(in srgb, var(--color-background) 85%, #ffffff) !important;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  box-shadow: 0 0.75rem 2rem color-mix(in srgb, var(--color-text) 15%, transparent);
+}
+
+.custom-swal {
+  .swal2-title {
+    color: var(--color-text);
+  }
+
+  .swal2-html-container {
+    color: var(--color-text-secondary);
+  }
+}
+
+.custom-swal-confirm {
+  background-color: var(--color-primary);
+  color: #ffffff;
+
+  &:hover {
+    background-color: var(--color-primary-hover);
+  }
+
+  &:active {
+    background-color: var(--color-primary-active);
+  }
+}
+
+.custom-swal-danger {
+  background-color: var(--color-danger);
+  color: #ffffff;
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--color-danger) 85%, #000000);
+  }
+}
+
+.custom-swal-cancel {
+  background-color: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+
+  &:hover {
+    background-color: var(--color-card-hover);
+  }
+}
+
+.custom-swal-toast,
+.custom-swal {
+  .swal2-success {
+    border-color: var(--color-success);
+
+    .swal2-success-ring {
+      border-color: var(--color-success);
+    }
+
+    .swal2-success-line-tip,
+    .swal2-success-line-long {
+      background-color: var(--color-success);
+    }
+  }
+
+  .swal2-error {
+    color: var(--color-danger);
+    border-color: var(--color-danger);
+
+    [class^='swal2-x-mark-line'] {
+      background-color: var(--color-danger);
+    }
+  }
+
+  .swal2-warning {
+    color: var(--color-warning);
+    border-color: var(--color-warning);
+  }
+
+  .swal2-info {
+    color: var(--color-info);
+    border-color: var(--color-info);
+  }
+
+  .swal2-question {
+    color: var(--color-secondary);
+    border-color: var(--color-secondary);
+  }
+}
+
+/* =========================================================
+  12. ANGULAR MATERIAL
+   ========================================================= */
+
+// TABLES
+:has(.mat-mdc-row:active) .mat-mdc-row:not(:active) {
+  filter: blur(3px);
+}
+
+.mat-mdc-row:active {
+  background-color: color-mix(in srgb, var(--color-primary) 20%, #000000);
+  filter: blur(0);
+}
+
+.dark-theme {
+  & .mat-mdc-row {
+    &:hover > td {
+      color: #000000;
+    }
+  }
+}
+
+// THEME ICON
+.icon-theme {
+  color: var(--color-primary);
+}
+
+.dark-theme {
+  & .icon-theme {
+    color: gold;
+  }
+}
+
+/* =========================================================
+  13. ANGULAR MATERIAL — DARK THEME
+   ========================================================= */
+
+.dark-theme {
+  .mat-mdc-autocomplete-panel,
+  .mat-mdc-select-panel {
+    scrollbar-color: var(--color-primary) var(--color-surface);
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: var(--color-surface);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--color-primary);
+      border-radius: 10px;
+
+      &:hover {
+        background-color: var(--color-primary-light);
+      }
+    }
+  }
+}
+
+/* Select panel colors */
+html.dark-theme .mat-mdc-select-panel {
+  background-color: var(--color-surface) !important;
+  color: var(--color-text);
+}
+
+html.dark-theme .mat-mdc-option {
+  color: var(--color-text);
+}
+
+/* Autocomplete panel colors */
+html.dark-theme .mat-mdc-autocomplete-panel {
+  background-color: var(--color-surface) !important;
+  color: var(--color-text);
+}
+
+html.dark-theme .mat-mdc-autocomplete-panel .mat-mdc-option {
+  color: var(--color-text);
+}
+
+.mat-mdc-form-field-focus-overlay {
+  background-color: transparent;
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: transparent !important;
+}
+
+/* Gift fields */
+.dark-theme {
+  .gift-row {
+    .mat-mdc-input-element {
+      caret-color: var(--color-text);
+    }
+
+    .mdc-floating-label {
+      color: var(--color-text);
+    }
+
+    .mat-mdc-form-field.mat-focused .mdc-floating-label {
+      color: var(--color-text) !important;
+    }
+  }
+
+  .mat-mdc-form-field {
+    --mdc-outlined-text-field-label-text-color: var(--color-text);
+    --mdc-outlined-text-field-focus-label-text-color: color-mix(in srgb, var(--color-text) 80%, #000000);
+  }
+}
+
+.mat-mdc-paginator-container {
+  background-color: var(--color-surface);
+}
+
+/* =========================================================
+  15. ANIMATIONS
+   ========================================================= */
+
+@keyframes spinner {
+  to {
+    rotate: 1turn;
+  }
+}
+
+/* =========================================================
+  16. RESPONSIVE
+   ========================================================= */
+
+@media (min-width: 600px) {
+  .ctn-buttons {
+    flex-direction: row;
+  }
+}

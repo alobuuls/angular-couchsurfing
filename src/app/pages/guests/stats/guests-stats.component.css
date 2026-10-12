@@ -1,63 +1,58 @@
-.title-stats {
-  margin-top: 5rem;
-  text-align: center;
-}
-.ctn-buttons {
-  margin: 3rem 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
+/* Stats navigation buttons */
+.btn-summary,
+.btn-demographics,
+.btn-ranking,
+.btn-timeline,
+.btn-stays,
+.btn-geography,
+.btn-gifts,
+.btn-rating,
+.btn-birthdays {
+  background-color: transparent;
+  color: var(--color-text);
+  transition:
+    background-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+
+  &:hover,
+  &:focus {
+    box-shadow: 0 0.5rem 0.5rem -0.4rem var(--color-primary-dark);
+    transform: translateY(-0.25rem);
+  }
+
+  &.active {
+    background-color: var(--color-primary-dark);
+    box-shadow: 0 0.5rem 0.5rem -0.4rem var(--color-primary-light);
+    color: #ffffff;
+    transform: translateY(-0.25rem);
+  }
 }
 
+/* Chart content */
 .ctn-content {
-  width: 100%;
-  max-width: 1000px;
   height: 500px;
   margin: 0 auto;
+  max-width: 1000px;
+  width: 100%;
 }
 
-.btn-summary {
-  background-color: #000000;
-  color: #ffffff;
-}
+/* Empty state */
+.empty-data {
+  align-items: center;
+  color: var(--color-text-secondary);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  text-align: center;
 
-.btn-ranking {
-  background-color: #000000;
-  color: #ffffff;
-}
+  & h2 {
+    color: var(--color-primary-dark);
+    margin-bottom: 0.5rem;
+  }
 
-.btn-rating {
-  background-color: #000000;
-  color: #ffffff;
-}
-
-.btn-demographics {
-  background-color: #000000;
-  color: #ffffff;
-}
-
-.btn-geography {
-  background-color: #000000;
-  color: #ffffff;
-}
-
-.btn-timeline {
-  background-color: #000000;
-  color: #ffffff;
-}
-
-.btn-gifts {
-  background-color: #000000;
-  color: #ffffff;
-}
-
-.btn-stays {
-  background-color: #000000;
-  color: #ffffff;
-}
-
-.btn-birthdays {
-  background-color: #000000;
-  color: #ffffff;
+  & p {
+    color: var(--color-text-secondary);
+  }
 }

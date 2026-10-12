@@ -25,7 +25,7 @@ import { CountriesCodes, Regions } from '@type/word.types';
 import { WORLD } from '@config/world';
 
 // Helpers
-import { CONTINENT_COLORS, GENDER_COLORS, getGenderColor, getRankingColors, RANKING_COLORS } from '../../../../../utils/helpers/chart-colors';
+import { CHART_UNKNOWN_COLOR, CONTINENT_COLORS, GENDER_COLORS, getColorWithOpacity, getGenderColor, getRankingColors, RANKING_COLORS } from '@utils';
 
 @Component({
   selector: 'guest-geography-chart',
@@ -308,6 +308,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
                               fillStyle: CONTINENT_COLORS.america.background,
                               strokeStyle: CONTINENT_COLORS.america.border,
                               lineWidth: 1,
+                              fontColor: CHART_UNKNOWN_COLOR,
                             });
                           }
 
@@ -317,6 +318,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
                               fillStyle: CONTINENT_COLORS.europe.background,
                               strokeStyle: CONTINENT_COLORS.europe.border,
                               lineWidth: 1,
+                              fontColor: CHART_UNKNOWN_COLOR,
                             });
                           }
 
@@ -326,6 +328,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
                               fillStyle: CONTINENT_COLORS.africa.background,
                               strokeStyle: CONTINENT_COLORS.africa.border,
                               lineWidth: 1,
+                              fontColor: CHART_UNKNOWN_COLOR,
                             });
                           }
 
@@ -335,6 +338,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
                               fillStyle: CONTINENT_COLORS.asia.background,
                               strokeStyle: CONTINENT_COLORS.asia.border,
                               lineWidth: 1,
+                              fontColor: CHART_UNKNOWN_COLOR,
                             });
                           }
 
@@ -344,6 +348,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
                               fillStyle: CONTINENT_COLORS.oceania.background,
                               strokeStyle: CONTINENT_COLORS.oceania.border,
                               lineWidth: 1,
+                              fontColor: CHART_UNKNOWN_COLOR,
                             });
                           }
                         }
@@ -356,24 +361,28 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
                               fillStyle: RANKING_COLORS.gold.background,
                               strokeStyle: RANKING_COLORS.gold.border,
                               lineWidth: 1,
+                              fontColor: CHART_UNKNOWN_COLOR,
                             },
                             {
                               text: '2nd',
                               fillStyle: RANKING_COLORS.silver.background,
                               strokeStyle: RANKING_COLORS.silver.border,
                               lineWidth: 1,
+                              fontColor: CHART_UNKNOWN_COLOR,
                             },
                             {
                               text: '3rd',
                               fillStyle: RANKING_COLORS.bronze.background,
                               strokeStyle: RANKING_COLORS.bronze.border,
                               lineWidth: 1,
+                              fontColor: CHART_UNKNOWN_COLOR,
                             },
                             {
                               text: 'Others',
                               fillStyle: RANKING_COLORS.neutral.background,
                               strokeStyle: RANKING_COLORS.neutral.border,
                               lineWidth: 1,
+                              fontColor: CHART_UNKNOWN_COLOR,
                             }
                           );
                         }
@@ -390,6 +399,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
                               fillStyle: CONTINENT_COLORS.america.background,
                               strokeStyle: CONTINENT_COLORS.america.border,
                               lineWidth: 1,
+                              fontColor: CHART_UNKNOWN_COLOR,
                             });
                           }
 
@@ -399,6 +409,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
                               fillStyle: CONTINENT_COLORS.europe.background,
                               strokeStyle: CONTINENT_COLORS.europe.border,
                               lineWidth: 1,
+                              fontColor: CHART_UNKNOWN_COLOR,
                             });
                           }
 
@@ -408,6 +419,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
                               fillStyle: CONTINENT_COLORS.africa.background,
                               strokeStyle: CONTINENT_COLORS.africa.border,
                               lineWidth: 1,
+                              fontColor: CHART_UNKNOWN_COLOR,
                             });
                           }
 
@@ -417,6 +429,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
                               fillStyle: CONTINENT_COLORS.asia.background,
                               strokeStyle: CONTINENT_COLORS.asia.border,
                               lineWidth: 1,
+                              fontColor: CHART_UNKNOWN_COLOR,
                             });
                           }
 
@@ -426,6 +439,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
                               fillStyle: CONTINENT_COLORS.oceania.background,
                               strokeStyle: CONTINENT_COLORS.oceania.border,
                               lineWidth: 1,
+                              fontColor: CHART_UNKNOWN_COLOR,
                             });
                           }
                         }
@@ -438,24 +452,28 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
                               fillStyle: RANKING_COLORS.gold.background,
                               strokeStyle: RANKING_COLORS.gold.border,
                               lineWidth: 1,
+                              fontColor: CHART_UNKNOWN_COLOR,
                             },
                             {
                               text: '2nd',
                               fillStyle: RANKING_COLORS.silver.background,
                               strokeStyle: RANKING_COLORS.silver.border,
                               lineWidth: 1,
+                              fontColor: CHART_UNKNOWN_COLOR,
                             },
                             {
                               text: '3rd',
                               fillStyle: RANKING_COLORS.bronze.background,
                               strokeStyle: RANKING_COLORS.bronze.border,
                               lineWidth: 1,
+                              fontColor: CHART_UNKNOWN_COLOR,
                             },
                             {
                               text: 'Others',
                               fillStyle: RANKING_COLORS.neutral.background,
                               strokeStyle: RANKING_COLORS.neutral.border,
                               lineWidth: 1,
+                              fontColor: CHART_UNKNOWN_COLOR,
                             }
                           );
                         }
@@ -469,24 +487,28 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
                             fillStyle: RANKING_COLORS.gold.background,
                             strokeStyle: RANKING_COLORS.gold.border,
                             lineWidth: 1,
+                            fontColor: CHART_UNKNOWN_COLOR,
                           },
                           {
                             text: '2nd',
                             fillStyle: RANKING_COLORS.silver.background,
                             strokeStyle: RANKING_COLORS.silver.border,
                             lineWidth: 1,
+                            fontColor: CHART_UNKNOWN_COLOR,
                           },
                           {
                             text: '3rd',
                             fillStyle: RANKING_COLORS.bronze.background,
                             strokeStyle: RANKING_COLORS.bronze.border,
                             lineWidth: 1,
+                            fontColor: CHART_UNKNOWN_COLOR,
                           },
                           {
                             text: 'Others',
                             fillStyle: RANKING_COLORS.neutral.background,
                             strokeStyle: RANKING_COLORS.neutral.border,
                             lineWidth: 1,
+                            fontColor: CHART_UNKNOWN_COLOR,
                           }
                         );
                       }
@@ -628,7 +650,9 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
             })),
             pointRadius: 20,
             pointHoverRadius: 10,
-            pointBackgroundColor: guests.map(guest => getGenderColor(guest.gender)),
+            pointBackgroundColor: guests.map(guest =>
+              getColorWithOpacity(GENDER_COLORS[guest.gender.toLowerCase() as keyof typeof GENDER_COLORS] ?? { background: CHART_UNKNOWN_COLOR, border: CHART_UNKNOWN_COLOR })
+            ),
             pointBorderColor: guests.map(guest => getGenderColor(guest.gender)),
             showLine: false,
           },
@@ -675,6 +699,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
                     fillStyle: GENDER_COLORS.female.background,
                     strokeStyle: GENDER_COLORS.female.border,
                     lineWidth: 1,
+                    fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
 
@@ -684,6 +709,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
                     fillStyle: GENDER_COLORS.male.background,
                     strokeStyle: GENDER_COLORS.male.border,
                     lineWidth: 1,
+                    fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
 
@@ -693,6 +719,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
                     fillStyle: GENDER_COLORS.gay.background,
                     strokeStyle: GENDER_COLORS.gay.border,
                     lineWidth: 1,
+                    fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
 
@@ -702,6 +729,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges {
                     fillStyle: GENDER_COLORS.trans.background,
                     strokeStyle: GENDER_COLORS.trans.border,
                     lineWidth: 1,
+                    fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
 

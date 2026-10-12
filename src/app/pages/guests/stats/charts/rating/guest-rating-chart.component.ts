@@ -6,6 +6,9 @@ import Chart from 'chart.js/auto';
 // Interfaces
 import { IChartType, IRatingGuest, IRatingGroupType, IRatingMainView, IRatingView, IRatingsData, IRatingsDistribution } from '@interfaces/stats-interface';
 
+// Helpers
+import { RATING_DOT_COLORS, RATINGS_COLORS } from '@utils';
+
 // Services
 import { FormatService } from '@services/format.service';
 
@@ -116,15 +119,8 @@ export class GuestRatingChartComponent implements AfterViewInit, OnChanges {
           {
             label: 'Guests',
             data: [ratings['1'], ratings['2'], ratings['3'], ratings['4'], ratings['5'], ratings.unrated],
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(255, 159, 64, 0.2)',
-              'rgba(255, 205, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-            ],
-            borderColor: ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)'],
+            backgroundColor: RATINGS_COLORS.map(color => color.background),
+            borderColor: RATINGS_COLORS.map(color => color.border),
             borderWidth: 1,
           },
         ],
@@ -168,8 +164,8 @@ export class GuestRatingChartComponent implements AfterViewInit, OnChanges {
             })),
             pointRadius: 8,
             pointHoverRadius: 11,
-            backgroundColor: this.selectedMainView === 'highest' ? 'rgba(75, 192, 75, 0.8)' : 'rgb(228, 20, 65)',
-            borderColor: this.selectedMainView === 'highest' ? 'rgb(75, 192, 75)' : 'rgb(238, 40, 83)',
+            backgroundColor: this.selectedMainView === 'highest' ? RATING_DOT_COLORS.highest.background : RATING_DOT_COLORS.lowest.background,
+            borderColor: this.selectedMainView === 'highest' ? RATING_DOT_COLORS.highest.border : RATING_DOT_COLORS.lowest.border,
             borderWidth: 2,
           },
         ],

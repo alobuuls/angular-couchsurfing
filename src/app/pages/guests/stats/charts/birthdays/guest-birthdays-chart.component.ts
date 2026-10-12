@@ -10,6 +10,9 @@ Chart.register(MatrixController, MatrixElement);
 // Interfaces
 import { IBirthdaysDistribution, IBirthdaysView } from '@interfaces/stats-interface';
 
+// Helpers
+import { BIRTHDAYS_COLORS } from '@utils';
+
 // Services
 import { FormatService } from '@services/format.service';
 
@@ -118,8 +121,8 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
               r: Math.max(10, item.total * 6),
             })),
             // Use one color for repeated birthday dates.
-            backgroundColor: 'rgba(102, 204, 255, 0.5)',
-            borderColor: 'rgb(102, 222, 255)',
+            backgroundColor: BIRTHDAYS_COLORS.repeated.background,
+            borderColor: BIRTHDAYS_COLORS.repeated.border,
             borderWidth: 1,
           },
         ],
@@ -237,8 +240,8 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
               x: item.month,
               y: item.day,
             })),
-            borderColor: 'rgb(48, 159, 37)',
-            backgroundColor: 'rgba(37, 162, 83, 0.5)',
+            borderColor: BIRTHDAYS_COLORS.unusual.border,
+            backgroundColor: BIRTHDAYS_COLORS.unusual.background,
             borderWidth: 2,
             pointRadius: 8,
             pointHoverRadius: 11,
@@ -397,17 +400,20 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
               const total = value.v;
 
               if (total === 0) {
-                return 'rgba(238, 238, 238, 0.2)';
+                return BIRTHDAYS_COLORS.calendar.empty;
               }
+
               if (total === 1) {
-                return 'rgba(153, 102, 255, 0.35)';
+                return BIRTHDAYS_COLORS.calendar.one;
               }
+
               if (total === 2) {
-                return 'rgba(153, 102, 255, 0.6)';
+                return BIRTHDAYS_COLORS.calendar.two;
               }
-              return 'rgba(153, 102, 255, 0.95)';
+
+              return BIRTHDAYS_COLORS.calendar.many;
             },
-            borderColor: 'rgba(255, 255, 255, 0.8)',
+            borderColor: BIRTHDAYS_COLORS.calendar.border,
             borderWidth: 1,
 
             width: ({ chart }) => {

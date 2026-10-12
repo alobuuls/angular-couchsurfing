@@ -6,7 +6,7 @@
       *ngFor="let view of birthdaysViews"
       (click)="selectView(view)"
       [class.active]="selectedView === view"
-      class="btn-birthdays"
+      class="stats-nav-btns"
     >
       {{ birthdaysViewLabels[view] }}
     </button>
