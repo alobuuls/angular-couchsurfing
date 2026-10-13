@@ -1,39 +1,40 @@
-<h1>Trip Form</h1>
-
 <div class="ctn-form">
   <form #tripFormElement [formGroup]="formTrip">
     <div class="trip-row">
       <!-- VISITED DATE -->
-      <mat-form-field appearance="outline">
-        <mat-label>Visited Date</mat-label>
+      <section class="form-section">
+        <h3 class="title-form">Trip Information</h3>
+        <mat-form-field appearance="outline">
+          <mat-label>Visited Date</mat-label>
 
-        <mat-icon class="material-symbols-outlined" matPrefix>calendar_month</mat-icon>
+          <mat-icon class="material-symbols-outlined" matPrefix>calendar_month</mat-icon>
 
-        <input matInput [matDatepicker]="visitedDatePicker" formControlName="visitedDate" />
+          <input matInput [matDatepicker]="visitedDatePicker" formControlName="visitedDate" />
 
-        <mat-datepicker-toggle matSuffix [for]="visitedDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker-toggle matSuffix [for]="visitedDatePicker"></mat-datepicker-toggle>
 
-        <mat-datepicker #visitedDatePicker></mat-datepicker>
+          <mat-datepicker #visitedDatePicker></mat-datepicker>
 
-        <mat-error *ngIf="f['visitedDate'].hasError('required')"> Visited Date is required </mat-error>
-      </mat-form-field>
+          <mat-error *ngIf="f['visitedDate'].hasError('required')"> Visited Date is required </mat-error>
+        </mat-form-field>
 
-      <!-- TODAY -->
-      <button mat-stroked-button type="button" class="today-btn" (click)="btnSetToday()">Today</button>
+        <!-- TODAY -->
+        <button mat-stroked-button type="button" class="btn-today" (click)="btnSetToday()">Today</button>
 
-      <!-- STAYED -->
-      <mat-checkbox formControlName="stayed"> Stayed </mat-checkbox>
+        <!-- STAYED -->
+        <mat-checkbox formControlName="stayed"> Stayed </mat-checkbox>
 
-      <!-- NIGHTS -->
-      <mat-form-field appearance="outline" class="nights-field" *ngIf="f['stayed'].value">
-        <mat-label>Nights</mat-label>
+        <!-- NIGHTS -->
+        <mat-form-field appearance="outline" class="nights-field" *ngIf="f['stayed'].value">
+          <mat-label>Nights</mat-label>
 
-        <mat-select formControlName="nights">
-          <mat-option *ngFor="let night of nights" [value]="night">
-            {{ night }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+          <mat-select formControlName="nights">
+            <mat-option *ngFor="let night of nights" [value]="night">
+              {{ night }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </section>
     </div>
   </form>
 </div>

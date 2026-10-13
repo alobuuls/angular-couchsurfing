@@ -12,7 +12,7 @@ Chart.register(ForceDirectedGraphController, EdgeLine, LinearScale, PointElement
 import { ISameArrivalDay, ISameStay, ITimelineDistribution, ITimelineItem, ITimelineView } from '@interfaces/stats-interface';
 
 // Helpers
-import { getRankingColors, RANKING_COLORS } from '@utils';
+import { CHART_UNKNOWN_COLOR, getRankingColors, RANKING_COLORS, TIMELINE_COLORS } from '@utils';
 
 // Service
 import { FormatService } from '@services/format.service';
@@ -202,24 +202,28 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
                   fillStyle: RANKING_COLORS.gold.background,
                   strokeStyle: RANKING_COLORS.gold.border,
                   lineWidth: 1,
+                  fontColor: CHART_UNKNOWN_COLOR,
                 },
                 {
                   text: '2nd',
                   fillStyle: RANKING_COLORS.silver.background,
                   strokeStyle: RANKING_COLORS.silver.border,
                   lineWidth: 1,
+                  fontColor: CHART_UNKNOWN_COLOR,
                 },
                 {
                   text: '3rd',
                   fillStyle: RANKING_COLORS.bronze.background,
                   strokeStyle: RANKING_COLORS.bronze.border,
                   lineWidth: 1,
+                  fontColor: CHART_UNKNOWN_COLOR,
                 },
                 {
                   text: 'Other',
                   fillStyle: RANKING_COLORS.neutral.background,
                   strokeStyle: RANKING_COLORS.neutral.border,
                   lineWidth: 1,
+                  fontColor: CHART_UNKNOWN_COLOR,
                 },
               ],
             },
@@ -267,9 +271,9 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges {
             edges,
             pointRadius: 8,
             pointHoverRadius: 10,
-            pointBackgroundColor: 'rgba(75, 192, 192, 0.8)',
-            pointBorderColor: 'rgb(75, 192, 192)',
-            borderColor: 'rgba(75, 192, 192, 0.4)',
+            pointBackgroundColor: TIMELINE_COLORS.sameStay.background,
+            pointBorderColor: TIMELINE_COLORS.sameStay.border,
+            borderColor: TIMELINE_COLORS.sameStay.edges,
             borderWidth: 2,
           },
         ],

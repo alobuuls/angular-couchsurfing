@@ -6,6 +6,9 @@ import Chart from 'chart.js/auto';
 // Interfaces
 import { ISummaryCard, ISummaryDistribution, ISummaryView } from '@interfaces/stats-interface';
 
+// Helpers
+import { GIFTS_COLORS, RATINGS_COLORS, SUMMARY_COLORS } from '@utils';
+
 @Component({
   selector: 'guest-summary-chart',
   templateUrl: './guest-summary-chart.component.html',
@@ -142,25 +145,13 @@ export class GuestSummaryChartComponent implements OnChanges {
           {
             label: config.label,
             data: config.getData(this.summary),
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(255, 159, 64, 0.2)',
-              'rgba(255, 205, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-              'rgba(201, 203, 207, 0.2)',
-            ],
-            borderColor: ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(201, 203, 207)'],
+            // Reuse the shared chart palettes
+            backgroundColor: this.selectedView === 'gifts' ? GIFTS_COLORS.slice(0, 2).map(color => color.background) : RATINGS_COLORS.map(color => color.background),
+            borderColor: this.selectedView === 'gifts' ? GIFTS_COLORS.slice(0, 2).map(color => color.border) : RATINGS_COLORS.map(color => color.border),
             borderWidth: 1,
-            // Different color for each radar point.
-            pointBackgroundColor: [
-              'rgb(230, 99, 127)', // General
-              'rgb(58, 98, 219)', // Solo
-              'rgb(154, 230, 159)', // Groups
-            ],
-            pointBorderColor: ['rgb(204, 0, 44)', 'rgb(0, 19, 127)', 'rgb(0, 82, 35)'],
-            // Slightly larger points.
+            // Different color for radar point
+            pointBackgroundColor: [SUMMARY_COLORS.radarPoints.general.background, SUMMARY_COLORS.radarPoints.solo.background, SUMMARY_COLORS.radarPoints.groups.background],
+            pointBorderColor: [SUMMARY_COLORS.radarPoints.general.border, SUMMARY_COLORS.radarPoints.solo.border, SUMMARY_COLORS.radarPoints.groups.border],
             pointRadius: 8,
             pointHoverRadius: 10,
           },

@@ -6,6 +6,9 @@ import Chart from 'chart.js/auto';
 // Interfaces
 import { IGiftGuest, IGiftsDistribution, IGiftsView } from '@interfaces/stats-interface';
 
+// Helpers
+import { getColorWithOpacity, GIFTS_COLORS } from '@utils';
+
 // Services
 import { FormatService } from '@services/format.service';
 
@@ -102,8 +105,8 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges {
           {
             label: config.label,
             data: giftsData.map(guest => guest.total),
-            backgroundColor: giftsData.map((_, index) => this.getBackgroundColor(index)),
-            borderColor: giftsData.map((_, index) => this.getBorderColor(index)),
+            backgroundColor: giftsData.map((_, index) => getColorWithOpacity(GIFTS_COLORS[index % GIFTS_COLORS.length])),
+            borderColor: giftsData.map((_, index) => GIFTS_COLORS[index % GIFTS_COLORS.length].border),
             borderWidth: 1,
           },
         ],
@@ -155,26 +158,6 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges {
     });
   }
 
-  // Returns the background color for a chart section.
-  private getBackgroundColor(index: number): string {
-    const colors = [
-      'rgba(255, 99, 132, 0.5)',
-      'rgba(255, 159, 64, 0.5)',
-      'rgba(255, 205, 86, 0.5)',
-      'rgba(75, 192, 192, 0.5)',
-      'rgba(54, 162, 235, 0.5)',
-      'rgba(153, 102, 255, 0.5)',
-      'rgba(201, 203, 207, 0.5)',
-    ];
-    return colors[index % colors.length];
-  }
-
-  // Returns the border color for a chart section.
-  private getBorderColor(index: number): string {
-    const colors = ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(201, 203, 207)'];
-    return colors[index % colors.length];
-  }
-
   // Builds the common tooltip information for both charts.
   private getTooltipLines(guest: IGiftGuest): string[] {
     return [
@@ -192,15 +175,6 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges {
       return 'Unknown';
     }
     return groupType.charAt(0).toUpperCase() + groupType.slice(1);
-  }
-
-  // Formats a date for tooltip display.
-  private formatDate(date: string): string {
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
   }
 
   // Destroys the current Chart.js instance.

@@ -6,7 +6,7 @@
       *ngFor="let view of timelineViews"
       (click)="selectView(view)"
       [class.active]="selectedView === view"
-      class="btn-timeline"
+      class="stats-nav-btns"
     >
       {{ timelineViewLabels[view] }}
     </button>

@@ -6,7 +6,7 @@
       *ngFor="let view of demographicsViews"
       (click)="selectView(view)"
       [class.active]="selectedView === view"
-      class="btn-demographics"
+      class="stats-nav-btns"
     >
       {{ demographicsViewLabels[view] }}
     </button>
@@ -19,7 +19,7 @@
       *ngFor="let view of demographicTotalsViews"
       (click)="selectTotalsView(view)"
       [class.active]="selectedTotalsView === view"
-      class="btn-demographics"
+      class="stats-nav-btns-small"
     >
       {{ view }}
     </button>
@@ -32,7 +32,7 @@
       *ngFor="let view of demographicAgeViews"
       (click)="selectAgeView(view)"
       [class.active]="selectedAgeView === view"
-      class="btn-demographics"
+      class="stats-nav-btns-small"
     >
       {{ view }}
     </button>
@@ -45,7 +45,7 @@
       *ngFor="let view of demographicFirstLastViews"
       (click)="selectFirstLastView(view)"
       [class.active]="selectedFirstLastView === view"
-      class="btn-demographics"
+      class="stats-nav-btns-small"
     >
       {{ view }}
     </button>

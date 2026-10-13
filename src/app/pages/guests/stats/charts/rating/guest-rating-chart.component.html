@@ -6,7 +6,7 @@
       *ngFor="let view of ratingMainViews"
       (click)="selectMainView(view)"
       [class.active]="selectedMainView === view"
-      class="btn-rating"
+      class="stats-nav-btns"
     >
       {{ ratingMainViewLabels[view] }}
     </button>
@@ -19,7 +19,7 @@
       *ngFor="let view of ratingViews"
       (click)="selectView(view)"
       [class.active]="selectedView === view"
-      class="btn-rating"
+      class="stats-nav-btns-small"
     >
       {{ view }}
     </button>

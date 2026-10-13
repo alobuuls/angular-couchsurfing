@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { firstValueFrom, Observable } from 'rxjs';
-import Swal from 'sweetalert2';
 
 // Services
 import { AlertsService } from '@services/alerts.service';
@@ -26,6 +25,7 @@ export class GuestDeleteService {
 
     const alerts = ALERT_MESSAGES.deleteGuest;
 
+    // First confirmation
     const first = await this._alerts.showAlert({
       icon: 'question',
       title: '',
@@ -36,6 +36,7 @@ export class GuestDeleteService {
 
     if (!first.isConfirmed) return false;
 
+    // Warning
     const second = await this._alerts.showAlert({
       icon: 'warning',
       title: alerts.warning.title,
@@ -46,19 +47,8 @@ export class GuestDeleteService {
 
     if (!second.isConfirmed) return false;
 
-    const { isConfirmed } = await Swal.fire({
-      title: alerts.typeToConfirm.title(fullname),
-      input: 'text',
-      inputPlaceholder: fullname,
-      confirmButtonColor: '#ff0000',
-      showCancelButton: true,
-
-      preConfirm: (value: string) => {
-        if (value === fullname) return true;
-        Swal.showValidationMessage(`Must type "${fullname}" exactly`);
-        return false;
-      },
-    });
+    // Type fullname to confirm
+    const { isConfirmed } = await this._alerts.showDeleteConfirmation(alerts.typeToConfirm.title(fullname), fullname);
 
     if (!isConfirmed) return false;
 
@@ -67,7 +57,12 @@ export class GuestDeleteService {
     await firstValueFrom(request$);
 
     // Success
-    this._alerts.showToast({ icon: 'success', title: alerts.success.message(fullname), time: 6000 });
+    this._alerts.showToast({
+      icon: 'success',
+      title: alerts.success.message(fullname),
+      time: 6000,
+    });
+
     return true;
   }
 }

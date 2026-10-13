@@ -15,7 +15,7 @@ import { ILongestView, IStaysDistribution, IStaysView } from '@interfaces/stats-
 import { FormatService } from '@services/format.service';
 
 // Helpers
-import { GENDER_COLORS, getGenderColor, getRankingColors } from '@utils';
+import { CHART_NEUTRAL_COLOR, CHART_UNKNOWN_COLOR, GENDER_COLORS, getGenderColor, getRankingColors, STAYS_COLORS } from '@utils';
 
 @Component({
   selector: 'guest-stays-chart',
@@ -206,7 +206,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
             // Use guest gender for section colors.
             backgroundColor: people.map(item => {
               const gender = GENDER_COLORS[item.guest.gender.toLowerCase() as keyof typeof GENDER_COLORS];
-              return gender?.background ?? 'rgba(100, 100, 100, 0.5)';
+              return gender?.background ?? CHART_NEUTRAL_COLOR;
             }),
             borderColor: people.map(item => getGenderColor(item.guest.gender)),
             borderWidth: 1,
@@ -290,8 +290,8 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
           {
             label: 'Maximum Guests Together',
             data: [overall.total, solo.total],
-            backgroundColor: ['rgba(54, 162, 235, 0.5)', 'rgba(153, 102, 255, 0.5)'],
-            borderColor: ['rgb(54, 162, 235)', 'rgb(153, 102, 255)'],
+            backgroundColor: STAYS_COLORS.maxPeopleTogether.map(color => color.background),
+            borderColor: STAYS_COLORS.maxPeopleTogether.map(color => color.border),
             borderWidth: 1,
           },
         ],
@@ -427,24 +427,28 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
                   fillStyle: getRankingColors([1]).background[0],
                   strokeStyle: getRankingColors([1]).border[0],
                   lineWidth: 1,
+                  fontColor: CHART_UNKNOWN_COLOR,
                 },
                 {
                   text: '2nd',
                   fillStyle: getRankingColors([1, 2]).background[1],
                   strokeStyle: getRankingColors([1, 2]).border[1],
                   lineWidth: 1,
+                  fontColor: CHART_UNKNOWN_COLOR,
                 },
                 {
                   text: '3rd',
                   fillStyle: getRankingColors([1, 2, 3]).background[2],
                   strokeStyle: getRankingColors([1, 2, 3]).border[2],
                   lineWidth: 1,
+                  fontColor: CHART_UNKNOWN_COLOR,
                 },
                 {
                   text: 'Others',
                   fillStyle: getRankingColors([1, 2, 3, 4]).background[3],
                   strokeStyle: getRankingColors([1, 2, 3, 4]).border[3],
                   lineWidth: 1,
+                  fontColor: CHART_UNKNOWN_COLOR,
                 },
               ],
             },
@@ -537,10 +541,10 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
             pointBackgroundColor: nodes.map(node => {
               const gender = GENDER_COLORS[node.gender.toLowerCase() as keyof typeof GENDER_COLORS];
 
-              return gender?.background ?? 'rgba(100, 100, 100, 0.5)';
+              return gender?.background ?? CHART_NEUTRAL_COLOR;
             }),
             pointBorderColor: nodes.map(node => getGenderColor(node.gender)),
-            borderColor: 'rgba(100, 100, 100, 0.4)',
+            borderColor: STAYS_COLORS.networkEdges,
             borderWidth: 2,
           },
         ],
@@ -582,6 +586,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
                       fillStyle: color.background,
                       strokeStyle: color.border,
                       lineWidth: 1,
+                      fontColor: CHART_UNKNOWN_COLOR,
                     };
                   });
               },

@@ -6,7 +6,7 @@
       *ngFor="let view of geographyViews"
       (click)="selectView(view)"
       [class.active]="selectedView === view"
-      class="btn-geography"
+      class="stats-nav-btns"
     >
       {{ geographyViewLabels[view] }}
     </button>
@@ -21,7 +21,7 @@
         *ngFor="let ranking of rankingViews"
         (click)="selectRanking(ranking)"
         [class.active]="selectedRanking === ranking"
-        class="btn-ranking"
+        class="stats-nav-btns-small"
       >
         {{ ranking === 'all' ? 'All' : ranking === 'top' ? 'Top' : 'Bottom' }}
       </button>
@@ -34,7 +34,7 @@
         *ngFor="let ranking of countryRankingViews"
         (click)="selectRanking(ranking)"
         [class.active]="selectedRanking === ranking"
-        class="btn-ranking"
+        class="stats-nav-btns-small"
       >
         {{ ranking === 'topFemale' ? 'Top Female' : ranking === 'topMale' ? 'Top Male' : 'Most Consecutive' }}
       </button>

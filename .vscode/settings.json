@@ -26,7 +26,7 @@
   "oneDarkPro.bold": true,
   "oneDarkPro.vivid": true,
 
-  "files.autoSave": "afterDelay",
+  "files.autoSave": "off",
   "files.autoSaveDelay": 1000,
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,

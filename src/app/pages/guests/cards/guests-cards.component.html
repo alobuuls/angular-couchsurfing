@@ -30,7 +30,11 @@
             <div *ngFor="let p of guest.people" class="person">
               <div class="person-info">
                 <h2>
-                  <span *ngIf="p.hometown.code" [class]="p.hometown.code | flag" [matTooltip]="_format.formatCountry(p.hometown.code)"></span>
+                  <span
+                    *ngIf="p.hometown.code"
+                    [class]="p.hometown.code | flag"
+                    [matTooltip]="_format.formatCountry(p.hometown.code)"
+                  ></span>
                   {{ p.fullName }}
                   <mat-icon
                     class="material-symbols-outlined"
@@ -55,9 +59,9 @@
             </div>
 
             <!-- READ MORE -->
-            <a (click)="toggleCard(guest)">
+            <button [attr.aria-label]="isCardOpen(guest) ? 'Show less' : 'Read more'" (click)="toggleCard(guest)">
               {{ isCardOpen(guest) ? 'Show less' : 'Read more' }}
-            </a>
+            </button>
 
             <!-- DETAILS -->
             <div *ngIf="isCardOpen(guest)" class="card-details">
@@ -235,7 +239,11 @@
                         <strong>We Met: </strong>
 
                         <span class="gap-icons">
-                          <span *ngIf="member.countryCodeWeMet" [class]="member.countryCodeWeMet | flag" [matTooltip]="_format.formatCountry(member.countryCodeWeMet)"></span>
+                          <span
+                            *ngIf="member.countryCodeWeMet"
+                            [class]="member.countryCodeWeMet | flag"
+                            [matTooltip]="_format.formatCountry(member.countryCodeWeMet)"
+                          ></span>
 
                           <span *ngIf="member.countryCodeWeMet">
                             {{ _format.formatCountry(member.countryCodeWeMet) }}
@@ -286,7 +294,10 @@
 
               <!-- LOADING -->
               <ng-template #loading>
-                <app-loading [compact]="true" [messages]="['Loading details', 'Getting more information', 'Almost there']"></app-loading>
+                <app-loading
+                  [compact]="true"
+                  [messages]="['Loading details', 'Getting more information', 'Almost there']"
+                ></app-loading>
               </ng-template>
             </div>
           </div>

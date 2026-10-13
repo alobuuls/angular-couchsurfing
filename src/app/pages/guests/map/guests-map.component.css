@@ -12,7 +12,7 @@
   height: 65dvh;
   min-height: 65dvh;
   overflow: hidden;
-  background: #05080b;
+  background-color: var(--color-background);
   border-radius: 12px;
 }
 
@@ -22,91 +22,94 @@
   width: 100%;
   height: 100%;
   min-height: 0;
-  background: #05080b;
+  background-color: var(--color-background);
 }
+
 /* LEAFLET */
 :host ::ng-deep .leaflet-container {
   width: 100%;
   height: 100%;
-  background: #05080b;
+  background-color: var(--color-background);
   font-family: inherit;
   outline: none;
 }
 
 /* ZOOM CONTROL */
 :host ::ng-deep .leaflet-control-zoom {
-  border: 1px solid rgba(120, 180, 200, 0.2);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--color-text) 25%, transparent);
 }
 
 :host ::ng-deep .leaflet-control-zoom a {
   width: 34px;
   height: 34px;
   line-height: 34px;
-  background: rgba(7, 14, 19, 0.95);
-  color: #9bd9e8;
+  background-color: color-mix(in srgb, var(--color-primary-dark) 20%, var(--color-surface));
+  color: var(--color-primary);
   border: none;
   font-size: 18px;
 }
 
 :host ::ng-deep .leaflet-control-zoom a:hover {
-  background: rgba(15, 31, 40, 0.98);
-  color: #b9f3ff;
+  background-color: var(--color-primary-light);
+  color: var(--color-text);
 }
+
 /* ATTRIBUTION */
 :host ::ng-deep .leaflet-control-attribution {
-  background: rgba(5, 8, 11, 0.8);
-  color: #4d6874;
+  background-color: color-mix(in srgb, var(--color-surface) 85%, transparent);
+  color: var(--color-text-muted);
   font-size: 9px;
   backdrop-filter: blur(4px);
 }
 
 :host ::ng-deep .leaflet-control-attribution a {
-  color: #668e9c;
+  color: var(--color-primary);
 }
 
 /* COUNTRY HOVER TOOLTIP */
 :host ::ng-deep .country-hover-tooltip {
-  background: rgba(6, 13, 18, 0.96);
-  border: 1px solid rgba(139, 233, 253, 0.35);
+  background-color: color-mix(in srgb, var(--color-surface) 96%, var(--color-primary));
+  border: 1px solid color-mix(in srgb, var(--color-primary) 35%, transparent);
   border-radius: 6px;
-  color: #b9f3ff;
+  color: var(--color);
   font-size: 12px;
   font-weight: 500;
   padding: 5px 9px;
   box-shadow:
-    0 0 12px rgba(80, 210, 240, 0.12),
-    0 4px 18px rgba(0, 0, 0, 0.5);
+    0 0 12px color-mix(in srgb, var(--color-primary) 12%, transparent),
+    0 4px 18px color-mix(in srgb, var(--color-text) 30%, transparent);
   backdrop-filter: blur(6px);
 }
 
 :host ::ng-deep .country-hover-tooltip::before {
-  border-top-color: rgba(139, 233, 253, 0.35);
+  border-top-color: color-mix(in srgb, var(--color-primary) 35%, transparent);
 }
+
 /* POPUP */
 :host ::ng-deep .country-popup-container .leaflet-popup-content-wrapper {
-  background: #080d12;
-  color: #dceaf0;
-  border: 1px solid #263b46;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
   border-radius: 10px;
   box-shadow:
-    0 0 25px rgba(0, 200, 255, 0.08),
-    0 10px 35px rgba(0, 0, 0, 0.6);
+    0 0 25px color-mix(in srgb, var(--color-primary) 8%, transparent),
+    0 10px 35px color-mix(in srgb, var(--color-text) 30%, transparent);
 }
 
 :host ::ng-deep .country-popup-container .leaflet-popup-tip {
-  background: #080d12;
+  background-color: var(--color-surface);
 }
 
 :host ::ng-deep .country-popup-container .leaflet-popup-close-button {
-  color: #607582;
+  color: var(--color-text-muted);
   font-size: 18px;
 }
 
 :host ::ng-deep .country-popup-container .leaflet-popup-close-button:hover {
-  color: #8be9fd;
+  color: var(--color-primary);
 }
 
 /* POPUP CONTENT */
@@ -116,7 +119,7 @@
 }
 
 :host ::ng-deep .country-popup-title {
-  color: #8be9fd;
+  color: var(--color);
   font-size: 17px;
   font-weight: 600;
   letter-spacing: 0.3px;
@@ -124,7 +127,7 @@
 
 :host ::ng-deep .country-popup-code {
   margin-top: 3px;
-  color: #526873;
+  color: var(--color-text-muted);
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 1.5px;
@@ -133,7 +136,7 @@
 :host ::ng-deep .country-popup-divider {
   height: 1px;
   margin: 10px 0;
-  background: linear-gradient(90deg, rgba(139, 233, 253, 0.35), rgba(139, 233, 253, 0));
+  background-image: linear-gradient(90deg, color-mix(in srgb, var(--color-primary) 35%, transparent), transparent);
 }
 
 :host ::ng-deep .country-popup-row {
@@ -146,33 +149,34 @@
 }
 
 :host ::ng-deep .country-popup-row span {
-  color: #607582;
+  color: var(--color-text-secondary);
 }
 
 :host ::ng-deep .country-popup-row strong {
-  color: #dceaf0;
+  color: var(--color-text);
   font-weight: 500;
   text-align: right;
 }
 
 /* ZERO GUESTS TOOLTIP */
 :host ::ng-deep .country-zero-tooltip {
-  background: rgba(10, 5, 7, 0.96);
-  border: 1px solid rgba(255, 70, 90, 0.45);
+  background-color: color-mix(in srgb, var(--color-surface) 96%, var(--color-danger));
+  border: 1px solid color-mix(in srgb, var(--color-danger) 45%, transparent);
   border-radius: 6px;
-  color: #ff5c6c;
+  color: var(--color-danger);
   font-size: 12px;
   font-weight: 600;
   padding: 5px 9px;
   box-shadow:
-    0 0 12px rgba(255, 50, 70, 0.12),
-    0 4px 18px rgba(0, 0, 0, 0.5);
+    0 0 12px color-mix(in srgb, var(--color-danger) 12%, transparent),
+    0 4px 18px color-mix(in srgb, var(--color-text) 30%, transparent);
   backdrop-filter: blur(6px);
 }
 
 :host ::ng-deep .country-zero-tooltip::before {
-  border-top-color: rgba(255, 70, 90, 0.45);
+  border-top-color: color-mix(in srgb, var(--color-danger) 45%, transparent);
 }
+
 /* MOBILE */
 @media (max-width: 768px) {
   .map-wrapper {
@@ -188,7 +192,7 @@
   }
 }
 
-/* /* SMALL MOBILE */
+/* SMALL MOBILE */
 @media (max-width: 480px) {
   .map-wrapper {
     height: 420px;
