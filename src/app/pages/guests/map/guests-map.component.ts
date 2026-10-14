@@ -1,23 +1,27 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { environment } from '@env/environment';
 
-// Library
-import * as L from 'leaflet';
-import { union } from '@turf/union';
-import { featureCollection } from '@turf/helpers';
-
 // Services
 import { MapService } from '@services/map.service';
+import { LanguageService } from '@services/language.service';
 
 // Interfaces
 import { IGuestTableRow } from '@interfaces/data-structure-api';
 import { IAdminRegionsGeoJson, IWorldGeoJson } from '@interfaces/map-interface';
+import { REGION_NAMES } from '@config/world/regions';
 
 // Country data
 import { WORLD } from '@config/world';
 
 // Types
 import { ICountry } from '@type/word.types';
+
+// Libraries
+import * as L from 'leaflet';
+import { union } from '@turf/union';
+import { featureCollection } from '@turf/helpers';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'guests-map',
@@ -28,6 +32,10 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
   @Input() data: IGuestTableRow[] = [];
 
   private readonly _map = inject(MapService);
+  private readonly _language = inject(LanguageService);
+  private readonly _translate = inject(TranslateService);
+
+  private languageSubscription?: Subscription;
 
   private mapContainer?: HTMLDivElement;
   private geoJsonData?: IWorldGeoJson;
@@ -84,51 +92,96 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
   @ViewChild('mapCtn')
   set mapCtn(element: ElementRef<HTMLDivElement> | undefined) {
-    if (!element) {
-      return;
-    }
-
+    if (!element) return;
     this.mapContainer = element.nativeElement;
 
     this.tryInitMap();
   }
 
   // LIFECYCLE
-
   ngOnInit(): void {
     this.buildCountryLookups();
-
     this.guestCounts = this.getGuestCounts();
 
-    this.getWorldMap();
+    this.watchLanguageChanges();
 
+    this.getWorldMap();
     this.getAdminRegionsMap();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['data'] || changes['data'].firstChange) {
-      return;
-    }
-
+    if (!changes['data'] || changes['data'].firstChange) return;
     this.guestCounts = this.getGuestCounts();
-
     this.updateCountryStyles();
   }
 
   ngOnDestroy(): void {
-    this.resizeObserver?.disconnect();
+    this.languageSubscription?.unsubscribe();
+    this.languageSubscription = undefined;
 
+    this.resizeObserver?.disconnect();
     this.resizeObserver = undefined;
+
+    this.themeObserver?.disconnect();
+    this.themeObserver = undefined;
 
     this.map?.remove();
 
     this.map = undefined;
     this.geoLayer = undefined;
+    this.tileLayer = undefined;
     this.geoJsonData = undefined;
     this.adminRegionsGeoJsonData = undefined;
+    this.adminRegionsLayer = undefined;
     this.mapContainer = undefined;
+  }
 
-    this.themeObserver?.disconnect();
+  private watchLanguageChanges(): void {
+    this.languageSubscription = this._translate.onLangChange.subscribe(() => this.updateTooltipsLanguage());
+  }
+
+  private updateTooltipsLanguage(): void {
+    // COUNTRIES
+    this.geoLayer?.eachLayer((layer: L.Layer) => {
+      const feature = (layer as any).feature;
+      if (!feature) return;
+      const config = this.getCountryConfig(feature);
+      const country = config.country;
+
+      const countryName =
+        country?.name[this._language.currentLanguage] ??
+        country?.name.en ??
+        feature.properties?.ADMIN ??
+        feature.properties?.name ??
+        this._translate.instant('MAP.UNKNOWN_COUNTRY');
+
+      layer.unbindTooltip();
+
+      layer.bindTooltip(`<strong>${countryName}</strong>`, {
+        sticky: true,
+        direction: 'top',
+        opacity: 1,
+        className: 'country-hover-tooltip',
+      });
+    });
+
+    // UK ADMINISTRATIVE REGIONS
+    this.adminRegionsLayer?.eachLayer((layer: L.Layer) => {
+      const feature = (layer as any).feature;
+      const code = feature?.properties?.gu_a3?.toLowerCase();
+
+      if (!code) return;
+      const regionName = this._translate.instant(`UK_REGIONS.${code}`);
+
+      layer.unbindTooltip();
+
+      layer.bindTooltip(`<strong>${regionName}</strong>`, {
+        sticky: true,
+        direction: 'top',
+        opacity: 1,
+        className: 'country-hover-tooltip',
+      });
+    });
   }
 
   // COUNTRY LOOKUPS
@@ -157,7 +210,9 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
        * Nombre
        */
       if (country.name) {
-        this.countriesByName[this.normalizeCountryName(country.name)] = country;
+        this.countriesByName[this.normalizeCountryName(country.name.en)] = country;
+        console.log(this.countriesByName[this.normalizeCountryName(country.name.en)]);
+        console.log(country);
       }
     });
   }
@@ -519,7 +574,13 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     const config = this.getCountryConfig(feature);
     const country = config.country;
     const countryName =
-      country?.name ?? feature?.properties?.name ?? feature?.properties?.ADMIN ?? feature?.properties?.NAME_EN ?? feature?.properties?.NAME ?? 'Unknown country';
+      country?.name[this._language.currentLanguage] ??
+      country?.name.en ??
+      feature?.properties?.name ??
+      feature?.properties?.ADMIN ??
+      feature?.properties?.NAME_EN ??
+      feature?.properties?.NAME ??
+      this._translate.instant('MAP.UNKNOWN_COUNTRY');
 
     const iso3 = config.iso3;
 
@@ -560,48 +621,53 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
       const currentCount = iso3 ? (this.guestCounts[iso3] ?? 0) : 0;
 
       // If there are not guest, the popup is not
-      if (currentCount === 0 || !country) {
-        return;
-      }
+      if (currentCount === 0 || !country) return;
 
-      this.showCountryPopup(layer, countryName, country, currentCount, iso3);
+      this.showCountryPopup(layer, country?.name[this._language.currentLanguage] ?? country?.name.en ?? countryName, country, currentCount, iso3);
     });
   }
 
   // COUNTRY POPUP
   private showCountryPopup(layer: L.Layer, countryName: string, country: ICountry, count: number, iso3: string): void {
-    const region = String(country.region);
-    const continent = String(country.continent);
+    const lang = this._language.currentLanguage;
+
+    // Nombre del país según el idioma seleccionado
+    const translatedCountry = countryName;
+
+    // Región traducida desde REGION_NAMES
+    const region = REGION_NAMES[country.region]?.[lang] ?? REGION_NAMES[country.region]?.en ?? country.region;
+
+    // Continente traducido desde ngx-translate
+    const continent = this._translate.instant(`CONTINENTS.${country.continent}`);
+
     const html = `
-      <div class="country-popup">
-
-        <div class="country-popup-title">
-          ${countryName}
-        </div>
-
-        <div class="country-popup-code">
-          ${iso3.toUpperCase()}
-        </div>
-
-        <div class="country-popup-divider"></div>
-
-        <div class="country-popup-row">
-          <span>Guests</span>
-          <strong>${count}</strong>
-        </div>
-
-        <div class="country-popup-row">
-          <span>Region</span>
-          <strong>${this.formatLabel(region)}</strong>
-        </div>
-
-        <div class="country-popup-row">
-          <span>Continent</span>
-          <strong>${this.formatLabel(continent)}</strong>
-        </div>
-
+    <div class="country-popup">
+      <div class="country-popup-title">
+        ${translatedCountry}
       </div>
-    `;
+
+      <div class="country-popup-code">
+        ${iso3.toUpperCase()}
+      </div>
+
+      <div class="country-popup-divider"></div>
+
+      <div class="country-popup-row">
+        <span>${this._translate.instant('MAP.GUESTS')}</span>
+        <strong>${count}</strong>
+      </div>
+
+      <div class="country-popup-row">
+        <span>${this._translate.instant('MAP.REGION')}</span>
+        <strong>${region}</strong>
+      </div>
+
+      <div class="country-popup-row">
+        <span>${this._translate.instant('MAP.CONTINENT')}</span>
+        <strong>${continent}</strong>
+      </div>
+    </div>
+  `;
 
     layer.bindPopup(html, {
       closeButton: true,
@@ -610,6 +676,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
       className: 'country-popup-container',
       maxWidth: 280,
     });
+
     layer.openPopup();
   }
 
@@ -764,19 +831,9 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
   private setupAdminRegionInteraction(feature: any, layer: L.Layer): void {
     const code = feature.properties?.gu_a3?.toLowerCase();
+    if (!code) return;
 
-    if (!code) {
-      return;
-    }
-
-    const names: Record<string, string> = {
-      sct: 'Scotland',
-      wls: 'Wales',
-      nir: 'Northern Ireland',
-      eng: 'England',
-    };
-
-    const countryName = names[code] ?? 'United Kingdom';
+    const countryName = this._translate.instant(`UK_REGIONS.${code}`);
 
     // HOVER
     layer.bindTooltip(`<strong>${countryName}</strong>`, {
@@ -829,35 +886,27 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
   private showAdminRegionPopup(layer: L.Layer, countryName: string, code: string, count: number): void {
     const html = `
-    <div class="country-popup">
+      <div class="country-popup">
+        <div class="country-popup-title">${countryName}</div>
+        <div class="country-popup-code">${code.toUpperCase()}</div>
+        <div class="country-popup-divider"></div>
 
-      <div class="country-popup-title">
-        ${countryName}
+        <div class="country-popup-row">
+          <span>${this._translate.instant('MAP.GUESTS')}</span>
+          <strong>${count}</strong>
+        </div>
+
+        <div class="country-popup-row">
+          <span>${this._translate.instant('MAP.REGION')}</span>
+          <strong>${this._translate.instant('MAP.UNITED_KINGDOM')}</strong>
+        </div>
+
+        <div class="country-popup-row">
+          <span>${this._translate.instant('MAP.CONTINENT')}</span>
+          <strong>${this._translate.instant('CONTINENTS.europe')}</strong>
+        </div>
       </div>
-
-      <div class="country-popup-code">
-        ${code.toUpperCase()}
-      </div>
-
-      <div class="country-popup-divider"></div>
-
-      <div class="country-popup-row">
-        <span>Guests</span>
-        <strong>${count}</strong>
-      </div>
-
-      <div class="country-popup-row">
-        <span>Region</span>
-        <strong>United Kingdom</strong>
-      </div>
-
-      <div class="country-popup-row">
-        <span>Continent</span>
-        <strong>Europe</strong>
-      </div>
-
-    </div>
-  `;
+    `;
 
     layer.bindPopup(html, {
       closeButton: true,

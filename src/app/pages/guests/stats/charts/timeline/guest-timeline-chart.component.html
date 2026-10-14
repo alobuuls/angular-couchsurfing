@@ -8,7 +8,7 @@
       [class.active]="selectedView === view"
       class="stats-nav-btns"
     >
-      {{ timelineViewLabels[view] }}
+      {{ 'STATS.TIMELINE.VIEWS.' + view.toUpperCase() | translate }}
     </button>
   </div>
 

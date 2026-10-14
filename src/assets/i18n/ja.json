@@ -1,0 +1,844 @@
+{
+  "MENU": {
+    "GUESTS": "ゲスト",
+    "HOSTED": "ホスト",
+    "PERSONAL": "個人"
+  },
+  "GUESTS_TABLE": {
+    "NO": "番号",
+    "HANG_OUT": "一緒に出かける",
+    "NIGHTS": "宿泊数",
+    "GENDER": "性別",
+    "AGE": "年齢",
+    "FULL_NAME": "氏名",
+    "CONTINENT": "大陸",
+    "HOMETOWN": "出身地",
+    "LIVING_IN": "現在の居住地",
+    "VISITED": "訪問日",
+    "RATING": "評価",
+    "ACTIONS": "操作",
+    "VIEW_GUEST": "ゲストを表示",
+    "EDIT_GUEST": "ゲストを編集",
+    "DELETE_GUEST": "ゲストを削除",
+    "VIEW_CS_PROFILE": "Couchsurfingのプロフィールを表示",
+    "CS_UNAVAILABLE": "Couchsurfingのプロフィールを利用できません",
+    "SEND_WHATSAPP": "WhatsAppでメッセージを送信",
+    "WHATSAPP_UNAVAILABLE": "WhatsAppを利用できません",
+    "BIRTHDATE": "生年月日",
+    "CURRENT_AGE": "現在の年齢"
+  },
+  "CONTINENTS": {
+    "africa": "アフリカ",
+    "asia": "アジア",
+    "europe": "ヨーロッパ",
+    "america": "アメリカ",
+    "oceania": "オセアニア"
+  },
+  "PAGINATOR": {
+    "ITEMS_PER_PAGE": "1ページあたりの項目数：",
+    "NEXT_PAGE": "次のページ",
+    "PREVIOUS_PAGE": "前のページ",
+    "FIRST_PAGE": "最初のページ",
+    "LAST_PAGE": "最後のページ",
+    "RANGE_EMPTY": "全{{length}}件中0件",
+    "RANGE_LABEL": "全{{length}}件中{{start}}～{{end}}件"
+  },
+  "GUESTS_FILTERS": {
+    "CONTINENT": "大陸",
+    "ALL_CONTINENTS": "すべての大陸",
+    "REGION": "地域",
+    "ALL_REGIONS": "すべての地域",
+    "COUNTRY": "国",
+    "ALL_COUNTRIES": "すべての国",
+    "GROUP_TYPE": "グループの種類",
+    "ALL_GROUPS": "すべてのグループ",
+    "SOLO": "一人旅",
+    "COUPLE": "カップル",
+    "FRIENDS": "友人",
+    "FAMILY": "家族",
+    "VISITED_FROM": "訪問開始日",
+    "VISITED_TO": "訪問終了日",
+    "FIRST_TIME": "初回",
+    "HANG_OUT": "一緒に出かける",
+    "AMBASSADOR": "アンバサダー",
+    "DID_THEY_REQUEST": "相手からリクエストがありましたか？",
+    "ALL": "すべて",
+    "YES": "はい",
+    "NO": "いいえ",
+    "CLEAR": "クリア",
+    "SEARCH": "検索"
+  },
+  "GUESTS_ACTIONS": {
+    "SEE_STATS": "統計を表示",
+    "CREATE_GUEST": "ゲストを作成"
+  },
+  "GUESTS_VIEW": {
+    "NO_MORE_GUESTS": "表示できるゲストはもういません。",
+    "GUESTS_TO_DISPLAY": "表示するゲスト",
+    "GUESTS_COUNT_SINGULAR": "人のゲスト",
+    "GUESTS_COUNT_PLURAL": "人のゲスト",
+    "NO_GUESTS_FOUND": "ゲストが見つかりませんでした！",
+    "CHANGE_SEARCH": "検索条件を変更してみてください。",
+    "CHANGE_TO_CARDS": "カード表示に切り替える",
+    "CHANGE_TO_MAP": "地図表示に切り替える",
+    "CHANGE_TO_TABLE": "テーブル表示に切り替える"
+  },
+  "GUESTS_LOADING": {
+    "CARDS_1": "ゲストを読み込んでいます",
+    "CARDS_2": "ゲスト情報を準備しています",
+    "CARDS_3": "もうすぐ完了です",
+    "CARDS_4": "カードを準備しています",
+    "MAP_1": "地図を読み込んでいます",
+    "MAP_2": "ゲストを検索しています",
+    "MAP_3": "地図を準備しています",
+    "MAP_4": "まもなく完了です",
+    "TABLE_1": "ゲストを読み込んでいます",
+    "TABLE_2": "ゲストを検索しています",
+    "TABLE_3": "検索結果を取得しています",
+    "TABLE_4": "まもなく完了です"
+  },
+  "DATE": {
+    "DAY": "日"
+  },
+  "LANGUAGES": {
+    "EN": "英語",
+    "ES": "スペイン語",
+    "DE": "ドイツ語",
+    "ZH": "中国語",
+    "FR": "フランス語",
+    "IT": "イタリア語",
+    "PT": "ポルトガル語",
+    "RU": "ロシア語",
+    "JA": "日本語"
+  },
+  "UK_REGIONS": {
+    "sct": "スコットランド",
+    "wls": "ウェールズ",
+    "nir": "北アイルランド",
+    "eng": "イングランド"
+  },
+  "MAP": {
+    "GUESTS": "ゲスト",
+    "REGION": "地域",
+    "CONTINENT": "大陸",
+    "UNITED_KINGDOM": "イギリス",
+    "UNKNOWN_COUNTRY": "不明な国"
+  },
+  "GUESTS_CARDS": {
+    "GUEST": "ゲスト",
+    "GUESTS": "ゲスト",
+    "VISIT": "訪問",
+    "VISITS": "訪問回数",
+    "READ_MORE": "続きを読む",
+    "SHOW_LESS": "折りたたむ",
+    "TRIP": "旅行",
+    "VISITED_DATE": "訪問日",
+    "NIGHTS": "宿泊数",
+    "STAYED": "宿泊した",
+    "HANG_OUT": "一緒に過ごした",
+    "FIRST_TIME": "初回",
+    "GROUP_TYPE": "グループの種類",
+    "MEMBERS": "メンバー",
+    "AMBASSADOR": "アンバサダー",
+    "PERSONAL_INFORMATION": "個人情報",
+    "FULL_NAME": "氏名",
+    "BIRTH_DATE": "生年月日",
+    "WHATSAPP": "WhatsApp",
+    "INSTAGRAM": "Instagram",
+    "COUCHSURFING": "Couchsurfing",
+    "GAY": "ゲイ",
+    "DID_THEY_REQUEST": "宿泊をリクエストしましたか？",
+    "I_SENT_THE_REQUEST": "自分からリクエストした",
+    "LOCATION": "場所",
+    "CONTINENT": "大陸",
+    "REGION": "地域",
+    "HOMETOWN": "出身地",
+    "LIVING_IN": "居住地",
+    "WE_MET": "出会った場所",
+    "OCCUPATION": "職業",
+    "GIFT": "贈り物",
+    "COMMENTS": "コメント",
+    "REFERENCES": "リファレンス",
+    "THEIR_REFERENCE": "相手へのリファレンス",
+    "MY_REFERENCE": "自分へのリファレンス",
+    "GROUP_TYPES": {
+      "solo": "一人",
+      "couple": "カップル",
+      "friends": "友人",
+      "family": "家族"
+    },
+    "LOADING_1": "詳細を読み込んでいます",
+    "LOADING_2": "追加情報を取得しています",
+    "LOADING_3": "もうすぐ完了します"
+  },
+  "GUEST_DETAIL": {
+    "TITLE": "ゲストの詳細",
+    "HEADER": {
+      "SUBTITLE": "旅行者アーカイブ",
+      "TITLE": "ゲストのパスポート",
+      "RECORD": "旅行記録"
+    },
+    "LOADING": {
+      "MESSAGE_1": "ゲストの詳細を読み込んでいます",
+      "MESSAGE_2": "情報を準備しています",
+      "MESSAGE_3": "もうすぐ完了します",
+      "MESSAGE_4": "ゲストのプロフィールを準備しています"
+    },
+    "PASSPORT": {
+      "SUBTITLE": "海外からのゲスト",
+      "TITLE": "個人パスポート"
+    },
+    "IDENTITY": {
+      "SUBTITLE": "旅行者情報",
+      "AMBASSADOR": "アンバサダー"
+    },
+    "SOCIAL": {
+      "COUCHSURFING": "Couchsurfingのプロフィールを見る",
+      "INSTAGRAM": "Instagramのプロフィールを見る",
+      "WHATSAPP": "WhatsAppのプロフィールを見る"
+    },
+    "DIVIDER": {
+      "IDENTITY": "本人情報"
+    },
+    "PERSONAL": {
+      "SUBTITLE": "旅行者プロフィール",
+      "TITLE": "個人情報",
+      "FULL_NAME": "氏名",
+      "GENDER": "性別",
+      "GENDERS": {
+        "MALE": "男性",
+        "FEMALE": "女性",
+        "TRANS": "トランスジェンダー"
+      },
+      "BIRTH_DATE": "生年月日",
+      "PHONE_NUMBER": "電話番号",
+      "GAY": "ゲイ",
+      "STAY_REQUEST": "宿泊リクエスト",
+      "REQUESTED_STAY": "相手から宿泊をリクエストされた",
+      "SENT_REQUEST": "自分からリクエストした"
+    },
+    "COMMON": {
+      "YES": "はい",
+      "NO": "いいえ"
+    },
+    "LOCATION": {
+      "SUBTITLE": "出身地と居住地",
+      "TITLE": "場所と位置情報",
+      "CONTINENT": "大陸",
+      "REGION": "地域",
+      "HOMETOWN": "出身地",
+      "CURRENTLY_LIVING_IN": "現在の居住地",
+      "WE_MET_IN": "出会った場所"
+    },
+    "TRIP": {
+      "SUBTITLE": "旅行記録",
+      "TITLE": "訪問記録",
+      "DATE_OF_VISIT": "訪問日",
+      "NIGHTS": "宿泊数",
+      "GROUP_TYPE": "グループの種類",
+      "GROUP_TYPES": {
+        "SOLO": "一人",
+        "COUPLE": "カップル",
+        "FRIENDS": "友人",
+        "FAMILY": "家族"
+      },
+      "STAYED": "宿泊した？",
+      "HUNG_OUT": "一緒に過ごした",
+      "FIRST_VISIT": "初めての訪問"
+    },
+    "OCCUPATION": {
+      "SUBTITLE": "職業プロフィール",
+      "TITLE": "職業"
+    },
+    "RATING": {
+      "SUBTITLE": "コミュニティからの評価",
+      "TITLE": "ゲストの評価"
+    },
+    "GIFTS": {
+      "SUBTITLE": "旅の思い出",
+      "TITLE": "贈り物"
+    },
+    "COMMENTS": {
+      "SUBTITLE": "個人的なメモ",
+      "TITLE": "コメント"
+    },
+    "REFERENCES": {
+      "SUBTITLE": "コミュニティでのつながり",
+      "TITLE": "リファレンス",
+      "THEIR_REFERENCE": "相手へのリファレンス",
+      "MY_REFERENCE": "自分へのリファレンス"
+    },
+    "FOOTER": {
+      "PHRASE": "出会いの一つひとつに物語がある"
+    },
+    "GROUP": {
+      "HEADER": {
+        "SUBTITLE": "海外ゲストの記録",
+        "TITLE": "グループのパスポート"
+      },
+      "TRIP": {
+        "SUBTITLE": "共有した旅",
+        "TITLE": "グループの旅行記録"
+      },
+      "MEMBERS": {
+        "SUBTITLE": "旅の仲間",
+        "TITLE": "グループメンバー",
+        "GUEST_FALLBACK": "ゲスト",
+        "WHATSAPP": "WhatsApp",
+        "LIVING_IN": "居住地"
+      }
+    }
+  },
+  "GUESTS_FORM": {
+    "GROUP_TYPE_TITLE": "どのようなグループで旅行しましたか？",
+    "GROUP_TYPES": {
+      "SOLO": "一人",
+      "COUPLE": "カップル",
+      "FRIENDS": "友人",
+      "FAMILY": "家族"
+    },
+    "ADD_GUEST": "ゲストを追加",
+    "CREATE": "作成",
+    "UPDATE": "更新",
+    "MAX_MEMBERS": "追加できるメンバーは最大5人です"
+  },
+  "TRIP_FORM": {
+    "TITLE": "旅行情報",
+    "VISITED_DATE": "訪問日",
+    "VISITED_DATE_REQUIRED": "訪問日は必須です",
+    "TODAY": "今日",
+    "STAYED": "宿泊した？",
+    "NIGHTS": "宿泊数"
+  },
+  "GUEST_FORM": {
+    "SECTIONS": {
+      "PERSONAL": "個人情報",
+      "LOCATION": "場所",
+      "OCCUPATION": "職業",
+      "CONTACT": "連絡先情報",
+      "ADDITIONAL": "追加情報",
+      "RATING_GIFTS": "評価と贈り物",
+      "REFERENCES_COMMENTS": "リファレンスとコメント"
+    },
+    "FIELDS": {
+      "FULL_NAME": "氏名",
+      "INSTAGRAM": "Instagram",
+      "CS_PROFILE_URL": "CouchsurfingのプロフィールURL",
+      "BIRTH_DATE": "生年月日",
+      "GENDER": "性別",
+      "HOMETOWN_COUNTRY": "出身国",
+      "HOMETOWN_STATE": "出身州・県",
+      "HOMETOWN_CITY": "出身都市",
+      "LIVING_COUNTRY": "居住国",
+      "LIVING_STATE": "居住州・県",
+      "LIVING_CITY": "居住都市",
+      "COUNTRY_WE_MET": "出会った国",
+      "STATE_WE_MET": "出会った州・県",
+      "CITY_WE_MET": "出会った都市",
+      "LOCATION_WE_MET": "出会った場所",
+      "OCCUPATION_AREA": "職業分野",
+      "OCCUPATIONS": "職業",
+      "OTHER_OCCUPATION": "職業を入力してください",
+      "ENTER_OCCUPATION": "職業を入力",
+      "PREFIX": "国番号",
+      "WHATSAPP": "WhatsApp",
+      "GIFTS": "贈り物",
+      "THEIR_REFERENCE": "相手へのリファレンス",
+      "MY_REFERENCE": "自分へのリファレンス",
+      "COMMENTS": "コメントを入力"
+    },
+    "GENDER_OPTIONS": {
+      "MALE": "男性",
+      "FEMALE": "女性",
+      "TRANS": "トランスジェンダー"
+    },
+    "CHECKBOXES": {
+      "FIRST_TIME": "初回",
+      "STAY_REQUEST": "宿泊をリクエストしましたか？",
+      "HANG_OUT": "一緒に過ごした",
+      "AMBASSADOR": "アンバサダー",
+      "GAY": "ゲイ"
+    },
+    "BUTTONS": {
+      "CLEAR_GIFTS": "クリア"
+    },
+    "HINTS": {
+      "GIFTS_COUNT": "{{count}}/15 個の贈り物"
+    },
+    "ERRORS": {
+      "FULL_NAME_REQUIRED": "氏名は必須です",
+      "FULL_NAME_MAX": "最大100文字まで入力できます",
+      "INSTAGRAM_MAX": "最大30文字まで入力できます",
+      "CS_PROFILE_REQUIRED": "CouchsurfingのプロフィールURLは必須です",
+      "CS_PROFILE_MAX": "最大50文字まで入力できます",
+      "GENDER_REQUIRED": "性別は必須です",
+      "COUNTRY_REQUIRED": "国は必須です",
+      "LOCATION_MAX": "最大100文字まで入力できます",
+      "OCCUPATION_REQUIRED": "職業分野は必須です",
+      "PREFIX_REQUIRED": "国番号は必須です",
+      "WHATSAPP_REQUIRED": "WhatsAppは必須です",
+      "PHONE_INVALID": "電話番号が正しくありません",
+      "WHATSAPP_MAX": "最大16文字まで入力できます",
+      "REFERENCE_MAX": "最大500文字まで入力できます",
+      "COMMENTS_MAX": "最大500文字まで入力できます"
+    },
+    "RATING": {
+      "1": "非常に悪い",
+      "2": "悪い",
+      "3": "普通",
+      "4": "良い",
+      "5": "非常に良い"
+    },
+    "TOASTS": {
+      "MAX_GIFTS": "贈り物は最大15個まで追加できます",
+      "DUPLICATE_GIFT": "この贈り物はすでに追加されています",
+      "GIFT_EXISTS": "この贈り物はすでに存在します",
+      "NO_GIFTS": "削除できる贈り物はありません",
+      "GIFTS_CLEARED": "贈り物リストをクリアしました"
+    },
+    "ANNOUNCEMENTS": {
+      "GIFT_REMOVED": "贈り物を削除しました"
+    }
+  },
+  "STATS": {
+    "TITLE": "統計",
+    "NAV": {
+      "SUMMARY": "概要を見る",
+      "DEMOGRAPHICS": "人口統計を見る",
+      "GEOGRAPHY": "地理情報を見る",
+      "GIFTS": "贈り物を見る",
+      "RANKINGS": "ランキングを見る",
+      "RATINGS": "評価を見る",
+      "TIMELINE": "時系列を見る",
+      "STAYS": "宿泊記録を見る",
+      "BIRTHDAYS": "誕生日を見る"
+    },
+    "LOADING": {
+      "SUMMARY": "統計を読み込んでいます",
+      "ANALYZING": "ゲストのデータを分析しています",
+      "CHARTS": "グラフを準備しています",
+      "READY": "もうすぐ準備が整います"
+    },
+    "EMPTY": {
+      "TITLE": "データがありません",
+      "MESSAGE": "このグラフに表示できる情報はありません。"
+    },
+    "SUMMARY": {
+      "VIEWS": {
+        "TOTAL": "合計",
+        "NIGHTS": "宿泊数",
+        "RATING": "評価",
+        "GIFTS": "贈り物"
+      },
+      "CARDS": {
+        "VIEW": "表示",
+        "TOTAL_GUESTS": "ゲスト総数",
+        "SOLO_GUESTS": "個人ゲスト数",
+        "GROUP_GUESTS": "グループゲスト数",
+        "TOTAL_VISITS": "訪問総数",
+        "TOTAL_NIGHTS": "宿泊総数"
+      },
+      "CHARTS": {
+        "GUEST_TYPES": {
+          "GENERAL": "全体",
+          "SOLO": "個人",
+          "GROUPS": "グループ"
+        },
+        "AVERAGE_NIGHTS": "平均宿泊数",
+        "AVERAGE_RATING": "平均評価",
+        "GIFTS": {
+          "RECEIVED": "受け取った",
+          "WITHOUT_GIFT": "贈り物なし"
+        }
+      }
+    },
+    "DEMOGRAPHICS": {
+      "VIEWS": {
+        "TOTALS": "合計",
+        "OLDEST": "最年長",
+        "YOUNGEST": "最年少",
+        "FIRST_LAST": "最初 / 最後"
+      },
+      "TOTALS": {
+        "GUESTS": "ゲスト数",
+        "VISITS": "訪問回数",
+        "NIGHTS": "宿泊数"
+      },
+      "AGE": {
+        "AGE": "年齢",
+        "GUESTS": "ゲスト数",
+        "VISITS": "訪問回数",
+        "NIGHTS": "宿泊数"
+      },
+      "FIRST_LAST": {
+        "FIRST": "最初",
+        "LAST": "最後"
+      },
+      "SUBVIEWS": {
+        "OVERALL": "全体",
+        "SOLO": "個人",
+        "GROUPS": "グループ"
+      },
+      "GROUPS": {
+        "COUPLE": "カップル",
+        "FRIENDS": "友人",
+        "FAMILY": "家族"
+      },
+      "GENDER": {
+        "MALE": "男性",
+        "FEMALE": "女性",
+        "TRANS": "トランスジェンダー",
+        "GAY": "ゲイ"
+      },
+      "LABELS": {
+        "AGE": "年齢",
+        "GENDER": "性別",
+        "COUNTRY": "国",
+        "VISIT": "訪問",
+        "VISITED_DATE": "訪問日",
+        "VISIT_DATE": "訪問日",
+        "GROUP": "グループ",
+        "GROUPS": "グループ",
+        "SOLO_GUESTS": "個人ゲスト",
+        "OVERALL_DEMOGRAPHICS": "全体の人口統計",
+        "CATEGORY": "カテゴリー"
+      },
+      "RANKING": {
+        "OLDEST": "最年長",
+        "SECOND_OLDEST": "2番目に年上",
+        "THIRD_OLDEST": "3番目に年上",
+        "OTHER": "その他",
+        "YOUNGEST": "最年少",
+        "SECOND_YOUNGEST": "2番目に年下",
+        "THIRD_YOUNGEST": "3番目に年下",
+        "FIRST": "最初",
+        "LAST": "最後"
+      }
+    },
+    "GEOGRAPHY": {
+      "VIEWS": {
+        "CONTINENTS": "大陸",
+        "REGIONS": "地域",
+        "COUNTRIES": "国",
+        "LIVING_IN": "居住地",
+        "HOMETOWN": "出身地"
+      },
+      "RANKINGS": {
+        "ALL": "すべて",
+        "TOP": "上位",
+        "BOTTOM": "下位",
+        "TOP_FEMALE": "女性の上位",
+        "TOP_MALE": "男性の上位",
+        "MOST_CONSECUTIVE": "連続訪問回数が最多"
+      },
+      "TITLES": {
+        "GUESTS_BY_CONTINENT": "大陸別のゲスト",
+        "GUESTS_BY_REGION": "地域別のゲスト",
+        "GUESTS_BY_COUNTRY": "国別のゲスト",
+        "GUESTS_LIVING_IN": "居住地別のゲスト",
+        "GUESTS_HOMETOWN": "ゲストの出身地",
+        "MOST_CONSECUTIVE_VISITS": "{{country}} — {{streak}}回連続の訪問"
+      },
+      "LABELS": {
+        "NUMBER_OF_GUESTS": "ゲスト数",
+        "FEMALE_GUESTS": "女性ゲスト",
+        "MALE_GUESTS": "男性ゲスト",
+        "GENDER": "性別",
+        "GROUP": "グループ",
+        "VISIT": "訪問",
+        "VISIT_DATE": "訪問日",
+        "GUESTS": "ゲスト",
+        "CONSECUTIVE_VISITS": "{{streak}}回連続の訪問"
+      },
+      "GENDER": {
+        "FEMALE": "女性",
+        "MALE": "男性",
+        "GAY": "ゲイ",
+        "TRANS": "トランスジェンダー"
+      },
+      "CONTINENTS": {
+        "AMERICA": "アメリカ",
+        "EUROPE": "ヨーロッパ",
+        "AFRICA": "アフリカ",
+        "ASIA": "アジア",
+        "OCEANIA": "オセアニア"
+      },
+      "RANKING_LABELS": {
+        "FIRST": "1位",
+        "SECOND": "2位",
+        "THIRD": "3位",
+        "OTHERS": "その他"
+      }
+    },
+    "GIFTS": {
+      "VIEWS": {
+        "GROUPS": "グループ",
+        "SOLO": "個人"
+      },
+      "TITLES": {
+        "GROUPS": "グループから受け取った贈り物",
+        "SOLO": "個人ゲストから受け取った贈り物"
+      },
+      "LABELS": {
+        "GIFTS_COUNT": "贈り物 {{count}} 個",
+        "GROUP": "グループ",
+        "COUNTRY": "国",
+        "VISIT": "訪問",
+        "GIFTS_RECEIVED": "受け取った贈り物：",
+        "UNKNOWN": "不明",
+        "GROUP_TYPES": {
+          "COUPLE": "カップル",
+          "FRIENDS": "友人",
+          "FAMILY": "家族",
+          "SOLO": "一人"
+        }
+      }
+    },
+    "RANKINGS": {
+      "VIEWS": {
+        "PEOPLE": "人物",
+        "WOMEN": "女性",
+        "MEN": "男性",
+        "GROUPS": "グループ"
+      },
+      "SUBVIEWS": {
+        "OVERALL": "全体",
+        "SOLO": "個人"
+      },
+      "GROUP_TYPES": {
+        "OVERALL": "全体",
+        "COUPLE": "カップル",
+        "FAMILY": "家族",
+        "FRIENDS": "友人"
+      },
+      "TITLES": {
+        "PEOPLE": "人物ランキング",
+        "WOMEN": "女性ランキング",
+        "MEN": "男性ランキング",
+        "GROUPS": "グループランキング"
+      },
+      "LABELS": {
+        "DATASET": "{{title}} - {{subview}}",
+        "OVERALL_RANKING": "総合ランキング：{{position}}",
+        "VISIT": "訪問日：{{date}}",
+        "RANKING_POSITION": "ランキング順位"
+      }
+    },
+    "RATINGS": {
+      "VIEWS": {
+        "DISTRIBUTION": "分布",
+        "LOWEST": "評価が低い順",
+        "HIGHEST": "評価が高い順"
+      },
+      "GROUP_TYPES": {
+        "OVERALL": "全体",
+        "SOLO": "個人",
+        "COUPLE": "カップル",
+        "FRIENDS": "友人",
+        "FAMILY": "家族"
+      },
+      "LABELS": {
+        "GUESTS": "ゲスト",
+        "UNRATED": "未評価",
+        "RATING": "評価",
+        "RATING_VALUE": "評価：{{rating}} ⭐",
+        "GENDER": "性別：{{gender}}",
+        "COUNTRY": "国：{{country}}",
+        "VISIT": "訪問日：{{date}}"
+      },
+      "GENDERS": {
+        "MALE": "男性",
+        "FEMALE": "女性",
+        "TRANS": "トランスジェンダー"
+      }
+    },
+    "TIMELINE": {
+      "VIEWS": {
+        "YEARS": "年",
+        "MONTHS": "月",
+        "DAYS": "日",
+        "SAMEARRIVALDAY": "同じ到着日",
+        "SAMESTAY": "同じ宿泊期間"
+      },
+      "TITLES": {
+        "YEARS": "年別のゲスト",
+        "MONTHS": "月別のゲスト",
+        "DAYS": "日別のゲスト",
+        "SAMEARRIVALDAY": "同じ日に到着したゲスト",
+        "SAMESTAY": "同じ宿泊期間を共有したゲスト"
+      },
+      "LABELS": {
+        "FIRST": "1位",
+        "SECOND": "2位",
+        "THIRD": "3位",
+        "OTHER": "その他",
+        "NUMBER_OF_GUESTS": "ゲスト数",
+        "COUNTRY": "国：{{country}}",
+        "GENDER": "性別：{{gender}}",
+        "VISIT": "訪問日：{{date}}",
+        "GROUP_NAME": "{{name}}と{{group}}"
+      },
+      "GROUP_LABELS": {
+        "COUPLE": "カップル",
+        "FRIENDS": "友人",
+        "FAMILY": "家族"
+      }
+    },
+    "STAYS": {
+      "VIEWS": {
+        "LONGEST": "宿泊期間が最も長い",
+        "SHORTEST": "宿泊期間が最も短い",
+        "MAXPEOPLETOGETHER": "同時に滞在した人数",
+        "SAMEARRIVAL": "同じ到着日",
+        "SAMEDATES": "同じ日程"
+      },
+      "SUBVIEWS": {
+        "OVERALL": "全体",
+        "SOLO": "個人",
+        "COUPLE": "カップル",
+        "FRIENDS": "友人",
+        "FAMILY": "家族"
+      },
+      "GROUP": "グループ",
+      "TITLES": {
+        "LONGEST": "宿泊期間が最も長い",
+        "SHORTEST": "宿泊期間が最も短い",
+        "MAXIMUM_GUESTS_TOGETHER": "同時に滞在したゲストの最大人数",
+        "GUESTS_WITH_SAME_ARRIVAL_DATE": "同じ日に到着したゲスト",
+        "SAME_DATES_GROUP": "同じ日程 - グループ{{group}}"
+      },
+      "LABELS": {
+        "OVERALL": "全体",
+        "SOLO": "個人",
+        "MAXIMUM_GUESTS_TOGETHER": "同時に滞在したゲストの最大人数",
+        "SAME_ARRIVAL": "同じ到着日",
+        "FIRST": "1位",
+        "SECOND": "2位",
+        "THIRD": "3位",
+        "OTHERS": "その他",
+        "GUESTS": "ゲスト",
+        "STAY_TYPE": "宿泊タイプ",
+        "OVERLAPPING_GUESTS": "滞在期間が重なるゲスト",
+        "ARRIVAL_DATE": "到着日",
+        "TOTAL_NIGHTS": "合計宿泊数：{{nights}}",
+        "COUNTRY": "国：{{country}}",
+        "VISIT": "訪問日：{{date}}",
+        "GROUP": "グループ：{{group}}",
+        "CONNECTIONS": "つながり：{{count}}",
+        "GROUP_NAME": "{{name}}と{{group}}"
+      },
+      "GENDERS": {
+        "MALE": "男性",
+        "FEMALE": "女性",
+        "OTHER": "その他",
+        "UNKNOWN": "不明"
+      },
+      "GROUP_LABELS": {
+        "SOLO": "一人",
+        "COUPLE": "カップル",
+        "FRIENDS": "友人",
+        "FAMILY": "家族"
+      }
+    },
+    "BIRTHDAYS": {
+      "VIEWS": {
+        "CALENDAR": "カレンダー",
+        "REPEATED": "繰り返し",
+        "UNUSUAL": "珍しい日付"
+      },
+      "MONTHS": {
+        "JANUARY": "1月",
+        "FEBRUARY": "2月",
+        "MARCH": "3月",
+        "APRIL": "4月",
+        "MAY": "5月",
+        "JUNE": "6月",
+        "JULY": "7月",
+        "AUGUST": "8月",
+        "SEPTEMBER": "9月",
+        "OCTOBER": "10月",
+        "NOVEMBER": "11月",
+        "DECEMBER": "12月"
+      },
+      "TITLES": {
+        "CALENDAR": "誕生日カレンダー",
+        "REPEATED": "繰り返し現れる誕生日",
+        "UNUSUAL": "珍しい誕生日"
+      },
+      "LABELS": {
+        "CALENDAR": "誕生日カレンダー",
+        "REPEATED_BIRTHDAYS": "繰り返し現れる誕生日",
+        "UNUSUAL_BIRTHDAYS": "珍しい誕生日",
+        "GUESTS": "ゲスト"
+      },
+      "AXES": {
+        "MONTH": "月",
+        "DAY": "日"
+      },
+      "TOOLTIPS": {
+        "GUESTS": "ゲスト数：{{count}}",
+        "REASON": "理由：{{reason}}"
+      }
+    }
+  },
+  "ALERTS": {
+    "BUTTONS": {
+      "SAVE": "保存",
+      "CLOSE": "閉じる",
+      "DELETE": "削除"
+    },
+    "VALIDATION": {
+      "TYPE_NAME_EXACTLY": "「{{name}}」と正確に入力してください。"
+    },
+    "DELETE_GUEST": {
+      "CONFIRMATION": {
+        "MESSAGE": "このゲストを削除してもよろしいですか？",
+        "CONFIRM_BUTTON": "このゲストを削除する"
+      },
+      "WARNING": {
+        "TITLE": "続行する前によくお読みください",
+        "MESSAGE": "ゲスト <strong class=\"danger\">{{name}}</strong> は完全に削除されます。",
+        "CONFIRM_BUTTON": "削除の結果を理解しました"
+      },
+      "TYPE_TO_CONFIRM": {
+        "TITLE": "確認のため「<strong class=\"danger\">{{name}}</strong>」と入力してください",
+        "CONFIRM_BUTTON": "ゲストを削除"
+      },
+      "SUCCESS": {
+        "MESSAGE": "ゲスト <strong class=\"danger\">{{name}}</strong> を正常に削除しました"
+      }
+    },
+    "CREATE": {
+      "GUEST_SUCCESS": "ゲストを正常に作成しました",
+      "GUEST_ERROR": "ゲストの作成中にエラーが発生しました",
+      "GROUP_SUCCESS": "グループを正常に作成しました",
+      "GROUP_ERROR": "グループの作成中にエラーが発生しました"
+    },
+    "EDIT": {
+      "GUEST_SUCCESS": "ゲストを正常に更新しました",
+      "GUEST_ERROR": "ゲストの更新中にエラーが発生しました",
+      "GROUP_SUCCESS": "グループを正常に更新しました",
+      "GROUP_ERROR": "グループの更新中にエラーが発生しました"
+    }
+  },
+  "ERRORS": {
+    "HTTP": {
+      "400": "⚠️ 無効なリクエストです。一部のデータが不足しているか、正しくありません。確認してもう一度お試しください。",
+      "401": "🔐 セッションが無効か期限切れです。続行するにはログインしてください。",
+      "403": "🚫 アクセスが拒否されました。このリソースを表示する権限がありません。",
+      "404": "🔍 お探しの情報が見つかりませんでした。URLを確認するか、もう一度お試しください。",
+      "500": "💥 サーバーエラーが発生しました。現在、問題の解決に取り組んでいます。しばらくしてからもう一度お試しください。",
+      "502": "📡 接続エラーが発生しました。インターネット接続を確認してください。",
+      "DEFAULT": "❌ 予期しないエラーが発生しました。もう一度お試しください。"
+    }
+  },
+  "LOADING": {
+    "MESSAGES": {
+      "INITIAL": "読み込み中",
+      "ALMOST_THERE": "もうすぐです",
+      "WORKING": "処理しています",
+      "ALMOST_READY": "まもなく準備完了です",
+      "JUST_A_MOMENT": "少々お待ちください"
+    }
+  }
+}

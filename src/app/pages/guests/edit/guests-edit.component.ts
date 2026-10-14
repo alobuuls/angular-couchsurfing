@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 // Services
@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 
 // Interfaces
 import { IBodyGuest, IGroupDetail, IGroupEdit, IGuestDetail, IGuestsFormSubmit } from '@interfaces/guests.interface';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'guests-edit',
@@ -19,12 +20,11 @@ export class GuestsEditComponent implements OnInit {
   group?: IGroupEdit;
   groupId?: string;
 
-  constructor(
-    private _guests: GuestsService,
-    private _alerts: AlertsService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {}
+  private _guests = inject(GuestsService);
+  private _alerts = inject(AlertsService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private _translate = inject(TranslateService);
 
   ngOnInit(): void {
     this.getById();
@@ -65,14 +65,14 @@ export class GuestsEditComponent implements OnInit {
         next: () => {
           this._alerts.showToast({
             icon: 'success',
-            title: 'Guest updated successfully',
+            title: this._translate.instant('ALERTS.EDIT.GUEST_SUCCESS'),
           });
           this.router.navigateByUrl('/guests');
         },
         error: () =>
           this._alerts.showToast({
             icon: 'error',
-            title: 'Error updating guest',
+            title: this._translate.instant('ALERTS.EDIT.GUEST_ERROR'),
           }),
       });
       return;
@@ -94,14 +94,14 @@ export class GuestsEditComponent implements OnInit {
       next: () => {
         this._alerts.showToast({
           icon: 'success',
-          title: 'Guest updated successfully',
+          title: this._translate.instant('ALERTS.EDIT.GROUP_SUCCESS'),
         });
         this.router.navigateByUrl('/guests');
       },
       error: () =>
         this._alerts.showToast({
           icon: 'error',
-          title: 'Error updating guest',
+          title: this._translate.instant('ALERTS.EDIT.GROUP_ERROR'),
         }),
     });
   }

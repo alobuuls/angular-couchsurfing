@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 // Material
 import { MatBadgeModule } from '@angular/material/badge';
@@ -16,7 +17,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
@@ -42,7 +43,6 @@ const MATERIAL_MODULES = [
   MatTooltipModule,
   MatRadioModule,
   MatDatepickerModule,
-  MatNativeDateModule,
   MatCheckboxModule,
   MatSelectModule,
   MatChipsModule,
@@ -53,7 +53,7 @@ const PIPES = [FlagPipe];
 
 @NgModule({
   declarations: [...PIPES, LoadingComponent],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, ...MATERIAL_MODULES],
-  exports: [CommonModule, FormsModule, ReactiveFormsModule, ...MATERIAL_MODULES, ...PIPES, LoadingComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, ...MATERIAL_MODULES, TranslateModule],
+  exports: [CommonModule, FormsModule, ReactiveFormsModule, ...MATERIAL_MODULES, ...PIPES, LoadingComponent, TranslateModule],
 })
 export class SharedModule {}

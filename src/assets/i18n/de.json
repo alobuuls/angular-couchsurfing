@@ -1,0 +1,843 @@
+{
+  "MENU": {
+    "GUESTS": "Gäste",
+    "HOSTED": "Gastgeber",
+    "PERSONAL": "Persönliches"
+  },
+  "GUESTS_TABLE": {
+    "NO": "Nr.",
+    "HANG_OUT": "Gemeinsam etwas unternehmen",
+    "NIGHTS": "Nächte",
+    "GENDER": "Geschlecht",
+    "AGE": "Alter",
+    "FULL_NAME": "Vollständiger Name",
+    "CONTINENT": "Kontinent",
+    "HOMETOWN": "Heimatstadt",
+    "LIVING_IN": "Wohnort",
+    "VISITED": "Besuchsdatum",
+    "RATING": "Bewertung",
+    "ACTIONS": "Aktionen",
+    "VIEW_GUEST": "Gast ansehen",
+    "EDIT_GUEST": "Gast bearbeiten",
+    "DELETE_GUEST": "Gast löschen",
+    "VIEW_CS_PROFILE": "Couchsurfing-Profil ansehen",
+    "CS_UNAVAILABLE": "Couchsurfing-Profil nicht verfügbar",
+    "SEND_WHATSAPP": "Nachricht über WhatsApp senden",
+    "WHATSAPP_UNAVAILABLE": "WhatsApp nicht verfügbar",
+    "BIRTHDATE": "Geburtsdatum",
+    "CURRENT_AGE": "Aktuelles Alter"
+  },
+  "CONTINENTS": {
+    "africa": "Afrika",
+    "asia": "Asien",
+    "europe": "Europa",
+    "america": "Amerika",
+    "oceania": "Ozeanien"
+  },
+  "PAGINATOR": {
+    "ITEMS_PER_PAGE": "Elemente pro Seite:",
+    "NEXT_PAGE": "Nächste Seite",
+    "PREVIOUS_PAGE": "Vorherige Seite",
+    "FIRST_PAGE": "Erste Seite",
+    "LAST_PAGE": "Letzte Seite",
+    "RANGE_EMPTY": "0 von {{length}}",
+    "RANGE_LABEL": "{{start}} – {{end}} von {{length}}"
+  },
+  "GUESTS_FILTERS": {
+    "CONTINENT": "Kontinent",
+    "ALL_CONTINENTS": "Alle Kontinente",
+    "REGION": "Region",
+    "ALL_REGIONS": "Alle Regionen",
+    "COUNTRY": "Land",
+    "ALL_COUNTRIES": "Alle Länder",
+    "GROUP_TYPE": "Gruppentyp",
+    "ALL_GROUPS": "Alle Gruppen",
+    "SOLO": "Alleinreisend",
+    "COUPLE": "Paar",
+    "FRIENDS": "Freunde",
+    "FAMILY": "Familie",
+    "VISITED_FROM": "Besucht von",
+    "VISITED_TO": "Besucht bis",
+    "FIRST_TIME": "Erstes Mal",
+    "HANG_OUT": "Gemeinsam etwas unternehmen",
+    "AMBASSADOR": "Botschafter",
+    "DID_THEY_REQUEST": "Haben sie es angefragt?",
+    "ALL": "Alle",
+    "YES": "Ja",
+    "NO": "Nein",
+    "CLEAR": "Zurücksetzen",
+    "SEARCH": "Suchen"
+  },
+  "GUESTS_ACTIONS": {
+    "SEE_STATS": "Statistiken ansehen",
+    "CREATE_GUEST": "Gast erstellen"
+  },
+  "GUESTS_VIEW": {
+    "NO_MORE_GUESTS": "Keine weiteren Gäste zum Anzeigen.",
+    "GUESTS_TO_DISPLAY": "Anzuzeigende Gäste",
+    "GUESTS_COUNT_SINGULAR": "Gast",
+    "GUESTS_COUNT_PLURAL": "Gäste",
+    "NO_GUESTS_FOUND": "Keine Gäste gefunden!",
+    "CHANGE_SEARCH": "Versuche, die Suchkriterien zu ändern.",
+    "CHANGE_TO_CARDS": "Zur Kartenansicht wechseln",
+    "CHANGE_TO_MAP": "Zur Kartenansicht auf der Karte wechseln",
+    "CHANGE_TO_TABLE": "Zur Tabellenansicht wechseln"
+  },
+  "GUESTS_LOADING": {
+    "CARDS_1": "Deine Gäste werden geladen",
+    "CARDS_2": "Deine Gäste werden vorbereitet",
+    "CARDS_3": "Gleich geschafft",
+    "CARDS_4": "Deine Karten kommen gleich",
+    "MAP_1": "Karte wird geladen",
+    "MAP_2": "Deine Gäste werden gesucht",
+    "MAP_3": "Deine Karte wird vorbereitet",
+    "MAP_4": "Fast fertig",
+    "TABLE_1": "Gäste werden geladen",
+    "TABLE_2": "Deine Gäste werden gesucht",
+    "TABLE_3": "Ergebnisse werden abgerufen",
+    "TABLE_4": "Fast fertig"
+  },
+  "DATE": {
+    "DAY": "Tag"
+  },
+  "LANGUAGES": {
+    "EN": "Englisch",
+    "ES": "Spanisch",
+    "DE": "Deutsch",
+    "ZH": "Chinesisch",
+    "FR": "Französisch",
+    "IT": "Italienisch",
+    "PT": "Portugiesisch",
+    "RU": "Russisch",
+    "JA": "Japanisch"
+  },
+  "UK_REGIONS": {
+    "sct": "Schottland",
+    "wls": "Wales",
+    "nir": "Nordirland",
+    "eng": "England"
+  },
+  "MAP": {
+    "GUESTS": "Gäste",
+    "REGION": "Region",
+    "CONTINENT": "Kontinent",
+    "UNITED_KINGDOM": "Vereinigtes Königreich"
+  },
+  "GUESTS_CARDS": {
+    "GUEST": "Gast",
+    "GUESTS": "Gäste",
+    "VISIT": "Besuch",
+    "VISITS": "Besuche",
+    "READ_MORE": "Mehr anzeigen",
+    "SHOW_LESS": "Weniger anzeigen",
+    "TRIP": "REISE",
+    "VISITED_DATE": "Besuchsdatum",
+    "NIGHTS": "Nächte",
+    "STAYED": "Übernachtet",
+    "HANG_OUT": "Zeit miteinander verbracht",
+    "FIRST_TIME": "Erstes Mal",
+    "GROUP_TYPE": "Gruppentyp",
+    "MEMBERS": "MITGLIEDER",
+    "AMBASSADOR": "Botschafter",
+    "PERSONAL_INFORMATION": "PERSÖNLICHE INFORMATIONEN",
+    "FULL_NAME": "Vollständiger Name",
+    "BIRTH_DATE": "Geburtsdatum",
+    "WHATSAPP": "WhatsApp",
+    "INSTAGRAM": "Instagram",
+    "COUCHSURFING": "Couchsurfing",
+    "GAY": "Schwul",
+    "DID_THEY_REQUEST": "Haben sie um eine Übernachtung gebeten?",
+    "I_SENT_THE_REQUEST": "Ich habe die Anfrage gesendet",
+    "LOCATION": "ORT",
+    "CONTINENT": "Kontinent",
+    "REGION": "Region",
+    "HOMETOWN": "Heimatort",
+    "LIVING_IN": "Wohnort",
+    "WE_MET": "Ort unseres Kennenlernens",
+    "OCCUPATION": "BERUF",
+    "GIFT": "GESCHENK",
+    "COMMENTS": "KOMMENTARE",
+    "REFERENCES": "REFERENZEN",
+    "THEIR_REFERENCE": "Ihre Referenz",
+    "MY_REFERENCE": "Meine Referenz",
+    "GROUP_TYPES": {
+      "solo": "Allein",
+      "couple": "Paar",
+      "friends": "Freunde",
+      "family": "Familie"
+    },
+    "LOADING_1": "Details werden geladen",
+    "LOADING_2": "Weitere Informationen werden abgerufen",
+    "LOADING_3": "Fast geschafft"
+  },
+  "GUEST_DETAIL": {
+    "TITLE": "Gastdetails",
+    "HEADER": {
+      "SUBTITLE": "REISEARCHIV",
+      "TITLE": "Gästepass",
+      "RECORD": "REISEAUFZEICHNUNG"
+    },
+    "LOADING": {
+      "MESSAGE_1": "Gastdetails werden geladen",
+      "MESSAGE_2": "Alles wird vorbereitet",
+      "MESSAGE_3": "Fast geschafft",
+      "MESSAGE_4": "Das Gästeprofil wird vorbereitet"
+    },
+    "PASSPORT": {
+      "SUBTITLE": "INTERNATIONALER GAST",
+      "TITLE": "Persönlicher Reisepass"
+    },
+    "IDENTITY": {
+      "SUBTITLE": "IDENTITÄT DES REISENDEN",
+      "AMBASSADOR": "Botschafter"
+    },
+    "SOCIAL": {
+      "COUCHSURFING": "Couchsurfing-Profil ansehen",
+      "INSTAGRAM": "Instagram-Profil ansehen",
+      "WHATSAPP": "WhatsApp-Profil ansehen"
+    },
+    "DIVIDER": {
+      "IDENTITY": "IDENTITÄT"
+    },
+    "PERSONAL": {
+      "SUBTITLE": "REISENDENPROFIL",
+      "TITLE": "Persönliche Informationen",
+      "FULL_NAME": "Vollständiger Name",
+      "GENDER": "Geschlecht",
+      "GENDERS": {
+        "MALE": "Männlich",
+        "FEMALE": "Weiblich",
+        "TRANS": "Trans"
+      },
+      "BIRTH_DATE": "Geburtsdatum",
+      "PHONE_NUMBER": "Telefonnummer",
+      "GAY": "Schwul",
+      "STAY_REQUEST": "Übernachtungsanfrage",
+      "REQUESTED_STAY": "Hat um eine Übernachtung gebeten",
+      "SENT_REQUEST": "Ich habe die Anfrage gesendet"
+    },
+    "COMMON": {
+      "YES": "Ja",
+      "NO": "Nein"
+    },
+    "LOCATION": {
+      "SUBTITLE": "HERKUNFT UND WOHNORT",
+      "TITLE": "Orte und Koordinaten",
+      "CONTINENT": "Kontinent",
+      "REGION": "Region",
+      "HOMETOWN": "Heimatort",
+      "CURRENTLY_LIVING_IN": "Derzeitiger Wohnort",
+      "WE_MET_IN": "Ort unseres Kennenlernens"
+    },
+    "TRIP": {
+      "SUBTITLE": "REISEEINTRAG",
+      "TITLE": "Reiseaufzeichnung",
+      "DATE_OF_VISIT": "Besuchsdatum",
+      "NIGHTS": "Nächte",
+      "GROUP_TYPE": "Gruppentyp",
+      "GROUP_TYPES": {
+        "SOLO": "Allein",
+        "COUPLE": "Paar",
+        "FRIENDS": "Freunde",
+        "FAMILY": "Familie"
+      },
+      "STAYED": "Übernachtet?",
+      "HUNG_OUT": "Zeit miteinander verbracht",
+      "FIRST_VISIT": "Erster Besuch"
+    },
+    "OCCUPATION": {
+      "SUBTITLE": "BERUFLICHES PROFIL",
+      "TITLE": "Beruf"
+    },
+    "RATING": {
+      "SUBTITLE": "RÜCKMELDUNGEN AUS DER COMMUNITY",
+      "TITLE": "Gästebewertung"
+    },
+    "GIFTS": {
+      "SUBTITLE": "REISEERINNERUNGEN",
+      "TITLE": "Geschenke"
+    },
+    "COMMENTS": {
+      "SUBTITLE": "PERSÖNLICHE NOTIZEN",
+      "TITLE": "Kommentare"
+    },
+    "REFERENCES": {
+      "SUBTITLE": "VERBINDUNGEN INNERHALB DER COMMUNITY",
+      "TITLE": "Referenzen",
+      "THEIR_REFERENCE": "Ihre Referenz",
+      "MY_REFERENCE": "Meine Referenz"
+    },
+    "FOOTER": {
+      "PHRASE": "Jede Begegnung erzählt eine Geschichte"
+    },
+    "GROUP": {
+      "HEADER": {
+        "SUBTITLE": "INTERNATIONALER GÄSTEEINTRAG",
+        "TITLE": "Gruppenpass"
+      },
+      "TRIP": {
+        "SUBTITLE": "GEMEINSAME REISE",
+        "TITLE": "Gruppenreise"
+      },
+      "MEMBERS": {
+        "SUBTITLE": "REISEBEGLEITER",
+        "TITLE": "Gruppenmitglieder",
+        "GUEST_FALLBACK": "Gast",
+        "WHATSAPP": "WhatsApp",
+        "LIVING_IN": "Wohnort"
+      }
+    }
+  },
+  "GUESTS_FORM": {
+    "GROUP_TYPE_TITLE": "Wie sind sie gereist?",
+    "GROUP_TYPES": {
+      "SOLO": "Allein",
+      "COUPLE": "Paar",
+      "FRIENDS": "Freunde",
+      "FAMILY": "Familie"
+    },
+    "ADD_GUEST": "Weiteren Gast hinzufügen",
+    "CREATE": "Erstellen",
+    "UPDATE": "Aktualisieren",
+    "MAX_MEMBERS": "Du kannst maximal 5 Mitglieder hinzufügen"
+  },
+  "TRIP_FORM": {
+    "TITLE": "Reiseinformationen",
+    "VISITED_DATE": "Besuchsdatum",
+    "VISITED_DATE_REQUIRED": "Das Besuchsdatum ist erforderlich",
+    "TODAY": "Heute",
+    "STAYED": "Übernachtet?",
+    "NIGHTS": "Nächte"
+  },
+  "GUEST_FORM": {
+    "SECTIONS": {
+      "PERSONAL": "Persönliche Informationen",
+      "LOCATION": "Ort",
+      "OCCUPATION": "Beruf",
+      "CONTACT": "Kontaktinformationen",
+      "ADDITIONAL": "Zusätzliche Informationen",
+      "RATING_GIFTS": "Bewertung und Geschenke",
+      "REFERENCES_COMMENTS": "Referenzen und Kommentare"
+    },
+    "FIELDS": {
+      "FULL_NAME": "Vollständiger Name",
+      "INSTAGRAM": "Instagram",
+      "CS_PROFILE_URL": "Couchsurfing-Profil-URL",
+      "BIRTH_DATE": "Geburtsdatum",
+      "GENDER": "Geschlecht",
+      "HOMETOWN_COUNTRY": "Herkunftsland",
+      "HOMETOWN_STATE": "Bundesland der Herkunft",
+      "HOMETOWN_CITY": "Heimatstadt",
+      "LIVING_COUNTRY": "Wohnland",
+      "LIVING_STATE": "Bundesland des Wohnorts",
+      "LIVING_CITY": "Wohnstadt",
+      "COUNTRY_WE_MET": "Land, in dem wir uns kennengelernt haben",
+      "STATE_WE_MET": "Bundesland, in dem wir uns kennengelernt haben",
+      "CITY_WE_MET": "Stadt, in der wir uns kennengelernt haben",
+      "LOCATION_WE_MET": "Ort, an dem wir uns kennengelernt haben",
+      "OCCUPATION_AREA": "Berufsfeld",
+      "OCCUPATIONS": "Beruf(e)",
+      "OTHER_OCCUPATION": "Gib deinen Beruf ein",
+      "ENTER_OCCUPATION": "Beruf eingeben",
+      "PREFIX": "Vorwahl",
+      "WHATSAPP": "WhatsApp",
+      "GIFTS": "Geschenke",
+      "THEIR_REFERENCE": "Ihre Referenz",
+      "MY_REFERENCE": "Meine Referenz",
+      "COMMENTS": "Kommentar hinterlassen"
+    },
+    "GENDER_OPTIONS": {
+      "MALE": "Männlich",
+      "FEMALE": "Weiblich",
+      "TRANS": "Trans"
+    },
+    "CHECKBOXES": {
+      "FIRST_TIME": "Erstes Mal",
+      "STAY_REQUEST": "Haben sie um eine Übernachtung gebeten?",
+      "HANG_OUT": "Zeit miteinander verbracht",
+      "AMBASSADOR": "Botschafter",
+      "GAY": "Schwul"
+    },
+    "BUTTONS": {
+      "CLEAR_GIFTS": "Leeren"
+    },
+    "HINTS": {
+      "GIFTS_COUNT": "{{count}}/15 Geschenke"
+    },
+    "ERRORS": {
+      "FULL_NAME_REQUIRED": "Der vollständige Name ist erforderlich",
+      "FULL_NAME_MAX": "Maximal 100 Zeichen",
+      "INSTAGRAM_MAX": "Maximal 30 Zeichen",
+      "CS_PROFILE_REQUIRED": "Die Couchsurfing-Profil-URL ist erforderlich",
+      "CS_PROFILE_MAX": "Maximal 50 Zeichen",
+      "GENDER_REQUIRED": "Das Geschlecht ist erforderlich",
+      "COUNTRY_REQUIRED": "Das Land ist erforderlich",
+      "LOCATION_MAX": "Maximal 100 Zeichen",
+      "OCCUPATION_REQUIRED": "Das Berufsfeld ist erforderlich",
+      "PREFIX_REQUIRED": "Die Vorwahl ist erforderlich",
+      "WHATSAPP_REQUIRED": "Die WhatsApp-Nummer ist erforderlich",
+      "PHONE_INVALID": "Ungültige Telefonnummer",
+      "WHATSAPP_MAX": "Maximal 16 Zeichen",
+      "REFERENCE_MAX": "Maximal 500 Zeichen",
+      "COMMENTS_MAX": "Maximal 500 Zeichen"
+    },
+    "RATING": {
+      "1": "Sehr schlecht",
+      "2": "Schlecht",
+      "3": "Normal",
+      "4": "Gut",
+      "5": "Ausgezeichnet"
+    },
+    "TOASTS": {
+      "MAX_GIFTS": "Es sind maximal 15 Geschenke erlaubt",
+      "DUPLICATE_GIFT": "Dieses Geschenk wurde bereits hinzugefügt",
+      "GIFT_EXISTS": "Dieses Geschenk ist bereits vorhanden",
+      "NO_GIFTS": "Es gibt keine Geschenke zum Entfernen",
+      "GIFTS_CLEARED": "Geschenkeliste geleert"
+    },
+    "ANNOUNCEMENTS": {
+      "GIFT_REMOVED": "Geschenk entfernt"
+    }
+  },
+  "STATS": {
+    "TITLE": "Statistiken",
+    "NAV": {
+      "SUMMARY": "Zusammenfassung anzeigen",
+      "DEMOGRAPHICS": "Demografie anzeigen",
+      "GEOGRAPHY": "Geografie anzeigen",
+      "GIFTS": "Geschenke anzeigen",
+      "RANKINGS": "Ranglisten anzeigen",
+      "RATINGS": "Bewertungen anzeigen",
+      "TIMELINE": "Zeitverlauf anzeigen",
+      "STAYS": "Übernachtungen anzeigen",
+      "BIRTHDAYS": "Geburtstage anzeigen"
+    },
+    "LOADING": {
+      "SUMMARY": "Deine Statistiken werden geladen",
+      "ANALYZING": "Deine Gästedaten werden analysiert",
+      "CHARTS": "Deine Diagramme werden vorbereitet",
+      "READY": "Fast fertig"
+    },
+    "EMPTY": {
+      "TITLE": "Keine Daten verfügbar",
+      "MESSAGE": "Für dieses Diagramm sind keine Informationen verfügbar."
+    },
+    "SUMMARY": {
+      "VIEWS": {
+        "TOTAL": "Gesamt",
+        "NIGHTS": "Nächte",
+        "RATING": "Bewertung",
+        "GIFTS": "Geschenke"
+      },
+      "CARDS": {
+        "VIEW": "Ansicht",
+        "TOTAL_GUESTS": "Gäste insgesamt",
+        "SOLO_GUESTS": "Einzelgäste",
+        "GROUP_GUESTS": "Gäste in Gruppen",
+        "TOTAL_VISITS": "Besuche insgesamt",
+        "TOTAL_NIGHTS": "Nächte insgesamt"
+      },
+      "CHARTS": {
+        "GUEST_TYPES": {
+          "GENERAL": "Allgemein",
+          "SOLO": "Alleinreisende",
+          "GROUPS": "Gruppen"
+        },
+        "AVERAGE_NIGHTS": "Durchschnittliche Anzahl der Nächte",
+        "AVERAGE_RATING": "Durchschnittliche Bewertung",
+        "GIFTS": {
+          "RECEIVED": "Erhalten",
+          "WITHOUT_GIFT": "Ohne Geschenk"
+        }
+      }
+    },
+    "DEMOGRAPHICS": {
+      "VIEWS": {
+        "TOTALS": "Gesamtzahlen",
+        "OLDEST": "Älteste",
+        "YOUNGEST": "Jüngste",
+        "FIRST_LAST": "Erste / Letzte"
+      },
+      "TOTALS": {
+        "GUESTS": "Gäste",
+        "VISITS": "Besuche",
+        "NIGHTS": "Nächte"
+      },
+      "AGE": {
+        "AGE": "Alter",
+        "GUESTS": "Gäste",
+        "VISITS": "Besuche",
+        "NIGHTS": "Nächte"
+      },
+      "FIRST_LAST": {
+        "FIRST": "Erste",
+        "LAST": "Letzte"
+      },
+      "SUBVIEWS": {
+        "OVERALL": "Insgesamt",
+        "SOLO": "Alleinreisende",
+        "GROUPS": "Gruppen"
+      },
+      "GROUPS": {
+        "COUPLE": "Paar",
+        "FRIENDS": "Freunde",
+        "FAMILY": "Familie"
+      },
+      "GENDER": {
+        "MALE": "Männlich",
+        "FEMALE": "Weiblich",
+        "TRANS": "Trans",
+        "GAY": "Schwul"
+      },
+      "LABELS": {
+        "AGE": "Alter",
+        "GENDER": "Geschlecht",
+        "COUNTRY": "Land",
+        "VISIT": "Besuch",
+        "VISITED_DATE": "Besuchsdatum",
+        "VISIT_DATE": "Besuchsdatum",
+        "GROUP": "Gruppe",
+        "GROUPS": "Gruppen",
+        "SOLO_GUESTS": "Alleinreisende Gäste",
+        "OVERALL_DEMOGRAPHICS": "Demografische Daten insgesamt",
+        "CATEGORY": "Kategorie"
+      },
+      "RANKING": {
+        "OLDEST": "Ältester Gast",
+        "SECOND_OLDEST": "Zweitältester Gast",
+        "THIRD_OLDEST": "Drittältester Gast",
+        "OTHER": "Weitere",
+        "YOUNGEST": "Jüngster Gast",
+        "SECOND_YOUNGEST": "Zweitjüngster Gast",
+        "THIRD_YOUNGEST": "Drittjüngster Gast",
+        "FIRST": "Erster",
+        "LAST": "Letzter"
+      }
+    },
+    "GEOGRAPHY": {
+      "VIEWS": {
+        "CONTINENTS": "Kontinente",
+        "REGIONS": "Regionen",
+        "COUNTRIES": "Länder",
+        "LIVING_IN": "Wohnort",
+        "HOMETOWN": "Heimatort"
+      },
+      "RANKINGS": {
+        "ALL": "Alle",
+        "TOP": "Top",
+        "BOTTOM": "Letzte",
+        "TOP_FEMALE": "Top Frauen",
+        "TOP_MALE": "Top Männer",
+        "MOST_CONSECUTIVE": "Längste Besuchsserie"
+      },
+      "TITLES": {
+        "GUESTS_BY_CONTINENT": "Gäste nach Kontinent",
+        "GUESTS_BY_REGION": "Gäste nach Region",
+        "GUESTS_BY_COUNTRY": "Gäste nach Land",
+        "GUESTS_LIVING_IN": "Gäste nach Wohnort",
+        "GUESTS_HOMETOWN": "Gäste nach Heimatort",
+        "MOST_CONSECUTIVE_VISITS": "{{country}} — {{streak}} Besuche in Folge"
+      },
+      "LABELS": {
+        "NUMBER_OF_GUESTS": "Anzahl der Gäste",
+        "FEMALE_GUESTS": "Weibliche Gäste",
+        "MALE_GUESTS": "Männliche Gäste",
+        "GENDER": "Geschlecht",
+        "GROUP": "Gruppe",
+        "VISIT": "Besuch",
+        "VISIT_DATE": "Besuchsdatum",
+        "GUESTS": "Gäste",
+        "CONSECUTIVE_VISITS": "{{streak}} Besuche in Folge"
+      },
+      "GENDER": {
+        "FEMALE": "Weiblich",
+        "MALE": "Männlich",
+        "GAY": "Schwul",
+        "TRANS": "Trans"
+      },
+      "CONTINENTS": {
+        "AMERICA": "Amerika",
+        "EUROPE": "Europa",
+        "AFRICA": "Afrika",
+        "ASIA": "Asien",
+        "OCEANIA": "Ozeanien"
+      },
+      "RANKING_LABELS": {
+        "FIRST": "1.",
+        "SECOND": "2.",
+        "THIRD": "3.",
+        "OTHERS": "Weitere"
+      }
+    },
+    "GIFTS": {
+      "VIEWS": {
+        "GROUPS": "Gruppen",
+        "SOLO": "Alleinreisende"
+      },
+      "TITLES": {
+        "GROUPS": "Geschenke von Gruppen",
+        "SOLO": "Geschenke von alleinreisenden Gästen"
+      },
+      "LABELS": {
+        "GIFTS_COUNT": "{{count}} Geschenke",
+        "GROUP": "Gruppe",
+        "COUNTRY": "Land",
+        "VISIT": "Besuch",
+        "GIFTS_RECEIVED": "Erhaltene Geschenke:",
+        "UNKNOWN": "Unbekannt",
+        "GROUP_TYPES": {
+          "COUPLE": "Paar",
+          "FRIENDS": "Freunde",
+          "FAMILY": "Familie",
+          "SOLO": "Alleinreisend"
+        }
+      }
+    },
+    "RANKINGS": {
+      "VIEWS": {
+        "PEOPLE": "Personen",
+        "WOMEN": "Frauen",
+        "MEN": "Männer",
+        "GROUPS": "Gruppen"
+      },
+      "SUBVIEWS": {
+        "OVERALL": "Insgesamt",
+        "SOLO": "Alleinreisende"
+      },
+      "GROUP_TYPES": {
+        "OVERALL": "Insgesamt",
+        "COUPLE": "Paar",
+        "FAMILY": "Familie",
+        "FRIENDS": "Freunde"
+      },
+      "TITLES": {
+        "PEOPLE": "Personen-Rangliste",
+        "WOMEN": "Frauen-Rangliste",
+        "MEN": "Männer-Rangliste",
+        "GROUPS": "Gruppen-Rangliste"
+      },
+      "LABELS": {
+        "DATASET": "{{title}} - {{subview}}",
+        "OVERALL_RANKING": "Gesamtrang: {{position}}",
+        "VISIT": "Besuch: {{date}}",
+        "RANKING_POSITION": "Rangposition"
+      }
+    },
+    "RATINGS": {
+      "VIEWS": {
+        "DISTRIBUTION": "Verteilung",
+        "LOWEST": "Niedrigste",
+        "HIGHEST": "Höchste"
+      },
+      "GROUP_TYPES": {
+        "OVERALL": "Insgesamt",
+        "SOLO": "Alleinreisende",
+        "COUPLE": "Paar",
+        "FRIENDS": "Freunde",
+        "FAMILY": "Familie"
+      },
+      "LABELS": {
+        "GUESTS": "Gäste",
+        "UNRATED": "Ohne Bewertung",
+        "RATING": "Bewertung",
+        "RATING_VALUE": "Bewertung: {{rating}} ⭐",
+        "GENDER": "Geschlecht: {{gender}}",
+        "COUNTRY": "Land: {{country}}",
+        "VISIT": "Besuch: {{date}}"
+      },
+      "GENDERS": {
+        "MALE": "Männlich",
+        "FEMALE": "Weiblich",
+        "TRANS": "Trans"
+      }
+    },
+    "TIMELINE": {
+      "VIEWS": {
+        "YEARS": "Jahre",
+        "MONTHS": "Monate",
+        "DAYS": "Tage",
+        "SAMEARRIVALDAY": "Gleicher Anreisetag",
+        "SAMESTAY": "Gleicher Aufenthalt"
+      },
+      "TITLES": {
+        "YEARS": "Gäste nach Jahr",
+        "MONTHS": "Gäste nach Monat",
+        "DAYS": "Gäste nach Monatstag",
+        "SAMEARRIVALDAY": "Gäste mit gleichem Anreisetag",
+        "SAMESTAY": "Gäste mit gemeinsamem Aufenthalt"
+      },
+      "LABELS": {
+        "FIRST": "1.",
+        "SECOND": "2.",
+        "THIRD": "3.",
+        "OTHER": "Weitere",
+        "NUMBER_OF_GUESTS": "Anzahl der Gäste",
+        "COUNTRY": "Land: {{country}}",
+        "GENDER": "Geschlecht: {{gender}}",
+        "VISIT": "Besuch: {{date}}",
+        "GROUP_NAME": "{{name}} und {{group}}"
+      },
+      "GROUP_LABELS": {
+        "COUPLE": "Paar",
+        "FRIENDS": "Freund",
+        "FAMILY": "Familie"
+      }
+    },
+    "STAYS": {
+      "VIEWS": {
+        "LONGEST": "Längste Aufenthalte",
+        "SHORTEST": "Kürzeste Aufenthalte",
+        "MAXPEOPLETOGETHER": "Personen zusammen",
+        "SAMEARRIVAL": "Gleiche Anreise",
+        "SAMEDATES": "Gleiche Daten"
+      },
+      "SUBVIEWS": {
+        "OVERALL": "Insgesamt",
+        "SOLO": "Alleinreisende",
+        "COUPLE": "Paar",
+        "FRIENDS": "Freunde",
+        "FAMILY": "Familie"
+      },
+      "GROUP": "Gruppe",
+      "TITLES": {
+        "LONGEST": "Längste Aufenthalte",
+        "SHORTEST": "Kürzeste Aufenthalte",
+        "MAXIMUM_GUESTS_TOGETHER": "Maximale Anzahl gemeinsamer Gäste",
+        "GUESTS_WITH_SAME_ARRIVAL_DATE": "Gäste mit gleichem Anreisedatum",
+        "SAME_DATES_GROUP": "Gleiche Daten – Gruppe {{group}}"
+      },
+      "LABELS": {
+        "OVERALL": "Insgesamt",
+        "SOLO": "Alleinreisende",
+        "MAXIMUM_GUESTS_TOGETHER": "Maximale Anzahl gemeinsamer Gäste",
+        "SAME_ARRIVAL": "Gleiche Anreise",
+        "FIRST": "1.",
+        "SECOND": "2.",
+        "THIRD": "3.",
+        "OTHERS": "Weitere",
+        "GUESTS": "Gäste",
+        "STAY_TYPE": "Aufenthaltsart",
+        "OVERLAPPING_GUESTS": "Gäste mit überschneidenden Aufenthalten",
+        "ARRIVAL_DATE": "Anreisedatum",
+        "TOTAL_NIGHTS": "Nächte insgesamt: {{nights}}",
+        "COUNTRY": "Land: {{country}}",
+        "VISIT": "Besuch: {{date}}",
+        "GROUP": "Gruppe: {{group}}",
+        "CONNECTIONS": "Verbindungen: {{count}}",
+        "GROUP_NAME": "{{name}} und {{group}}"
+      },
+      "GENDERS": {
+        "MALE": "Männlich",
+        "FEMALE": "Weiblich",
+        "OTHER": "Andere",
+        "UNKNOWN": "Unbekannt"
+      },
+      "GROUP_LABELS": {
+        "SOLO": "Alleinreisend",
+        "COUPLE": "Paar",
+        "FRIENDS": "Freund",
+        "FAMILY": "Familie"
+      }
+    },
+    "BIRTHDAYS": {
+      "VIEWS": {
+        "CALENDAR": "Kalender",
+        "REPEATED": "Wiederkehrende",
+        "UNUSUAL": "Ungewöhnliche"
+      },
+      "MONTHS": {
+        "JANUARY": "Januar",
+        "FEBRUARY": "Februar",
+        "MARCH": "März",
+        "APRIL": "April",
+        "MAY": "Mai",
+        "JUNE": "Juni",
+        "JULY": "Juli",
+        "AUGUST": "August",
+        "SEPTEMBER": "September",
+        "OCTOBER": "Oktober",
+        "NOVEMBER": "November",
+        "DECEMBER": "Dezember"
+      },
+      "TITLES": {
+        "CALENDAR": "Geburtstagskalender",
+        "REPEATED": "Wiederkehrende Geburtstage",
+        "UNUSUAL": "Ungewöhnliche Geburtstage"
+      },
+      "LABELS": {
+        "CALENDAR": "Geburtstagskalender",
+        "REPEATED_BIRTHDAYS": "Wiederkehrende Geburtstage",
+        "UNUSUAL_BIRTHDAYS": "Ungewöhnliche Geburtstage",
+        "GUESTS": "Gäste"
+      },
+      "AXES": {
+        "MONTH": "Monat",
+        "DAY": "Tag"
+      },
+      "TOOLTIPS": {
+        "GUESTS": "Gäste: {{count}}",
+        "REASON": "Anlass: {{reason}}"
+      }
+    }
+  },
+  "ALERTS": {
+    "BUTTONS": {
+      "SAVE": "Speichern",
+      "CLOSE": "Schließen",
+      "DELETE": "Löschen"
+    },
+    "VALIDATION": {
+      "TYPE_NAME_EXACTLY": "Du musst exakt \"{{name}}\" eingeben."
+    },
+    "DELETE_GUEST": {
+      "CONFIRMATION": {
+        "MESSAGE": "Möchtest du diesen Gast wirklich löschen?",
+        "CONFIRM_BUTTON": "Ich möchte diesen Gast löschen"
+      },
+      "WARNING": {
+        "TITLE": "Bitte lies dies sorgfältig, bevor du fortfährst",
+        "MESSAGE": "Dadurch wird der Gast <strong class=\"danger\">{{name}}</strong> dauerhaft gelöscht.",
+        "CONFIRM_BUTTON": "Ich verstehe die Konsequenzen"
+      },
+      "TYPE_TO_CONFIRM": {
+        "TITLE": "Gib zur Bestätigung \"<strong class=\"danger\">{{name}}</strong>\" ein",
+        "CONFIRM_BUTTON": "Gast löschen"
+      },
+      "SUCCESS": {
+        "MESSAGE": "<strong class=\"danger\">{{name}}</strong> wurde erfolgreich gelöscht"
+      }
+    },
+    "CREATE": {
+      "GUEST_SUCCESS": "Gast erfolgreich erstellt",
+      "GUEST_ERROR": "Fehler beim Erstellen des Gastes",
+      "GROUP_SUCCESS": "Gruppe erfolgreich erstellt",
+      "GROUP_ERROR": "Fehler beim Erstellen der Gruppe"
+    },
+    "EDIT": {
+      "GUEST_SUCCESS": "Gast erfolgreich aktualisiert",
+      "GUEST_ERROR": "Fehler beim Aktualisieren des Gastes",
+      "GROUP_SUCCESS": "Gruppe erfolgreich aktualisiert",
+      "GROUP_ERROR": "Fehler beim Aktualisieren der Gruppe"
+    }
+  },
+  "ERRORS": {
+    "HTTP": {
+      "400": "⚠️ Ungültige Anfrage. Einige Angaben fehlen oder sind fehlerhaft. Bitte überprüfe deine Eingaben und versuche es erneut.",
+      "401": "🔐 Die Sitzung ist ungültig oder abgelaufen. Bitte melde dich an, um fortzufahren.",
+      "403": "🚫 Zugriff verweigert. Du hast keine Berechtigung, diese Ressource aufzurufen.",
+      "404": "🔍 Die gesuchte Ressource wurde nicht gefunden. Überprüfe die URL oder versuche es erneut.",
+      "500": "💥 Serverfehler. Wir arbeiten daran, das Problem zu beheben. Bitte versuche es später erneut.",
+      "502": "📡 Verbindungsfehler. Bitte überprüfe deine Internetverbindung.",
+      "DEFAULT": "❌ Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut."
+    }
+  },
+  "LOADING": {
+    "MESSAGES": {
+      "INITIAL": "Wird geladen",
+      "ALMOST_THERE": "Fast geschafft",
+      "WORKING": "Wir arbeiten daran",
+      "ALMOST_READY": "Fast fertig",
+      "JUST_A_MOMENT": "Einen Moment bitte"
+    }
+  }
+}

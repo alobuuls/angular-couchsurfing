@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 // Services
 import { GuestsService } from '@services/guests.service';
@@ -11,11 +12,10 @@ import { AlertsService } from '@services/alerts.service';
   styleUrls: ['./guests-create.component.css'],
 })
 export class GuestsCreateComponent {
-  constructor(
-    private _guests: GuestsService,
-    private _alerts: AlertsService,
-    private router: Router
-  ) {}
+  private _guests = inject(GuestsService);
+  private _alerts = inject(AlertsService);
+  private _translate = inject(TranslateService);
+  private router = inject(Router);
 
   create(data: any): void {
     let payload: any;
@@ -30,7 +30,7 @@ export class GuestsCreateComponent {
         next: () => {
           this._alerts.showToast({
             icon: 'success',
-            title: 'Guest created successfully',
+            title: this._translate.instant('ALERTS.CREATE.GUEST_SUCCESS'),
           });
 
           this.router.navigateByUrl('/guests');
@@ -38,7 +38,7 @@ export class GuestsCreateComponent {
         error: () => {
           this._alerts.showToast({
             icon: 'error',
-            title: 'Error creating guest',
+            title: this._translate.instant('ALERTS.CREATE.GUEST_ERROR'),
           });
         },
       });
@@ -54,10 +54,19 @@ export class GuestsCreateComponent {
 
     this._guests.createNewGroup(payload).subscribe({
       next: () => {
-        this._alerts.showToast({ icon: 'success', title: 'Group created successfully' });
+        this._alerts.showToast({
+          icon: 'success',
+          title: this._translate.instant('ALERTS.CREATE.GROUP_SUCCESS'),
+        });
+
         this.router.navigateByUrl('/guests'); // TODO
       },
-      error: () => this._alerts.showToast({ icon: 'error', title: 'Error creating group' }),
+      error: () => {
+        this._alerts.showToast({
+          icon: 'error',
+          title: this._translate.instant('ALERTS.CREATE.GROUP_ERROR'),
+        });
+      },
     });
   }
 }

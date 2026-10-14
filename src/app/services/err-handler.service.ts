@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { TranslateService } from '@ngx-translate/core';
 
 // Interfaces
 import { IErrResp } from '@interfaces/data-structure-api';
@@ -8,35 +9,27 @@ import { IErrResp } from '@interfaces/data-structure-api';
   providedIn: 'root',
 })
 export class ErrorHandlerService {
-  private readonly statusMessages: Record<number | 'DEFAULT', string> = {
-    400: '⚠️ Solicitud inválida. Faltan datos o hay información incorrecta. Revisa e inténtalo de nuevo.',
-    401: '🔐 Sesión no válida o expirada. Inicia sesión para continuar.',
-    403: '🚫 Acceso denegado. No tienes permisos para ver este recurso.',
-    404: '🔍 No encontramos lo que buscas. Verifica la URL o intenta de nuevo.',
-    500: '💥 Error del servidor. Estamos trabajando en solucionarlo. Intenta más tarde.',
-    502: '📡 Error de conexión, verifica tu internet.',
-    DEFAULT: '❌ Ocurrió un error inesperado. Por favor, inténtalo nuevamente.',
-  };
+  private _translate = inject(TranslateService);
 
   handle(error: unknown): IErrResp {
     if (error instanceof HttpErrorResponse) {
-      // 🔌 Offline / error de red
+      // Error de red o falta de conexión
       if (error.status === 0) {
         return {
-          message: this.statusMessages[502],
+          message: this._translate.instant('ERRORS.HTTP.502'),
           status: 0,
         };
       }
 
       return {
         status: error.status,
-        message: this.statusMessages[error.status] ?? this.statusMessages.DEFAULT,
+        message: this._translate.instant(`ERRORS.HTTP.${error.status}`) || this._translate.instant('ERRORS.HTTP.DEFAULT'),
       };
     }
 
-    // ⚠️ Error no controlado (runtime, throw manual, etc.)
+    // Error no controlado
     return {
-      message: this.statusMessages.DEFAULT,
+      message: this._translate.instant('ERRORS.HTTP.DEFAULT'),
     };
   }
 }

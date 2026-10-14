@@ -1,5 +1,7 @@
-import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 import Chart from 'chart.js/auto';
 
@@ -17,9 +19,12 @@ import { FormatService } from '@services/format.service';
   templateUrl: './guest-gifts-chart.component.html',
   styleUrls: ['./guest-gifts-chart.component.css'],
 })
-export class GuestGiftsChartComponent implements AfterViewInit, OnChanges {
+export class GuestGiftsChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   private _format = inject(FormatService);
   private _router = inject(Router);
+  private _translate = inject(TranslateService);
+
+  private langChangeSubscription?: Subscription;
 
   @Input() gifts!: IGiftsDistribution;
 
@@ -34,8 +39,8 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges {
 
   // Labels displayed in the view buttons.
   readonly giftsViewLabels: Record<IGiftsView, string> = {
-    groups: 'Groups',
-    solo: 'Solo',
+    groups: 'STATS.GIFTS.VIEWS.GROUPS',
+    solo: 'STATS.GIFTS.VIEWS.SOLO',
   };
 
   private chart?: Chart;
@@ -44,20 +49,17 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges {
   private readonly chartConfig: Record<
     IGiftsView,
     {
-      label: string;
-      type: 'polarArea';
+      titleKey: string;
       getData: (gifts: IGiftsDistribution) => IGiftGuest[];
     }
   > = {
     groups: {
-      label: 'Gifts Received by Groups',
-      type: 'polarArea',
+      titleKey: 'STATS.GIFTS.TITLES.GROUPS',
       getData: gifts => gifts.groups,
     },
 
     solo: {
-      label: 'Gifts Received by Solo Guests',
-      type: 'polarArea',
+      titleKey: 'STATS.GIFTS.TITLES.SOLO',
       getData: gifts => gifts.solo,
     },
   };
@@ -66,6 +68,11 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges {
     if (this.gifts) {
       this.createChart();
     }
+
+    // Recreate the chart when the language changes.
+    this.langChangeSubscription = this._translate.onLangChange.subscribe(() => {
+      this.createChart();
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -74,13 +81,18 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  selectView(view: IGiftsView): void {
-    this.selectedView = view;
+  ngOnDestroy(): void {
+    this.langChangeSubscription?.unsubscribe();
     this.destroyChart();
+  }
 
-    setTimeout(() => {
-      this.createChart();
-    });
+  selectView(view: IGiftsView): void {
+    if (this.selectedView === view) {
+      return;
+    }
+
+    this.selectedView = view;
+    this.createChart();
   }
 
   // Creates the Polar Area chart for the selected gifts view.
@@ -88,6 +100,9 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges {
     if (!this.giftsChart || !this.gifts) {
       return;
     }
+
+    this.destroyChart();
+
     const config = this.chartConfig[this.selectedView];
     const giftsData = config.getData(this.gifts);
 
@@ -95,15 +110,17 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges {
       return;
     }
 
-    this.destroyChart();
+    const title = this._translate.instant(config.titleKey);
+
     this.giftsChart.nativeElement.style.height = `${Math.max(400, giftsData.length * 50)}px`;
+
     this.chart = new Chart(this.giftsChart.nativeElement, {
       type: 'polarArea',
       data: {
         labels: giftsData.map(guest => guest.fullName),
         datasets: [
           {
-            label: config.label,
+            label: title,
             data: giftsData.map(guest => guest.total),
             backgroundColor: giftsData.map((_, index) => getColorWithOpacity(GIFTS_COLORS[index % GIFTS_COLORS.length])),
             borderColor: giftsData.map((_, index) => GIFTS_COLORS[index % GIFTS_COLORS.length].border),
@@ -128,7 +145,7 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges {
         plugins: {
           title: {
             display: true,
-            text: config.label,
+            text: title,
           },
           legend: {
             display: true,
@@ -137,7 +154,8 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges {
             callbacks: {
               label: context => {
                 const guest = giftsData[context.dataIndex];
-                return `${guest.total} Gifts`;
+
+                return this._translate.instant('STATS.GIFTS.LABELS.GIFTS_COUNT', { count: guest.total });
               },
               afterBody: context => {
                 const guest = giftsData[context[0].dataIndex];
@@ -161,20 +179,28 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges {
   // Builds the common tooltip information for both charts.
   private getTooltipLines(guest: IGiftGuest): string[] {
     return [
-      `Group: ${this.formatGroupType(guest.groupType)}`,
-      `Country: ${this._format.formatCountry(guest.hometownCode)}`,
-      `Visit: ${this._format.formatDate(guest.visitedDate)}`,
-      'Gifts received:',
+      `${this._translate.instant('STATS.GIFTS.LABELS.GROUP')}: ${this.formatGroupType(guest.groupType)}`,
+
+      `${this._translate.instant('STATS.GIFTS.LABELS.COUNTRY')}: ${this._format.formatCountry(guest.hometownCode)}`,
+
+      `${this._translate.instant('STATS.GIFTS.LABELS.VISIT')}: ${this._format.formatDate(guest.visitedDate)}`,
+
+      this._translate.instant('STATS.GIFTS.LABELS.GIFTS_RECEIVED'),
+
       ...guest.gifts.map(gift => `• ${gift}`),
     ];
   }
 
-  // Formats group type for display.
+  // Translates the group type received from the API.
   private formatGroupType(groupType: string): string {
     if (!groupType) {
-      return 'Unknown';
+      return this._translate.instant('STATS.GIFTS.LABELS.UNKNOWN');
     }
-    return groupType.charAt(0).toUpperCase() + groupType.slice(1);
+
+    const key = `STATS.GIFTS.LABELS.GROUP_TYPES.${groupType.toUpperCase()}`;
+    const translated = this._translate.instant(key);
+
+    return translated === key ? groupType.charAt(0).toUpperCase() + groupType.slice(1) : translated;
   }
 
   // Destroys the current Chart.js instance.

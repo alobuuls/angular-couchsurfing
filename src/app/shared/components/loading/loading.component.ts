@@ -1,4 +1,5 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-loading',
@@ -6,7 +7,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
   styleUrls: ['./loading.component.css'],
 })
 export class LoadingComponent implements OnInit, OnDestroy {
-  @Input() messages: string[] = ['Loading', 'Almost there', 'We’re working on it', 'Almost ready', 'Just a moment'];
+  @Input() messages: string[] = [];
 
   @Input() compact = false;
 
@@ -14,7 +15,19 @@ export class LoadingComponent implements OnInit, OnDestroy {
   private messageIndex = 0;
   private messageInterval?: ReturnType<typeof setInterval>;
 
+  private _translate = inject(TranslateService);
+
   ngOnInit(): void {
+    if (!this.messages.length) {
+      this.messages = [
+        this._translate.instant('LOADING.MESSAGES.INITIAL'),
+        this._translate.instant('LOADING.MESSAGES.ALMOST_THERE'),
+        this._translate.instant('LOADING.MESSAGES.WORKING'),
+        this._translate.instant('LOADING.MESSAGES.ALMOST_READY'),
+        this._translate.instant('LOADING.MESSAGES.JUST_A_MOMENT'),
+      ];
+    }
+
     this.changeLoadingMs();
   }
 

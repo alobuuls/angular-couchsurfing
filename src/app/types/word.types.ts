@@ -1,8 +1,10 @@
 import { WORLD } from '@config/world';
 
+export const LANG = ['en', 'es', 'de', 'zh', 'fr', 'it', 'pt', 'ru', 'ja'] as const;
+export type Language = (typeof LANG)[number];
 export interface ICountry {
   flag: string;
-  name: string;
+  name: Record<Language, string>;
   prefix: string;
   continent: Continents;
   region: Regions;
@@ -45,5 +47,5 @@ export type Regions =
   // 🌊 Oceania
   | 'melanesia'
   | 'micronesia'
-  | 'polinesia'
+  | 'polynesia'
   | 'oceania';

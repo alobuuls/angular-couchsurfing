@@ -8,7 +8,7 @@
       [class.active]="selectedView === view"
       class="stats-nav-btns"
     >
-      {{ staysViewLabels[view] }}
+      {{ 'STATS.STAYS.VIEWS.' + view.toUpperCase() | translate }}
     </button>
   </div>
 
@@ -21,7 +21,7 @@
       [class.active]="selectedStayView === view"
       class="stats-nav-btns-small"
     >
-      {{ view }}
+      {{ 'STATS.STAYS.SUBVIEWS.' + view.toUpperCase() | translate }}
     </button>
   </div>
 
@@ -34,7 +34,7 @@
       [class.active]="selectedSameDatesGroup === i"
       class="stats-nav-btns-small"
     >
-      Group {{ i + 1 }}
+      {{ 'STATS.STAYS.GROUP' | translate }} {{ i + 1 }}
     </button>
   </div>
 

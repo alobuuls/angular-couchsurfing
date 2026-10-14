@@ -24,7 +24,7 @@
           class="material-symbols-outlined"
           fontIcon="diversity_1"
         ></mat-icon>
-        Guests
+        {{ 'MENU.GUESTS' | translate }}
       </a>
 
       <!-- HOSTED -->
@@ -35,7 +35,7 @@
           class="material-symbols-outlined"
           fontIcon="home"
         ></mat-icon>
-        Hosted
+        {{ 'MENU.HOSTED' | translate }}
       </a>
 
       <!-- PERSONAL -->
@@ -46,7 +46,7 @@
           class="material-symbols-outlined"
           fontIcon="person"
         ></mat-icon>
-        Personal
+        {{ 'MENU.PERSONAL' | translate }}
       </a>
 
       <!-- THEME -->
@@ -101,6 +101,32 @@
             [class.selected]="currentPalette === 'lavender'"
             (click)="selectPalette('lavender')"
           ></button>
+        </div>
+      </div>
+
+      <!-- LANGUAGE -->
+      <div class="ctn-selection-language">
+        <button
+          class="links-menu btn-language"
+          aria-label="Select language"
+          title="Select language"
+          (click)="toggleLanguageSelection()"
+        >
+          <mat-icon class="material-symbols-outlined" aria-hidden="true" fontIcon="language"></mat-icon>
+
+          <span>{{ currentLanguage.toUpperCase() }}</span>
+        </button>
+
+        <div class="languages" [class.active]="showLanguageSelection">
+          <button
+            class="btn-language-option"
+            [class.selected]="currentLanguage === btnLang.selectedLang"
+            (click)="selectLanguage(btnLang.selectedLang)"
+            *ngFor="let btnLang of btnsLang"
+          >
+            <span [ngClass]="'fi fi-' + btnLang.flag"></span>
+            {{ btnLang.translationKey | translate }}
+          </button>
         </div>
       </div>
     </div>

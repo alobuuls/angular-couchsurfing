@@ -79,4 +79,8 @@ export class GuestsDetailComponent implements OnInit {
   formatRegion(region: string): string {
     return region.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
   }
+
+  formatDate(date: string): string {
+    return this._format.formatDate(date);
+  }
 }

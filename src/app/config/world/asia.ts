@@ -5,7 +5,17 @@ export const ASIA = {
 
   arm: {
     flag: 'am',
-    name: 'Armenia',
+    name: {
+      en: 'Armenia',
+      es: 'Armenia',
+      de: 'Armenien',
+      zh: '亚美尼亚',
+      fr: 'Arménie',
+      it: 'Armenia',
+      pt: 'Arménia',
+      ru: 'Армения',
+      ja: 'アルメニア',
+    },
     prefix: '+374',
     continent: 'asia',
     region: 'west_asia',
@@ -13,7 +23,17 @@ export const ASIA = {
 
   aze: {
     flag: 'az',
-    name: 'Azerbaijan',
+    name: {
+      en: 'Azerbaijan',
+      es: 'Azerbaiyán',
+      de: 'Aserbaidschan',
+      zh: '阿塞拜疆',
+      fr: 'Azerbaïdjan',
+      it: 'Azerbaigian',
+      pt: 'Azerbaijão',
+      ru: 'Азербайджан',
+      ja: 'アゼルバイジャン',
+    },
     prefix: '+994',
     continent: 'asia',
     region: 'west_asia',
@@ -21,7 +41,17 @@ export const ASIA = {
 
   bhr: {
     flag: 'bh',
-    name: 'Bahrain',
+    name: {
+      en: 'Bahrain',
+      es: 'Baréin',
+      de: 'Bahrain',
+      zh: '巴林',
+      fr: 'Bahreïn',
+      it: 'Bahrein',
+      pt: 'Bahrein',
+      ru: 'Бахрейн',
+      ja: 'バーレーン',
+    },
     prefix: '+973',
     continent: 'asia',
     region: 'west_asia',
@@ -29,7 +59,17 @@ export const ASIA = {
 
   geo: {
     flag: 'ge',
-    name: 'Georgia',
+    name: {
+      en: 'Georgia',
+      es: 'Georgia',
+      de: 'Georgien',
+      zh: '格鲁吉亚',
+      fr: 'Géorgie',
+      it: 'Georgia',
+      pt: 'Geórgia',
+      ru: 'Грузия',
+      ja: 'ジョージア',
+    },
     prefix: '+995',
     continent: 'asia',
     region: 'west_asia',
@@ -37,7 +77,17 @@ export const ASIA = {
 
   irn: {
     flag: 'ir',
-    name: 'Iran',
+    name: {
+      en: 'Iran',
+      es: 'Irán',
+      de: 'Iran',
+      zh: '伊朗',
+      fr: 'Iran',
+      it: 'Iran',
+      pt: 'Irão',
+      ru: 'Иран',
+      ja: 'イラン',
+    },
     prefix: '+98',
     continent: 'asia',
     region: 'west_asia',
@@ -45,7 +95,17 @@ export const ASIA = {
 
   irq: {
     flag: 'iq',
-    name: 'Iraq',
+    name: {
+      en: 'Iraq',
+      es: 'Irak',
+      de: 'Irak',
+      zh: '伊拉克',
+      fr: 'Irak',
+      it: 'Iraq',
+      pt: 'Iraque',
+      ru: 'Ирак',
+      ja: 'イラク',
+    },
     prefix: '+964',
     continent: 'asia',
     region: 'west_asia',
@@ -53,7 +113,17 @@ export const ASIA = {
 
   isr: {
     flag: 'il',
-    name: 'Israel',
+    name: {
+      en: 'Israel',
+      es: 'Israel',
+      de: 'Israel',
+      zh: '以色列',
+      fr: 'Israël',
+      it: 'Israele',
+      pt: 'Israel',
+      ru: 'Израиль',
+      ja: 'イスラエル',
+    },
     prefix: '+972',
     continent: 'asia',
     region: 'west_asia',
@@ -61,7 +131,17 @@ export const ASIA = {
 
   jor: {
     flag: 'jo',
-    name: 'Jordan',
+    name: {
+      en: 'Jordan',
+      es: 'Jordania',
+      de: 'Jordanien',
+      zh: '约旦',
+      fr: 'Jordanie',
+      it: 'Giordania',
+      pt: 'Jordânia',
+      ru: 'Иордания',
+      ja: 'ヨルダン',
+    },
     prefix: '+962',
     continent: 'asia',
     region: 'west_asia',
@@ -69,7 +149,17 @@ export const ASIA = {
 
   kwt: {
     flag: 'kw',
-    name: 'Kuwait',
+    name: {
+      en: 'Kuwait',
+      es: 'Kuwait',
+      de: 'Kuwait',
+      zh: '科威特',
+      fr: 'Koweït',
+      it: 'Kuwait',
+      pt: 'Kuwait',
+      ru: 'Кувейт',
+      ja: 'クウェート',
+    },
     prefix: '+965',
     continent: 'asia',
     region: 'west_asia',
@@ -77,7 +167,17 @@ export const ASIA = {
 
   lbn: {
     flag: 'lb',
-    name: 'Lebanon',
+    name: {
+      en: 'Lebanon',
+      es: 'Líbano',
+      de: 'Libanon',
+      zh: '黎巴嫩',
+      fr: 'Liban',
+      it: 'Libano',
+      pt: 'Líbano',
+      ru: 'Ливан',
+      ja: 'レバノン',
+    },
     prefix: '+961',
     continent: 'asia',
     region: 'west_asia',
@@ -85,7 +185,17 @@ export const ASIA = {
 
   omn: {
     flag: 'om',
-    name: 'Oman',
+    name: {
+      en: 'Oman',
+      es: 'Omán',
+      de: 'Oman',
+      zh: '阿曼',
+      fr: 'Oman',
+      it: 'Oman',
+      pt: 'Omã',
+      ru: 'Оман',
+      ja: 'オマーン',
+    },
     prefix: '+968',
     continent: 'asia',
     region: 'west_asia',
@@ -93,7 +203,17 @@ export const ASIA = {
 
   pse: {
     flag: 'ps',
-    name: 'Palestine',
+    name: {
+      en: 'Palestine',
+      es: 'Palestina',
+      de: 'Palästina',
+      zh: '巴勒斯坦',
+      fr: 'Palestine',
+      it: 'Palestina',
+      pt: 'Palestina',
+      ru: 'Палестина',
+      ja: 'パレスチナ',
+    },
     prefix: '+970',
     continent: 'asia',
     region: 'west_asia',
@@ -101,7 +221,17 @@ export const ASIA = {
 
   qat: {
     flag: 'qa',
-    name: 'Qatar',
+    name: {
+      en: 'Qatar',
+      es: 'Catar',
+      de: 'Katar',
+      zh: '卡塔尔',
+      fr: 'Qatar',
+      it: 'Qatar',
+      pt: 'Catar',
+      ru: 'Катар',
+      ja: 'カタール',
+    },
     prefix: '+974',
     continent: 'asia',
     region: 'west_asia',
@@ -109,7 +239,17 @@ export const ASIA = {
 
   sau: {
     flag: 'sa',
-    name: 'Saudi Arabia',
+    name: {
+      en: 'Saudi Arabia',
+      es: 'Arabia Saudita',
+      de: 'Saudi-Arabien',
+      zh: '沙特阿拉伯',
+      fr: 'Arabie saoudite',
+      it: 'Arabia Saudita',
+      pt: 'Arábia Saudita',
+      ru: 'Саудовская Аравия',
+      ja: 'サウジアラビア',
+    },
     prefix: '+966',
     continent: 'asia',
     region: 'west_asia',
@@ -117,7 +257,17 @@ export const ASIA = {
 
   syr: {
     flag: 'sy',
-    name: 'Syria',
+    name: {
+      en: 'Syria',
+      es: 'Siria',
+      de: 'Syrien',
+      zh: '叙利亚',
+      fr: 'Syrie',
+      it: 'Siria',
+      pt: 'Síria',
+      ru: 'Сирия',
+      ja: 'シリア',
+    },
     prefix: '+963',
     continent: 'asia',
     region: 'west_asia',
@@ -125,7 +275,17 @@ export const ASIA = {
 
   tur: {
     flag: 'tr',
-    name: 'Türkiye',
+    name: {
+      en: 'Türkiye',
+      es: 'Turquía',
+      de: 'Türkei',
+      zh: '土耳其',
+      fr: 'Turquie',
+      it: 'Turchia',
+      pt: 'Turquia',
+      ru: 'Турция',
+      ja: 'トルコ',
+    },
     prefix: '+90',
     continent: 'asia',
     region: 'west_asia',
@@ -133,7 +293,17 @@ export const ASIA = {
 
   are: {
     flag: 'ae',
-    name: 'United Arab Emirates',
+    name: {
+      en: 'United Arab Emirates',
+      es: 'Emiratos Árabes Unidos',
+      de: 'Vereinigte Arabische Emirate',
+      zh: '阿拉伯联合酋长国',
+      fr: 'Émirats arabes unis',
+      it: 'Emirati Arabi Uniti',
+      pt: 'Emirados Árabes Unidos',
+      ru: 'Объединённые Арабские Эмираты',
+      ja: 'アラブ首長国連邦',
+    },
     prefix: '+971',
     continent: 'asia',
     region: 'west_asia',
@@ -141,7 +311,17 @@ export const ASIA = {
 
   yem: {
     flag: 'ye',
-    name: 'Yemen',
+    name: {
+      en: 'Yemen',
+      es: 'Yemen',
+      de: 'Jemen',
+      zh: '也门',
+      fr: 'Yémen',
+      it: 'Yemen',
+      pt: 'Iémen',
+      ru: 'Йемен',
+      ja: 'イエメン',
+    },
     prefix: '+967',
     continent: 'asia',
     region: 'west_asia',
@@ -151,7 +331,17 @@ export const ASIA = {
 
   brn: {
     flag: 'bn',
-    name: 'Brunei',
+    name: {
+      en: 'Brunei',
+      es: 'Brunéi',
+      de: 'Brunei',
+      zh: '文莱',
+      fr: 'Brunei',
+      it: 'Brunei',
+      pt: 'Brunei',
+      ru: 'Бруней',
+      ja: 'ブルネイ',
+    },
     prefix: '+673',
     continent: 'asia',
     region: 'southeast_asia',
@@ -159,7 +349,17 @@ export const ASIA = {
 
   khm: {
     flag: 'kh',
-    name: 'Cambodia',
+    name: {
+      en: 'Cambodia',
+      es: 'Camboya',
+      de: 'Kambodscha',
+      zh: '柬埔寨',
+      fr: 'Cambodge',
+      it: 'Cambogia',
+      pt: 'Camboja',
+      ru: 'Камбоджа',
+      ja: 'カンボジア',
+    },
     prefix: '+855',
     continent: 'asia',
     region: 'southeast_asia',
@@ -167,7 +367,17 @@ export const ASIA = {
 
   idn: {
     flag: 'id',
-    name: 'Indonesia',
+    name: {
+      en: 'Indonesia',
+      es: 'Indonesia',
+      de: 'Indonesien',
+      zh: '印度尼西亚',
+      fr: 'Indonésie',
+      it: 'Indonesia',
+      pt: 'Indonésia',
+      ru: 'Индонезия',
+      ja: 'インドネシア',
+    },
     prefix: '+62',
     continent: 'asia',
     region: 'southeast_asia',
@@ -175,7 +385,17 @@ export const ASIA = {
 
   lao: {
     flag: 'la',
-    name: 'Laos',
+    name: {
+      en: 'Laos',
+      es: 'Laos',
+      de: 'Laos',
+      zh: '老挝',
+      fr: 'Laos',
+      it: 'Laos',
+      pt: 'Laos',
+      ru: 'Лаос',
+      ja: 'ラオス',
+    },
     prefix: '+856',
     continent: 'asia',
     region: 'southeast_asia',
@@ -183,7 +403,17 @@ export const ASIA = {
 
   mys: {
     flag: 'my',
-    name: 'Malaysia',
+    name: {
+      en: 'Malaysia',
+      es: 'Malasia',
+      de: 'Malaysia',
+      zh: '马来西亚',
+      fr: 'Malaisie',
+      it: 'Malesia',
+      pt: 'Malásia',
+      ru: 'Малайзия',
+      ja: 'マレーシア',
+    },
     prefix: '+60',
     continent: 'asia',
     region: 'southeast_asia',
@@ -191,7 +421,17 @@ export const ASIA = {
 
   mmr: {
     flag: 'mm',
-    name: 'Myanmar',
+    name: {
+      en: 'Myanmar',
+      es: 'Myanmar',
+      de: 'Myanmar',
+      zh: '缅甸',
+      fr: 'Myanmar',
+      it: 'Myanmar',
+      pt: 'Myanmar',
+      ru: 'Мьянма',
+      ja: 'ミャンマー',
+    },
     prefix: '+95',
     continent: 'asia',
     region: 'southeast_asia',
@@ -199,7 +439,17 @@ export const ASIA = {
 
   phl: {
     flag: 'ph',
-    name: 'Philippines',
+    name: {
+      en: 'Philippines',
+      es: 'Filipinas',
+      de: 'Philippinen',
+      zh: '菲律宾',
+      fr: 'Philippines',
+      it: 'Filippine',
+      pt: 'Filipinas',
+      ru: 'Филиппины',
+      ja: 'フィリピン',
+    },
     prefix: '+63',
     continent: 'asia',
     region: 'southeast_asia',
@@ -207,7 +457,17 @@ export const ASIA = {
 
   sgp: {
     flag: 'sg',
-    name: 'Singapore',
+    name: {
+      en: 'Singapore',
+      es: 'Singapur',
+      de: 'Singapur',
+      zh: '新加坡',
+      fr: 'Singapour',
+      it: 'Singapore',
+      pt: 'Singapura',
+      ru: 'Сингапур',
+      ja: 'シンガポール',
+    },
     prefix: '+65',
     continent: 'asia',
     region: 'southeast_asia',
@@ -215,7 +475,17 @@ export const ASIA = {
 
   tha: {
     flag: 'th',
-    name: 'Thailand',
+    name: {
+      en: 'Thailand',
+      es: 'Tailandia',
+      de: 'Thailand',
+      zh: '泰国',
+      fr: 'Thaïlande',
+      it: 'Thailandia',
+      pt: 'Tailândia',
+      ru: 'Таиланд',
+      ja: 'タイ',
+    },
     prefix: '+66',
     continent: 'asia',
     region: 'southeast_asia',
@@ -223,7 +493,17 @@ export const ASIA = {
 
   tls: {
     flag: 'tl',
-    name: 'Timor-Leste',
+    name: {
+      en: 'Timor-Leste',
+      es: 'Timor-Leste',
+      de: 'Timor-Leste',
+      zh: '东帝汶',
+      fr: 'Timor oriental',
+      it: 'Timor Est',
+      pt: 'Timor-Leste',
+      ru: 'Восточный Тимор',
+      ja: '東ティモール',
+    },
     prefix: '+670',
     continent: 'asia',
     region: 'southeast_asia',
@@ -231,7 +511,17 @@ export const ASIA = {
 
   vnm: {
     flag: 'vn',
-    name: 'Vietnam',
+    name: {
+      en: 'Vietnam',
+      es: 'Vietnam',
+      de: 'Vietnam',
+      zh: '越南',
+      fr: 'Viêt Nam',
+      it: 'Vietnam',
+      pt: 'Vietname',
+      ru: 'Вьетнам',
+      ja: 'ベトナム',
+    },
     prefix: '+84',
     continent: 'asia',
     region: 'southeast_asia',
@@ -241,7 +531,17 @@ export const ASIA = {
 
   chn: {
     flag: 'cn',
-    name: 'China',
+    name: {
+      en: 'China',
+      es: 'China',
+      de: 'China',
+      zh: '中国',
+      fr: 'Chine',
+      it: 'Cina',
+      pt: 'China',
+      ru: 'Китай',
+      ja: '中国',
+    },
     prefix: '+86',
     continent: 'asia',
     region: 'east_asia',
@@ -249,7 +549,17 @@ export const ASIA = {
 
   hkg: {
     flag: 'hk',
-    name: 'Hong Kong',
+    name: {
+      en: 'Hong Kong',
+      es: 'Hong Kong',
+      de: 'Hongkong',
+      zh: '香港',
+      fr: 'Hong Kong',
+      it: 'Hong Kong',
+      pt: 'Hong Kong',
+      ru: 'Гонконг',
+      ja: '香港',
+    },
     prefix: '+852',
     continent: 'asia',
     region: 'east_asia',
@@ -257,7 +567,17 @@ export const ASIA = {
 
   jpn: {
     flag: 'jp',
-    name: 'Japan',
+    name: {
+      en: 'Japan',
+      es: 'Japón',
+      de: 'Japan',
+      zh: '日本',
+      fr: 'Japon',
+      it: 'Giappone',
+      pt: 'Japão',
+      ru: 'Япония',
+      ja: '日本',
+    },
     prefix: '+81',
     continent: 'asia',
     region: 'east_asia',
@@ -265,7 +585,17 @@ export const ASIA = {
 
   kor: {
     flag: 'kr',
-    name: 'South Korea',
+    name: {
+      en: 'South Korea',
+      es: 'Corea del Sur',
+      de: 'Südkorea',
+      zh: '韩国',
+      fr: 'Corée du Sud',
+      it: 'Corea del Sud',
+      pt: 'Coreia do Sul',
+      ru: 'Южная Корея',
+      ja: '韓国',
+    },
     prefix: '+82',
     continent: 'asia',
     region: 'east_asia',
@@ -273,7 +603,17 @@ export const ASIA = {
 
   prk: {
     flag: 'kp',
-    name: 'North Korea',
+    name: {
+      en: 'North Korea',
+      es: 'Corea del Norte',
+      de: 'Nordkorea',
+      zh: '朝鲜',
+      fr: 'Corée du Nord',
+      it: 'Corea del Nord',
+      pt: 'Coreia do Norte',
+      ru: 'Северная Корея',
+      ja: '北朝鮮',
+    },
     prefix: '+850',
     continent: 'asia',
     region: 'east_asia',
@@ -281,7 +621,17 @@ export const ASIA = {
 
   mac: {
     flag: 'mo',
-    name: 'Macao',
+    name: {
+      en: 'Macao',
+      es: 'Macao',
+      de: 'Macau',
+      zh: '澳门',
+      fr: 'Macao',
+      it: 'Macao',
+      pt: 'Macau',
+      ru: 'Макао',
+      ja: 'マカオ',
+    },
     prefix: '+853',
     continent: 'asia',
     region: 'east_asia',
@@ -289,7 +639,17 @@ export const ASIA = {
 
   mng: {
     flag: 'mn',
-    name: 'Mongolia',
+    name: {
+      en: 'Mongolia',
+      es: 'Mongolia',
+      de: 'Mongolei',
+      zh: '蒙古',
+      fr: 'Mongolie',
+      it: 'Mongolia',
+      pt: 'Mongólia',
+      ru: 'Монголия',
+      ja: 'モンゴル',
+    },
     prefix: '+976',
     continent: 'asia',
     region: 'east_asia',
@@ -297,7 +657,17 @@ export const ASIA = {
 
   twn: {
     flag: 'tw',
-    name: 'Taiwan',
+    name: {
+      en: 'Taiwan',
+      es: 'Taiwán',
+      de: 'Taiwan',
+      zh: '台湾',
+      fr: 'Taïwan',
+      it: 'Taiwan',
+      pt: 'Taiwan',
+      ru: 'Тайвань',
+      ja: '台湾',
+    },
     prefix: '+886',
     continent: 'asia',
     region: 'east_asia',
@@ -307,7 +677,17 @@ export const ASIA = {
 
   afg: {
     flag: 'af',
-    name: 'Afghanistan',
+    name: {
+      en: 'Afghanistan',
+      es: 'Afganistán',
+      de: 'Afghanistan',
+      zh: '阿富汗',
+      fr: 'Afghanistan',
+      it: 'Afghanistan',
+      pt: 'Afeganistão',
+      ru: 'Афганистан',
+      ja: 'アフガニスタン',
+    },
     prefix: '+93',
     continent: 'asia',
     region: 'south_asia',
@@ -315,7 +695,17 @@ export const ASIA = {
 
   bgd: {
     flag: 'bd',
-    name: 'Bangladesh',
+    name: {
+      en: 'Bangladesh',
+      es: 'Bangladés',
+      de: 'Bangladesch',
+      zh: '孟加拉国',
+      fr: 'Bangladesh',
+      it: 'Bangladesh',
+      pt: 'Bangladesh',
+      ru: 'Бангладеш',
+      ja: 'バングラデシュ',
+    },
     prefix: '+880',
     continent: 'asia',
     region: 'south_asia',
@@ -323,7 +713,17 @@ export const ASIA = {
 
   btn: {
     flag: 'bt',
-    name: 'Bhutan',
+    name: {
+      en: 'Bhutan',
+      es: 'Bután',
+      de: 'Bhutan',
+      zh: '不丹',
+      fr: 'Bhoutan',
+      it: 'Bhutan',
+      pt: 'Butão',
+      ru: 'Бутан',
+      ja: 'ブータン',
+    },
     prefix: '+975',
     continent: 'asia',
     region: 'south_asia',
@@ -331,7 +731,17 @@ export const ASIA = {
 
   ind: {
     flag: 'in',
-    name: 'India',
+    name: {
+      en: 'India',
+      es: 'India',
+      de: 'Indien',
+      zh: '印度',
+      fr: 'Inde',
+      it: 'India',
+      pt: 'Índia',
+      ru: 'Индия',
+      ja: 'インド',
+    },
     prefix: '+91',
     continent: 'asia',
     region: 'south_asia',
@@ -339,7 +749,17 @@ export const ASIA = {
 
   mdv: {
     flag: 'mv',
-    name: 'Maldives',
+    name: {
+      en: 'Maldives',
+      es: 'Maldivas',
+      de: 'Malediven',
+      zh: '马尔代夫',
+      fr: 'Maldives',
+      it: 'Maldive',
+      pt: 'Maldivas',
+      ru: 'Мальдивы',
+      ja: 'モルディブ',
+    },
     prefix: '+960',
     continent: 'asia',
     region: 'south_asia',
@@ -347,7 +767,17 @@ export const ASIA = {
 
   npl: {
     flag: 'np',
-    name: 'Nepal',
+    name: {
+      en: 'Nepal',
+      es: 'Nepal',
+      de: 'Nepal',
+      zh: '尼泊尔',
+      fr: 'Népal',
+      it: 'Nepal',
+      pt: 'Nepal',
+      ru: 'Непал',
+      ja: 'ネパール',
+    },
     prefix: '+977',
     continent: 'asia',
     region: 'south_asia',
@@ -355,7 +785,17 @@ export const ASIA = {
 
   pak: {
     flag: 'pk',
-    name: 'Pakistan',
+    name: {
+      en: 'Pakistan',
+      es: 'Pakistán',
+      de: 'Pakistan',
+      zh: '巴基斯坦',
+      fr: 'Pakistan',
+      it: 'Pakistan',
+      pt: 'Paquistão',
+      ru: 'Пакистан',
+      ja: 'パキスタン',
+    },
     prefix: '+92',
     continent: 'asia',
     region: 'south_asia',
@@ -363,7 +803,17 @@ export const ASIA = {
 
   lka: {
     flag: 'lk',
-    name: 'Sri Lanka',
+    name: {
+      en: 'Sri Lanka',
+      es: 'Sri Lanka',
+      de: 'Sri Lanka',
+      zh: '斯里兰卡',
+      fr: 'Sri Lanka',
+      it: 'Sri Lanka',
+      pt: 'Sri Lanka',
+      ru: 'Шри-Ланка',
+      ja: 'スリランカ',
+    },
     prefix: '+94',
     continent: 'asia',
     region: 'south_asia',
@@ -373,7 +823,17 @@ export const ASIA = {
 
   kaz: {
     flag: 'kz',
-    name: 'Kazakhstan',
+    name: {
+      en: 'Kazakhstan',
+      es: 'Kazajistán',
+      de: 'Kasachstan',
+      zh: '哈萨克斯坦',
+      fr: 'Kazakhstan',
+      it: 'Kazakistan',
+      pt: 'Cazaquistão',
+      ru: 'Казахстан',
+      ja: 'カザフスタン',
+    },
     prefix: '+7',
     continent: 'asia',
     region: 'central_asia',
@@ -381,7 +841,17 @@ export const ASIA = {
 
   kgz: {
     flag: 'kg',
-    name: 'Kyrgyzstan',
+    name: {
+      en: 'Kyrgyzstan',
+      es: 'Kirguistán',
+      de: 'Kirgisistan',
+      zh: '吉尔吉斯斯坦',
+      fr: 'Kirghizistan',
+      it: 'Kirghizistan',
+      pt: 'Quirguistão',
+      ru: 'Кыргызстан',
+      ja: 'キルギス',
+    },
     prefix: '+996',
     continent: 'asia',
     region: 'central_asia',
@@ -389,7 +859,17 @@ export const ASIA = {
 
   tkm: {
     flag: 'tm',
-    name: 'Turkmenistan',
+    name: {
+      en: 'Turkmenistan',
+      es: 'Turkmenistán',
+      de: 'Turkmenistan',
+      zh: '土库曼斯坦',
+      fr: 'Turkménistan',
+      it: 'Turkmenistan',
+      pt: 'Turquemenistão',
+      ru: 'Туркменистан',
+      ja: 'トルクメニスタン',
+    },
     prefix: '+993',
     continent: 'asia',
     region: 'central_asia',
@@ -397,7 +877,17 @@ export const ASIA = {
 
   uzb: {
     flag: 'uz',
-    name: 'Uzbekistan',
+    name: {
+      en: 'Uzbekistan',
+      es: 'Uzbekistán',
+      de: 'Usbekistan',
+      zh: '乌兹别克斯坦',
+      fr: 'Ouzbékistan',
+      it: 'Uzbekistan',
+      pt: 'Uzbequistão',
+      ru: 'Узбекистан',
+      ja: 'ウズベキスタン',
+    },
     prefix: '+998',
     continent: 'asia',
     region: 'central_asia',
@@ -405,7 +895,17 @@ export const ASIA = {
 
   tjk: {
     flag: 'tj',
-    name: 'Tajikistan',
+    name: {
+      en: 'Tajikistan',
+      es: 'Tayikistán',
+      de: 'Tadschikistan',
+      zh: '塔吉克斯坦',
+      fr: 'Tadjikistan',
+      it: 'Tagikistan',
+      pt: 'Tajiquistão',
+      ru: 'Таджикистан',
+      ja: 'タジキスタン',
+    },
     prefix: '+992',
     continent: 'asia',
     region: 'central_asia',

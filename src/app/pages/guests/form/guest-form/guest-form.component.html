@@ -2,11 +2,16 @@
   <form #guestForm [formGroup]="formCreateGuest">
     <!-- 1. PERSONAL INFORMATION -->
     <section class="form-section">
-      <h3 class="title-form">Personal Information</h3>
+      <h3 class="title-form">
+        {{ 'GUEST_FORM.SECTIONS.PERSONAL' | translate }}
+      </h3>
+
       <div class="fields-grid personal-grid">
-        <!-- FULL NAME  -->
+        <!-- FULL NAME -->
         <mat-form-field appearance="outline">
-          <mat-label>Full Name</mat-label>
+          <mat-label>
+            {{ 'GUEST_FORM.FIELDS.FULL_NAME' | translate }}
+          </mat-label>
 
           <mat-icon class="material-symbols-outlined" matPrefix>person</mat-icon>
 
@@ -27,16 +32,22 @@
             / {{ getMaxLength('fullName') }}
           </mat-hint>
 
-          <mat-error *ngIf="f['fullName'].hasError('required')"> Full Name is required </mat-error>
+          <mat-error *ngIf="f['fullName'].hasError('required')">
+            {{ 'GUEST_FORM.ERRORS.FULL_NAME_REQUIRED' | translate }}
+          </mat-error>
 
-          <mat-error *ngIf="f['fullName'].hasError('maxlength')"> Maximum 100 characters </mat-error>
+          <mat-error *ngIf="f['fullName'].hasError('maxlength')">
+            {{ 'GUEST_FORM.ERRORS.FULL_NAME_MAX' | translate }}
+          </mat-error>
         </mat-form-field>
 
         <!-- INSTAGRAM -->
         <mat-form-field appearance="outline">
-          <mat-label>Instagram</mat-label>
+          <mat-label>
+            {{ 'GUEST_FORM.FIELDS.INSTAGRAM' | translate }}
+          </mat-label>
 
-          <mat-icon class="material-symbols-outlined" matPrefix>alternate_email</mat-icon>
+          <mat-icon class="material-symbols-outlined" matPrefix> alternate_email </mat-icon>
 
           <mat-icon class="material-symbols-outlined icon-success" matSuffix *ngIf="isValid('instagram')">
             check_circle
@@ -55,12 +66,16 @@
             / {{ getMaxLength('instagram') }}
           </mat-hint>
 
-          <mat-error *ngIf="f['instagram'].hasError('maxlength')"> Maximum 30 characters </mat-error>
+          <mat-error *ngIf="f['instagram'].hasError('maxlength')">
+            {{ 'GUEST_FORM.ERRORS.INSTAGRAM_MAX' | translate }}
+          </mat-error>
         </mat-form-field>
 
         <!-- URL CS PROFILE -->
         <mat-form-field appearance="outline">
-          <mat-label>CS Profile URL</mat-label>
+          <mat-label>
+            {{ 'GUEST_FORM.FIELDS.CS_PROFILE_URL' | translate }}
+          </mat-label>
 
           <mat-icon class="material-symbols-outlined" matPrefix>link</mat-icon>
 
@@ -81,16 +96,22 @@
             / {{ getMaxLength('urlProfileCs') }}
           </mat-hint>
 
-          <mat-error *ngIf="f['urlProfileCs'].hasError('required')"> Url Cs Profile is required </mat-error>
+          <mat-error *ngIf="f['urlProfileCs'].hasError('required')">
+            {{ 'GUEST_FORM.ERRORS.CS_PROFILE_REQUIRED' | translate }}
+          </mat-error>
 
-          <mat-error *ngIf="f['urlProfileCs'].hasError('maxlength')"> Maximum 50 characters </mat-error>
+          <mat-error *ngIf="f['urlProfileCs'].hasError('maxlength')">
+            {{ 'GUEST_FORM.ERRORS.CS_PROFILE_MAX' | translate }}
+          </mat-error>
         </mat-form-field>
       </div>
 
       <div class="fields-grid birth-grid">
         <!-- BIRTH DATE -->
         <mat-form-field appearance="outline">
-          <mat-label>Birth Date</mat-label>
+          <mat-label>
+            {{ 'GUEST_FORM.FIELDS.BIRTH_DATE' | translate }}
+          </mat-label>
 
           <mat-icon class="material-symbols-outlined" matPrefix>cake</mat-icon>
 
@@ -103,23 +124,38 @@
           />
 
           <mat-datepicker-toggle matSuffix [for]="birthPicker"></mat-datepicker-toggle>
+
           <mat-datepicker #birthPicker></mat-datepicker>
 
-          <!-- <mat-error *ngIf="f['birthDate'].hasError('required')"> Birth Date is required </mat-error> -->
+          <!--
+          <mat-error *ngIf="f['birthDate'].hasError('required')">
+            Birth Date is required
+          </mat-error>
+          -->
         </mat-form-field>
 
         <!-- GENDER -->
         <section class="card-section">
-          <h4 class="subtitle">Gender:</h4>
+          <h4 class="subtitle">
+            {{ 'GUEST_FORM.FIELDS.GENDER' | translate }}
+          </h4>
 
           <mat-radio-group formControlName="gender">
-            <mat-radio-button value="male">Male</mat-radio-button>
-            <mat-radio-button value="female">Female</mat-radio-button>
-            <mat-radio-button value="trans">Trans</mat-radio-button>
+            <mat-radio-button value="male">
+              {{ 'GUEST_FORM.GENDER_OPTIONS.MALE' | translate }}
+            </mat-radio-button>
+
+            <mat-radio-button value="female">
+              {{ 'GUEST_FORM.GENDER_OPTIONS.FEMALE' | translate }}
+            </mat-radio-button>
+
+            <mat-radio-button value="trans">
+              {{ 'GUEST_FORM.GENDER_OPTIONS.TRANS' | translate }}
+            </mat-radio-button>
           </mat-radio-group>
 
           <div class="error-msg" *ngIf="f['gender'].hasError('required') && f['gender'].touched">
-            Gender is required
+            {{ 'GUEST_FORM.ERRORS.GENDER_REQUIRED' | translate }}
           </div>
         </section>
       </div>
@@ -127,14 +163,18 @@
 
     <!-- 2. LOCATION -->
     <section class="form-section">
-      <h3 class="title-form">Location</h3>
+      <h3 class="title-form">
+        {{ 'GUEST_FORM.SECTIONS.LOCATION' | translate }}
+      </h3>
 
       <div class="fields-grid location-grid">
         <!-- HOMETOWN COUNTRY -->
         <mat-form-field appearance="outline">
-          <mat-label>Hometown Country</mat-label>
+          <mat-label>
+            {{ 'GUEST_FORM.FIELDS.HOMETOWN_COUNTRY' | translate }}
+          </mat-label>
 
-          <mat-icon class="material-symbols-outlined" matPrefix>public</mat-icon>
+          <mat-icon class="material-symbols-outlined" matPrefix> public </mat-icon>
 
           <mat-icon class="material-symbols-outlined icon-success" matSuffix *ngIf="isValid('hometownCode')">
             check_circle
@@ -154,18 +194,22 @@
           <mat-autocomplete #autoHometown="matAutocomplete" [displayWith]="displayCountryCode">
             <mat-option *ngFor="let country of filteredCountries" [value]="country.countryCode">
               <span [class]="country.countryCode | flag"></span>
-              {{ country.name }}
+              {{ getCountryName(country) }}
             </mat-option>
           </mat-autocomplete>
 
-          <mat-error *ngIf="f['hometownCode'].hasError('required')"> Country is required </mat-error>
+          <mat-error *ngIf="f['hometownCode'].hasError('required')">
+            {{ 'GUEST_FORM.ERRORS.COUNTRY_REQUIRED' | translate }}
+          </mat-error>
         </mat-form-field>
 
         <!-- HOMETOWN STATE -->
         <mat-form-field appearance="outline" *ngIf="f['hometownCode'].value" class="select-field">
-          <mat-label>Hometown State</mat-label>
+          <mat-label>
+            {{ 'GUEST_FORM.FIELDS.HOMETOWN_STATE' | translate }}
+          </mat-label>
 
-          <mat-icon class="material-symbols-outlined" matPrefix>map</mat-icon>
+          <mat-icon class="material-symbols-outlined" matPrefix> map </mat-icon>
 
           <mat-select formControlName="hometownState">
             <mat-option *ngFor="let state of hometownStates" [value]="state">
@@ -176,9 +220,11 @@
 
         <!-- HOMETOWN CITY -->
         <mat-form-field appearance="outline" *ngIf="f['hometownState'].value" class="select-field">
-          <mat-label>Hometown City</mat-label>
+          <mat-label>
+            {{ 'GUEST_FORM.FIELDS.HOMETOWN_CITY' | translate }}
+          </mat-label>
 
-          <mat-icon class="material-symbols-outlined" matPrefix>location_city</mat-icon>
+          <mat-icon class="material-symbols-outlined" matPrefix> location_city </mat-icon>
 
           <mat-select formControlName="hometownCity">
             <mat-option *ngFor="let city of hometownCities" [value]="city">
@@ -191,9 +237,11 @@
       <div class="fields-grid location-grid">
         <!-- LIVING COUNTRY -->
         <mat-form-field appearance="outline" class="country-field">
-          <mat-label>Living In Country</mat-label>
+          <mat-label>
+            {{ 'GUEST_FORM.FIELDS.LIVING_COUNTRY' | translate }}
+          </mat-label>
 
-          <mat-icon class="material-symbols-outlined" matPrefix>public</mat-icon>
+          <mat-icon class="material-symbols-outlined" matPrefix> public </mat-icon>
 
           <mat-icon class="material-symbols-outlined icon-success" matSuffix *ngIf="isValid('livingInCode')">
             check_circle
@@ -213,18 +261,22 @@
           <mat-autocomplete #autoLiving="matAutocomplete" [displayWith]="displayCountryCode">
             <mat-option *ngFor="let country of filteredLiving" [value]="country.countryCode">
               <span [class]="country.countryCode | flag"></span>
-              {{ country.name }}
+              {{ getCountryName(country) }}
             </mat-option>
           </mat-autocomplete>
 
-          <mat-error *ngIf="f['livingInCode'].hasError('required')"> Country is required </mat-error>
+          <mat-error *ngIf="f['livingInCode'].hasError('required')">
+            {{ 'GUEST_FORM.ERRORS.COUNTRY_REQUIRED' | translate }}
+          </mat-error>
         </mat-form-field>
 
-        <!-- Living In State -->
+        <!-- LIVING IN STATE -->
         <mat-form-field appearance="outline" *ngIf="f['livingInCode'].value" class="select-field">
-          <mat-label>Living In State</mat-label>
+          <mat-label>
+            {{ 'GUEST_FORM.FIELDS.LIVING_STATE' | translate }}
+          </mat-label>
 
-          <mat-icon class="material-symbols-outlined" matPrefix>public</mat-icon>
+          <mat-icon class="material-symbols-outlined" matPrefix> public </mat-icon>
 
           <mat-select formControlName="livingInState">
             <mat-option *ngFor="let state of livingInStates" [value]="state">
@@ -233,11 +285,13 @@
           </mat-select>
         </mat-form-field>
 
-        <!-- Living In city -->
+        <!-- LIVING IN CITY -->
         <mat-form-field appearance="outline" *ngIf="f['livingInState'].value" class="select-field">
-          <mat-label>Living In City</mat-label>
+          <mat-label>
+            {{ 'GUEST_FORM.FIELDS.LIVING_CITY' | translate }}
+          </mat-label>
 
-          <mat-icon class="material-symbols-outlined" matPrefix>location_city</mat-icon>
+          <mat-icon class="material-symbols-outlined" matPrefix> location_city </mat-icon>
 
           <mat-select formControlName="livingInCity">
             <mat-option *ngFor="let city of livingInCities" [value]="city">
@@ -250,15 +304,19 @@
       <div class="fields-grid location-grid">
         <!-- COUNTRY WE MET -->
         <mat-form-field appearance="outline">
-          <mat-label>Country We Met</mat-label>
+          <mat-label>
+            {{ 'GUEST_FORM.FIELDS.COUNTRY_WE_MET' | translate }}
+          </mat-label>
 
           <mat-icon class="material-symbols-outlined" matPrefix>public</mat-icon>
-          <mat-icon class="material-symbols-outlined icon-success" matSuffix *ngIf="isValid('countryCodeWeMet')"
-            >check_circle</mat-icon
-          >
-          <mat-icon class="material-symbols-outlined icon-warning" matSuffix *ngIf="isInvalid('countryCodeWeMet')"
-            >error</mat-icon
-          >
+
+          <mat-icon class="material-symbols-outlined icon-success" matSuffix *ngIf="isValid('countryCodeWeMet')">
+            check_circle
+          </mat-icon>
+
+          <mat-icon class="material-symbols-outlined icon-warning" matSuffix *ngIf="isInvalid('countryCodeWeMet')">
+            error
+          </mat-icon>
 
           <input
             matInput
@@ -269,64 +327,85 @@
 
           <mat-autocomplete #autoCountryWeMet="matAutocomplete" [displayWith]="displayCountryCode">
             <mat-option *ngFor="let country of filteredCountryWeMet" [value]="country.countryCode">
-              <span [class]="country.countryCode | flag"></span>{{ country.name }}</mat-option
-            >
+              <span [class]="country.countryCode | flag"></span>
+              {{ getCountryName(country) }}
+            </mat-option>
           </mat-autocomplete>
 
-          <mat-error *ngIf="f['countryCodeWeMet'].hasError('required')">Country is required</mat-error>
+          <mat-error *ngIf="f['countryCodeWeMet'].hasError('required')">
+            {{ 'GUEST_FORM.ERRORS.COUNTRY_REQUIRED' | translate }}
+          </mat-error>
         </mat-form-field>
 
         <!-- STATE WE MET -->
         <mat-form-field appearance="outline" *ngIf="f['countryCodeWeMet'].value" class="select-field">
-          <mat-label>State We Met</mat-label>
+          <mat-label>
+            {{ 'GUEST_FORM.FIELDS.STATE_WE_MET' | translate }}
+          </mat-label>
 
           <mat-icon class="material-symbols-outlined" matPrefix>map</mat-icon>
 
           <mat-select formControlName="stateWeMet">
-            <mat-option *ngFor="let state of weMetStates" [value]="state">{{ state.name }}</mat-option>
+            <mat-option *ngFor="let state of weMetStates" [value]="state">
+              {{ state.name }}
+            </mat-option>
           </mat-select>
         </mat-form-field>
 
         <!-- CITY WE MET -->
         <mat-form-field appearance="outline" *ngIf="f['stateWeMet'].value" class="select-field">
-          <mat-label>City We Met</mat-label>
+          <mat-label>
+            {{ 'GUEST_FORM.FIELDS.CITY_WE_MET' | translate }}
+          </mat-label>
 
-          <mat-icon class="material-symbols-outlined" matPrefix>location_city</mat-icon>
+          <mat-icon class="material-symbols-outlined" matPrefix> location_city </mat-icon>
 
           <mat-select formControlName="cityWeMet">
-            <mat-option *ngFor="let city of weMetCities" [value]="city">{{ city.name }}</mat-option>
+            <mat-option *ngFor="let city of weMetCities" [value]="city">
+              {{ city.name }}
+            </mat-option>
           </mat-select>
         </mat-form-field>
 
         <!-- LOCATION WE MET -->
         <mat-form-field appearance="outline" *ngIf="f['cityWeMet'].value">
-          <mat-label>Location We Met</mat-label>
+          <mat-label>
+            {{ 'GUEST_FORM.FIELDS.LOCATION_WE_MET' | translate }}
+          </mat-label>
 
           <mat-icon class="material-symbols-outlined" matPrefix>place</mat-icon>
-          <mat-icon class="material-symbols-outlined" class="icon-success" matSuffix *ngIf="isValid('locationWeMet')"
-            >check_circle</mat-icon
-          >
-          <mat-icon class="material-symbols-outlined" class="icon-warning" matSuffix *ngIf="isInvalid('locationWeMet')"
-            >error</mat-icon
-          >
+
+          <mat-icon class="material-symbols-outlined icon-success" matSuffix *ngIf="isValid('locationWeMet')">
+            check_circle
+          </mat-icon>
+
+          <mat-icon class="material-symbols-outlined icon-warning" matSuffix *ngIf="isInvalid('locationWeMet')">
+            error
+          </mat-icon>
 
           <input matInput formControlName="locationWeMet" maxlength="100" />
 
           <mat-hint align="end"> {{ f['locationWeMet'].value?.length || 0 }}/100 </mat-hint>
 
-          <mat-error *ngIf="f['locationWeMet'].hasError('maxlength')"> Maximum 100 characters </mat-error>
+          <mat-error *ngIf="f['locationWeMet'].hasError('maxlength')">
+            {{ 'GUEST_FORM.ERRORS.LOCATION_MAX' | translate }}
+          </mat-error>
         </mat-form-field>
       </div>
     </section>
 
     <!-- 3. OCCUPATION -->
     <section class="form-section">
-      <h3 class="title-form">Occupation</h3>
+      <h3 class="title-form">
+        {{ 'GUEST_FORM.SECTIONS.OCCUPATION' | translate }}
+      </h3>
 
       <div class="fields-grid occupation-grid">
         <!-- OCCUPATION AREA -->
         <mat-form-field appearance="outline" class="select-field">
-          <mat-label>Occupation Area</mat-label>
+          <mat-label>
+            {{ 'GUEST_FORM.FIELDS.OCCUPATION_AREA' | translate }}
+          </mat-label>
 
           <mat-icon class="material-symbols-outlined" matPrefix>work</mat-icon>
 
@@ -344,22 +423,26 @@
 
           <mat-select formControlName="occupationArea" multiple>
             <mat-option *ngFor="let area of occupationAreas" [value]="area">
-              {{ area }}
+              {{ getOccupationAreaLabel(area) }}
             </mat-option>
           </mat-select>
 
-          <mat-error *ngIf="f['occupationArea'].hasError('required')"> Occupation Area is required </mat-error>
+          <mat-error *ngIf="f['occupationArea'].hasError('required')">
+            {{ 'GUEST_FORM.ERRORS.OCCUPATION_REQUIRED' | translate }}
+          </mat-error>
         </mat-form-field>
 
         <!-- OCCUPATION -->
         <mat-form-field appearance="outline" *ngIf="occupations.length > 0" class="select-field">
-          <mat-label>Occupation(s)</mat-label>
+          <mat-label>
+            {{ 'GUEST_FORM.FIELDS.OCCUPATIONS' | translate }}
+          </mat-label>
 
           <mat-icon class="material-symbols-outlined" matPrefix>badge</mat-icon>
 
           <mat-select formControlName="occupation" multiple>
             <mat-option *ngFor="let occupation of occupations" [value]="occupation">
-              {{ occupation }}
+              {{ getOccupationLabel(occupation) }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -370,11 +453,18 @@
           *ngIf="f['occupation'].value?.includes('Write another occupation')"
           class="select-field"
         >
-          <mat-label>Write your occupation</mat-label>
+          <mat-label>
+            {{ 'GUEST_FORM.FIELDS.OTHER_OCCUPATION' | translate }}
+          </mat-label>
 
           <mat-icon class="material-symbols-outlined" matPrefix>edit</mat-icon>
 
-          <input matInput formControlName="otherOccupation" placeholder="Enter your occupation" maxlength="100" />
+          <input
+            matInput
+            formControlName="otherOccupation"
+            [placeholder]="'GUEST_FORM.FIELDS.ENTER_OCCUPATION' | translate"
+            maxlength="100"
+          />
         </mat-form-field>
       </div>
     </section>
@@ -382,13 +472,17 @@
     <!-- 4. CONTACT + ADDITIONAL INFORMATION -->
     <div class="two-section-grid">
       <section class="form-section">
-        <h3 class="title-form">Contact Information</h3>
+        <h3 class="title-form">
+          {{ 'GUEST_FORM.SECTIONS.CONTACT' | translate }}
+        </h3>
 
         <div class="fields-grid contact-grid">
           <!-- PREFIX -->
           <div class="phone-row">
             <mat-form-field appearance="outline" class="prefix-field">
-              <mat-label>Prefix</mat-label>
+              <mat-label>
+                {{ 'GUEST_FORM.FIELDS.PREFIX' | translate }}
+              </mat-label>
 
               <span matPrefix *ngIf="selectedPrefixCountry" class="prefix-country">
                 <span [class]="selectedPrefixCountry.countryCode | flag"></span>
@@ -408,54 +502,84 @@
                 (optionSelected)="selectPrefix($event)"
               >
                 <mat-option *ngFor="let country of filteredPrefixCountries" [value]="country">
-                  <span [class]="country.countryCode | flag"></span>{{ country.prefix }}
+                  <span [class]="country.countryCode | flag"></span>
+                  {{ country.prefix }}
                 </mat-option>
               </mat-autocomplete>
 
-              <mat-error *ngIf="f['prefixCode'].hasError('required')"> Prefix is required </mat-error>
+              <mat-error *ngIf="f['prefixCode'].hasError('required')">
+                {{ 'GUEST_FORM.ERRORS.PREFIX_REQUIRED' | translate }}
+              </mat-error>
             </mat-form-field>
 
             <!-- WHATSAPP -->
             <mat-form-field appearance="outline" class="phone-field">
-              <mat-label>Whatsapp</mat-label>
-              <mat-icon class="material-symbols-outlined" matPrefix>phone</mat-icon>
-              <mat-icon class="material-symbols-outlined" class="icon-success" matSuffix *ngIf="isValid('whatsapp')"
-                >check_circle</mat-icon
-              >
-              <mat-icon class="material-symbols-outlined" class="icon-warning" matSuffix *ngIf="isInvalid('whatsapp')"
-                >error</mat-icon
-              >
+              <mat-label>
+                {{ 'GUEST_FORM.FIELDS.WHATSAPP' | translate }}
+              </mat-label>
+
+              <mat-icon class="material-symbols-outlined" matPrefix> phone </mat-icon>
+
+              <mat-icon class="material-symbols-outlined icon-success" matSuffix *ngIf="isValid('whatsapp')">
+                check_circle
+              </mat-icon>
+
+              <mat-icon class="material-symbols-outlined icon-warning" matSuffix *ngIf="isInvalid('whatsapp')">
+                error
+              </mat-icon>
 
               <input type="tel" matInput formControlName="whatsapp" maxlength="16" autocomplete="tel" />
 
-              <mat-error *ngIf="f['whatsapp'].hasError('required')"> Whatsapp is required </mat-error>
-              <mat-error *ngIf="f['whatsapp'].hasError('pattern')"> Invalid phone number </mat-error>
-              <mat-error *ngIf="f['whatsapp'].hasError('maxlength')"> Maximum 16 characters </mat-error>
+              <mat-error *ngIf="f['whatsapp'].hasError('required')">
+                {{ 'GUEST_FORM.ERRORS.WHATSAPP_REQUIRED' | translate }}
+              </mat-error>
+
+              <mat-error *ngIf="f['whatsapp'].hasError('pattern')">
+                {{ 'GUEST_FORM.ERRORS.PHONE_INVALID' | translate }}
+              </mat-error>
+
+              <mat-error *ngIf="f['whatsapp'].hasError('maxlength')">
+                {{ 'GUEST_FORM.ERRORS.WHATSAPP_MAX' | translate }}
+              </mat-error>
             </mat-form-field>
           </div>
         </div>
       </section>
 
       <section class="form-section">
-        <h3 class="title-form">Additional Information</h3>
+        <h3 class="title-form">
+          {{ 'GUEST_FORM.SECTIONS.ADDITIONAL' | translate }}
+        </h3>
 
         <div class="checkbox-group additional-checkboxes">
-          <mat-checkbox formControlName="isFirstTime"> First Time </mat-checkbox>
+          <mat-checkbox formControlName="isFirstTime">
+            {{ 'GUEST_FORM.CHECKBOXES.FIRST_TIME' | translate }}
+          </mat-checkbox>
 
-          <mat-checkbox formControlName="didTheyReq"> Did they request a stay? </mat-checkbox>
+          <mat-checkbox formControlName="didTheyReq">
+            {{ 'GUEST_FORM.CHECKBOXES.STAY_REQUEST' | translate }}
+          </mat-checkbox>
 
-          <mat-checkbox formControlName="hangOut"> Hang Out </mat-checkbox>
+          <mat-checkbox formControlName="hangOut">
+            {{ 'GUEST_FORM.CHECKBOXES.HANG_OUT' | translate }}
+          </mat-checkbox>
 
-          <mat-checkbox formControlName="ambassador"> Ambassador </mat-checkbox>
+          <mat-checkbox formControlName="ambassador">
+            {{ 'GUEST_FORM.CHECKBOXES.AMBASSADOR' | translate }}
+          </mat-checkbox>
 
-          <mat-checkbox formControlName="isGay"> Gay </mat-checkbox>
+          <mat-checkbox formControlName="isGay">
+            {{ 'GUEST_FORM.CHECKBOXES.GAY' | translate }}
+          </mat-checkbox>
         </div>
       </section>
     </div>
 
     <!-- 5. RATING + GIFTS -->
     <section class="form-section">
-      <h3 class="title-form">Rating & Gifts</h3>
+      <h3 class="title-form">
+        {{ 'GUEST_FORM.SECTIONS.RATING_GIFTS' | translate }}
+      </h3>
 
       <div class="two-section-grid rating-gifts-grid">
         <div class="rating">
@@ -484,7 +608,9 @@
           <!-- GIFTS -->
           <div class="gift-row full-row">
             <mat-form-field class="example-chip-list full-row">
-              <mat-label>Gifts</mat-label>
+              <mat-label>
+                {{ 'GUEST_FORM.FIELDS.GIFTS' | translate }}
+              </mat-label>
 
               <mat-chip-grid #chipGrid>
                 <mat-chip-row
@@ -496,7 +622,7 @@
                   {{ gift.name }}
 
                   <button matChipRemove>
-                    <mat-icon class="material-symbols-outlined">cancel</mat-icon>
+                    <mat-icon class="material-symbols-outlined"> cancel </mat-icon>
                   </button>
                 </mat-chip-row>
 
@@ -509,11 +635,14 @@
                 />
               </mat-chip-grid>
 
-              <mat-hint align="end"> {{ gifts.length }}/15 gifts </mat-hint>
+              <mat-hint align="end">
+                {{ 'GUEST_FORM.HINTS.GIFTS_COUNT' | translate: { count: gifts.length } }}
+              </mat-hint>
             </mat-form-field>
+
             <button type="button" mat-stroked-button class="btn-clear-gifts" (click)="clearGiftInput()">
               <mat-icon class="material-symbols-outlined">delete</mat-icon>
-              Clear
+              {{ 'GUEST_FORM.BUTTONS.CLEAR_GIFTS' | translate }}
             </button>
           </div>
         </div>
@@ -522,15 +651,19 @@
 
     <!-- 6. REFERENCES + COMMENTS -->
     <section class="form-section">
-      <h3 class="title-form">References & Comments</h3>
+      <h3 class="title-form">
+        {{ 'GUEST_FORM.SECTIONS.REFERENCES_COMMENTS' | translate }}
+      </h3>
 
       <div class="two-section-grid references-grid">
         <div>
           <!-- THEIR REFERENCE -->
           <mat-form-field appearance="outline" class="full-row">
-            <mat-label>Their Reference</mat-label>
+            <mat-label>
+              {{ 'GUEST_FORM.FIELDS.THEIR_REFERENCE' | translate }}
+            </mat-label>
 
-            <mat-icon class="material-symbols-outlined" matPrefix>comment</mat-icon>
+            <mat-icon class="material-symbols-outlined" matPrefix> comment </mat-icon>
 
             <textarea
               class="full-row"
@@ -548,16 +681,20 @@
               / {{ getMaxLength('theirReference') }}
             </mat-hint>
 
-            <mat-error *ngIf="f['theirReference'].hasError('maxlength')"> Maximum 500 characters </mat-error>
+            <mat-error *ngIf="f['theirReference'].hasError('maxlength')">
+              {{ 'GUEST_FORM.ERRORS.REFERENCE_MAX' | translate }}
+            </mat-error>
           </mat-form-field>
         </div>
 
         <div>
           <!-- MY REFERENCE -->
           <mat-form-field appearance="outline" class="full-row">
-            <mat-label>My Reference</mat-label>
+            <mat-label>
+              {{ 'GUEST_FORM.FIELDS.MY_REFERENCE' | translate }}
+            </mat-label>
 
-            <mat-icon class="material-symbols-outlined" matPrefix>comment</mat-icon>
+            <mat-icon class="material-symbols-outlined" matPrefix> comment </mat-icon>
 
             <textarea
               class="full-row"
@@ -575,16 +712,20 @@
               / {{ getMaxLength('myReference') }}
             </mat-hint>
 
-            <mat-error *ngIf="f['myReference'].hasError('maxlength')"> Maximum 500 characters </mat-error>
+            <mat-error *ngIf="f['myReference'].hasError('maxlength')">
+              {{ 'GUEST_FORM.ERRORS.REFERENCE_MAX' | translate }}
+            </mat-error>
           </mat-form-field>
         </div>
 
         <div class="comments-field">
           <!-- COMMENTS -->
           <mat-form-field appearance="outline" class="full-row">
-            <mat-label>Leave a comment</mat-label>
+            <mat-label>
+              {{ 'GUEST_FORM.FIELDS.COMMENTS' | translate }}
+            </mat-label>
 
-            <mat-icon class="material-symbols-outlined" matPrefix>comment</mat-icon>
+            <mat-icon class="material-symbols-outlined" matPrefix> comment </mat-icon>
 
             <textarea
               class="full-row"
@@ -602,7 +743,9 @@
               / {{ getMaxLength('comments') }}
             </mat-hint>
 
-            <mat-error *ngIf="f['comments'].hasError('maxlength')"> Maximum 500 characters </mat-error>
+            <mat-error *ngIf="f['comments'].hasError('maxlength')">
+              {{ 'GUEST_FORM.ERRORS.COMMENTS_MAX' | translate }}
+            </mat-error>
           </mat-form-field>
         </div>
       </div>
