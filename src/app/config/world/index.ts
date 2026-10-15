@@ -14,10 +14,10 @@ export * from '@config/world/asia';
 export * from '@config/world/europe';
 export * from '@config/world/oceania';
 
-export const WORLD = {
+export const WORLD: Record<string, ICountry> = {
   ...AFRICA,
   ...AMERICA,
   ...ASIA,
   ...EUROPE,
   ...OCEANIA,
-} satisfies Record<string, ICountry>;
+};

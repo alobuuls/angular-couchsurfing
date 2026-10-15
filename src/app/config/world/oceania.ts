@@ -3,7 +3,17 @@ import { ICountry } from '@type/word.types';
 export const OCEANIA = {
   aus: {
     flag: 'au',
-    name: 'Australia',
+    name: {
+      en: 'Australia',
+      es: 'Australia',
+      de: 'Australien',
+      zh: '澳大利亚',
+      fr: 'Australie',
+      it: 'Australia',
+      pt: 'Austrália',
+      ru: 'Австралия',
+      ja: 'オーストラリア',
+    },
     prefix: '+61',
     continent: 'oceania',
     region: 'oceania',
@@ -11,7 +21,17 @@ export const OCEANIA = {
 
   fji: {
     flag: 'fj',
-    name: 'Fiji',
+    name: {
+      en: 'Fiji',
+      es: 'Fiyi',
+      de: 'Fidschi',
+      zh: '斐济',
+      fr: 'Fidji',
+      it: 'Figi',
+      pt: 'Fiji',
+      ru: 'Фиджи',
+      ja: 'フィジー',
+    },
     prefix: '+679',
     continent: 'oceania',
     region: 'melanesia',
@@ -19,7 +39,17 @@ export const OCEANIA = {
 
   kir: {
     flag: 'ki',
-    name: 'Kiribati',
+    name: {
+      en: 'Kiribati',
+      es: 'Kiribati',
+      de: 'Kiribati',
+      zh: '基里巴斯',
+      fr: 'Kiribati',
+      it: 'Kiribati',
+      pt: 'Kiribati',
+      ru: 'Кирибати',
+      ja: 'キリバス',
+    },
     prefix: '+686',
     continent: 'oceania',
     region: 'micronesia',
@@ -27,15 +57,35 @@ export const OCEANIA = {
 
   mhl: {
     flag: 'mh',
-    name: 'Marshall Islands',
+    name: {
+      en: 'Marshall Islands',
+      es: 'Islas Marshall',
+      de: 'Marshallinseln',
+      zh: '马绍尔群岛',
+      fr: 'Îles Marshall',
+      it: 'Isole Marshall',
+      pt: 'Ilhas Marshall',
+      ru: 'Маршалловы Острова',
+      ja: 'マーシャル諸島',
+    },
     prefix: '+692',
     continent: 'oceania',
     region: 'micronesia',
   },
 
-  mic: {
+  fsm: {
     flag: 'fm',
-    name: 'Micronesia (Federated States of Micronesia)',
+    name: {
+      en: 'Federated States of Micronesia',
+      es: 'Estados Federados de Micronesia',
+      de: 'Föderierte Staaten von Mikronesien',
+      zh: '密克罗尼西亚联邦',
+      fr: 'États fédérés de Micronésie',
+      it: 'Stati Federati di Micronesia',
+      pt: 'Estados Federados da Micronésia',
+      ru: 'Федеративные Штаты Микронезии',
+      ja: 'ミクロネシア連邦',
+    },
     prefix: '+691',
     continent: 'oceania',
     region: 'micronesia',
@@ -43,7 +93,17 @@ export const OCEANIA = {
 
   nru: {
     flag: 'nr',
-    name: 'Nauru',
+    name: {
+      en: 'Nauru',
+      es: 'Nauru',
+      de: 'Nauru',
+      zh: '瑙鲁',
+      fr: 'Nauru',
+      it: 'Nauru',
+      pt: 'Nauru',
+      ru: 'Науру',
+      ja: 'ナウル',
+    },
     prefix: '+674',
     continent: 'oceania',
     region: 'micronesia',
@@ -51,7 +111,17 @@ export const OCEANIA = {
 
   nzl: {
     flag: 'nz',
-    name: 'New Zealand',
+    name: {
+      en: 'New Zealand',
+      es: 'Nueva Zelanda',
+      de: 'Neuseeland',
+      zh: '新西兰',
+      fr: 'Nouvelle-Zélande',
+      it: 'Nuova Zelanda',
+      pt: 'Nova Zelândia',
+      ru: 'Новая Зеландия',
+      ja: 'ニュージーランド',
+    },
     prefix: '+64',
     continent: 'oceania',
     region: 'oceania',
@@ -59,7 +129,17 @@ export const OCEANIA = {
 
   plw: {
     flag: 'pw',
-    name: 'Palau',
+    name: {
+      en: 'Palau',
+      es: 'Palaos',
+      de: 'Palau',
+      zh: '帕劳',
+      fr: 'Palaos',
+      it: 'Palau',
+      pt: 'Palau',
+      ru: 'Палау',
+      ja: 'パラオ',
+    },
     prefix: '+680',
     continent: 'oceania',
     region: 'micronesia',
@@ -67,7 +147,17 @@ export const OCEANIA = {
 
   png: {
     flag: 'pg',
-    name: 'Papua New Guinea',
+    name: {
+      en: 'Papua New Guinea',
+      es: 'Papúa Nueva Guinea',
+      de: 'Papua-Neuguinea',
+      zh: '巴布亚新几内亚',
+      fr: 'Papouasie-Nouvelle-Guinée',
+      it: 'Papua Nuova Guinea',
+      pt: 'Papua-Nova Guiné',
+      ru: 'Папуа — Новая Гвинея',
+      ja: 'パプアニューギニア',
+    },
     prefix: '+675',
     continent: 'oceania',
     region: 'melanesia',
@@ -75,7 +165,17 @@ export const OCEANIA = {
 
   slb: {
     flag: 'sb',
-    name: 'Solomon Islands',
+    name: {
+      en: 'Solomon Islands',
+      es: 'Islas Salomón',
+      de: 'Salomonen',
+      zh: '所罗门群岛',
+      fr: 'Îles Salomon',
+      it: 'Isole Salomone',
+      pt: 'Ilhas Salomão',
+      ru: 'Соломоновы Острова',
+      ja: 'ソロモン諸島',
+    },
     prefix: '+677',
     continent: 'oceania',
     region: 'melanesia',
@@ -83,23 +183,53 @@ export const OCEANIA = {
 
   ton: {
     flag: 'to',
-    name: 'Tonga',
+    name: {
+      en: 'Tonga',
+      es: 'Tonga',
+      de: 'Tonga',
+      zh: '汤加',
+      fr: 'Tonga',
+      it: 'Tonga',
+      pt: 'Tonga',
+      ru: 'Тонга',
+      ja: 'トンガ',
+    },
     prefix: '+676',
     continent: 'oceania',
-    region: 'polinesia',
+    region: 'polynesia',
   },
 
   tuv: {
     flag: 'tv',
-    name: 'Tuvalu',
+    name: {
+      en: 'Tuvalu',
+      es: 'Tuvalu',
+      de: 'Tuvalu',
+      zh: '图瓦卢',
+      fr: 'Tuvalu',
+      it: 'Tuvalu',
+      pt: 'Tuvalu',
+      ru: 'Тувалу',
+      ja: 'ツバル',
+    },
     prefix: '+688',
     continent: 'oceania',
-    region: 'polinesia',
+    region: 'polynesia',
   },
 
   vut: {
     flag: 'vu',
-    name: 'Vanuatu',
+    name: {
+      en: 'Vanuatu',
+      es: 'Vanuatu',
+      de: 'Vanuatu',
+      zh: '瓦努阿图',
+      fr: 'Vanuatu',
+      it: 'Vanuatu',
+      pt: 'Vanuatu',
+      ru: 'Вануату',
+      ja: 'バヌアツ',
+    },
     prefix: '+678',
     continent: 'oceania',
     region: 'melanesia',

@@ -1,5 +1,6 @@
-import { Component, ElementRef, inject, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 import Chart from 'chart.js/auto';
 
@@ -14,23 +15,33 @@ import { GIFTS_COLORS, RATINGS_COLORS, SUMMARY_COLORS } from '@utils';
   templateUrl: './guest-summary-chart.component.html',
   styleUrls: ['./guest-summary-chart.component.css'],
 })
-export class GuestSummaryChartComponent implements OnChanges {
+export class GuestSummaryChartComponent implements OnInit, OnChanges, OnDestroy {
   @Input() summary!: ISummaryDistribution;
 
   @ViewChild('summaryChart')
   summaryChart!: ElementRef<HTMLCanvasElement>;
 
-  // Controls the currently selected summary view.
   selectedView: ISummaryView = 'total';
 
-  // Available summary views.
   readonly summaryViews: ISummaryView[] = ['total', 'nights', 'rating', 'gifts'];
 
   private chart?: Chart;
 
+  private readonly _router = inject(Router);
+  private readonly _translate = inject(TranslateService);
+
+  private langChangeSubscription?: import('rxjs').Subscription;
+
   cards: ISummaryCard[] = [];
 
-  // Configuration for each chart-based summary view.
+  private readonly cardKeys: Record<string, string> = {
+    'Total Guests': 'TOTAL_GUESTS',
+    'Solo Guests': 'SOLO_GUESTS',
+    'Group Guests': 'GROUP_GUESTS',
+    'Total Visits': 'TOTAL_VISITS',
+    'Total Nights': 'TOTAL_NIGHTS',
+  };
+
   private readonly chartConfig: Record<
     Exclude<ISummaryView, 'total'>,
     {
@@ -42,34 +53,45 @@ export class GuestSummaryChartComponent implements OnChanges {
       max?: number;
     }
   > = {
-    // Average nights by guest type.
     nights: {
       type: 'radar',
-      labels: ['General', 'Solo', 'Groups'],
-      label: 'Average Nights',
+      labels: [
+        this._translate.instant('STATS.SUMMARY.CHARTS.GUEST_TYPES.GENERAL'),
+        this._translate.instant('STATS.SUMMARY.CHARTS.GUEST_TYPES.SOLO'),
+        this._translate.instant('STATS.SUMMARY.CHARTS.GUEST_TYPES.GROUPS'),
+      ],
+      label: this._translate.instant('STATS.SUMMARY.CHARTS.AVERAGE_NIGHTS'),
       getData: summary => [summary.averageNightsGeneral, summary.averageNightsSolo, summary.averageNightsGroup],
       max: 4,
     },
 
-    // Average rating by guest type.
     rating: {
       type: 'radar',
-      labels: ['General', 'Solo', 'Groups'],
-      label: 'Average Rating',
+      labels: [
+        this._translate.instant('STATS.SUMMARY.CHARTS.GUEST_TYPES.GENERAL'),
+        this._translate.instant('STATS.SUMMARY.CHARTS.GUEST_TYPES.SOLO'),
+        this._translate.instant('STATS.SUMMARY.CHARTS.GUEST_TYPES.GROUPS'),
+      ],
+      label: this._translate.instant('STATS.SUMMARY.CHARTS.AVERAGE_RATING'),
       getData: summary => [summary.averageRatingGeneral, summary.averageRatingSolo, summary.averageRatingGroup],
       max: 5,
     },
 
-    // Gift distribution across visits.
     gifts: {
       type: 'doughnut',
-      labels: ['Received', 'Without Gift'],
-      label: 'Gifts',
+      labels: [this._translate.instant('STATS.SUMMARY.CHARTS.GIFTS.RECEIVED'), this._translate.instant('STATS.SUMMARY.CHARTS.GIFTS.WITHOUT_GIFT')],
+      label: this._translate.instant('STATS.SUMMARY.CHARTS.GIFTS.RECEIVED'),
       getData: summary => [summary.giftsReceived, summary.guestsWithoutGift],
     },
   };
 
-  private _router = inject(Router);
+  ngOnInit(): void {
+    this.langChangeSubscription = this._translate.onLangChange.subscribe(() => {
+      if (this.selectedView !== 'total') {
+        this.createChart();
+      }
+    });
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['summary']) {
@@ -109,6 +131,7 @@ export class GuestSummaryChartComponent implements OnChanges {
 
   ngOnDestroy(): void {
     this.chart?.destroy();
+    this.langChangeSubscription?.unsubscribe();
   }
 
   selectView(view: ISummaryView): void {
@@ -127,14 +150,12 @@ export class GuestSummaryChartComponent implements OnChanges {
   }
 
   private createChart(): void {
-    // A chart is only required for non-total views.
     if (!this.summaryChart || !this.summary || this.selectedView === 'total') {
       return;
     }
 
-    const config = this.chartConfig[this.selectedView];
+    const config = this.getChartConfig(this.selectedView);
 
-    // Ensure any existing chart instance is removed.
     this.chart?.destroy();
 
     this.chart = new Chart(this.summaryChart.nativeElement, {
@@ -145,11 +166,9 @@ export class GuestSummaryChartComponent implements OnChanges {
           {
             label: config.label,
             data: config.getData(this.summary),
-            // Reuse the shared chart palettes
             backgroundColor: this.selectedView === 'gifts' ? GIFTS_COLORS.slice(0, 2).map(color => color.background) : RATINGS_COLORS.map(color => color.background),
             borderColor: this.selectedView === 'gifts' ? GIFTS_COLORS.slice(0, 2).map(color => color.border) : RATINGS_COLORS.map(color => color.border),
             borderWidth: 1,
-            // Different color for radar point
             pointBackgroundColor: [SUMMARY_COLORS.radarPoints.general.background, SUMMARY_COLORS.radarPoints.solo.background, SUMMARY_COLORS.radarPoints.groups.background],
             pointBorderColor: [SUMMARY_COLORS.radarPoints.general.border, SUMMARY_COLORS.radarPoints.solo.border, SUMMARY_COLORS.radarPoints.groups.border],
             pointRadius: 8,
@@ -159,6 +178,18 @@ export class GuestSummaryChartComponent implements OnChanges {
       },
       options: {
         responsive: true,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: context => {
+                const label = context.label;
+                const value = context.parsed;
+
+                return `${label}: ${value}`;
+              },
+            },
+          },
+        },
         onClick: (_event, elements) => {
           if (!elements.length || this.selectedView !== 'gifts') {
             return;
@@ -169,11 +200,11 @@ export class GuestSummaryChartComponent implements OnChanges {
           if (index === 0) {
             this.navigateToGiftGuests(true);
           }
+
           if (index === 1) {
             this.navigateToGiftGuests(false);
           }
         },
-        // Apply axis configuration only to bar charts.
         ...(config.type === 'bar' && {
           indexAxis: config.indexAxis ?? 'x',
           scales: {
@@ -191,7 +222,6 @@ export class GuestSummaryChartComponent implements OnChanges {
             },
           },
         }),
-        // Apply radial scale configuration only to radar charts.
         ...(config.type === 'radar' && {
           scales: {
             r: {
@@ -207,6 +237,38 @@ export class GuestSummaryChartComponent implements OnChanges {
         }),
       },
     });
+  }
+
+  private getChartConfig(view: Exclude<ISummaryView, 'total'>): (typeof this.chartConfig)[typeof view] {
+    const guestTypes = [
+      this._translate.instant('STATS.SUMMARY.CHARTS.GUEST_TYPES.GENERAL'),
+      this._translate.instant('STATS.SUMMARY.CHARTS.GUEST_TYPES.SOLO'),
+      this._translate.instant('STATS.SUMMARY.CHARTS.GUEST_TYPES.GROUPS'),
+    ];
+
+    const config = this.chartConfig[view];
+
+    if (view === 'nights') {
+      return {
+        ...config,
+        labels: guestTypes,
+        label: this._translate.instant('STATS.SUMMARY.CHARTS.AVERAGE_NIGHTS'),
+      };
+    }
+
+    if (view === 'rating') {
+      return {
+        ...config,
+        labels: guestTypes,
+        label: this._translate.instant('STATS.SUMMARY.CHARTS.AVERAGE_RATING'),
+      };
+    }
+
+    return {
+      ...config,
+      labels: [this._translate.instant('STATS.SUMMARY.CHARTS.GIFTS.RECEIVED'), this._translate.instant('STATS.SUMMARY.CHARTS.GIFTS.WITHOUT_GIFT')],
+      label: this._translate.instant('STATS.SUMMARY.CHARTS.GIFTS.RECEIVED'),
+    };
   }
 
   private navigateToCards(groupType: string): void {
@@ -229,6 +291,10 @@ export class GuestSummaryChartComponent implements OnChanges {
 
   navigateToCard(label: string): void {
     this.navigateToCards(this.cardNavigation[label] ?? this.cardNavigation['default']);
+  }
+
+  getCardTranslationKey(label: string): string {
+    return `STATS.SUMMARY.CARDS.${this.cardKeys[label] ?? 'TOTAL_GUESTS'}`;
   }
 
   trackById(index: number, item: ISummaryCard): string {

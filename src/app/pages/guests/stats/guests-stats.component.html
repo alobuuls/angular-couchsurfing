@@ -1,13 +1,13 @@
 <main *ngIf="vm$ | async as vm">
-  <h1 class="title-component">STATS</h1>
+  <h1 class="title-component">{{ 'STATS.TITLE' | translate }}</h1>
 
   <h1 *ngIf="vm.status === 'error'">{{ vm.error.message }}</h1>
 
   <div class="ctn-buttons">
     <!-- Summary -->
     <button
-      aria-label="See Summary"
-      matTooltip="See Summary"
+      [attr.aria-label]="'STATS.NAV.SUMMARY' | translate"
+      [matTooltip]="'STATS.NAV.SUMMARY' | translate"
       mat-icon-button
       [class.active]="currentChart === 'summary'"
       class="btn-summary"
@@ -18,21 +18,20 @@
 
     <!-- Demographics -->
     <button
-      aria-label="See Demographics"
-      matTooltip="See Demographics"
+      [attr.aria-label]="'STATS.NAV.DEMOGRAPHICS' | translate"
+      [matTooltip]="'STATS.NAV.DEMOGRAPHICS' | translate"
       mat-icon-button
       [class.active]="currentChart === 'demographics'"
       class="btn-demographics"
       (click)="changeChart('demographics')"
-      [class.active]="currentChart === 'demographics'"
     >
       <mat-icon class="material-symbols-outlined">groups</mat-icon>
     </button>
 
     <!-- Geography -->
     <button
-      aria-label="See Geography"
-      matTooltip="See Geography"
+      [attr.aria-label]="'STATS.NAV.GEOGRAPHY' | translate"
+      [matTooltip]="'STATS.NAV.GEOGRAPHY' | translate"
       mat-icon-button
       [class.active]="currentChart === 'geography'"
       class="btn-geography"
@@ -43,8 +42,8 @@
 
     <!-- Gifts -->
     <button
-      aria-label="See Gifts"
-      matTooltip="See Gifts"
+      [attr.aria-label]="'STATS.NAV.GIFTS' | translate"
+      [matTooltip]="'STATS.NAV.GIFTS' | translate"
       mat-icon-button
       [class.active]="currentChart === 'gifts'"
       class="btn-gifts"
@@ -55,8 +54,8 @@
 
     <!-- Rankings -->
     <button
-      aria-label="See Rankings"
-      matTooltip="See Rankings"
+      [attr.aria-label]="'STATS.NAV.RANKINGS' | translate"
+      [matTooltip]="'STATS.NAV.RANKINGS' | translate"
       mat-icon-button
       [class.active]="currentChart === 'rankings'"
       class="btn-ranking"
@@ -67,8 +66,8 @@
 
     <!-- Ratings -->
     <button
-      aria-label="See Ratings"
-      matTooltip="See Ratings"
+      [attr.aria-label]="'STATS.NAV.RATINGS' | translate"
+      [matTooltip]="'STATS.NAV.RATINGS' | translate"
       mat-icon-button
       [class.active]="currentChart === 'ratings'"
       class="btn-rating"
@@ -79,8 +78,8 @@
 
     <!-- Timeline -->
     <button
-      aria-label="See Timeline"
-      matTooltip="See Timeline"
+      [attr.aria-label]="'STATS.NAV.TIMELINE' | translate"
+      [matTooltip]="'STATS.NAV.TIMELINE' | translate"
       mat-icon-button
       [class.active]="currentChart === 'timeline'"
       class="btn-timeline"
@@ -91,8 +90,8 @@
 
     <!-- Stays -->
     <button
-      aria-label="See Stays"
-      matTooltip="See Stays"
+      [attr.aria-label]="'STATS.NAV.STAYS' | translate"
+      [matTooltip]="'STATS.NAV.STAYS' | translate"
       mat-icon-button
       [class.active]="currentChart === 'stays'"
       class="btn-stays"
@@ -103,8 +102,8 @@
 
     <!-- Birthdays -->
     <button
-      aria-label="See Birthdays"
-      matTooltip="See Birthdays"
+      [attr.aria-label]="'STATS.NAV.BIRTHDAYS' | translate"
+      [matTooltip]="'STATS.NAV.BIRTHDAYS' | translate"
       mat-icon-button
       [class.active]="currentChart === 'birthdays'"
       class="btn-birthdays"
@@ -116,7 +115,12 @@
 
   <app-loading
     *ngIf="vm.status === 'loading'"
-    [messages]="['Loading your statistics', 'Analyzing your guest data', 'Preparing your charts', 'Almost ready']"
+    [messages]="[
+      'STATS.LOADING.SUMMARY' | translate,
+      'STATS.LOADING.ANALYZING' | translate,
+      'STATS.LOADING.CHARTS' | translate,
+      'STATS.LOADING.READY' | translate,
+    ]"
   ></app-loading>
 
   <ng-container *ngIf="vm.status === 'success'">
@@ -135,8 +139,8 @@
 
       <ng-template #noData>
         <div class="empty-data">
-          <h2>No data available</h2>
-          <p>There is no information available for this chart.</p>
+          <h2>{{ 'STATS.EMPTY.TITLE' | translate }}</h2>
+          <p>{{ 'STATS.EMPTY.MESSAGE' | translate }}</p>
         </div>
       </ng-template>
     </div>

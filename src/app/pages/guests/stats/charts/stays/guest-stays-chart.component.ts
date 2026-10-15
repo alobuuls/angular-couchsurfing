@@ -1,5 +1,7 @@
 import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 import Chart from 'chart.js/auto';
 import { LinearScale, PointElement } from 'chart.js';
@@ -25,30 +27,24 @@ import { CHART_NEUTRAL_COLOR, CHART_UNKNOWN_COLOR, GENDER_COLORS, getGenderColor
 export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   private _format = inject(FormatService);
   private _router = inject(Router);
+  private _translate = inject(TranslateService);
 
-  // Stays data received from parent
+  private langChangeSubscription?: Subscription;
+
+  // Stays data received from parent.
   @Input() stays!: IStaysDistribution;
 
-  // Chart canvas
+  // Chart canvas.
   @ViewChild('staysChart')
   staysChart!: ElementRef<HTMLCanvasElement>;
 
-  // Stores the main selected Stays view
+  // Stores the main selected Stays view.
   selectedView: IStaysView = 'longest';
 
-  // Main Stays views
+  // Main Stays views.
   readonly staysViews: IStaysView[] = ['longest', 'shortest', 'maxPeopleTogether', 'sameArrival', 'sameDates'];
 
-  // Labels for main Stays views
-  readonly staysViewLabels: Record<IStaysView, string> = {
-    longest: 'Longest',
-    shortest: 'Shortest',
-    maxPeopleTogether: 'People Together',
-    sameArrival: 'Same Arrival',
-    sameDates: 'Same Dates',
-  };
-
-  // Stores the selected Longest/Shortest subview
+  // Stores the selected Longest/Shortest subview.
   selectedStayView: ILongestView = 'overall';
 
   // Longest and Shortest subviews.
@@ -57,43 +53,49 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
   // Stores the selected Same Dates group.
   selectedSameDatesGroup = 0;
 
-  // Stores current Chart.js instance
+  // Stores current Chart.js instance.
   private chart?: Chart;
 
-  // Configuration for Longest and Shortest views
+  // Configuration for Longest and Shortest views.
   private readonly chartConfig: Record<
     'longest' | 'shortest',
     {
-      label: string;
+      labelKey: string;
       getData: (stays: IStaysDistribution) => IStaysDistribution['longest'];
     }
   > = {
     longest: {
-      label: 'Longest Stays',
+      labelKey: 'STATS.STAYS.TITLES.LONGEST',
       getData: stays => stays.longest,
     },
     shortest: {
-      label: 'Shortest Stays',
+      labelKey: 'STATS.STAYS.TITLES.SHORTEST',
       getData: stays => stays.shortest,
     },
   };
 
-  // Group type labels for tooltip
-  private readonly groupTypeLabels: Record<string, string> = {
-    solo: 'Solo',
-    couple: 'Couple',
-    friends: 'Friends',
-    family: 'Family',
+  // Group type translation keys for tooltips and guest labels.
+  private readonly groupTypeKeys: Record<string, string> = {
+    solo: 'STATS.STAYS.GROUP_LABELS.SOLO',
+    couple: 'STATS.STAYS.GROUP_LABELS.COUPLE',
+    friends: 'STATS.STAYS.GROUP_LABELS.FRIENDS',
+    family: 'STATS.STAYS.GROUP_LABELS.FAMILY',
   };
 
-  // Creates the chart after the view is initialized
+  // Creates the chart after the view is initialized.
   ngAfterViewInit(): void {
+    // Recreate charts when the language changes.
+    this.langChangeSubscription = this._translate.onLangChange.subscribe(() => {
+      this.destroyChart();
+      this.createChart();
+    });
+
     if (this.stays) {
       this.createChart();
     }
   }
 
-  // Recreates the chart when the input data changes
+  // Recreates the chart when the input data changes.
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['stays'] && this.staysChart && this.stays) {
       // Reset the selected group when new data arrives.
@@ -102,7 +104,13 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     }
   }
 
-  // Changes the main Stays view
+  // Clean up when the component is destroyed.
+  ngOnDestroy(): void {
+    this.langChangeSubscription?.unsubscribe();
+    this.destroyChart();
+  }
+
+  // Changes the main Stays view.
   selectView(view: IStaysView): void {
     this.selectedView = view;
 
@@ -111,18 +119,15 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
       this.selectedSameDatesGroup = 0;
     }
 
-    // Destroy current chart
     this.destroyChart();
 
-    // Wait for Angular to update the template
+    // Wait for Angular to update the template.
     setTimeout(() => this.createChart());
   }
 
-  // Changes the selected Longest/Shortest subview
+  // Changes the selected Longest/Shortest subview.
   selectStayView(view: ILongestView): void {
     this.selectedStayView = view;
-
-    // Destroy current chart.
     this.destroyChart();
 
     // Wait for Angular to update the template.
@@ -132,28 +137,25 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
   // Changes the selected Same Dates group.
   selectSameDatesGroup(index: number): void {
     this.selectedSameDatesGroup = index;
-
-    // Destroy current chart.
     this.destroyChart();
 
     // Wait for Angular to update the canvas.
     setTimeout(() => this.createChart());
   }
 
-  // Creates the corresponding chart according to the selected view
+  // Creates the corresponding chart according to the selected view.
   private createChart(): void {
     if (!this.staysChart || !this.stays) {
       return;
     }
 
-    // Longest and Shortest use the same Polar Area chart
+    // Longest and Shortest use the same Polar Area chart.
     if (this.selectedView === 'longest' || this.selectedView === 'shortest') {
       const config = this.chartConfig[this.selectedView];
-
       const stayData = config.getData(this.stays);
+      const chartLabel = this.translate(config.labelKey);
 
-      this.createStayPolarChart(stayData, this.selectedStayView, config.label);
-
+      this.createStayPolarChart(stayData, this.selectedStayView, chartLabel);
       return;
     }
 
@@ -171,27 +173,25 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     // Same Dates uses one Network chart per group.
     if (this.selectedView === 'sameDates') {
       this.createSameDatesNetworkChart();
-      return;
     }
   }
 
   // LONGEST / SHORTEST
-  // Creates the Polar Area chart for Longest and Shortest stays
+  // Creates the Polar Area chart for Longest and Shortest stays.
   private createStayPolarChart(stayData: IStaysDistribution['longest'], selectedView: ILongestView, chartLabel: string): void {
     if (!this.staysChart || !stayData) {
       return;
     }
 
-    // Get the selected stay data
+    // Get the selected stay data.
     const people = stayData[selectedView];
+
     if (!people || people.length === 0) {
       return;
     }
 
-    // Destroy previous chart
     this.destroyChart();
 
-    // Create Polar Area chart
     this.chart = new Chart(this.staysChart.nativeElement, {
       type: 'polarArea',
       data: {
@@ -219,12 +219,14 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
           if (!elements.length) {
             return;
           }
+
           const index = elements[0].index;
-          const guest = people[index].guest;
+          const guest = people[index]?.guest;
 
           if (!guest?.guestId) {
             return;
           }
+
           this.navigateToGuest(guest.guestId, guest.groupType, guest.groupId);
         },
         maintainAspectRatio: false,
@@ -263,11 +265,12 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
   }
 
   // MAX PEOPLE TOGETHER
-  // Create Bar chart comparing Overall and Solo.
+  // Creates a bar chart comparing Overall and Solo.
   private createMaxPeopleTogetherBarChart(): void {
     if (!this.staysChart || !this.stays) {
       return;
     }
+
     const chartData = this.stays.maxPeopleTogether;
 
     if (!chartData) {
@@ -282,13 +285,14 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     }
 
     this.destroyChart();
+
     this.chart = new Chart(this.staysChart.nativeElement, {
       type: 'bar',
       data: {
-        labels: ['Overall', 'Solo'],
+        labels: [this.translate('STATS.STAYS.LABELS.OVERALL'), this.translate('STATS.STAYS.LABELS.SOLO')],
         datasets: [
           {
-            label: 'Maximum Guests Together',
+            label: this.translate('STATS.STAYS.TITLES.MAXIMUM_GUESTS_TOGETHER'),
             data: [overall.total, solo.total],
             backgroundColor: STAYS_COLORS.maxPeopleTogether.map(color => color.background),
             borderColor: STAYS_COLORS.maxPeopleTogether.map(color => color.border),
@@ -312,7 +316,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
         plugins: {
           title: {
             display: true,
-            text: 'Maximum Guests Together',
+            text: this.translate('STATS.STAYS.TITLES.MAXIMUM_GUESTS_TOGETHER'),
           },
           legend: {
             display: false,
@@ -324,15 +328,17 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
                 const selectedData = index === 0 ? overall : solo;
                 const guest = selectedData.guests[0];
 
-                return this._format.formatDate(guest.visitedDate);
+                return guest ? this._format.formatDate(guest.visitedDate) : '';
               },
-              label: context => {
-                return `Guests: ${context.parsed.y}`;
-              },
+              label: context =>
+                this.translate('STATS.STAYS.LABELS.GUESTS_COUNT', {
+                  count: context.parsed.y ?? 0,
+                }),
               afterBody: context => {
                 const index = context[0].dataIndex;
                 const selectedData = index === 0 ? overall : solo;
-                return ['', 'Guests:', ...selectedData.guests.map(guest => `• ${guest.fullName}`)];
+
+                return ['', this.translate('STATS.STAYS.LABELS.GUESTS'), ...selectedData.guests.map(guest => `• ${guest.fullName}`)];
               },
             },
           },
@@ -346,13 +352,13 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
             },
             title: {
               display: true,
-              text: 'Guests',
+              text: this.translate('STATS.STAYS.LABELS.GUESTS'),
             },
           },
           x: {
             title: {
               display: true,
-              text: 'Stay Type',
+              text: this.translate('STATS.STAYS.LABELS.STAY_TYPE'),
             },
           },
         },
@@ -360,12 +366,14 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     });
   }
 
-  // Create Horizontal Bar chart for guests with the same arrival date.
+  // Creates a horizontal bar chart for guests with the same arrival date.
   private createSameArrivalBarChart(): void {
     if (!this.staysChart || !this.stays) {
       return;
     }
+
     const chartData = this.stays.sameArrival;
+
     if (!chartData || chartData.length === 0) {
       return;
     }
@@ -381,9 +389,11 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
         labels: chartData.map(item => this._format.formatDate(item.date)),
         datasets: [
           {
-            label: 'Same Arrival',
+            label: this.translate('STATS.STAYS.VIEWS.SAMEARRIVAL'),
+
             // Number of guests determines bar length.
             data: chartData.map(item => item.total),
+
             // Color bars according to their ranking.
             backgroundColor: rankingColors.background,
             borderColor: rankingColors.border,
@@ -398,12 +408,14 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
           if (!elements.length) {
             return;
           }
+
           const index = elements[0].index;
           const item = chartData[index];
 
           if (!item?.date) {
             return;
           }
+
           this._router.navigate(['/guests'], {
             queryParams: {
               view: 'cards',
@@ -416,35 +428,35 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
         plugins: {
           title: {
             display: true,
-            text: 'Guests with Same Arrival Date',
+            text: this.translate('STATS.STAYS.TITLES.GUESTS_WITH_SAME_ARRIVAL_DATE'),
           },
           legend: {
             display: true,
             labels: {
               generateLabels: () => [
                 {
-                  text: '1st',
+                  text: this.translate('STATS.STAYS.LABELS.FIRST'),
                   fillStyle: getRankingColors([1]).background[0],
                   strokeStyle: getRankingColors([1]).border[0],
                   lineWidth: 1,
                   fontColor: CHART_UNKNOWN_COLOR,
                 },
                 {
-                  text: '2nd',
+                  text: this.translate('STATS.STAYS.LABELS.SECOND'),
                   fillStyle: getRankingColors([1, 2]).background[1],
                   strokeStyle: getRankingColors([1, 2]).border[1],
                   lineWidth: 1,
                   fontColor: CHART_UNKNOWN_COLOR,
                 },
                 {
-                  text: '3rd',
+                  text: this.translate('STATS.STAYS.LABELS.THIRD'),
                   fillStyle: getRankingColors([1, 2, 3]).background[2],
                   strokeStyle: getRankingColors([1, 2, 3]).border[2],
                   lineWidth: 1,
                   fontColor: CHART_UNKNOWN_COLOR,
                 },
                 {
-                  text: 'Others',
+                  text: this.translate('STATS.STAYS.LABELS.OTHERS'),
                   fillStyle: getRankingColors([1, 2, 3, 4]).background[3],
                   strokeStyle: getRankingColors([1, 2, 3, 4]).border[3],
                   lineWidth: 1,
@@ -455,13 +467,14 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
           },
           tooltip: {
             callbacks: {
-              label: context => {
-                return `Guests: ${context.parsed.x}`;
-              },
+              label: context =>
+                this.translate('STATS.STAYS.LABELS.GUESTS_COUNT', {
+                  count: context.parsed.x ?? 0,
+                }),
               afterBody: context => {
                 const item = chartData[context[0].dataIndex];
 
-                return ['', 'Guests:', ...item.guests.map(guest => `• ${guest.fullName}`)];
+                return ['', this.translate('STATS.STAYS.LABELS.GUESTS'), ...item.guests.map(guest => `• ${guest.fullName}`)];
               },
             },
           },
@@ -475,13 +488,13 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
             },
             title: {
               display: true,
-              text: 'Overlapping Guests',
+              text: this.translate('STATS.STAYS.LABELS.OVERLAPPING_GUESTS'),
             },
           },
           y: {
             title: {
               display: true,
-              text: 'Arrival Date',
+              text: this.translate('STATS.STAYS.LABELS.ARRIVAL_DATE'),
             },
           },
         },
@@ -489,17 +502,20 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     });
   }
 
-  // Create network chart for guests with the same dates.
+  // Creates a network chart for guests with the same dates.
   private createSameDatesNetworkChart(): void {
     if (!this.staysChart || !this.stays) {
       return;
     }
+
     const groups = this.stays.sameDates;
+
     if (!groups || groups.length === 0) {
       return;
     }
 
     const group = groups[this.selectedSameDatesGroup];
+
     if (!group || !group.guests || group.guests.length === 0) {
       return;
     }
@@ -519,28 +535,20 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     // Connect every guest with the other guests in the same group.
     const edges = this.getSameDatesEdges(nodes);
 
-    // Create Network chart.
     this.chart = new Chart(this.staysChart.nativeElement, {
       type: 'forceDirectedGraph',
       data: {
-        // Use guest names as node labels.
         labels: nodes.map(node => node.label),
         datasets: [
           {
-            // Create one node for every guest.
             data: nodes.map(() => ({})),
-
-            // Connect guests from the same group.
             edges,
-
-            // Node size.
             pointRadius: 10,
             pointHoverRadius: 13,
 
             // Use guest gender for node colors.
             pointBackgroundColor: nodes.map(node => {
               const gender = GENDER_COLORS[node.gender.toLowerCase() as keyof typeof GENDER_COLORS];
-
               return gender?.background ?? CHART_NEUTRAL_COLOR;
             }),
             pointBorderColor: nodes.map(node => getGenderColor(node.gender)),
@@ -549,26 +557,29 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
           },
         ],
       },
-
       options: {
         responsive: true,
         onClick: (_event, elements) => {
           if (!elements.length) {
             return;
           }
+
           const index = elements[0].index;
           const node = nodes[index];
 
           if (!node?.guestId) {
             return;
           }
-          this.navigateToGuest(node.guestId);
+
+          this.navigateToGuest(node.guestId, node.groupType, node.groupId);
         },
         maintainAspectRatio: false,
         plugins: {
           title: {
             display: true,
-            text: `Same Dates - Group ${this.selectedSameDatesGroup + 1}`,
+            text: this.translate('STATS.STAYS.TITLES.SAME_DATES_GROUP', {
+              group: this.selectedSameDatesGroup + 1,
+            }),
           },
           legend: {
             display: true,
@@ -582,7 +593,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
                     const color = GENDER_COLORS[gender as keyof typeof GENDER_COLORS];
 
                     return {
-                      text: gender.charAt(0).toUpperCase() + gender.slice(1),
+                      text: this.translateGender(gender),
                       fillStyle: color.background,
                       strokeStyle: color.border,
                       lineWidth: 1,
@@ -610,7 +621,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     });
   }
 
-  // Create connections between every guest in the same dates group.
+  // Creates connections between every guest in the same dates group.
   private getSameDatesEdges(
     nodes: {
       id: string;
@@ -636,32 +647,51 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
         });
       }
     }
+
     return edges;
   }
 
   private getGuestDisplayName(fullName: string, groupType: string | null): string {
-    if (groupType === 'solo') {
+    if (!groupType || groupType === 'solo') {
       return fullName;
     }
 
-    const groupLabels: Record<string, string> = {
-      couple: 'Couple',
-      friends: 'Friend',
-      family: 'Family',
-    };
+    const groupLabelKey = this.groupTypeKeys[groupType];
 
-    const groupLabel = groupType ? groupLabels[groupType] : undefined;
-    return groupLabel ? `${fullName} and ${groupLabel}` : fullName;
+    if (!groupLabelKey) {
+      return fullName;
+    }
+
+    return this.translate('STATS.STAYS.LABELS.GROUP_NAME', {
+      name: fullName,
+      group: this.translate(groupLabelKey),
+    });
   }
 
   // Build tooltip information for stay charts.
   private getTooltipLines(item: IStaysDistribution['longest']['overall'][number], selectedView: ILongestView): string[] {
     const guest = item.guest;
 
-    const lines = [`Total nights: ${item.nights}`, `Country: ${this._format.formatCountry(guest.hometownCode)}`, `Visit: ${this._format.formatDate(guest.visitedDate)}`];
+    const lines = [
+      this.translate('STATS.STAYS.LABELS.TOTAL_NIGHTS', {
+        count: item.nights,
+      }),
+      this.translate('STATS.STAYS.LABELS.COUNTRY', {
+        country: this._format.formatCountry(guest.hometownCode),
+      }),
+      this.translate('STATS.STAYS.LABELS.VISIT', {
+        date: this._format.formatDate(guest.visitedDate),
+      }),
+    ];
 
     if (selectedView === 'overall') {
-      lines.splice(1, 0, `Group: ${this.groupTypeLabels[guest.groupType] ?? guest.groupType}`);
+      lines.splice(
+        1,
+        0,
+        this.translate('STATS.STAYS.LABELS.GROUP', {
+          group: this.translateGroupType(guest.groupType),
+        })
+      );
     }
 
     return lines;
@@ -670,11 +700,46 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
   // Build tooltip information for network nodes.
   private getNetworkTooltipLines(guest: IStaysDistribution['sameDates'][number]['guests'][number], connections: number): string[] {
     return [
-      `Connections: ${connections}`,
-      `Group: ${this.groupTypeLabels[guest.groupType] ?? guest.groupType}`,
-      `Country: ${this._format.formatCountry(guest.hometownCode)}`,
-      `Visit: ${this._format.formatDate(guest.visitedDate)}`,
+      this.translate('STATS.STAYS.LABELS.CONNECTIONS', {
+        count: connections,
+      }),
+      this.translate('STATS.STAYS.LABELS.GROUP', {
+        group: this.translateGroupType(guest.groupType),
+      }),
+      this.translate('STATS.STAYS.LABELS.COUNTRY', {
+        country: this._format.formatCountry(guest.hometownCode),
+      }),
+      this.translate('STATS.STAYS.LABELS.VISIT', {
+        date: this._format.formatDate(guest.visitedDate),
+      }),
     ];
+  }
+
+  // Translate a group type, keeping the original value as fallback.
+  private translateGroupType(groupType: string | null): string {
+    if (!groupType) {
+      return '';
+    }
+
+    const key = this.groupTypeKeys[groupType];
+
+    return key ? this.translate(key) : groupType;
+  }
+
+  // Translate a gender, keeping the original value if no translation exists.
+  private translateGender(gender: string): string {
+    const key = `STATS.STAYS.GENDERS.${gender.toUpperCase()}`;
+    const translated = this._translate.instant(key);
+
+    return translated === key ? gender.charAt(0).toUpperCase() + gender.slice(1) : translated;
+  }
+
+  // Return a translated string using the current language.
+  private translate(key: string, params?: Record<string, string | number>): string {
+    const translated = this._translate.instant(key, params);
+
+    // Keep a readable fallback if a translation key is missing.
+    return translated === key ? (key.split('.').pop() ?? key) : translated;
   }
 
   // Destroy the current chart instance.
@@ -683,16 +748,12 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     this.chart = undefined;
   }
 
-  // Clean up chart when the component is destroyed.
-  ngOnDestroy(): void {
-    this.destroyChart();
-  }
-
   private navigateToGuest(guestId: string, groupType?: string | null, groupId?: string | null): void {
     if (groupType !== 'solo' && groupId) {
       this._router.navigate(['/guests/groups', groupId]);
       return;
     }
+
     this._router.navigate(['/guests', guestId]);
   }
 

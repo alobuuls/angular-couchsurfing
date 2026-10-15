@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import Swal, { SweetAlertResult } from 'sweetalert2';
+import { TranslateService } from '@ngx-translate/core';
 
 // Interfaces
 import { IAlert, IToast } from '@interfaces/alerts.interface';
@@ -8,6 +9,8 @@ import { IAlert, IToast } from '@interfaces/alerts.interface';
   providedIn: 'root',
 })
 export class AlertsService {
+  private _translate = inject(TranslateService);
+
   showToast({ icon, title, time = 3500, stopTimer = true }: IToast) {
     return Swal.mixin({
       toast: true,
@@ -30,15 +33,18 @@ export class AlertsService {
     });
   }
 
-  showAlert({ title, html, icon, allowClose = true, confirmText = 'Guardar', cancelText = 'Cerrar', showCancelButton = true, opts }: IAlert) {
+  showAlert({ title, html, icon, allowClose = true, confirmText, cancelText, showCancelButton = true, opts }: IAlert) {
+    const translatedConfirmText = confirmText ?? this._translate.instant('ALERTS.BUTTONS.SAVE');
+    const translatedCancelText = cancelText ?? this._translate.instant('ALERTS.BUTTONS.CLOSE');
+
     return Swal.fire({
       title,
       html,
       icon,
       showConfirmButton: true,
       showCancelButton,
-      confirmButtonText: confirmText,
-      cancelButtonText: cancelText,
+      confirmButtonText: translatedConfirmText,
+      cancelButtonText: translatedCancelText,
       allowEscapeKey: allowClose,
       allowOutsideClick: allowClose,
       reverseButtons: true,
@@ -47,7 +53,6 @@ export class AlertsService {
         confirmButton: 'custom-swal-confirm',
         cancelButton: 'custom-swal-cancel',
       },
-
       ...opts,
     });
   }
@@ -58,18 +63,19 @@ export class AlertsService {
       input: 'text',
       inputPlaceholder: fullname,
       showCancelButton: true,
-      confirmButtonText: 'Eliminar',
-      cancelButtonText: 'Cerrar',
+      confirmButtonText: this._translate.instant('ALERTS.BUTTONS.DELETE'),
+      cancelButtonText: this._translate.instant('ALERTS.BUTTONS.CLOSE'),
       reverseButtons: true,
       customClass: {
         popup: 'custom-swal',
         confirmButton: 'custom-swal-danger',
         cancelButton: 'custom-swal-cancel',
       },
-
       preConfirm: (value: string) => {
         if (value === fullname) return true;
-        Swal.showValidationMessage(`Must type "${fullname}" exactly`);
+
+        Swal.showValidationMessage(this._translate.instant('ALERTS.VALIDATION.TYPE_NAME_EXACTLY', { name: fullname }));
+
         return false;
       },
     });

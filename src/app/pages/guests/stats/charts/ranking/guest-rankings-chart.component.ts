@@ -1,5 +1,7 @@
-import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 import Chart from 'chart.js/auto';
 
@@ -17,9 +19,12 @@ import { FormatService } from '@services/format.service';
   templateUrl: './guest-rankings-chart.component.html',
   styleUrls: ['./guest-rankings-chart.component.css'],
 })
-export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
+export class GuestRankingsChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   private _format = inject(FormatService);
   private _router = inject(Router);
+  private _translate = inject(TranslateService);
+
+  private langChangeSubscription?: Subscription;
 
   @Input() rankings!: IRankingsDistribution;
 
@@ -38,16 +43,16 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
   // Available People ranking views.
   readonly peopleRankingViews: IRankingGenderView[] = ['overall', 'solo'];
 
-  // Controls the selected women ranking view.
+  // Controls the selected Women ranking view.
   selectedWomenView: IRankingGenderView = 'overall';
 
-  // Available women ranking views.
+  // Available Women ranking views.
   readonly womenRankingViews: IRankingGenderView[] = ['overall', 'solo'];
 
-  // Controls the selected men ranking view.
+  // Controls the selected Men ranking view.
   selectedMenView: IRankingGenderView = 'overall';
 
-  // Available men ranking views.
+  // Available Men ranking views.
   readonly menRankingViews: IRankingGenderView[] = ['overall', 'solo'];
 
   // Controls the selected Group ranking view.
@@ -56,31 +61,34 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
   // Available Group ranking views.
   readonly groupRankingViews: IRankingGroupView[] = ['overall', 'couple', 'family', 'friends'];
 
-  // Stores current Chart.js instance.
+  // Stores the current Chart.js instance.
   private chart?: Chart;
 
   // Configuration for each ranking view.
   private readonly chartConfig: Record<
     IRankingView,
     {
-      label: string;
+      titleKey: string;
       getData: (rankings: IRankingsDistribution) => IRankingItem[];
     }
   > = {
     people: {
-      label: 'People Ranking',
+      titleKey: 'STATS.RANKINGS.TITLES.PEOPLE',
       getData: rankings => rankings.people.overall,
     },
+
     women: {
-      label: 'Women Ranking',
+      titleKey: 'STATS.RANKINGS.TITLES.WOMEN',
       getData: rankings => rankings.women.overall,
     },
+
     men: {
-      label: 'Men Ranking',
+      titleKey: 'STATS.RANKINGS.TITLES.MEN',
       getData: rankings => rankings.men.overall,
     },
+
     groups: {
-      label: 'Groups Ranking',
+      titleKey: 'STATS.RANKINGS.TITLES.GROUPS',
       getData: rankings => rankings.groups.overall,
     },
   };
@@ -90,6 +98,11 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
     if (this.rankings) {
       this.createChart();
     }
+
+    // Recreate the chart when the language changes.
+    this.langChangeSubscription = this._translate.onLangChange.subscribe(() => {
+      this.createChart();
+    });
   }
 
   // Recreate the chart when ranking data changes.
@@ -99,94 +112,58 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
     }
   }
 
+  // Clean up subscriptions and the chart instance.
+  ngOnDestroy(): void {
+    this.langChangeSubscription?.unsubscribe();
+    this.destroyChart();
+  }
+
   // Changes the main ranking view.
   selectView(view: IRankingView): void {
     this.selectedView = view;
 
-    // Reset People ranking to overall when selecting People.
+    // Reset the selected subview when changing the main view.
     if (view === 'people') {
       this.selectedPeopleView = 'overall';
     }
 
-    // Reset Women ranking to overall when selecting Women.
     if (view === 'women') {
       this.selectedWomenView = 'overall';
     }
 
-    // Reset the men ranking to overall when selecting Men.
     if (view === 'men') {
       this.selectedMenView = 'overall';
     }
 
-    // Reset the group ranking to overall when selecting Groups.
     if (view === 'groups') {
       this.selectedGroupView = 'overall';
     }
 
-    // Destroy the previous chart before creating a new one.
-    this.chart?.destroy();
-    this.chart = undefined;
-
-    // Wait for Angular to update the view before creating the chart.
-    setTimeout(() => {
-      this.createChart();
-    });
+    this.createChart();
   }
 
   // Changes the selected People ranking view.
   selectPeopleView(view: IRankingGenderView): void {
     this.selectedPeopleView = view;
-
-    // Destroy the previous chart before creating a new one.
-    this.chart?.destroy();
-    this.chart = undefined;
-
-    // Wait for Angular to update the view before creating the chart.
-    setTimeout(() => {
-      this.createChart();
-    });
+    this.createChart();
   }
 
   // Changes the selected Women ranking view.
   selectWomenView(view: IRankingGenderView): void {
     this.selectedWomenView = view;
-
-    // Destroy the previous chart before creating a new one.
-    this.chart?.destroy();
-    this.chart = undefined;
-
-    // Wait for Angular to update the view before creating the chart.
-    setTimeout(() => {
-      this.createChart();
-    });
+    this.createChart();
   }
 
   // Changes the selected Men ranking view.
   selectMenView(view: IRankingGenderView): void {
     this.selectedMenView = view;
-
-    // Destroy the previous chart before creating a new one.
-    this.chart?.destroy();
-    this.chart = undefined;
-
-    // Wait for Angular to update the view before creating the chart.
-    setTimeout(() => {
-      this.createChart();
-    });
+    this.createChart();
   }
 
   // Changes the selected Group ranking view.
   selectGroupView(view: IRankingGroupView): void {
     this.selectedGroupView = view;
-
-    // Destroy the previous chart before creating a new one.
-    this.chart?.destroy();
-    this.chart = undefined;
-
-    // Wait for Angular to update the view before creating the chart.
-    setTimeout(() => {
-      this.createChart();
-    });
+    this.createChart();
   }
 
   // Creates the ranking chart according to the selected view.
@@ -194,9 +171,13 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
     if (!this.rankingChart || !this.rankings) {
       return;
     }
+
+    // Destroy the previous chart before creating another one.
+    this.destroyChart();
+
     const config = this.chartConfig[this.selectedView];
 
-    // Use the selected subview for People, Women, Men, or Groups.
+    // Get the data for the selected main view and subview.
     const rankingData =
       this.selectedView === 'people'
         ? (this.rankings.people[this.selectedPeopleView] ?? [])
@@ -230,38 +211,41 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
 
     const rankColors = getRankingColors(rankingData.map(item => item.position));
 
-    // Destroy any existing chart instance.
-    this.chart?.destroy();
+    const title = this._translate.instant(config.titleKey);
+    const subviewLabel = this.getSelectedSubviewLabel();
+
+    const datasetLabel = this._translate.instant('STATS.RANKINGS.LABELS.DATASET', {
+      title,
+      subview: subviewLabel,
+    });
 
     this.chart = new Chart(this.rankingChart.nativeElement, {
       type: 'bar',
+
       data: {
-        // Use the formatted guest name in the chart labels.
+        // Use the translated guest display name in chart labels.
         labels: rankingData.map(item => this.getGuestDisplayName(item)),
+
         datasets: [
           {
-            label:
-              this.selectedView === 'people'
-                ? `${config.label} - ${this.selectedPeopleView}`
-                : this.selectedView === 'women'
-                  ? `${config.label} - ${this.selectedWomenView}`
-                  : this.selectedView === 'men'
-                    ? `${config.label} - ${this.selectedMenView}`
-                    : this.selectedView === 'groups'
-                      ? `${config.label} - ${this.selectedGroupView}`
-                      : config.label,
+            label: datasetLabel,
             data: rankingData.map(item => item.position),
+
             backgroundColor: rankColors.background.map(color => {
               const rankingColor = Object.values(RANKING_COLORS).find(ranking => ranking.background === color);
+
               return rankingColor ? getColorWithOpacity(rankingColor) : color;
             }),
+
             borderColor: rankColors.border,
             borderWidth: 1,
           },
         ],
       },
+
       options: {
         responsive: true,
+
         onClick: (_event, elements) => {
           if (!elements.length) {
             return;
@@ -273,36 +257,50 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
           if (!item?.guest?.guestId) {
             return;
           }
+
           this.navigateToGuest(item.guest.guestId, item.guest.groupType, item.guest.groupId);
         },
+
         indexAxis: 'y',
+
         plugins: {
           tooltip: {
             callbacks: {
               label: context => {
                 const item = rankingData[context.dataIndex];
 
-                return [`Overall ranking: ${item.position}`, `Visit: ${this._format.formatDate(item.guest.visitedDate)}`];
+                return [
+                  this._translate.instant('STATS.RANKINGS.LABELS.OVERALL_RANKING', { position: item.position }),
+
+                  this._translate.instant('STATS.RANKINGS.LABELS.VISIT', {
+                    date: this._format.formatDate(item.guest.visitedDate),
+                  }),
+                ];
               },
             },
           },
         },
+
         scales: {
           x: {
             beginAtZero: true,
             min: 0,
             max: chartMax,
+
             ticks: {
               callback: (value: string | number) => {
                 const numericValue = Number(value);
+
                 return rankingTicks.includes(numericValue) ? numericValue : '';
               },
             },
+
             title: {
               display: true,
-              text: 'Ranking Position',
+              text: this._translate.instant('STATS.RANKINGS.LABELS.RANKING_POSITION'),
             },
           },
+
           y: {
             beginAtZero: true,
           },
@@ -311,28 +309,41 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges {
     });
   }
 
-  private getGuestDisplayName(item: IRankingItem): string {
-    const guest = item.guest;
+  // Gets the translated label for the selected subview.
+  private getSelectedSubviewLabel(): string {
+    let key: string;
 
-    if (guest.groupType === 'solo') {
-      return guest.fullName;
+    if (this.selectedView === 'people') {
+      key = `STATS.RANKINGS.SUBVIEWS.${this.selectedPeopleView.toUpperCase()}`;
+    } else if (this.selectedView === 'women') {
+      key = `STATS.RANKINGS.SUBVIEWS.${this.selectedWomenView.toUpperCase()}`;
+    } else if (this.selectedView === 'men') {
+      key = `STATS.RANKINGS.SUBVIEWS.${this.selectedMenView.toUpperCase()}`;
+    } else {
+      key = `STATS.RANKINGS.GROUP_TYPES.${this.selectedGroupView.toUpperCase()}`;
     }
 
-    const groupLabels: Record<string, string> = {
-      couple: 'Couple',
-      friends: 'Friend',
-      family: 'Family',
-    };
-
-    const groupLabel = groupLabels[guest.groupType];
-    return groupLabel ? `${guest.fullName} and ${groupLabel}` : guest.fullName;
+    return this._translate.instant(key);
   }
 
+  // Formats the guest name according to the selected ranking view.
+  private getGuestDisplayName(item: IRankingItem): string {
+    return item.guest.fullName;
+  }
+
+  // Destroys the current Chart.js instance.
+  private destroyChart(): void {
+    this.chart?.destroy();
+    this.chart = undefined;
+  }
+
+  // Navigates to the group or individual guest details.
   private navigateToGuest(guestId: string, groupType?: string | null, groupId?: string | null): void {
     if (groupType !== 'solo' && groupId) {
       this._router.navigate(['/guests/groups', groupId]);
       return;
     }
+
     this._router.navigate(['/guests', guestId]);
   }
 }

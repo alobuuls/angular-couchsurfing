@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { combineLatestWith, map, switchMap } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 
 // Material
 import { Sort } from '@angular/material/sort';
@@ -23,7 +24,7 @@ import { IGuestListItem, IQueryParamsGuests } from '@interfaces/guests.interface
 import { ICurrentView, IGuestsTableVM, IGuestTableRow, IGuestTableRowWithIndex, VIEW_CONFIG } from '@interfaces/data-structure-api';
 
 // Types
-import { Continents, CountriesCodes, ICountry, Regions } from '@type/word.types';
+import { Continents, CountriesCodes, ICountry, LANG, Language, Regions } from '@type/word.types';
 
 // Constants
 import { WORLD } from '@config/world';
@@ -98,6 +99,7 @@ export class GuestsComponent implements OnInit {
   private _sortService = inject(GuestSortService);
   private _deleteService = inject(GuestDeleteService);
   private _errH = inject(ErrorHandlerService);
+  private _translate = inject(TranslateService);
 
   ngOnInit(): void {
     this.initFiltersForm();
@@ -107,6 +109,7 @@ export class GuestsComponent implements OnInit {
     this.listenCountryAutocomplete();
     this.listenContinentFilter();
     this.listenRegionFilter();
+    this.listenLanguageChange();
   }
 
   // FILTERS
@@ -172,6 +175,18 @@ export class GuestsComponent implements OnInit {
     this.filteredRegions = [...this.regions];
   }
 
+  getRegionName(region: Regions): string {
+    const currentLang = this._translate.currentLang || 'en';
+    const lang: Language = LANG.includes(currentLang as Language) ? (currentLang as Language) : 'en';
+    return this.regionNames[region]?.[lang] || this.regionNames[region]?.en || region;
+  }
+
+  getCountryName(country: ICountry): string {
+    const currentLang = this._translate.currentLang || 'en';
+    const lang: Language = LANG.includes(currentLang as Language) ? (currentLang as Language) : 'en';
+    return country.name[lang] || country.name.en;
+  }
+
   private getBooleanFilter(value: boolean | string | null): boolean | undefined {
     if (value === '' || value === null || value === undefined) return undefined;
     return value === true || value === 'true';
@@ -181,6 +196,16 @@ export class GuestsComponent implements OnInit {
     if (!dateValue) return undefined;
     const date = new Date(dateValue);
     return [date.getFullYear(), String(date.getMonth() + 1).padStart(2, '0'), String(date.getDate()).padStart(2, '0')].join('-');
+  }
+
+  private listenLanguageChange(): void {
+    this._translate.onLangChange.subscribe(() => {
+      this.sortCountriesByLanguage();
+      this.sortRegionsByLanguage();
+
+      // Refresh region references when the language changes
+      this.filteredRegions = [...this.filteredRegions];
+    });
   }
 
   // VIEW MODEL
@@ -257,20 +282,21 @@ export class GuestsComponent implements OnInit {
   }
 
   // COUNTRIES
+
   private loadDataCountries(): void {
-    this.countries = (Object.entries(WORLD) as [CountriesCodes, ICountry][])
-      .map(([countryCode, country]) => ({
-        countryCode,
-        ...country,
-      }))
-      .sort((a, b) => a.name.localeCompare(b.name));
+    this.countries = (Object.entries(WORLD) as [CountriesCodes, ICountry][]).map(([countryCode, country]) => ({
+      countryCode,
+      ...country,
+    }));
+
+    // Sort countries using the current language
+    this.sortCountriesByLanguage();
 
     // Get regions from data countries
     this.regions = [...new Set(this.countries.map(country => country.region))];
 
-    // Initially show all regions to autocomplete
+    // Initially show all regions and countries
     this.filteredRegions = [...this.regions];
-    // Initially show all countries to autocomplete
     this.filteredCountries = [...this.countries];
   }
 
@@ -289,8 +315,7 @@ export class GuestsComponent implements OnInit {
   private listenCountryAutocomplete(): void {
     const countryCtrl = this.filtersForm.get('country');
     countryCtrl?.valueChanges.subscribe(value => {
-      // Si es un código porque seleccionó una opción,
-      // no hacemos filtrado por texto
+      // If is one code, it is not filter text
       if (typeof value !== 'string') return;
 
       const search = value.toLowerCase().trim();
@@ -306,21 +331,51 @@ export class GuestsComponent implements OnInit {
       if (selectedRegion) {
         countries = countries.filter(country => country.region === selectedRegion);
       }
+
       // No search text
       if (!search) {
         this.filteredCountries = [...countries];
         return;
       }
-      // Search by country name or code
-      this.filteredCountries = countries.filter(country => country.name.toLowerCase().includes(search) || country.countryCode.toLowerCase().includes(search));
+      // Search by translated country name or country code
+      this.filteredCountries = countries.filter(country => {
+        const translatedName = this.getCountryName(country).toLowerCase();
+        return translatedName.includes(search) || country.name.en.toLowerCase().includes(search) || country.countryCode.toLowerCase().includes(search);
+      });
     });
   }
 
   displayCountryCode = (countryCode: string | null): string => {
-    if (!countryCode) return 'All Countries';
-    const country = this.countries.find(country => country.countryCode === countryCode);
-    return country?.name ?? '';
+    if (!countryCode) return this._translate.instant('GUESTS_FILTERS.ALL_COUNTRIES');
+    const country = this.countries.find(c => c.countryCode === countryCode);
+    return country ? this.getCountryName(country) : '';
   };
+
+  private sortRegionsByLanguage(): void {
+    const currentLang = this._translate.currentLang || 'en';
+    const lang: Language = LANG.includes(currentLang as Language) ? (currentLang as Language) : 'en';
+    this.regions.sort((a, b) => this.getRegionName(a).localeCompare(this.getRegionName(b), lang));
+    this.filteredRegions.sort((a, b) => this.getRegionName(a).localeCompare(this.getRegionName(b), lang));
+  }
+
+  private sortCountriesByLanguage(): void {
+    const currentLang = this._translate.currentLang || 'en';
+
+    const lang: Language = LANG.includes(currentLang as Language) ? (currentLang as Language) : 'en';
+
+    this.countries.sort((a, b) => {
+      const nameA = this.getCountryName(a);
+      const nameB = this.getCountryName(b);
+
+      return nameA.localeCompare(nameB, lang);
+    });
+
+    // Mantener los filtros de continente y región
+    const continent = this.filtersForm?.get('continent')?.value;
+    const region = this.filtersForm?.get('region')?.value;
+
+    this.filteredCountries = this.countries.filter(country => (!continent || country.continent === continent) && (!region || country.region === region));
+  }
 
   // FITER COUNTRY BY CONTINENT
   private listenContinentFilter(): void {
@@ -488,7 +543,7 @@ export class GuestsComponent implements OnInit {
   }
 
   get nextViewTooltip(): string {
-    return VIEW_CONFIG[this.currentView].tooltip;
+    return this._translate.instant(VIEW_CONFIG[this.currentView].tooltip);
   }
 
   changeView(): void {

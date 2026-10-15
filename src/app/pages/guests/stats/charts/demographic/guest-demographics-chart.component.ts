@@ -1,5 +1,7 @@
 import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 import Chart from 'chart.js/auto';
 import 'chartjs-adapter-date-fns';
@@ -22,6 +24,9 @@ import { FormatService } from '@services/format.service';
 export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   private _format = inject(FormatService);
   private _router = inject(Router);
+  private _translate = inject(TranslateService);
+
+  private langChangeSubscription?: Subscription;
 
   // Demographic data received from the parent component.
   @Input() demographics!: IDemographicsDistribution;
@@ -30,25 +35,30 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
   @ViewChild('demographicsChart')
   demographicsChart!: ElementRef<HTMLCanvasElement>;
 
-  groupLabels: Record<string, string> = {
-    couple: 'Couple',
-    friends: 'Friend',
-    family: 'Family',
-  };
+  // Translated group labels used in chart tooltips.
+  get groupLabels(): Record<string, string> {
+    return {
+      couple: this._translate.instant('STATS.DEMOGRAPHICS.GROUPS.COUPLE'),
+      friends: this._translate.instant('STATS.DEMOGRAPHICS.GROUPS.FRIENDS'),
+      family: this._translate.instant('STATS.DEMOGRAPHICS.GROUPS.FAMILY'),
+    };
+  }
 
   // Currently selected main demographics view.
   selectedView: IDemographicsView = 'totals';
+
   // Available main views shown in the UI.
   readonly demographicsViews: IDemographicsView[] = ['totals', 'oldest', 'youngest', 'firstLast'];
 
+  // Translation keys for the main views.
   readonly demographicsViewLabels: Record<IDemographicsView, string> = {
-    totals: 'Totals',
-    oldest: 'Oldest',
-    youngest: 'Youngest',
-    firstLast: 'First - Last',
+    totals: 'STATS.DEMOGRAPHICS.VIEWS.TOTALS',
+    oldest: 'STATS.DEMOGRAPHICS.VIEWS.OLDEST',
+    youngest: 'STATS.DEMOGRAPHICS.VIEWS.YOUNGEST',
+    firstLast: 'STATS.DEMOGRAPHICS.VIEWS.FIRST_LAST',
   };
 
-  // References color
+  // Gender colors.
   private readonly genderColors = {
     male: GENDER_COLORS.male,
     female: GENDER_COLORS.female,
@@ -58,28 +68,37 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
   // Currently selected totals sub-view.
   selectedTotalsView: IDemographicsTotalsView = 'overall';
+
   // Available totals sub-views.
   readonly demographicTotalsViews: IDemographicsTotalsView[] = ['overall', 'groups'];
 
-  // Currently selected group for the oldest view.
+  // Currently selected age-based sub-view.
   selectedAgeView: IDemographicsOldestView = 'overall';
-  // Available groups for the oldest view.
+
+  // Available age-based sub-views.
   readonly demographicAgeViews: IDemographicsOldestView[] = ['overall', 'solo', 'groups'];
 
-  // Currently selected first/last view.
+  // Currently selected first/last sub-view.
   selectedFirstLastView: IDemographicsOldestView = 'overall';
 
-  // Available first/last views.
+  // Available first/last sub-views.
   readonly demographicFirstLastViews: IDemographicsOldestView[] = ['overall', 'solo', 'groups'];
 
-  // Stores the current Chart.js instance so it can be destroyed or replaced.
+  // Stores the current Chart.js instance.
   private chart?: Chart;
 
   ngAfterViewInit(): void {
-    // The canvas must exist before Chart.js can create the chart.
+    // Create the chart once the canvas is available.
     if (this.demographics) {
       this.createChart();
     }
+
+    // Recreate the chart when the language changes.
+    this.langChangeSubscription = this._translate.onLangChange.subscribe(() => {
+      this.chart?.destroy();
+      this.chart = undefined;
+      this.createChart();
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -90,80 +109,64 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
   }
 
   selectView(view: IDemographicsView): void {
-    // Update the selected main view.
     this.selectedView = view;
 
-    // Remove the previous Chart.js instance before creating a new one.
     this.chart?.destroy();
     this.chart = undefined;
 
-    // Wait for Angular to update the template/canvas before creating the chart.
     setTimeout(() => {
       this.createChart();
     });
   }
 
   selectTotalsView(view: IDemographicsTotalsView): void {
-    // Update the selected totals sub-view.
     this.selectedTotalsView = view;
 
-    // Remove the previous chart instance.
     this.chart?.destroy();
     this.chart = undefined;
 
-    // Create the chart for the selected totals view.
     setTimeout(() => {
       this.createChart();
     });
   }
 
   selectAgeView(view: IDemographicsOldestView): void {
-    // Update the selected age-based sub-view.
     this.selectedAgeView = view;
 
-    // Remove the previous chart instance.
     this.chart?.destroy();
     this.chart = undefined;
 
-    // Wait for Angular to update the template before creating the new chart.
     setTimeout(() => {
       this.createChart();
     });
   }
 
-  // FIRST LAST
   selectFirstLastView(view: IDemographicsOldestView): void {
-    // Update the selected first/last view.
     this.selectedFirstLastView = view;
 
-    // Remove the previous chart instance.
     this.chart?.destroy();
     this.chart = undefined;
 
-    // Wait for Angular to update the template before creating the new chart.
     setTimeout(() => {
       this.createChart();
     });
   }
 
   private createChart(): void {
-    // Do not try to create a chart if the canvas or data is not available.
+    // Do not create a chart without a canvas or demographic data.
     if (!this.demographicsChart || !this.demographics) {
       return;
     }
 
-    // Make sure an existing Chart.js instance is removed first.
     this.chart?.destroy();
 
     // TOTALS
     if (this.selectedView === 'totals') {
-      // Display the overall gender distribution.
       if (this.selectedTotalsView === 'overall') {
         this.chart = this.createOverallTotalsChart();
         return;
       }
 
-      // Display gender distribution separated by travel group.
       if (this.selectedTotalsView === 'groups') {
         this.chart = this.createGroupsChart();
         return;
@@ -172,19 +175,16 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
     // OLDEST
     if (this.selectedView === 'oldest') {
-      // Display the oldest guests overall.
       if (this.selectedAgeView === 'overall') {
         this.chart = this.createOverallOldestChart();
         return;
       }
 
-      // Display solo oldest guests.
       if (this.selectedAgeView === 'solo') {
         this.chart = this.createSoloOldestChart();
         return;
       }
 
-      // Display oldest guests from couple, friends and family groups.
       if (this.selectedAgeView === 'groups') {
         this.chart = this.createGroupsOldestChart();
         return;
@@ -193,19 +193,16 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
     // YOUNGEST
     if (this.selectedView === 'youngest') {
-      // Display the youngest guests overall.
       if (this.selectedAgeView === 'overall') {
         this.chart = this.createOverallYoungestChart();
         return;
       }
 
-      // Display solo youngest guests.
       if (this.selectedAgeView === 'solo') {
         this.chart = this.createSoloYoungestChart();
         return;
       }
 
-      // Display youngest guests from couple, friends and family groups.
       if (this.selectedAgeView === 'groups') {
         this.chart = this.createGroupsYoungestChart();
         return;
@@ -214,19 +211,16 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
     // FIRST LAST
     if (this.selectedView === 'firstLast') {
-      // Display first and last guests overall.
       if (this.selectedFirstLastView === 'overall') {
         this.chart = this.createOverallFirstLastChart();
         return;
       }
 
-      // Display first and last guests for solo guests by gender.
       if (this.selectedFirstLastView === 'solo') {
         this.chart = this.createSoloFirstLastChart();
         return;
       }
 
-      // Display first and last guests for couple, friends and family groups.
       if (this.selectedFirstLastView === 'groups') {
         this.chart = this.createGroupsFirstLastChart();
         return;
@@ -238,7 +232,14 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
   private createOverallTotalsChart(): Chart {
     // Get the aggregated demographic data.
     const overall = this.demographics.totals.overall;
-    const labels = ['Male', 'Female', 'Trans', 'Gay'];
+
+    const labels = [
+      this._translate.instant('STATS.DEMOGRAPHICS.GENDER.MALE'),
+      this._translate.instant('STATS.DEMOGRAPHICS.GENDER.FEMALE'),
+      this._translate.instant('STATS.DEMOGRAPHICS.GENDER.TRANS'),
+      this._translate.instant('STATS.DEMOGRAPHICS.GENDER.GAY'),
+    ];
+
     return new Chart(this.demographicsChart.nativeElement, {
       // Doughnut chart is used to show the overall distribution.
       type: 'doughnut',
@@ -247,7 +248,8 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         labels,
         datasets: [
           {
-            label: 'Overall Demographics',
+            label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.OVERALL_DEMOGRAPHICS'),
+
             // Values used to calculate each section of the doughnut.
             data: [overall.male, overall.female, overall.trans, overall.isGay],
 
@@ -269,8 +271,9 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
           if (!elements.length) {
             return;
           }
+
           const index = elements[0].index;
-          const label = labels[index];
+          const label = ['Male', 'Female', 'Trans', 'Gay'][index];
 
           this.navigateToGenderGuests(label);
         },
@@ -288,36 +291,41 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
   private createGroupsChart(): Chart {
     // Get demographic data separated by travel group.
     const groups = this.demographics.totals.groups;
+
     return new Chart(this.demographicsChart.nativeElement, {
       type: 'bar',
       data: {
         // Each bar represents a travel group.
-        labels: ['Solo', 'Couple', 'Friends', 'Family'],
+        labels: [
+          this._translate.instant('STATS.DEMOGRAPHICS.SUBVIEWS.SOLO'),
+          this._translate.instant('STATS.DEMOGRAPHICS.GROUPS.COUPLE'),
+          this._translate.instant('STATS.DEMOGRAPHICS.GROUPS.FRIENDS'),
+          this._translate.instant('STATS.DEMOGRAPHICS.GROUPS.FAMILY'),
+        ],
         datasets: [
           {
-            label: 'Male',
+            label: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.MALE'),
             data: [groups.solo.male, groups.couple.male, groups.friends.male, groups.family.male],
             backgroundColor: getColorWithOpacity(GENDER_COLORS.male),
             borderColor: GENDER_COLORS.male.border,
             borderWidth: 1,
           },
-
           {
-            label: 'Female',
+            label: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.FEMALE'),
             data: [groups.solo.female, groups.couple.female, groups.friends.female, groups.family.female],
             backgroundColor: getColorWithOpacity(GENDER_COLORS.female),
             borderColor: GENDER_COLORS.female.border,
             borderWidth: 1,
           },
           {
-            label: 'Trans',
+            label: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.TRANS'),
             data: [groups.solo.trans, groups.couple.trans, groups.friends.trans, groups.family.trans],
             backgroundColor: getColorWithOpacity(GENDER_COLORS.trans),
             borderColor: GENDER_COLORS.trans.border,
             borderWidth: 1,
           },
           {
-            label: 'gay',
+            label: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.GAY'),
             data: [groups.solo.isGay, groups.couple.isGay, groups.friends.isGay, groups.family.isGay],
             backgroundColor: getColorWithOpacity(GENDER_COLORS.gay),
             borderColor: GENDER_COLORS.gay.border,
@@ -335,6 +343,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
           const datasetIndex = elements[0].datasetIndex;
           const groupIndex = elements[0].index;
 
+          // Keep the original values for navigation and filtering.
           const genderLabels = ['Male', 'Female', 'Trans', 'Gay'];
           const groupLabels = ['Solo', 'Couple', 'Friends', 'Family'];
 
@@ -346,6 +355,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
           if (!genderFilters || !groupType) {
             return;
           }
+
           this._router.navigate(['/guests'], {
             queryParams: {
               view: 'cards',
@@ -354,6 +364,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             },
           });
         },
+
         // Use horizontal bars instead of vertical bars.
         indexAxis: 'y',
         scales: {
@@ -393,11 +404,12 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         visitedDate: person.visitedDate,
         country: person.hometownCode,
       }))
-
-      // Sort from oldest to youngest
+      // Sort from oldest to youngest.
       .sort((a, b) => b.age - a.age);
-    //  Get ranking colors based on the sorted ages.
+
+    // Get ranking colors based on the sorted ages.
     const colors = getRankingColors(oldestPeople.map(person => person.age));
+
     return new Chart(this.demographicsChart.nativeElement, {
       type: 'bar',
       data: {
@@ -405,10 +417,10 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         labels: oldestPeople.map(person => person.name),
         datasets: [
           {
-            label: 'Age',
+            label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE'),
             // Each bar represents the person's calculated age.
             data: oldestPeople.map(person => person.age),
-            //  Apply ranking colors
+            // Apply ranking colors.
             backgroundColor: colors.background,
             borderColor: colors.border,
             borderWidth: 1,
@@ -421,12 +433,14 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
           if (!elements.length) {
             return;
           }
+
           const index = elements[0].index;
           const person = oldestPeople[index];
 
           if (!person) {
             return;
           }
+
           this.navigateToGuest(person.guestId);
         },
         // Display horizontal bars.
@@ -437,11 +451,11 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             // Identify the X axis as age.
             title: {
               display: true,
-              text: 'Age',
+              text: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE'),
             },
           },
           y: {
-            //  The data is already sorted from oldest to youngest, so the axis does not need to be reversed.
+            // The data is already sorted from oldest to youngest.
             reverse: false,
           },
         },
@@ -452,28 +466,28 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
               // Generate fixed labels to identify the ranking colors.
               generateLabels: () => [
                 {
-                  text: 'Oldest',
+                  text: this._translate.instant('STATS.DEMOGRAPHICS.RANKING.OLDEST'),
                   fillStyle: getColorWithOpacity(RANKING_COLORS.gold),
                   strokeStyle: RANKING_COLORS.gold.border,
                   lineWidth: 1,
                   fontColor: CHART_UNKNOWN_COLOR,
                 },
                 {
-                  text: 'Second oldest',
+                  text: this._translate.instant('STATS.DEMOGRAPHICS.RANKING.SECOND_OLDEST'),
                   fillStyle: getColorWithOpacity(RANKING_COLORS.silver),
                   strokeStyle: RANKING_COLORS.silver.border,
                   lineWidth: 1,
                   fontColor: CHART_UNKNOWN_COLOR,
                 },
                 {
-                  text: 'Third oldest',
+                  text: this._translate.instant('STATS.DEMOGRAPHICS.RANKING.THIRD_OLDEST'),
                   fillStyle: getColorWithOpacity(RANKING_COLORS.bronze),
                   strokeStyle: RANKING_COLORS.bronze.border,
                   lineWidth: 1,
                   fontColor: CHART_UNKNOWN_COLOR,
                 },
                 {
-                  text: 'Other',
+                  text: this._translate.instant('STATS.DEMOGRAPHICS.RANKING.OTHER'),
                   fillStyle: RANKING_COLORS.neutral.background,
                   strokeStyle: RANKING_COLORS.neutral.border,
                   lineWidth: 1,
@@ -486,11 +500,12 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             callbacks: {
               label: context => {
                 const person = oldestPeople[context.dataIndex];
+
                 return [
-                  `Age: ${person.age}`,
-                  `Gender: ${person.gender}`,
-                  `Country: ${this._format.formatCountry(person.country)}`,
-                  `Visit: ${this._format.formatDate(person.visitedDate)}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE')}: ${person.age}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GENDER')}: ${person.gender}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(person.country)}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(person.visitedDate)}`,
                 ];
               },
             },
@@ -577,7 +592,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       data: {
         datasets: [
           {
-            label: 'Oldest',
+            label: this._translate.instant('STATS.DEMOGRAPHICS.RANKING.OLDEST'),
             data: oldestPeople.map(person => ({
               x: person.visitedDate,
               y: person.age,
@@ -616,12 +631,14 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
           if (!elements.length) {
             return;
           }
+
           const index = elements[0].index;
           const person = oldestPeople[index];
 
           if (!person) {
             return;
           }
+
           this.navigateToGuest(person.guestId);
         },
         scales: {
@@ -629,14 +646,14 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             type: 'time',
             title: {
               display: true,
-              text: 'Visited Date',
+              text: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISITED_DATE'),
             },
           },
           y: {
             beginAtZero: true,
             title: {
               display: true,
-              text: 'Age',
+              text: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE'),
             },
           },
         },
@@ -649,7 +666,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (oldestPeople.some(person => person.demographic === 'male')) {
                   labels.push({
-                    text: 'Male',
+                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.MALE'),
                     fillStyle: this.genderColors.male.background,
                     strokeStyle: this.genderColors.male.border,
                     lineWidth: 1,
@@ -659,7 +676,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (oldestPeople.some(person => person.demographic === 'female')) {
                   labels.push({
-                    text: 'Female',
+                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.FEMALE'),
                     fillStyle: this.genderColors.female.background,
                     strokeStyle: this.genderColors.female.border,
                     lineWidth: 1,
@@ -669,7 +686,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (oldestPeople.some(person => person.demographic === 'isGay')) {
                   labels.push({
-                    text: 'Gay',
+                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.GAY'),
                     fillStyle: this.genderColors.isGay.background,
                     strokeStyle: this.genderColors.isGay.border,
                     lineWidth: 1,
@@ -679,7 +696,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (oldestPeople.some(person => person.demographic === 'trans')) {
                   labels.push({
-                    text: 'Trans',
+                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.TRANS'),
                     fillStyle: this.genderColors.trans.background,
                     strokeStyle: this.genderColors.trans.border,
                     lineWidth: 1,
@@ -696,13 +713,16 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
               label: context => {
                 const person = oldestPeople[context.dataIndex];
 
-                const tooltip = [person.name, `Age: ${person.age}`];
+                const tooltip = [person.name, `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE')}: ${person.age}`];
 
                 if (person.demographic === 'isGay' || person.demographic === 'trans') {
-                  tooltip.push(`Gender: ${person.gender}`);
+                  tooltip.push(`${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GENDER')}: ${person.gender}`);
                 }
 
-                tooltip.push(`Country: ${this._format.formatCountry(person.country)}`, `Visit: ${this._format.formatDate(person.visitedDateLabel)}`);
+                tooltip.push(
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(person.country)}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(person.visitedDateLabel)}`
+                );
 
                 return tooltip;
               },
@@ -763,7 +783,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       data: {
         datasets: [
           {
-            label: 'Groups',
+            label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GROUPS'),
             // Each bubble represents one guest.
             data: groupsPeople.map(person => ({
               x: person.age,
@@ -784,12 +804,14 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
           if (!elements.length) {
             return;
           }
+
           const index = elements[0].index;
           const person = groupsPeople[index];
 
           if (!person) {
             return;
           }
+
           this.navigateToGuest(person.guestId);
         },
         scales: {
@@ -798,7 +820,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             beginAtZero: true,
             title: {
               display: true,
-              text: 'Age',
+              text: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE'),
             },
           },
 
@@ -810,16 +832,17 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
               stepSize: 1,
               callback: value => {
                 const labels: Record<number, string> = {
-                  1: 'Couple',
-                  2: 'Friends',
-                  3: 'Family',
+                  1: this._translate.instant('STATS.DEMOGRAPHICS.GROUPS.COUPLE'),
+                  2: this._translate.instant('STATS.DEMOGRAPHICS.GROUPS.FRIENDS'),
+                  3: this._translate.instant('STATS.DEMOGRAPHICS.GROUPS.FAMILY'),
                 };
+
                 return labels[value as number];
               },
             },
             title: {
               display: true,
-              text: 'Group',
+              text: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GROUP'),
             },
           },
         },
@@ -833,7 +856,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (groupsPeople.some(person => person.group === 'Couple')) {
                   labels.push({
-                    text: 'Couple',
+                    text: this._translate.instant('STATS.DEMOGRAPHICS.GROUPS.COUPLE'),
                     fillStyle: getColorWithOpacity(GROUP_COLORS.Couple),
                     strokeStyle: GROUP_COLORS.Couple.border,
                     lineWidth: 1,
@@ -843,7 +866,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (groupsPeople.some(person => person.group === 'Friends')) {
                   labels.push({
-                    text: 'Friends',
+                    text: this._translate.instant('STATS.DEMOGRAPHICS.GROUPS.FRIENDS'),
                     fillStyle: getColorWithOpacity(GROUP_COLORS.Friends),
                     strokeStyle: GROUP_COLORS.Friends.border,
                     lineWidth: 1,
@@ -853,13 +876,14 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (groupsPeople.some(person => person.group === 'Family')) {
                   labels.push({
-                    text: 'Family',
+                    text: this._translate.instant('STATS.DEMOGRAPHICS.GROUPS.FAMILY'),
                     fillStyle: getColorWithOpacity(GROUP_COLORS.Family),
                     strokeStyle: GROUP_COLORS.Family.border,
                     lineWidth: 1,
                     fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
+
                 return labels;
               },
             },
@@ -870,12 +894,13 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             callbacks: {
               label: context => {
                 const person = groupsPeople[context.dataIndex];
+
                 return [
                   person.name,
-                  `Age: ${person.age}`,
-                  `Gender: ${person.gender}`,
-                  `Country: ${this._format.formatCountry(person.country)}`,
-                  `Visit: ${this._format.formatDate(person.visitedDate)}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE')}: ${person.age}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GENDER')}: ${person.gender}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(person.country)}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(person.visitedDate)}`,
                 ];
               },
             },
@@ -883,6 +908,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         },
       },
     });
+
     console.log('Color de labels:', chart.options.plugins?.legend?.labels?.color);
 
     console.log('Color CSS actual:', getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim());
@@ -907,6 +933,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         fillStyle: item.fillStyle,
       }))
     );
+
     return chart;
   }
 
@@ -928,9 +955,10 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         visitedDate: person.visitedDate,
         country: person.hometownCode,
       }))
-      // Sort from youngest to oldest
+      // Sort from youngest to oldest.
       .sort((a, b) => a.age - b.age);
-    //  Get ranking colors based on the sorted ages.
+
+    // Get ranking colors based on the sorted ages.
     const colors = getRankingColors(youngestPeople.map(person => person.age));
 
     return new Chart(this.demographicsChart.nativeElement, {
@@ -940,10 +968,10 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         labels: youngestPeople.map(person => person.name),
         datasets: [
           {
-            label: 'Age',
+            label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE'),
             // Each bar represents the person's calculated age.
             data: youngestPeople.map(person => person.age),
-            // Apply ranking colors
+            // Apply ranking colors.
             backgroundColor: colors.background,
             borderColor: colors.border,
             borderWidth: 1,
@@ -956,12 +984,14 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
           if (!elements.length) {
             return;
           }
+
           const index = elements[0].index;
           const person = youngestPeople[index];
 
           if (!person) {
             return;
           }
+
           this.navigateToGuest(person.guestId);
         },
         // Display horizontal bars.
@@ -969,11 +999,10 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         scales: {
           x: {
             beginAtZero: true,
-
             // Identify the X axis as age.
             title: {
               display: true,
-              text: 'Age',
+              text: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE'),
             },
           },
 
@@ -990,21 +1019,21 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
               // Generate fixed labels to identify the ranking colors.
               generateLabels: () => [
                 {
-                  text: 'Youngest',
+                  text: this._translate.instant('STATS.DEMOGRAPHICS.RANKING.YOUNGEST'),
                   fillStyle: getColorWithOpacity(RANKING_COLORS.gold),
                   strokeStyle: RANKING_COLORS.gold.border,
                   lineWidth: 1,
                   fontColor: CHART_UNKNOWN_COLOR,
                 },
                 {
-                  text: 'Second Youngest',
+                  text: this._translate.instant('STATS.DEMOGRAPHICS.RANKING.SECOND_YOUNGEST'),
                   fillStyle: getColorWithOpacity(RANKING_COLORS.silver),
                   strokeStyle: RANKING_COLORS.silver.border,
                   lineWidth: 1,
                   fontColor: CHART_UNKNOWN_COLOR,
                 },
                 {
-                  text: 'Third Youngest',
+                  text: this._translate.instant('STATS.DEMOGRAPHICS.RANKING.THIRD_YOUNGEST'),
                   fillStyle: getColorWithOpacity(RANKING_COLORS.bronze),
                   strokeStyle: RANKING_COLORS.bronze.border,
                   lineWidth: 1,
@@ -1017,11 +1046,12 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             callbacks: {
               label: context => {
                 const person = youngestPeople[context.dataIndex];
+
                 return [
-                  `Age: ${person.age}`,
-                  `Gender: ${person.gender}`,
-                  `Country: ${this._format.formatCountry(person.country)}`,
-                  `Visit: ${this._format.formatDate(person.visitedDate)}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE')}: ${person.age}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GENDER')}: ${person.gender}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(person.country)}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(person.visitedDate)}`,
                 ];
               },
             },
@@ -1074,7 +1104,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       data: {
         datasets: [
           {
-            label: 'Solo Guests',
+            label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.SOLO_GUESTS'),
             data: soloPeople.map(person => ({
               x: person.visitedDate,
               y: person.age,
@@ -1092,12 +1122,14 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
           if (!elements.length) {
             return;
           }
+
           const index = elements[0].index;
           const person = soloPeople[index];
 
           if (!person) {
             return;
           }
+
           this.navigateToGuest(person.guestId);
         },
         scales: {
@@ -1106,7 +1138,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             type: 'time',
             title: {
               display: true,
-              text: 'Visit Date',
+              text: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT_DATE'),
             },
           },
 
@@ -1115,7 +1147,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             beginAtZero: true,
             title: {
               display: true,
-              text: 'Age',
+              text: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE'),
             },
           },
         },
@@ -1128,7 +1160,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (soloPeople.some(person => person.demographic === 'male')) {
                   labels.push({
-                    text: 'Male',
+                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.MALE'),
                     fillStyle: getColorWithOpacity(this.genderColors.male),
                     strokeStyle: this.genderColors.male.border,
                     lineWidth: 1,
@@ -1138,7 +1170,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (soloPeople.some(person => person.demographic === 'female')) {
                   labels.push({
-                    text: 'Female',
+                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.FEMALE'),
                     fillStyle: getColorWithOpacity(this.genderColors.female),
                     strokeStyle: this.genderColors.female.border,
                     lineWidth: 1,
@@ -1148,7 +1180,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (soloPeople.some(person => person.demographic === 'trans')) {
                   labels.push({
-                    text: 'Trans',
+                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.TRANS'),
                     fillStyle: getColorWithOpacity(this.genderColors.trans),
                     strokeStyle: this.genderColors.trans.border,
                     lineWidth: 1,
@@ -1158,13 +1190,14 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (soloPeople.some(person => person.demographic === 'isGay')) {
                   labels.push({
-                    text: 'Gay',
+                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.GAY'),
                     fillStyle: getColorWithOpacity(this.genderColors.isGay),
                     strokeStyle: this.genderColors.isGay.border,
                     lineWidth: 1,
                     fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
+
                 return labels;
               },
             },
@@ -1173,11 +1206,12 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             callbacks: {
               label: context => {
                 const person = soloPeople[context.dataIndex];
+
                 return [
                   person.name,
-                  `Age: ${person.age}`,
-                  `Country: ${this._format.formatCountry(person.country)}`,
-                  `Visit: ${this._format.formatDate(person.visitedDateLabel)}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE')}: ${person.age}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(person.country)}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(person.visitedDateLabel)}`,
                 ];
               },
             },
@@ -1233,11 +1267,10 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
     return new Chart(this.demographicsChart.nativeElement, {
       type: 'bubble',
-
       data: {
         datasets: [
           {
-            label: 'Groups',
+            label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GROUPS'),
             // Each bubble represents one guest.
             data: groupsPeople.map(person => ({
               x: person.age,
@@ -1257,12 +1290,14 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
           if (!elements.length) {
             return;
           }
+
           const index = elements[0].index;
           const person = groupsPeople[index];
 
           if (!person) {
             return;
           }
+
           this.navigateToGuest(person.guestId);
         },
         scales: {
@@ -1271,7 +1306,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             beginAtZero: true,
             title: {
               display: true,
-              text: 'Age',
+              text: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE'),
             },
           },
 
@@ -1283,16 +1318,17 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
               stepSize: 1,
               callback: value => {
                 const labels: Record<number, string> = {
-                  1: 'Couple',
-                  2: 'Friends',
-                  3: 'Family',
+                  1: this._translate.instant('STATS.DEMOGRAPHICS.GROUPS.COUPLE'),
+                  2: this._translate.instant('STATS.DEMOGRAPHICS.GROUPS.FRIENDS'),
+                  3: this._translate.instant('STATS.DEMOGRAPHICS.GROUPS.FAMILY'),
                 };
+
                 return labels[value as number];
               },
             },
             title: {
               display: true,
-              text: 'Group',
+              text: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GROUP'),
             },
           },
         },
@@ -1305,7 +1341,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (groupsPeople.some(person => person.group === 'Couple')) {
                   labels.push({
-                    text: 'Couple',
+                    text: this._translate.instant('STATS.DEMOGRAPHICS.GROUPS.COUPLE'),
                     fillStyle: getColorWithOpacity(GROUP_COLORS.Couple),
                     strokeStyle: GROUP_COLORS.Couple.border,
                     lineWidth: 1,
@@ -1315,7 +1351,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (groupsPeople.some(person => person.group === 'Friends')) {
                   labels.push({
-                    text: 'Friends',
+                    text: this._translate.instant('STATS.DEMOGRAPHICS.GROUPS.FRIENDS'),
                     fillStyle: getColorWithOpacity(GROUP_COLORS.Friends),
                     strokeStyle: GROUP_COLORS.Friends.border,
                     lineWidth: 1,
@@ -1325,13 +1361,14 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (groupsPeople.some(person => person.group === 'Family')) {
                   labels.push({
-                    text: 'Family',
+                    text: this._translate.instant('STATS.DEMOGRAPHICS.GROUPS.FAMILY'),
                     fillStyle: getColorWithOpacity(GROUP_COLORS.Family),
                     strokeStyle: GROUP_COLORS.Family.border,
                     lineWidth: 1,
                     fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
+
                 return labels;
               },
             },
@@ -1342,12 +1379,13 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             callbacks: {
               label: context => {
                 const person = groupsPeople[context.dataIndex];
+
                 return [
                   person.name,
-                  `Age: ${person.age}`,
-                  `Gender: ${person.gender}`,
-                  `Country: ${this._format.formatCountry(person.country)}`,
-                  `Visit: ${this._format.formatDate(person.visitedDate)}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE')}: ${person.age}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GENDER')}: ${person.gender}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(person.country)}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(person.visitedDate)}`,
                 ];
               },
             },
@@ -1363,12 +1401,13 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
     const overall = this.demographics.firstLast.overall.people;
     const first = overall.first;
     const last = overall.last;
+
     return new Chart(this.demographicsChart.nativeElement, {
       type: 'scatter',
       data: {
         datasets: [
           {
-            label: 'Overall',
+            label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.OVERALL_DEMOGRAPHICS'),
             data: [
               ...(first
                 ? [
@@ -1418,7 +1457,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             type: 'time',
             title: {
               display: true,
-              text: 'Visit Date',
+              text: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT_DATE'),
             },
           },
 
@@ -1428,7 +1467,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             max: 1.5,
             ticks: {
               stepSize: 1,
-              callback: () => 'Overall',
+              callback: () => this._translate.instant('STATS.DEMOGRAPHICS.LABELS.OVERALL_DEMOGRAPHICS'),
             },
           },
         },
@@ -1446,10 +1485,26 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                 }[] = [];
 
                 const genders = [
-                  { key: 'male' as const, text: 'Male', color: this.genderColors.male },
-                  { key: 'female' as const, text: 'Female', color: this.genderColors.female },
-                  { key: 'trans' as const, text: 'Trans', color: this.genderColors.trans },
-                  { key: 'isGay' as const, text: 'Gay', color: this.genderColors.isGay },
+                  {
+                    key: 'male' as const,
+                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.MALE'),
+                    color: this.genderColors.male,
+                  },
+                  {
+                    key: 'female' as const,
+                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.FEMALE'),
+                    color: this.genderColors.female,
+                  },
+                  {
+                    key: 'trans' as const,
+                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.TRANS'),
+                    color: this.genderColors.trans,
+                  },
+                  {
+                    key: 'isGay' as const,
+                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.GAY'),
+                    color: this.genderColors.isGay,
+                  },
                 ];
 
                 genders.forEach(gender => {
@@ -1463,6 +1518,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                     });
                   }
                 });
+
                 return labels;
               },
             },
@@ -1484,11 +1540,15 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 const groupLabel = point.person.groupType === 'solo' ? '' : ` and ${this.groupLabels[point.person.groupType]}`;
 
+                const firstLastLabel = this._translate.instant(point.type === 'First' ? 'STATS.DEMOGRAPHICS.RANKING.FIRST' : 'STATS.DEMOGRAPHICS.RANKING.LAST');
+
+                const genderLabel = this._translate.instant(`STATS.DEMOGRAPHICS.GENDER.${this.getGenderTranslationKey(point.person.gender)}`);
+
                 return [
-                  `${point.type}: ${point.person.fullName}${groupLabel}`,
-                  `Gender: ${point.person.gender}`,
-                  `Country: ${this._format.formatCountry(point.person.hometownCode)}`,
-                  `Visit: ${this._format.formatDate(point.person.visitedDate)}`,
+                  `${firstLastLabel}: ${point.person.fullName}${groupLabel}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GENDER')}: ${genderLabel}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(point.person.hometownCode)}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(point.person.visitedDate)}`,
                 ];
               },
             },
@@ -1502,27 +1562,32 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
   private createSoloFirstLastChart(): Chart {
     // Get first and last guests for each solo demographic.
     const solo = this.demographics.firstLast.solo;
+
     const categories = [
       {
-        label: 'Solo Female',
+        key: 'Solo Female',
+        label: `${this._translate.instant('STATS.DEMOGRAPHICS.GENDER.FEMALE')} (${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.SOLO_GUESTS')})`,
         first: solo.female.first,
         last: solo.female.last,
         color: this.genderColors.female,
       },
       {
-        label: 'Solo Male',
+        key: 'Solo Male',
+        label: `${this._translate.instant('STATS.DEMOGRAPHICS.GENDER.MALE')} (${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.SOLO_GUESTS')})`,
         first: solo.male.first,
         last: solo.male.last,
         color: this.genderColors.male,
       },
       {
-        label: 'Solo Trans',
+        key: 'Solo Trans',
+        label: `${this._translate.instant('STATS.DEMOGRAPHICS.GENDER.TRANS')} (${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.SOLO_GUESTS')})`,
         first: solo.trans.first,
         last: solo.trans.last,
         color: this.genderColors.trans,
       },
       {
-        label: 'Solo Gay',
+        key: 'Solo Gay',
+        label: `${this._translate.instant('STATS.DEMOGRAPHICS.GENDER.GAY')} (${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.SOLO_GUESTS')})`,
         first: solo.isGay.first,
         last: solo.isGay.last,
         color: this.genderColors.isGay,
@@ -1564,12 +1629,14 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
           if (!elements.length) {
             return;
           }
+
           const point = elements[0];
           const data = this.chart?.data.datasets[point.datasetIndex].data[point.index] as any;
 
           if (!data?.person?.guestId) {
             return;
           }
+
           this.navigateToGuest(data.person.guestId);
         },
         scales: {
@@ -1577,7 +1644,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             type: 'time',
             title: {
               display: true,
-              text: 'Visit Date',
+              text: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT_DATE'),
             },
           },
           y: {
@@ -1591,7 +1658,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             },
             title: {
               display: true,
-              text: 'Category',
+              text: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.CATEGORY'),
             },
           },
         },
@@ -1602,9 +1669,9 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
               generateLabels: () => {
                 const labels = [];
 
-                if (validCategories.some(category => category.label === 'Solo Female')) {
+                if (validCategories.some(category => category.key === 'Solo Female')) {
                   labels.push({
-                    text: 'Female',
+                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.FEMALE'),
                     fillStyle: getColorWithOpacity(this.genderColors.female),
                     strokeStyle: this.genderColors.female.border,
                     lineWidth: 1,
@@ -1612,9 +1679,9 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                   });
                 }
 
-                if (validCategories.some(category => category.label === 'Solo Male')) {
+                if (validCategories.some(category => category.key === 'Solo Male')) {
                   labels.push({
-                    text: 'Male',
+                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.MALE'),
                     fillStyle: getColorWithOpacity(this.genderColors.male),
                     strokeStyle: this.genderColors.male.border,
                     lineWidth: 1,
@@ -1622,9 +1689,9 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                   });
                 }
 
-                if (validCategories.some(category => category.label === 'Solo Trans')) {
+                if (validCategories.some(category => category.key === 'Solo Trans')) {
                   labels.push({
-                    text: 'Trans',
+                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.TRANS'),
                     fillStyle: getColorWithOpacity(this.genderColors.trans),
                     strokeStyle: this.genderColors.trans.border,
                     lineWidth: 1,
@@ -1632,15 +1699,16 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                   });
                 }
 
-                if (validCategories.some(category => category.label === 'Solo Gay')) {
+                if (validCategories.some(category => category.key === 'Solo Gay')) {
                   labels.push({
-                    text: 'Gay',
+                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.GAY'),
                     fillStyle: getColorWithOpacity(this.genderColors.isGay),
                     strokeStyle: this.genderColors.isGay.border,
                     lineWidth: 1,
                     fontColor: CHART_UNKNOWN_COLOR,
                   });
                 }
+
                 return labels;
               },
             },
@@ -1650,14 +1718,18 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
               label: context => {
                 const category = chartCategories[context.datasetIndex];
                 const person = context.dataIndex === 0 ? category.first : category.last;
+
                 if (!person) {
                   return '';
                 }
+
+                const firstLastLabel = this._translate.instant(context.dataIndex === 0 ? 'STATS.DEMOGRAPHICS.RANKING.FIRST' : 'STATS.DEMOGRAPHICS.RANKING.LAST');
+
                 return [
-                  `${context.dataIndex === 0 ? 'First' : 'Last'}: ${person.fullName}`,
-                  `Category: ${category.label}`,
-                  `Country: ${this._format.formatCountry(person.hometownCode)}`,
-                  `Visit: ${this._format.formatDate(person.visitedDate)}`,
+                  `${firstLastLabel}: ${person.fullName}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.CATEGORY')}: ${category.label}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(person.hometownCode)}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(person.visitedDate)}`,
                 ];
               },
             },
@@ -1671,27 +1743,33 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
   private createGroupsFirstLastChart(): Chart {
     // Get first and last guests for each travel group.
     const firstLast = this.demographics.firstLast;
+
     const categories = [
       {
-        label: 'Couple',
+        key: 'Couple',
+        label: this._translate.instant('STATS.DEMOGRAPHICS.GROUPS.COUPLE'),
         first: firstLast.couple.first,
         last: firstLast.couple.last,
         color: GROUP_COLORS.Couple,
       },
       {
-        label: 'Friends',
+        key: 'Friends',
+        label: this._translate.instant('STATS.DEMOGRAPHICS.GROUPS.FRIENDS'),
         first: firstLast.friends.first,
         last: firstLast.friends.last,
         color: GROUP_COLORS.Friends,
       },
       {
-        label: 'Family',
+        key: 'Family',
+        label: this._translate.instant('STATS.DEMOGRAPHICS.GROUPS.FAMILY'),
         first: firstLast.family.first,
         last: firstLast.family.last,
         color: GROUP_COLORS.Family,
       },
     ];
+
     const chartCategories = categories.filter(category => category.first && category.last);
+
     return new Chart(this.demographicsChart.nativeElement, {
       type: 'scatter',
       data: {
@@ -1733,7 +1811,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             type: 'time',
             title: {
               display: true,
-              text: 'Visit Date',
+              text: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT_DATE'),
             },
           },
           y: {
@@ -1748,7 +1826,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             },
             title: {
               display: true,
-              text: 'Group',
+              text: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GROUP'),
             },
           },
         },
@@ -1786,17 +1864,22 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
               label: context => {
                 const category = chartCategories[context.datasetIndex];
                 const person = context.dataIndex === 0 ? category.first : category.last;
+
                 if (!person) {
                   return '';
                 }
 
+                const firstLastLabel = this._translate.instant(context.dataIndex === 0 ? 'STATS.DEMOGRAPHICS.RANKING.FIRST' : 'STATS.DEMOGRAPHICS.RANKING.LAST');
+
                 const groupLabel = person.groupType === 'solo' ? '' : ` and ${this.groupLabels[person.groupType]}`;
 
+                const genderLabel = this._translate.instant(`STATS.DEMOGRAPHICS.GENDER.${this.getGenderTranslationKey(person.gender)}`);
+
                 return [
-                  `${context.dataIndex === 0 ? 'First' : 'Last'}: ${person.fullName} ${groupLabel}`,
-                  `Gender: ${person.gender}`,
-                  `Country: ${this._format.formatCountry(person.hometownCode)}`,
-                  `Visit: ${this._format.formatDate(person.visitedDate)}`,
+                  `${firstLastLabel}: ${person.fullName} ${groupLabel}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GENDER')}: ${genderLabel}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(person.hometownCode)}`,
+                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(person.visitedDate)}`,
                 ];
               },
             },
@@ -1807,7 +1890,8 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
   }
 
   ngOnDestroy(): void {
-    // Destroy the Chart.js instance when the component is removed to prevent memory leaks and duplicated charts
+    // Destroy the Chart.js instance when the component is removed to prevent memory leaks and duplicated charts.
+    this.langChangeSubscription?.unsubscribe();
     this.chart?.destroy();
   }
 
@@ -1832,6 +1916,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
     if (!filters) {
       return;
     }
+
     this._router.navigate(['/guests'], {
       queryParams: {
         view: 'cards',
@@ -1847,5 +1932,16 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
     }
 
     this._router.navigate(['/guests', guestId]);
+  }
+
+  private getGenderTranslationKey(gender: IDemographicGender): string {
+    const genderKeys: Record<IDemographicGender, string> = {
+      male: 'MALE',
+      female: 'FEMALE',
+      trans: 'TRANS',
+      isGay: 'GAY',
+    };
+
+    return genderKeys[gender];
   }
 }

@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { firstValueFrom, Observable } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 // Services
 import { AlertsService } from '@services/alerts.service';
@@ -10,27 +11,23 @@ import { IGuestListItem } from '@interfaces/guests.interface';
 // Utils
 import { isGroup } from '@utils';
 
-// Const
-import { ALERT_MESSAGES } from '@const/alerts';
-
 @Injectable({
   providedIn: 'root',
 })
 export class GuestDeleteService {
-  constructor(private _alerts: AlertsService) {}
+  private _alerts = inject(AlertsService);
+  private _translate = inject(TranslateService);
 
   async confirmAndDelete(guest: IGuestListItem, deleteFn: (guest: IGuestListItem) => Observable<unknown>): Promise<boolean> {
     const group = isGroup(guest);
     const fullname = group ? guest.members[0].fullName : guest.fullName;
 
-    const alerts = ALERT_MESSAGES.deleteGuest;
-
     // First confirmation
     const first = await this._alerts.showAlert({
       icon: 'question',
       title: '',
-      html: alerts.confirmation.message,
-      confirmText: alerts.confirmation.confirmButtonText,
+      html: this._translate.instant('ALERTS.DELETE_GUEST.CONFIRMATION.MESSAGE'),
+      confirmText: this._translate.instant('ALERTS.DELETE_GUEST.CONFIRMATION.CONFIRM_BUTTON'),
       showCancelButton: false,
     });
 
@@ -39,16 +36,16 @@ export class GuestDeleteService {
     // Warning
     const second = await this._alerts.showAlert({
       icon: 'warning',
-      title: alerts.warning.title,
-      html: alerts.warning.message(fullname),
-      confirmText: alerts.warning.confirmButtonText,
+      title: this._translate.instant('ALERTS.DELETE_GUEST.WARNING.TITLE'),
+      html: this._translate.instant('ALERTS.DELETE_GUEST.WARNING.MESSAGE', { name: fullname }),
+      confirmText: this._translate.instant('ALERTS.DELETE_GUEST.WARNING.CONFIRM_BUTTON'),
       showCancelButton: false,
     });
 
     if (!second.isConfirmed) return false;
 
     // Type fullname to confirm
-    const { isConfirmed } = await this._alerts.showDeleteConfirmation(alerts.typeToConfirm.title(fullname), fullname);
+    const { isConfirmed } = await this._alerts.showDeleteConfirmation(this._translate.instant('ALERTS.DELETE_GUEST.TYPE_TO_CONFIRM.TITLE', { name: fullname }), fullname);
 
     if (!isConfirmed) return false;
 
@@ -59,7 +56,7 @@ export class GuestDeleteService {
     // Success
     this._alerts.showToast({
       icon: 'success',
-      title: alerts.success.message(fullname),
+      title: this._translate.instant('ALERTS.DELETE_GUEST.SUCCESS.MESSAGE', { name: fullname }),
       time: 6000,
     });
 

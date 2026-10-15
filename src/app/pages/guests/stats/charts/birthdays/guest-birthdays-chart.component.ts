@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 import Chart from 'chart.js/auto';
 
@@ -24,6 +25,7 @@ import { FormatService } from '@services/format.service';
 export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   private _format = inject(FormatService);
   private _router = inject(Router);
+  private _translate = inject(TranslateService);
 
   // Birthdays data received from parent
   @Input() birthdays!: IBirthdaysDistribution;
@@ -38,15 +40,16 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
   // Main Birthdays views
   readonly birthdaysViews: IBirthdaysView[] = ['calendar', 'repeated', 'unusual'];
 
-  // Labels for main Birthdays views
-  readonly birthdaysViewLabels: Record<IBirthdaysView, string> = {
-    calendar: 'Calendar',
-    repeated: 'Repeated',
-    unusual: 'Unusual',
-  };
-
   // Stores current Chart.js instance
   private chart?: Chart;
+
+  // Subscription to language changes
+  private langChangeSubscription = this._translate.onLangChange.subscribe(() => {
+    if (this.birthdaysChart && this.birthdays) {
+      this.destroyChart();
+      this.createChart();
+    }
+  });
 
   // Creates the chart after the view is initialized
   ngAfterViewInit(): void {
@@ -66,11 +69,39 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
   selectView(view: IBirthdaysView): void {
     this.selectedView = view;
 
-    // Destroy current chart.
+    // Destroy current chart
     this.destroyChart();
 
-    // Wait for Angular to update the template.
+    // Wait for Angular to update the template
     setTimeout(() => this.createChart());
+  }
+
+  // Gets a translated text
+  private translate(key: string, params?: Record<string, unknown>): string {
+    return this._translate.instant(key, params);
+  }
+
+  // Gets translated month names
+  private getMonths(): string[] {
+    return [
+      this.translate('STATS.BIRTHDAYS.MONTHS.JANUARY'),
+      this.translate('STATS.BIRTHDAYS.MONTHS.FEBRUARY'),
+      this.translate('STATS.BIRTHDAYS.MONTHS.MARCH'),
+      this.translate('STATS.BIRTHDAYS.MONTHS.APRIL'),
+      this.translate('STATS.BIRTHDAYS.MONTHS.MAY'),
+      this.translate('STATS.BIRTHDAYS.MONTHS.JUNE'),
+      this.translate('STATS.BIRTHDAYS.MONTHS.JULY'),
+      this.translate('STATS.BIRTHDAYS.MONTHS.AUGUST'),
+      this.translate('STATS.BIRTHDAYS.MONTHS.SEPTEMBER'),
+      this.translate('STATS.BIRTHDAYS.MONTHS.OCTOBER'),
+      this.translate('STATS.BIRTHDAYS.MONTHS.NOVEMBER'),
+      this.translate('STATS.BIRTHDAYS.MONTHS.DECEMBER'),
+    ];
+  }
+
+  // Gets a translated month by its number
+  private getMonthName(month: number): string {
+    return this.getMonths()[month - 1] ?? '';
   }
 
   // Creates the corresponding chart according to the selected view
@@ -78,49 +109,52 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
     if (!this.birthdaysChart || !this.birthdays) {
       return;
     }
-    // Repeated birthdays use a Bubble chart.
+
     if (this.selectedView === 'repeated') {
       this.createRepeatedBubbleChart();
       return;
     }
-    // Calendar birthdays use a Matrix heatmap.
+
     if (this.selectedView === 'calendar') {
       this.createCalendarHeatmap();
       return;
     }
-    // Unusual birthdays use a Line chart.
+
     if (this.selectedView === 'unusual') {
       this.createUnusualLineChart();
-      return;
     }
   }
 
   // REPEATED
-  // Creates the Bubble chart for repeated birthdays.
+  // Creates the Bubble chart for repeated birthdays
   private createRepeatedBubbleChart(): void {
     if (!this.birthdaysChart || !this.birthdays) {
       return;
     }
+
     const repeated = this.birthdays.repeated;
+
     if (!repeated || repeated.length === 0) {
+      this.destroyChart();
       return;
     }
-    // Destroy previous chart.
+
     this.destroyChart();
+
     this.chart = new Chart(this.birthdaysChart.nativeElement, {
       type: 'bubble',
       data: {
         datasets: [
           {
-            label: 'Repeated Birthdays',
-            // Each bubble represents one repeated birthday date.
+            label: this.translate('STATS.BIRTHDAYS.LABELS.REPEATED_BIRTHDAYS'),
+            // Each bubble represents one repeated birthday date
             data: repeated.map(item => ({
               x: item.month,
               y: item.day,
-              // More guests means a larger bubble.
+              // More guests means a larger bubble
               r: Math.max(10, item.total * 6),
             })),
-            // Use one color for repeated birthday dates.
+            // Use one color for repeated birthday dates
             backgroundColor: BIRTHDAYS_COLORS.repeated.background,
             borderColor: BIRTHDAYS_COLORS.repeated.border,
             borderWidth: 1,
@@ -133,24 +167,26 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
           if (!elements.length) {
             return;
           }
+
           const index = elements[0].index;
           const item = repeated[index];
 
           if (!item) {
             return;
           }
+
           this.navigateToBirthday(item.month, item.day);
         },
         maintainAspectRatio: false,
         plugins: {
           title: {
             display: true,
-            text: 'Repeated Birthdays',
+            text: this.translate('STATS.BIRTHDAYS.TITLES.REPEATED'),
           },
           legend: {
             display: true,
           },
-          // Show birthday information when hovering over a bubble.
+          // Show birthday information when hovering over a bubble
           tooltip: {
             callbacks: {
               title: context => {
@@ -159,47 +195,36 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
               },
               label: context => {
                 const item = repeated[context.dataIndex];
-                return `Guests: ${item.total}`;
+
+                return this.translate('STATS.BIRTHDAYS.TOOLTIPS.GUESTS', {
+                  count: item.total,
+                });
               },
               afterBody: context => {
                 const item = repeated[context[0].dataIndex];
 
-                return ['', 'Guests:', ...item.guests.map(guest => `• ${guest.fullName}`)];
+                return ['', this.translate('STATS.BIRTHDAYS.LABELS.GUESTS'), ...item.guests.map(guest => `• ${guest.fullName}`)];
               },
             },
           },
         },
         scales: {
-          // X axis represents the month.
+          // X axis represents the month
           x: {
             min: 0,
             max: 13,
             ticks: {
               stepSize: 1,
               callback: value => {
-                const months: Record<number, string> = {
-                  1: 'January',
-                  2: 'February',
-                  3: 'March',
-                  4: 'April',
-                  5: 'May',
-                  6: 'June',
-                  7: 'July',
-                  8: 'August',
-                  9: 'September',
-                  10: 'October',
-                  11: 'November',
-                  12: 'December',
-                };
-                return months[value as number] ?? '';
+                return this.getMonthName(Number(value));
               },
             },
             title: {
               display: true,
-              text: 'Month',
+              text: this.translate('STATS.BIRTHDAYS.AXES.MONTH'),
             },
           },
-          // Y axis represents the day of the month.
+          // Y axis represents the day of the month
           y: {
             min: 1,
             max: 31,
@@ -209,7 +234,7 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
             },
             title: {
               display: true,
-              text: 'Day',
+              text: this.translate('STATS.BIRTHDAYS.AXES.DAY'),
             },
           },
         },
@@ -218,16 +243,19 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
   }
 
   // UNUSUAL
+  // Creates the Line chart for unusual birthdays
   private createUnusualLineChart(): void {
     if (!this.birthdaysChart || !this.birthdays) {
       return;
     }
+
     const unusual = this.birthdays.unusual;
+
     if (!unusual || unusual.length === 0) {
+      this.destroyChart();
       return;
     }
 
-    // Destroy previous chart.
     this.destroyChart();
 
     this.chart = new Chart(this.birthdaysChart.nativeElement, {
@@ -235,7 +263,7 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
       data: {
         datasets: [
           {
-            label: 'Unusual Birthdays',
+            label: this.translate('STATS.BIRTHDAYS.LABELS.UNUSUAL_BIRTHDAYS'),
             data: unusual.map(item => ({
               x: item.month,
               y: item.day,
@@ -246,7 +274,7 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
             pointRadius: 8,
             pointHoverRadius: 11,
             tension: 0,
-            // Connect the unusual birthday dates.
+            // Connect the unusual birthday dates
             showLine: true,
           },
         ],
@@ -257,12 +285,14 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
           if (!elements.length) {
             return;
           }
+
           const index = elements[0].index;
           const item = unusual[index];
 
           if (!item) {
             return;
           }
+
           this.navigateToBirthday(item.month, item.day);
         },
         maintainAspectRatio: false,
@@ -277,7 +307,7 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
         plugins: {
           title: {
             display: true,
-            text: 'Unusual Birthdays',
+            text: this.translate('STATS.BIRTHDAYS.TITLES.UNUSUAL'),
           },
           legend: {
             display: true,
@@ -290,11 +320,21 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
               },
               label: context => {
                 const item = unusual[context.dataIndex];
-                return `Reason: ${item.reason}`;
+
+                return this.translate('STATS.BIRTHDAYS.TOOLTIPS.REASON', {
+                  reason: item.reason,
+                });
               },
               afterBody: context => {
                 const item = unusual[context[0].dataIndex];
-                return [`Guests: ${item.total}`, '', ...item.guests.map(guest => `• ${guest.fullName}`)];
+
+                return [
+                  this.translate('STATS.BIRTHDAYS.TOOLTIPS.GUESTS', {
+                    count: item.total,
+                  }),
+                  '',
+                  ...item.guests.map(guest => `• ${guest.fullName}`),
+                ];
               },
             },
           },
@@ -308,26 +348,12 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
             ticks: {
               stepSize: 1,
               callback: value => {
-                const months: Record<number, string> = {
-                  1: 'January',
-                  2: 'February',
-                  3: 'March',
-                  4: 'April',
-                  5: 'May',
-                  6: 'June',
-                  7: 'July',
-                  8: 'August',
-                  9: 'September',
-                  10: 'October',
-                  11: 'November',
-                  12: 'December',
-                };
-                return months[value as number] ?? '';
+                return this.getMonthName(Number(value));
               },
             },
             title: {
               display: true,
-              text: 'Month',
+              text: this.translate('STATS.BIRTHDAYS.AXES.MONTH'),
             },
           },
           y: {
@@ -343,7 +369,7 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
             },
             title: {
               display: true,
-              text: 'Day',
+              text: this.translate('STATS.BIRTHDAYS.AXES.DAY'),
             },
           },
         },
@@ -352,23 +378,28 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
   }
 
   // CALENDAR
+  // Creates the Matrix heatmap for birthdays
   private createCalendarHeatmap(): void {
     if (!this.birthdaysChart || !this.birthdays) {
       return;
     }
+
     const calendar = this.birthdays.calendar;
+
     if (!calendar || calendar.length === 0) {
+      this.destroyChart();
       return;
     }
 
-    // Destroy previous chart.
     this.destroyChart();
 
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const months = this.getMonths();
     const days = Array.from({ length: 31 }, (_, index) => String(index + 1));
-    // Store birthday information by month and day.
+
+    // Store birthday information by month and day
     const birthdayMap = new Map(calendar.map(item => [`${item.month}-${item.day}`, item]));
-    // Create all 12 × 31 calendar cells.
+
+    // Create all 12 × 31 calendar cells
     const calendarData = months.flatMap((month, monthIndex) =>
       days.map(day => {
         const monthNumber = monthIndex + 1;
@@ -388,7 +419,7 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
       data: {
         datasets: [
           {
-            label: 'Birthdays Calendar',
+            label: this.translate('STATS.BIRTHDAYS.LABELS.CALENDAR'),
             data: calendarData,
             backgroundColor: context => {
               const value = context.dataset.data[context.dataIndex] as {
@@ -415,22 +446,22 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
             },
             borderColor: BIRTHDAYS_COLORS.calendar.border,
             borderWidth: 1,
-
             width: ({ chart }) => {
               const area = chart.chartArea;
 
               if (!area) {
                 return 20;
               }
+
               return (area.right - area.left) / 12 - 2;
             },
-
             height: ({ chart }) => {
               const area = chart.chartArea;
 
               if (!area) {
                 return 20;
               }
+
               return (area.bottom - area.top) / 31 - 2;
             },
           },
@@ -442,11 +473,14 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
           if (!elements.length) {
             return;
           }
+
           const index = elements[0].index;
           const cell = calendarData[index];
+
           if (!cell || cell.v === 0) {
             return;
           }
+
           const monthIndex = months.indexOf(cell.x) + 1;
           const day = Number(cell.y);
 
@@ -464,7 +498,7 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
         plugins: {
           title: {
             display: true,
-            text: 'Birthdays Calendar',
+            text: this.translate('STATS.BIRTHDAYS.TITLES.CALENDAR'),
           },
           legend: {
             display: false,
@@ -489,7 +523,10 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
                   y: string;
                   v: number;
                 };
-                return `Guests: ${value.v}`;
+
+                return this.translate('STATS.BIRTHDAYS.TOOLTIPS.GUESTS', {
+                  count: value.v,
+                });
               },
               afterBody: context => {
                 const value = context[0].raw as {
@@ -505,6 +542,7 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
                 if (!item) {
                   return [];
                 }
+
                 return ['', ...item.guests.map(guest => `• ${guest.fullName}`)];
               },
             },
@@ -520,7 +558,7 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
             },
             title: {
               display: true,
-              text: 'Month',
+              text: this.translate('STATS.BIRTHDAYS.AXES.MONTH'),
             },
           },
           y: {
@@ -533,7 +571,7 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
             },
             title: {
               display: true,
-              text: 'Day',
+              text: this.translate('STATS.BIRTHDAYS.AXES.DAY'),
             },
           },
         },
@@ -541,15 +579,16 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
     });
   }
 
-  // Destroy the current chart instance.
+  // Destroy the current chart instance
   private destroyChart(): void {
     this.chart?.destroy();
     this.chart = undefined;
   }
 
-  // Clean up chart when the component is destroyed.
+  // Clean up chart and subscription when the component is destroyed
   ngOnDestroy(): void {
     this.destroyChart();
+    this.langChangeSubscription.unsubscribe();
   }
 
   private navigateToBirthday(month: number, day: number): void {
