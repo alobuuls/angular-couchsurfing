@@ -1,0 +1,29 @@
+services:
+  front-cs-image-dev:
+    image: front-cs-image-dev
+
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: dev
+
+    container_name: front-cs-container-dev
+    restart: unless-stopped
+
+    ports:
+      - '4200:4200'
+
+    volumes:
+      - .:/docker-cs-app
+      - /docker-cs-app/node_modules
+
+    security_opt:
+      - no-new-privileges:true
+
+    networks:
+      - cs_network_dev
+
+networks:
+  cs_network_dev:
+    name: cs_network_dev
+    external: true

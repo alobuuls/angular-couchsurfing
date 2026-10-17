@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
 
-  endpointUrlApiCs: 'http://localhost:3001/api/v1',
+  endpointUrlApiCs: '/api/v1',
 
   exampleEndpoint400: 'https://httpbin.org/status/400',
   exampleEndpoint404: 'https://httpbin.org/status/404',

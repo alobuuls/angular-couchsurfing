@@ -31,7 +31,7 @@ jobs:
           echo "NG_APP_KEY_CARTO=${{ secrets.NG_APP_KEY_CARTO }}" >> .env
 
       - name: Build Angular
-        run: npm run build -- --configuration production --base-href /angular-couchsurfing/
+        run: npm run build -- --configuration production,github-pages --base-href /angular-couchsurfing/
 
       - name: Fix Angular routing
         run: cp ./dist/couchsurfing-app/index.html ./dist/couchsurfing-app/404.html
