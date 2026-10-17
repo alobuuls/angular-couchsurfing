@@ -122,7 +122,9 @@
     "REGION": "地域",
     "CONTINENT": "大陸",
     "UNITED_KINGDOM": "イギリス",
-    "UNKNOWN_COUNTRY": "不明な国"
+    "UNKNOWN_COUNTRY": "不明な国",
+    "VIEW_GUESTS": "ゲストを見る",
+    "VIEW_GUEST": "ゲストを見る"
   },
   "GUESTS_CARDS": {
     "GUEST": "ゲスト",

@@ -121,7 +121,9 @@
     "GUESTS": "Gäste",
     "REGION": "Region",
     "CONTINENT": "Kontinent",
-    "UNITED_KINGDOM": "Vereinigtes Königreich"
+    "UNITED_KINGDOM": "Vereinigtes Königreich",
+    "VIEW_GUESTS": "Gäste anzeigen",
+    "VIEW_GUEST": "Gast anzeigen"
   },
   "GUESTS_CARDS": {
     "GUEST": "Gast",
