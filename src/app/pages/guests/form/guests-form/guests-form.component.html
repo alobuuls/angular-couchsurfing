@@ -1,37 +1,50 @@
 <!-- Group Type (solo en Create) -->
 <section class="group-type-section" *ngIf="mode === 'create'">
-  <h2 class="title-form">How did they travel?</h2>
+  <h2 class="title-form">
+    {{ 'GUESTS_FORM.GROUP_TYPE_TITLE' | translate }}
+  </h2>
 
   <mat-radio-group [value]="selectedGroupType" (change)="selectGroupType($event.value)">
-    <mat-radio-button value="solo">Solo</mat-radio-button>
+    <mat-radio-button value="solo">
+      {{ 'GUESTS_FORM.GROUP_TYPES.SOLO' | translate }}
+    </mat-radio-button>
 
-    <mat-radio-button value="couple">Couple</mat-radio-button>
+    <mat-radio-button value="couple">
+      {{ 'GUESTS_FORM.GROUP_TYPES.COUPLE' | translate }}
+    </mat-radio-button>
 
-    <mat-radio-button value="friends">Friends</mat-radio-button>
+    <mat-radio-button value="friends">
+      {{ 'GUESTS_FORM.GROUP_TYPES.FRIENDS' | translate }}
+    </mat-radio-button>
 
-    <mat-radio-button value="family">Family</mat-radio-button>
+    <mat-radio-button value="family">
+      {{ 'GUESTS_FORM.GROUP_TYPES.FAMILY' | translate }}
+    </mat-radio-button>
   </mat-radio-group>
 </section>
 
 <!-- Form -->
 <section *ngIf="selectedGroupType">
   <!-- Trip -->
-  <app-trip-form [trip]="guest || group?.[0]"> </app-trip-form>
+  <app-trip-form [trip]="guest || group?.[0]"></app-trip-form>
 
   <!-- CREATE -->
   <ng-container *ngIf="mode === 'create'">
-    <app-guest-form *ngFor="let form of [].constructor(formsToShow)" [selectedGroupType]="selectedGroupType">
-    </app-guest-form>
+    <app-guest-form
+      *ngFor="let form of [].constructor(formsToShow)"
+      [selectedGroupType]="selectedGroupType"
+    ></app-guest-form>
   </ng-container>
 
   <!-- EDIT -->
   <ng-container *ngIf="mode === 'edit'">
-    <!-- Solo -->
-    <app-guest-form *ngIf="guest" [guest]="guest" [selectedGroupType]="selectedGroupType"> </app-guest-form>
+    <app-guest-form *ngIf="guest" [guest]="guest" [selectedGroupType]="selectedGroupType"></app-guest-form>
 
-    <!-- Group -->
-    <app-guest-form *ngFor="let member of group" [guest]="member" [selectedGroupType]="selectedGroupType">
-    </app-guest-form>
+    <app-guest-form
+      *ngFor="let member of group"
+      [guest]="member"
+      [selectedGroupType]="selectedGroupType"
+    ></app-guest-form>
   </ng-container>
 
   <!-- Add Guest -->
@@ -42,14 +55,17 @@
     mat-stroked-button
     (click)="addGuestForm()"
   >
-    Add another guest
+    {{ 'GUESTS_FORM.ADD_GUEST' | translate }}
   </button>
 
   <!-- Submit -->
   <button id="btn-create-guest" type="button" mat-raised-button [disabled]="wasFormSubmitted" (click)="submit()">
-    <mat-icon class="material-symbols-outlined" *ngIf="wasFormSubmitted" class="loading-animation" fontIcon="refresh">
-    </mat-icon>
+    <mat-icon
+      *ngIf="wasFormSubmitted"
+      class="material-symbols-outlined loading-animation"
+      fontIcon="refresh"
+    ></mat-icon>
 
-    {{ mode === 'create' ? 'Create' : 'Update' }}
+    {{ (mode === 'create' ? 'GUESTS_FORM.CREATE' : 'GUESTS_FORM.UPDATE') | translate }}
   </button>
 </section>

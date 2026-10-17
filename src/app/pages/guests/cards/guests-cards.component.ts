@@ -1,7 +1,10 @@
 import { Component, EventEmitter, HostListener, Input, Output, inject } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 // Interfaces
-import { IGuestTableRow, IGuestYearGroup } from '@interfaces/data-structure-api';
+import { ICurrentView, IGuestTableRow, IGuestYearGroup } from '@interfaces/data-structure-api';
 import { ICardGuest } from '@interfaces/guests.interface';
 
 // Services
@@ -13,10 +16,46 @@ import { FormatService } from '@services/format.service';
   templateUrl: './guests-cards.component.html',
   styleUrls: ['./guests-cards.component.css'],
 })
-export class GuestsCardsComponent {
+export class GuestsCardsComponent implements OnDestroy {
   _format = inject(FormatService);
   private _guests = inject(GuestsService);
+  private readonly _translate = inject(TranslateService);
   private _data: IGuestTableRow[] = [];
+
+  dateLocale = 'en-US';
+
+  private _langChangeSubscription!: Subscription;
+
+  constructor() {
+    this.dateLocale = this.getDateLocale(this._translate.currentLang || 'en');
+
+    this._langChangeSubscription = this._translate.onLangChange.subscribe(({ lang }) => {
+      this.dateLocale = this.getDateLocale(lang);
+      this.groupGuestsByDate();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this._langChangeSubscription.unsubscribe();
+  }
+
+  private getDateLocale(language: string): string {
+    const locales: Record<string, string> = {
+      en: 'en-US',
+      es: 'es-ES',
+      de: 'de-DE',
+      zh: 'zh-CN',
+      fr: 'fr-FR',
+      it: 'it-IT',
+      pt: 'pt-PT',
+      ru: 'ru-RU',
+      ja: 'ja-JP',
+    };
+
+    return locales[language] ?? 'en-US';
+  }
+
+  @Input() cardsHasMore: boolean = false;
 
   @Input()
   set data(value: IGuestTableRow[]) {
@@ -100,9 +139,23 @@ export class GuestsCardsComponent {
   }
 
   private getMonthName(month: number): string {
-    return new Intl.DateTimeFormat('en-US', {
+    return new Intl.DateTimeFormat(this.dateLocale, {
       month: 'long',
     }).format(new Date(2024, month, 1));
+  }
+
+  formatDate(value: Date | string): string {
+    if (!value) return '';
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) return '';
+
+    return new Intl.DateTimeFormat(this.dateLocale, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }).format(date);
   }
 
   // Open / close a card

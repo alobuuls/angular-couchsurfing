@@ -1,6 +1,7 @@
 import { Component, DestroyRef, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslateService } from '@ngx-translate/core';
 
 // Cdk
 import { LiveAnnouncer } from '@angular/cdk/a11y';
@@ -19,11 +20,11 @@ import { CityService, ICity, IState } from '@services/city.service';
 import { IBodyGuest, IGuestDetail } from '@interfaces/guests.interface';
 
 // Types
-import { ICountry, CountriesCodes } from '@type/word.types';
+import { ICountry, CountriesCodes, LANG, Language } from '@type/word.types';
 
 // Const
 import { WORLD } from '@config/world';
-import { OCCUPATIONS_BY_AREA } from '@config/occupations/occupations';
+import { OCCUPATIONS_BY_AREA, OCCUPATION_AREA_TRANSLATIONS, OCCUPATION_TRANSLATIONS } from '@config/occupations/occupations';
 
 @Component({
   selector: 'app-guest-form',
@@ -54,11 +55,11 @@ export class GuestFormComponent implements OnInit {
   hoverRating: number = 0;
 
   ratingMsgs: Record<number, string> = {
-    1: 'Super Bad',
-    2: 'Bad',
-    3: 'Normal',
-    4: 'Good',
-    5: 'Excelent',
+    1: 'GUEST_FORM.RATING.1',
+    2: 'GUEST_FORM.RATING.2',
+    3: 'GUEST_FORM.RATING.3',
+    4: 'GUEST_FORM.RATING.4',
+    5: 'GUEST_FORM.RATING.5',
   };
 
   // BirthDate Limit
@@ -75,6 +76,18 @@ export class GuestFormComponent implements OnInit {
   // Occupations
   occupationAreas = Object.keys(OCCUPATIONS_BY_AREA);
   occupations: string[] = [];
+
+  getOccupationAreaLabel(area: string): string {
+    const lang = this._translate.currentLang || 'en';
+
+    return OCCUPATION_AREA_TRANSLATIONS[area]?.[lang as 'en' | 'es'] ?? OCCUPATION_AREA_TRANSLATIONS[area]?.en ?? area;
+  }
+
+  getOccupationLabel(occupation: string): string {
+    const lang = this._translate.currentLang || 'en';
+
+    return OCCUPATION_TRANSLATIONS[occupation]?.[lang as 'en' | 'es'] ?? OCCUPATION_TRANSLATIONS[occupation]?.en ?? occupation;
+  }
 
   // Gifts
   addOnBlur = true;
@@ -101,6 +114,11 @@ export class GuestFormComponent implements OnInit {
   weMetCities: ICity[] = [];
 
   private readonly destroyRef = inject(DestroyRef);
+  private fb = inject(FormBuilder);
+  private _alerts = inject(AlertsService);
+  private announcer = inject(LiveAnnouncer);
+  private _city = inject(CityService);
+  private _translate = inject(TranslateService);
 
   get f() {
     return this.formCreateGuest.controls;
@@ -134,22 +152,19 @@ export class GuestFormComponent implements OnInit {
     return this.formCreateGuest.get('stateWeMet');
   }
 
-  constructor(
-    private fb: FormBuilder,
-    private _alerts: AlertsService,
-    private announcer: LiveAnnouncer,
-    private _city: CityService
-  ) {}
-
   ngOnInit(): void {
     this.initForm();
     this.loadDataCountries();
+
+    this._translate.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.sortCountriesByLanguage();
+    });
 
     this.filteredCountries = this.countries;
     this.filteredLiving = this.countries;
     this.filteredCountryWeMet = this.countries;
     this.filteredPrefixCountries = this.countries;
-    
+
     this.selectedPrefixCountry = this.countries.find(country => country.prefix === this.prefixCodeCtrl?.value);
 
     this.formCreateGuest.patchValue({ groupType: this.selectedGroupType });
@@ -321,7 +336,7 @@ export class GuestFormComponent implements OnInit {
   displayCountryCode = (countryCode: string | null): string => {
     if (!countryCode) return '';
     const country = this.countries.find(country => country.countryCode === countryCode);
-    return country?.name ?? '';
+    return country?.name?.en ?? '';
   };
 
   displayPrefix = (value: string | (ICountry & { countryCode: CountriesCodes }) | null): string => {
@@ -355,15 +370,40 @@ export class GuestFormComponent implements OnInit {
     this.formCreateGuest.patchValue({ rating });
   }
 
-  getRatingMsg() {
+  getRatingMsg(): string {
     const rating = this.hoverRating || this.formCreateGuest.get('rating')?.value;
-    return this.ratingMsgs[rating];
+
+    if (!rating) return '';
+
+    return this._translate.instant(this.ratingMsgs[rating]);
   }
 
   loadDataCountries(): void {
-    this.countries = (Object.entries(WORLD) as [CountriesCodes, ICountry][])
-      .map(([countryCode, country]) => ({ countryCode, ...country }))
-      .sort((a, b) => a.name.localeCompare(b.name));
+    this.countries = (Object.entries(WORLD) as [CountriesCodes, ICountry][]).map(([countryCode, country]) => ({ countryCode, ...country }));
+    this.sortCountriesByLanguage();
+  }
+
+  getCountryName(country: ICountry): string {
+    const currentLang = this._translate.currentLang || 'en';
+    const lang: Language = LANG.includes(currentLang as Language) ? (currentLang as Language) : 'en';
+
+    return country.name[lang] || country.name.en;
+  }
+
+  private sortCountriesByLanguage(): void {
+    const currentLang = this._translate.currentLang || 'en';
+
+    const lang: Language = LANG.includes(currentLang as Language) ? (currentLang as Language) : 'en';
+
+    const sortByCountryName = (countries: Array<ICountry & { countryCode: CountriesCodes }>) => {
+      return [...countries].sort((a, b) => this.getCountryName(a).localeCompare(this.getCountryName(b), lang));
+    };
+
+    this.countries = sortByCountryName(this.countries);
+    this.filteredCountries = sortByCountryName(this.filteredCountries);
+    this.filteredLiving = sortByCountryName(this.filteredLiving);
+    this.filteredCountryWeMet = sortByCountryName(this.filteredCountryWeMet);
+    this.filteredPrefixCountries = sortByCountryName(this.filteredPrefixCountries);
   }
 
   private listenHometownCountry(): void {
@@ -589,7 +629,13 @@ export class GuestFormComponent implements OnInit {
   filterPrefixes(event: Event): void {
     const value = (event.target as HTMLInputElement).value.toLowerCase().trim();
 
-    this.filteredPrefixCountries = this.countries.filter(country => country.name.toLowerCase().includes(value) || country.prefix.includes(value));
+    this.filteredPrefixCountries = this.countries.filter(
+      country =>
+        this.getCountryName(country).toLowerCase().includes(value) ||
+        country.name.en.toLowerCase().includes(value) ||
+        country.countryCode.toLowerCase().includes(value) ||
+        country.prefix.includes(value)
+    );
   }
 
   selectPrefix(event: MatAutocompleteSelectedEvent): void {
@@ -610,20 +656,27 @@ export class GuestFormComponent implements OnInit {
   }
 
   filterHometowns(event: Event): void {
-    const value = (event.target as HTMLInputElement).value.toLowerCase();
+    const value = (event.target as HTMLInputElement).value.toLowerCase().trim();
 
-    this.filteredCountries = this.countries.filter(country => country.name.toLowerCase().includes(value));
+    this.filteredCountries = this.countries.filter(
+      country => this.getCountryName(country).toLowerCase().includes(value) || country.name.en.toLowerCase().includes(value) || country.countryCode.toLowerCase().includes(value)
+    );
   }
 
   filterLiving(event: Event): void {
-    const value = (event.target as HTMLInputElement).value.toLowerCase();
+    const value = (event.target as HTMLInputElement).value.toLowerCase().trim();
 
-    this.filteredLiving = this.countries.filter(country => country.name.toLowerCase().includes(value));
+    this.filteredLiving = this.countries.filter(
+      country => this.getCountryName(country).toLowerCase().includes(value) || country.name.en.toLowerCase().includes(value) || country.countryCode.toLowerCase().includes(value)
+    );
   }
 
   filterCountryWeMet(event: Event): void {
-    const value = (event.target as HTMLInputElement).value.toLowerCase();
-    this.filteredCountryWeMet = this.countries.filter(country => country.name.toLowerCase().includes(value));
+    const value = (event.target as HTMLInputElement).value.toLowerCase().trim();
+
+    this.filteredCountryWeMet = this.countries.filter(
+      country => this.getCountryName(country).toLowerCase().includes(value) || country.name.en.toLowerCase().includes(value) || country.countryCode.toLowerCase().includes(value)
+    );
   }
 
   // GIFTS
@@ -635,14 +688,14 @@ export class GuestFormComponent implements OnInit {
     if (!value) return;
 
     if (this.gifts.length >= 15) {
-      this._alerts.showToast({ icon: 'warning', title: 'maximum 15 gifts allowed' });
+      this._alerts.showToast({ icon: 'warning', title: this._translate.instant('GUEST_FORM.TOASTS.MAX_GIFTS') });
       return;
     }
 
     const isRepeat = this.gifts.some(gift => gift.name.toLowerCase() === value.toLowerCase());
 
     if (isRepeat) {
-      this._alerts.showToast({ icon: 'warning', title: 'This gift has already been added' });
+      this._alerts.showToast({ icon: 'warning', title: this._translate.instant('GUEST_FORM.TOASTS.DUPLICATE_GIFT') });
       return;
     }
 
@@ -657,7 +710,7 @@ export class GuestFormComponent implements OnInit {
     if (index >= 0) {
       this.gifts.splice(index, 1);
       this.updatedGiftsForm();
-      this.announcer.announce(`Removed ${gift}`);
+      this.announcer.announce(this._translate.instant('GUEST_FORM.ANNOUNCEMENTS.GIFT_REMOVED'));
     }
   }
 
@@ -675,7 +728,7 @@ export class GuestFormComponent implements OnInit {
     if (isRepeat) {
       this._alerts.showToast({
         icon: 'warning',
-        title: 'This gift already exists',
+        title: this._translate.instant('GUEST_FORM.TOASTS.GIFT_EXISTS'),
       });
       return;
     }
@@ -694,14 +747,14 @@ export class GuestFormComponent implements OnInit {
 
   clearGiftInput(): void {
     if (!this.gifts.length) {
-      this._alerts.showToast({ icon: 'info', title: 'There are no gifts to clear' });
+      this._alerts.showToast({ icon: 'info', title: this._translate.instant('GUEST_FORM.TOASTS.NO_GIFTS') });
       return;
     }
 
     this.gifts.length = 0;
     this.updatedGiftsForm();
 
-    this._alerts.showToast({ icon: 'success', title: 'Gift list cleared' });
+    this._alerts.showToast({ icon: 'success', title: this._translate.instant('GUEST_FORM.TOASTS.GIFTS_CLEARED') });
   }
 
   btnSetToday(): void {

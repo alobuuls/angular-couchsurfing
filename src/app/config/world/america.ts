@@ -5,23 +5,89 @@ export const AMERICA = {
 
   can: {
     flag: 'ca',
-    name: 'Canada',
+    name: {
+      en: 'Canada',
+      es: 'Canadá',
+      de: 'Kanada',
+      zh: '加拿大',
+      fr: 'Canada',
+      it: 'Canada',
+      pt: 'Canadá',
+      ru: 'Канада',
+      ja: 'カナダ',
+    },
     prefix: '+1',
+    continent: 'america',
+    region: 'north_america',
+  },
+
+  grl: {
+    flag: 'gl',
+    name: {
+      en: 'Greenland',
+      es: 'Groenlandia',
+      de: 'Grönland',
+      zh: '格陵兰',
+      fr: 'Groenland',
+      it: 'Groenlandia',
+      pt: 'Gronelândia',
+      ru: 'Гренландия',
+      ja: 'グリーンランド',
+    },
+    prefix: '+299',
     continent: 'america',
     region: 'north_america',
   },
 
   mex: {
     flag: 'mx',
-    name: 'Mexico',
+    name: {
+      en: 'Mexico',
+      es: 'México',
+      de: 'Mexiko',
+      zh: '墨西哥',
+      fr: 'Mexique',
+      it: 'Messico',
+      pt: 'México',
+      ru: 'Мексика',
+      ja: 'メキシコ',
+    },
     prefix: '+52',
+    continent: 'america',
+    region: 'north_america',
+  },
+
+  spm: {
+    flag: 'pm',
+    name: {
+      en: 'Saint Pierre and Miquelon',
+      es: 'San Pedro y Miquelón',
+      de: 'Saint-Pierre und Miquelon',
+      zh: '圣皮埃尔和密克隆',
+      fr: 'Saint-Pierre-et-Miquelon',
+      it: 'Saint-Pierre e Miquelon',
+      pt: 'Saint-Pierre e Miquelon',
+      ru: 'Сен-Пьер и Микелон',
+      ja: 'サンピエール島・ミクロン島',
+    },
+    prefix: '+508',
     continent: 'america',
     region: 'north_america',
   },
 
   usa: {
     flag: 'us',
-    name: 'United States',
+    name: {
+      en: 'United States',
+      es: 'Estados Unidos',
+      de: 'Vereinigte Staaten',
+      zh: '美国',
+      fr: 'États-Unis',
+      it: 'Stati Uniti',
+      pt: 'Estados Unidos',
+      ru: 'Соединённые Штаты',
+      ja: 'アメリカ合衆国',
+    },
     prefix: '+1',
     continent: 'america',
     region: 'north_america',
@@ -31,31 +97,125 @@ export const AMERICA = {
 
   abw: {
     flag: 'aw',
-    name: 'Aruba',
+    name: {
+      en: 'Aruba',
+      es: 'Aruba',
+      de: 'Aruba',
+      zh: '阿鲁巴',
+      fr: 'Aruba',
+      it: 'Aruba',
+      pt: 'Aruba',
+      ru: 'Аруба',
+      ja: 'アルバ',
+    },
     prefix: '+297',
+    continent: 'america',
+    region: 'caribbean',
+  },
+
+  aia: {
+    flag: 'ai',
+    name: {
+      en: 'Anguilla',
+      es: 'Anguila',
+      de: 'Anguilla',
+      zh: '安圭拉',
+      fr: 'Anguilla',
+      it: 'Anguilla',
+      pt: 'Anguila',
+      ru: 'Ангилья',
+      ja: 'アンギラ',
+    },
+    prefix: '+1-264',
     continent: 'america',
     region: 'caribbean',
   },
 
   atg: {
     flag: 'ag',
-    name: 'Antigua and Barbuda',
+    name: {
+      en: 'Antigua and Barbuda',
+      es: 'Antigua y Barbuda',
+      de: 'Antigua und Barbuda',
+      zh: '安提瓜和巴布达',
+      fr: 'Antigua-et-Barbuda',
+      it: 'Antigua e Barbuda',
+      pt: 'Antígua e Barbuda',
+      ru: 'Антигуа и Барбуда',
+      ja: 'アンティグア・バーブーダ',
+    },
     prefix: '+1-268',
+    continent: 'america',
+    region: 'caribbean',
+  },
+
+  bes: {
+    flag: 'bq',
+    name: {
+      en: 'Caribbean Netherlands',
+      es: 'Caribe Neerlandés',
+      de: 'Karibische Niederlande',
+      zh: '荷属加勒比区',
+      fr: 'Pays-Bas caribéens',
+      it: 'Caraibi olandesi',
+      pt: 'Caraíbas Neerlandesas',
+      ru: 'Карибские Нидерланды',
+      ja: 'カリブ海オランダ',
+    },
+    prefix: '+599',
     continent: 'america',
     region: 'caribbean',
   },
 
   bhs: {
     flag: 'bs',
-    name: 'Bahamas',
+    name: {
+      en: 'Bahamas',
+      es: 'Bahamas',
+      de: 'Bahamas',
+      zh: '巴哈马',
+      fr: 'Bahamas',
+      it: 'Bahamas',
+      pt: 'Bahamas',
+      ru: 'Багамы',
+      ja: 'バハマ',
+    },
     prefix: '+1-242',
     continent: 'america',
     region: 'caribbean',
   },
 
+  bmu: {
+    flag: 'bm',
+    name: {
+      en: 'Bermuda',
+      es: 'Bermudas',
+      de: 'Bermuda',
+      zh: '百慕大',
+      fr: 'Bermudes',
+      it: 'Bermuda',
+      pt: 'Bermudas',
+      ru: 'Бермуды',
+      ja: 'バミューダ',
+    },
+    prefix: '+1-441',
+    continent: 'america',
+    region: 'north_america',
+  },
+
   brb: {
     flag: 'bb',
-    name: 'Barbados',
+    name: {
+      en: 'Barbados',
+      es: 'Barbados',
+      de: 'Barbados',
+      zh: '巴巴多斯',
+      fr: 'Barbade',
+      it: 'Barbados',
+      pt: 'Barbados',
+      ru: 'Барбадос',
+      ja: 'バルバドス',
+    },
     prefix: '+1-246',
     continent: 'america',
     region: 'caribbean',
@@ -63,7 +223,17 @@ export const AMERICA = {
 
   vgb: {
     flag: 'vg',
-    name: 'British Virgin Islands',
+    name: {
+      en: 'British Virgin Islands',
+      es: 'Islas Vírgenes Británicas',
+      de: 'Britische Jungferninseln',
+      zh: '英属维尔京群岛',
+      fr: 'Îles Vierges britanniques',
+      it: 'Isole Vergini britanniche',
+      pt: 'Ilhas Virgens Britânicas',
+      ru: 'Британские Виргинские острова',
+      ja: 'イギリス領ヴァージン諸島',
+    },
     prefix: '+1-284',
     continent: 'america',
     region: 'caribbean',
@@ -71,7 +241,17 @@ export const AMERICA = {
 
   cub: {
     flag: 'cu',
-    name: 'Cuba',
+    name: {
+      en: 'Cuba',
+      es: 'Cuba',
+      de: 'Kuba',
+      zh: '古巴',
+      fr: 'Cuba',
+      it: 'Cuba',
+      pt: 'Cuba',
+      ru: 'Куба',
+      ja: 'キューバ',
+    },
     prefix: '+53',
     continent: 'america',
     region: 'caribbean',
@@ -79,7 +259,17 @@ export const AMERICA = {
 
   cuw: {
     flag: 'cw',
-    name: 'Curaçao',
+    name: {
+      en: 'Curaçao',
+      es: 'Curazao',
+      de: 'Curaçao',
+      zh: '库拉索',
+      fr: 'Curaçao',
+      it: 'Curaçao',
+      pt: 'Curaçau',
+      ru: 'Кюрасао',
+      ja: 'キュラソー',
+    },
     prefix: '+599',
     continent: 'america',
     region: 'caribbean',
@@ -87,7 +277,17 @@ export const AMERICA = {
 
   cym: {
     flag: 'ky',
-    name: 'Cayman Islands',
+    name: {
+      en: 'Cayman Islands',
+      es: 'Islas Caimán',
+      de: 'Kaimaninseln',
+      zh: '开曼群岛',
+      fr: 'Îles Caïmans',
+      it: 'Isole Cayman',
+      pt: 'Ilhas Caimão',
+      ru: 'Каймановы острова',
+      ja: 'ケイマン諸島',
+    },
     prefix: '+1-345',
     continent: 'america',
     region: 'caribbean',
@@ -95,7 +295,17 @@ export const AMERICA = {
 
   dma: {
     flag: 'dm',
-    name: 'Dominica',
+    name: {
+      en: 'Dominica',
+      es: 'Dominica',
+      de: 'Dominica',
+      zh: '多米尼克',
+      fr: 'Dominique',
+      it: 'Dominica',
+      pt: 'Dominica',
+      ru: 'Доминика',
+      ja: 'ドミニカ国',
+    },
     prefix: '+1-767',
     continent: 'america',
     region: 'caribbean',
@@ -103,7 +313,17 @@ export const AMERICA = {
 
   dom: {
     flag: 'do',
-    name: 'Dominican Republic',
+    name: {
+      en: 'Dominican Republic',
+      es: 'República Dominicana',
+      de: 'Dominikanische Republik',
+      zh: '多米尼加共和国',
+      fr: 'République dominicaine',
+      it: 'Repubblica Dominicana',
+      pt: 'República Dominicana',
+      ru: 'Доминиканская Республика',
+      ja: 'ドミニカ共和国',
+    },
     prefix: '+1-809',
     continent: 'america',
     region: 'caribbean',
@@ -111,7 +331,17 @@ export const AMERICA = {
 
   glp: {
     flag: 'gp',
-    name: 'Guadeloupe',
+    name: {
+      en: 'Guadeloupe',
+      es: 'Guadalupe',
+      de: 'Guadeloupe',
+      zh: '瓜德罗普',
+      fr: 'Guadeloupe',
+      it: 'Guadalupa',
+      pt: 'Guadalupe',
+      ru: 'Гваделупа',
+      ja: 'グアドループ',
+    },
     prefix: '+590',
     continent: 'america',
     region: 'caribbean',
@@ -119,7 +349,17 @@ export const AMERICA = {
 
   grd: {
     flag: 'gd',
-    name: 'Grenada',
+    name: {
+      en: 'Grenada',
+      es: 'Granada',
+      de: 'Grenada',
+      zh: '格林纳达',
+      fr: 'Grenade',
+      it: 'Grenada',
+      pt: 'Granada',
+      ru: 'Гренада',
+      ja: 'グレナダ',
+    },
     prefix: '+1-473',
     continent: 'america',
     region: 'caribbean',
@@ -127,7 +367,17 @@ export const AMERICA = {
 
   hti: {
     flag: 'ht',
-    name: 'Haiti',
+    name: {
+      en: 'Haiti',
+      es: 'Haití',
+      de: 'Haiti',
+      zh: '海地',
+      fr: 'Haïti',
+      it: 'Haiti',
+      pt: 'Haiti',
+      ru: 'Гаити',
+      ja: 'ハイチ',
+    },
     prefix: '+509',
     continent: 'america',
     region: 'caribbean',
@@ -135,15 +385,35 @@ export const AMERICA = {
 
   jam: {
     flag: 'jm',
-    name: 'Jamaica',
-    prefix: '+1-876',
+    name: {
+      en: 'Jamaica',
+      es: 'Jamaica',
+      de: 'Jamaika',
+      zh: '牙买加',
+      fr: 'Jamaïque',
+      it: 'Giamaica',
+      pt: 'Jamaica',
+      ru: 'Ямайка',
+      ja: 'ジャマイカ',
+    },
+    prefix: '+1-876', // También existe +1-658.
     continent: 'america',
     region: 'caribbean',
   },
 
   msr: {
     flag: 'ms',
-    name: 'Montserrat',
+    name: {
+      en: 'Montserrat',
+      es: 'Montserrat',
+      de: 'Montserrat',
+      zh: '蒙特塞拉特',
+      fr: 'Montserrat',
+      it: 'Montserrat',
+      pt: 'Montserrat',
+      ru: 'Монтсеррат',
+      ja: 'モントセラト',
+    },
     prefix: '+1-664',
     continent: 'america',
     region: 'caribbean',
@@ -151,7 +421,17 @@ export const AMERICA = {
 
   mtq: {
     flag: 'mq',
-    name: 'Martinique',
+    name: {
+      en: 'Martinique',
+      es: 'Martinica',
+      de: 'Martinique',
+      zh: '马提尼克',
+      fr: 'Martinique',
+      it: 'Martinica',
+      pt: 'Martinica',
+      ru: 'Мартиника',
+      ja: 'マルティニーク',
+    },
     prefix: '+596',
     continent: 'america',
     region: 'caribbean',
@@ -159,7 +439,17 @@ export const AMERICA = {
 
   pri: {
     flag: 'pr',
-    name: 'Puerto Rico',
+    name: {
+      en: 'Puerto Rico',
+      es: 'Puerto Rico',
+      de: 'Puerto Rico',
+      zh: '波多黎各',
+      fr: 'Porto Rico',
+      it: 'Porto Rico',
+      pt: 'Porto Rico',
+      ru: 'Пуэрто-Рико',
+      ja: 'プエルトリコ',
+    },
     prefix: '+1-787',
     continent: 'america',
     region: 'caribbean',
@@ -167,7 +457,17 @@ export const AMERICA = {
 
   kna: {
     flag: 'kn',
-    name: 'Saint Kitts and Nevis',
+    name: {
+      en: 'Saint Kitts and Nevis',
+      es: 'San Cristóbal y Nieves',
+      de: 'St. Kitts und Nevis',
+      zh: '圣基茨和尼维斯',
+      fr: 'Saint-Christophe-et-Niévès',
+      it: 'Saint Kitts e Nevis',
+      pt: 'São Cristóvão e Neves',
+      ru: 'Сент-Китс и Невис',
+      ja: 'セントクリストファー・ネービス',
+    },
     prefix: '+1-869',
     continent: 'america',
     region: 'caribbean',
@@ -175,7 +475,17 @@ export const AMERICA = {
 
   lca: {
     flag: 'lc',
-    name: 'Saint Lucia',
+    name: {
+      en: 'Saint Lucia',
+      es: 'Santa Lucía',
+      de: 'St. Lucia',
+      zh: '圣卢西亚',
+      fr: 'Sainte-Lucie',
+      it: 'Saint Lucia',
+      pt: 'Santa Lúcia',
+      ru: 'Сент-Люсия',
+      ja: 'セントルシア',
+    },
     prefix: '+1-758',
     continent: 'america',
     region: 'caribbean',
@@ -183,7 +493,17 @@ export const AMERICA = {
 
   sxm: {
     flag: 'sx',
-    name: 'Sint Maarten',
+    name: {
+      en: 'Sint Maarten',
+      es: 'Sint Maarten',
+      de: 'Sint Maarten',
+      zh: '荷属圣马丁',
+      fr: 'Saint-Martin (partie néerlandaise)',
+      it: 'Sint Maarten',
+      pt: 'São Martinho',
+      ru: 'Синт-Мартен',
+      ja: 'シント・マールテン',
+    },
     prefix: '+1-721',
     continent: 'america',
     region: 'caribbean',
@@ -191,7 +511,17 @@ export const AMERICA = {
 
   tca: {
     flag: 'tc',
-    name: 'Turks and Caicos Islands',
+    name: {
+      en: 'Turks and Caicos Islands',
+      es: 'Islas Turcas y Caicos',
+      de: 'Turks- und Caicosinseln',
+      zh: '特克斯和凯科斯群岛',
+      fr: 'Îles Turques-et-Caïques',
+      it: 'Isole Turks e Caicos',
+      pt: 'Ilhas Turcas e Caicos',
+      ru: 'Теркс и Кайкос',
+      ja: 'タークス・カイコス諸島',
+    },
     prefix: '+1-649',
     continent: 'america',
     region: 'caribbean',
@@ -199,7 +529,17 @@ export const AMERICA = {
 
   tto: {
     flag: 'tt',
-    name: 'Trinidad and Tobago',
+    name: {
+      en: 'Trinidad and Tobago',
+      es: 'Trinidad y Tobago',
+      de: 'Trinidad und Tobago',
+      zh: '特立尼达和多巴哥',
+      fr: 'Trinité-et-Tobago',
+      it: 'Trinidad e Tobago',
+      pt: 'Trindade e Tobago',
+      ru: 'Тринидад и Тобаго',
+      ja: 'トリニダード・トバゴ',
+    },
     prefix: '+1-868',
     continent: 'america',
     region: 'caribbean',
@@ -207,7 +547,17 @@ export const AMERICA = {
 
   vct: {
     flag: 'vc',
-    name: 'Saint Vincent and the Grenadines',
+    name: {
+      en: 'Saint Vincent and the Grenadines',
+      es: 'San Vicente y las Granadinas',
+      de: 'St. Vincent und die Grenadinen',
+      zh: '圣文森特和格林纳丁斯',
+      fr: 'Saint-Vincent-et-les-Grenadines',
+      it: 'Saint Vincent e Grenadine',
+      pt: 'São Vicente e Granadinas',
+      ru: 'Сент-Винсент и Гренадины',
+      ja: 'セントビンセント・グレナディーン',
+    },
     prefix: '+1-784',
     continent: 'america',
     region: 'caribbean',
@@ -215,7 +565,17 @@ export const AMERICA = {
 
   vir: {
     flag: 'vi',
-    name: 'U.S. Virgin Islands',
+    name: {
+      en: 'U.S. Virgin Islands',
+      es: 'Islas Vírgenes de los Estados Unidos',
+      de: 'Amerikanische Jungferninseln',
+      zh: '美属维尔京群岛',
+      fr: 'Îles Vierges des États-Unis',
+      it: 'Isole Vergini Americane',
+      pt: 'Ilhas Virgens Americanas',
+      ru: 'Американские Виргинские острова',
+      ja: 'アメリカ領ヴァージン諸島',
+    },
     prefix: '+1-340',
     continent: 'america',
     region: 'caribbean',
@@ -225,7 +585,17 @@ export const AMERICA = {
 
   blz: {
     flag: 'bz',
-    name: 'Belize',
+    name: {
+      en: 'Belize',
+      es: 'Belice',
+      de: 'Belize',
+      zh: '伯利兹',
+      fr: 'Belize',
+      it: 'Belize',
+      pt: 'Belize',
+      ru: 'Белиз',
+      ja: 'ベリーズ',
+    },
     prefix: '+501',
     continent: 'america',
     region: 'central_america',
@@ -233,7 +603,17 @@ export const AMERICA = {
 
   cri: {
     flag: 'cr',
-    name: 'Costa Rica',
+    name: {
+      en: 'Costa Rica',
+      es: 'Costa Rica',
+      de: 'Costa Rica',
+      zh: '哥斯达黎加',
+      fr: 'Costa Rica',
+      it: 'Costa Rica',
+      pt: 'Costa Rica',
+      ru: 'Коста-Рика',
+      ja: 'コスタリカ',
+    },
     prefix: '+506',
     continent: 'america',
     region: 'central_america',
@@ -241,7 +621,17 @@ export const AMERICA = {
 
   slv: {
     flag: 'sv',
-    name: 'El Salvador',
+    name: {
+      en: 'El Salvador',
+      es: 'El Salvador',
+      de: 'El Salvador',
+      zh: '萨尔瓦多',
+      fr: 'Salvador',
+      it: 'El Salvador',
+      pt: 'El Salvador',
+      ru: 'Сальвадор',
+      ja: 'エルサルバドル',
+    },
     prefix: '+503',
     continent: 'america',
     region: 'central_america',
@@ -249,7 +639,17 @@ export const AMERICA = {
 
   gtm: {
     flag: 'gt',
-    name: 'Guatemala',
+    name: {
+      en: 'Guatemala',
+      es: 'Guatemala',
+      de: 'Guatemala',
+      zh: '危地马拉',
+      fr: 'Guatemala',
+      it: 'Guatemala',
+      pt: 'Guatemala',
+      ru: 'Гватемала',
+      ja: 'グアテマラ',
+    },
     prefix: '+502',
     continent: 'america',
     region: 'central_america',
@@ -257,7 +657,17 @@ export const AMERICA = {
 
   hnd: {
     flag: 'hn',
-    name: 'Honduras',
+    name: {
+      en: 'Honduras',
+      es: 'Honduras',
+      de: 'Honduras',
+      zh: '洪都拉斯',
+      fr: 'Honduras',
+      it: 'Honduras',
+      pt: 'Honduras',
+      ru: 'Гондурас',
+      ja: 'ホンジュラス',
+    },
     prefix: '+504',
     continent: 'america',
     region: 'central_america',
@@ -265,7 +675,17 @@ export const AMERICA = {
 
   nic: {
     flag: 'ni',
-    name: 'Nicaragua',
+    name: {
+      en: 'Nicaragua',
+      es: 'Nicaragua',
+      de: 'Nicaragua',
+      zh: '尼加拉瓜',
+      fr: 'Nicaragua',
+      it: 'Nicaragua',
+      pt: 'Nicarágua',
+      ru: 'Никарагуа',
+      ja: 'ニカラグア',
+    },
     prefix: '+505',
     continent: 'america',
     region: 'central_america',
@@ -273,7 +693,17 @@ export const AMERICA = {
 
   pan: {
     flag: 'pa',
-    name: 'Panama',
+    name: {
+      en: 'Panama',
+      es: 'Panamá',
+      de: 'Panama',
+      zh: '巴拿马',
+      fr: 'Panama',
+      it: 'Panama',
+      pt: 'Panamá',
+      ru: 'Панама',
+      ja: 'パナマ',
+    },
     prefix: '+507',
     continent: 'america',
     region: 'central_america',
@@ -283,7 +713,17 @@ export const AMERICA = {
 
   arg: {
     flag: 'ar',
-    name: 'Argentina',
+    name: {
+      en: 'Argentina',
+      es: 'Argentina',
+      de: 'Argentinien',
+      zh: '阿根廷',
+      fr: 'Argentine',
+      it: 'Argentina',
+      pt: 'Argentina',
+      ru: 'Аргентина',
+      ja: 'アルゼンチン',
+    },
     prefix: '+54',
     continent: 'america',
     region: 'south_america',
@@ -291,7 +731,17 @@ export const AMERICA = {
 
   bol: {
     flag: 'bo',
-    name: 'Bolivia',
+    name: {
+      en: 'Bolivia',
+      es: 'Bolivia',
+      de: 'Bolivien',
+      zh: '玻利维亚',
+      fr: 'Bolivie',
+      it: 'Bolivia',
+      pt: 'Bolívia',
+      ru: 'Боливия',
+      ja: 'ボリビア',
+    },
     prefix: '+591',
     continent: 'america',
     region: 'south_america',
@@ -299,7 +749,17 @@ export const AMERICA = {
 
   bra: {
     flag: 'br',
-    name: 'Brazil',
+    name: {
+      en: 'Brazil',
+      es: 'Brasil',
+      de: 'Brasilien',
+      zh: '巴西',
+      fr: 'Brésil',
+      it: 'Brasile',
+      pt: 'Brasil',
+      ru: 'Бразилия',
+      ja: 'ブラジル',
+    },
     prefix: '+55',
     continent: 'america',
     region: 'south_america',
@@ -307,7 +767,17 @@ export const AMERICA = {
 
   chl: {
     flag: 'cl',
-    name: 'Chile',
+    name: {
+      en: 'Chile',
+      es: 'Chile',
+      de: 'Chile',
+      zh: '智利',
+      fr: 'Chili',
+      it: 'Cile',
+      pt: 'Chile',
+      ru: 'Чили',
+      ja: 'チリ',
+    },
     prefix: '+56',
     continent: 'america',
     region: 'south_america',
@@ -315,7 +785,17 @@ export const AMERICA = {
 
   col: {
     flag: 'co',
-    name: 'Colombia',
+    name: {
+      en: 'Colombia',
+      es: 'Colombia',
+      de: 'Kolumbien',
+      zh: '哥伦比亚',
+      fr: 'Colombie',
+      it: 'Colombia',
+      pt: 'Colômbia',
+      ru: 'Колумбия',
+      ja: 'コロンビア',
+    },
     prefix: '+57',
     continent: 'america',
     region: 'south_america',
@@ -323,7 +803,17 @@ export const AMERICA = {
 
   ecu: {
     flag: 'ec',
-    name: 'Ecuador',
+    name: {
+      en: 'Ecuador',
+      es: 'Ecuador',
+      de: 'Ecuador',
+      zh: '厄瓜多尔',
+      fr: 'Équateur',
+      it: 'Ecuador',
+      pt: 'Equador',
+      ru: 'Эквадор',
+      ja: 'エクアドル',
+    },
     prefix: '+593',
     continent: 'america',
     region: 'south_america',
@@ -331,7 +821,17 @@ export const AMERICA = {
 
   flk: {
     flag: 'fk',
-    name: 'Falkland Islands',
+    name: {
+      en: 'Falkland Islands',
+      es: 'Islas Malvinas',
+      de: 'Falklandinseln',
+      zh: '福克兰群岛',
+      fr: 'Îles Malouines',
+      it: 'Isole Falkland',
+      pt: 'Ilhas Malvinas',
+      ru: 'Фолклендские острова',
+      ja: 'フォークランド諸島',
+    },
     prefix: '+500',
     continent: 'america',
     region: 'south_america',
@@ -339,7 +839,17 @@ export const AMERICA = {
 
   guf: {
     flag: 'gf',
-    name: 'French Guiana',
+    name: {
+      en: 'French Guiana',
+      es: 'Guayana Francesa',
+      de: 'Französisch-Guayana',
+      zh: '法属圭亚那',
+      fr: 'Guyane française',
+      it: 'Guyana francese',
+      pt: 'Guiana Francesa',
+      ru: 'Французская Гвиана',
+      ja: 'フランス領ギアナ',
+    },
     prefix: '+594',
     continent: 'america',
     region: 'south_america',
@@ -347,7 +857,17 @@ export const AMERICA = {
 
   guy: {
     flag: 'gy',
-    name: 'Guyana',
+    name: {
+      en: 'Guyana',
+      es: 'Guyana',
+      de: 'Guyana',
+      zh: '圭亚那',
+      fr: 'Guyana',
+      it: 'Guyana',
+      pt: 'Guiana',
+      ru: 'Гайана',
+      ja: 'ガイアナ',
+    },
     prefix: '+592',
     continent: 'america',
     region: 'south_america',
@@ -355,7 +875,17 @@ export const AMERICA = {
 
   per: {
     flag: 'pe',
-    name: 'Peru',
+    name: {
+      en: 'Peru',
+      es: 'Perú',
+      de: 'Peru',
+      zh: '秘鲁',
+      fr: 'Pérou',
+      it: 'Perù',
+      pt: 'Peru',
+      ru: 'Перу',
+      ja: 'ペルー',
+    },
     prefix: '+51',
     continent: 'america',
     region: 'south_america',
@@ -363,7 +893,17 @@ export const AMERICA = {
 
   pry: {
     flag: 'py',
-    name: 'Paraguay',
+    name: {
+      en: 'Paraguay',
+      es: 'Paraguay',
+      de: 'Paraguay',
+      zh: '巴拉圭',
+      fr: 'Paraguay',
+      it: 'Paraguay',
+      pt: 'Paraguai',
+      ru: 'Парагвай',
+      ja: 'パラグアイ',
+    },
     prefix: '+595',
     continent: 'america',
     region: 'south_america',
@@ -371,7 +911,17 @@ export const AMERICA = {
 
   sur: {
     flag: 'sr',
-    name: 'Suriname',
+    name: {
+      en: 'Suriname',
+      es: 'Surinam',
+      de: 'Suriname',
+      zh: '苏里南',
+      fr: 'Suriname',
+      it: 'Suriname',
+      pt: 'Suriname',
+      ru: 'Суринам',
+      ja: 'スリナム',
+    },
     prefix: '+597',
     continent: 'america',
     region: 'south_america',
@@ -379,7 +929,17 @@ export const AMERICA = {
 
   ury: {
     flag: 'uy',
-    name: 'Uruguay',
+    name: {
+      en: 'Uruguay',
+      es: 'Uruguay',
+      de: 'Uruguay',
+      zh: '乌拉圭',
+      fr: 'Uruguay',
+      it: 'Uruguay',
+      pt: 'Uruguai',
+      ru: 'Уругвай',
+      ja: 'ウルグアイ',
+    },
     prefix: '+598',
     continent: 'america',
     region: 'south_america',
@@ -387,7 +947,17 @@ export const AMERICA = {
 
   ven: {
     flag: 've',
-    name: 'Venezuela',
+    name: {
+      en: 'Venezuela',
+      es: 'Venezuela',
+      de: 'Venezuela',
+      zh: '委内瑞拉',
+      fr: 'Venezuela',
+      it: 'Venezuela',
+      pt: 'Venezuela',
+      ru: 'Венесуэла',
+      ja: 'ベネズエラ',
+    },
     prefix: '+58',
     continent: 'america',
     region: 'south_america',

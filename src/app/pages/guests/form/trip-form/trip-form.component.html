@@ -3,30 +3,39 @@
     <div class="trip-row">
       <!-- VISITED DATE -->
       <section class="form-section">
-        <h3 class="title-form">Trip Information</h3>
-        <mat-form-field appearance="outline">
-          <mat-label>Visited Date</mat-label>
+        <h3 class="title-form">
+          {{ 'TRIP_FORM.TITLE' | translate }}
+        </h3>
 
-          <mat-icon class="material-symbols-outlined" matPrefix>calendar_month</mat-icon>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'TRIP_FORM.VISITED_DATE' | translate }}</mat-label>
+
+          <mat-icon class="material-symbols-outlined" matPrefix> calendar_month </mat-icon>
 
           <input matInput [matDatepicker]="visitedDatePicker" formControlName="visitedDate" />
 
-          <mat-datepicker-toggle matSuffix [for]="visitedDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker-toggle matSuffix [for]="visitedDatePicker"> </mat-datepicker-toggle>
 
           <mat-datepicker #visitedDatePicker></mat-datepicker>
 
-          <mat-error *ngIf="f['visitedDate'].hasError('required')"> Visited Date is required </mat-error>
+          <mat-error *ngIf="f['visitedDate'].hasError('required')">
+            {{ 'TRIP_FORM.VISITED_DATE_REQUIRED' | translate }}
+          </mat-error>
         </mat-form-field>
 
         <!-- TODAY -->
-        <button mat-stroked-button type="button" class="btn-today" (click)="btnSetToday()">Today</button>
+        <button mat-stroked-button type="button" class="btn-today" (click)="btnSetToday()">
+          {{ 'TRIP_FORM.TODAY' | translate }}
+        </button>
 
         <!-- STAYED -->
-        <mat-checkbox formControlName="stayed"> Stayed </mat-checkbox>
+        <mat-checkbox formControlName="stayed">
+          {{ 'TRIP_FORM.STAYED' | translate }}
+        </mat-checkbox>
 
         <!-- NIGHTS -->
         <mat-form-field appearance="outline" class="nights-field" *ngIf="f['stayed'].value">
-          <mat-label>Nights</mat-label>
+          <mat-label>{{ 'TRIP_FORM.NIGHTS' | translate }}</mat-label>
 
           <mat-select formControlName="nights">
             <mat-option *ngFor="let night of nights" [value]="night">

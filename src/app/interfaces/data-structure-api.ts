@@ -107,16 +107,16 @@ export const VIEW_CONFIG: Record<ICurrentView, ViewConfig> = {
   table: {
     next: 'cards',
     icon: 'cards_stack',
-    tooltip: 'Change view to cards',
+    tooltip: 'GUESTS_VIEW.CHANGE_TO_CARDS',
   },
   cards: {
     next: 'map',
     icon: 'map',
-    tooltip: 'Change view to map',
+    tooltip: 'GUESTS_VIEW.CHANGE_TO_MAP',
   },
   map: {
     next: 'table',
     icon: 'table',
-    tooltip: 'Change view to table',
+    tooltip: 'GUESTS_VIEW.CHANGE_TO_TABLE',
   },
 };

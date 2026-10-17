@@ -8,7 +8,7 @@
       [class.active]="selectedView === view"
       class="stats-nav-btns"
     >
-      {{ birthdaysViewLabels[view] }}
+      {{ 'STATS.BIRTHDAYS.VIEWS.' + view.toUpperCase() | translate }}
     </button>
   </div>
 

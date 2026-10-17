@@ -177,6 +177,59 @@
   border-top-color: color-mix(in srgb, var(--color-danger) 45%, transparent);
 }
 
+:host ::ng-deep .view-country-guests {
+  background-color: var(--color-accent);
+  border-radius: 0.25rem;
+  box-shadow:
+    1px 0px color-mix(in srgb, var(--color-accent) 50%, var(--color-surface)),
+    0px 1px color-mix(in srgb, var(--color-accent) 50%, var(--color-surface)),
+    2px 1px color-mix(in srgb, var(--color-accent) 50%, var(--color-surface)),
+    1px 2px color-mix(in srgb, var(--color-accent) 50%, var(--color-surface)),
+    3px 2px color-mix(in srgb, var(--color-accent) 50%, var(--color-surface)),
+    2px 3px color-mix(in srgb, var(--color-accent) 50%, var(--color-surface)),
+    4px 3px color-mix(in srgb, var(--color-accent) 50%, var(--color-surface)),
+    3px 4px color-mix(in srgb, var(--color-accent) 50%, var(--color-surface)),
+    5px 4px color-mix(in srgb, var(--color-accent) 50%, var(--color-surface)),
+    4px 5px color-mix(in srgb, var(--color-accent) 50%, var(--color-surface)),
+    6px 5px color-mix(in srgb, var(--color-accent) 50%, var(--color-surface)),
+    5px 6px color-mix(in srgb, var(--color-accent) 50%, var(--color-surface));
+  color: var(--color-surface);
+  corner-shape: squircle;
+  font-family: unset;
+  cursor: pointer;
+  font-size: 12px;
+  padding-block: 0.5rem;
+  display: inline-block;
+  font-weight: 700;
+  text-align: center;
+  margin-block: 0.5rem;
+  text-shadow: 0 0 1px var(--color-text);
+  text-transform: capitalize;
+  transition:
+    background-color 0.3s ease-in-out,
+    box-shadow 0.3s ease-in-out,
+    translate 0.3s ease-in-out;
+  width: 100%;
+
+  &:hover,
+  &:focus {
+    background-color: color-mix(in srgb, var(--color-accent) 90%, var(--color-text));
+  }
+
+  &:active {
+    box-shadow:
+      1px 0px color-mix(in srgb, var(--color-accent) 50%, var(--color-surface)),
+      0px 1px color-mix(in srgb, var(--color-accent) 50%, var(--color-surface)),
+      2px 1px color-mix(in srgb, var(--color-accent) 50%, var(--color-surface)),
+      1px 2px color-mix(in srgb, var(--color-accent) 50%, var(--color-surface)),
+      3px 2px color-mix(in srgb, var(--color-accent) 50%, var(--color-surface)),
+      2px 3px color-mix(in srgb, var(--color-accent) 50%, var(--color-surface)),
+      4px 3px color-mix(in srgb, var(--color-accent) 50%, var(--color-surface)),
+      3px 4px color-mix(in srgb, var(--color-accent) 50%, var(--color-surface));
+    translate: 2px 2px;
+  }
+}
+
 /* MOBILE */
 @media (max-width: 768px) {
   .map-wrapper {

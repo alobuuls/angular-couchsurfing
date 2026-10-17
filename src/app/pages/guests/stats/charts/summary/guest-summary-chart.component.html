@@ -8,17 +8,20 @@
       [class.active]="selectedView === view"
       class="stats-nav-btns"
     >
-      {{ view }}
+      {{ 'STATS.SUMMARY.VIEWS.' + view.toUpperCase() | translate }}
     </button>
   </div>
+
   <!-- Total -->
   <div *ngIf="selectedView === 'total'">
     <div class="summary-cards">
       <div class="summary-card" *ngFor="let card of cards; trackBy: trackById">
         <button
           mat-icon-button
-          [attr.aria-label]="'View ' + card.label"
-          [matTooltip]="'View ' + card.label"
+          [attr.aria-label]="getCardTranslationKey(card.label) | translate"
+          [matTooltip]="
+            ('STATS.SUMMARY.CARDS.VIEW' | translate) + ' ' + (getCardTranslationKey(card.label) | translate)
+          "
           class="icon-summary-card"
           (click)="navigateToCard(card.label)"
         >
@@ -33,7 +36,7 @@
           </span>
 
           <span class="label-summary-card">
-            {{ card.label }}
+            {{ getCardTranslationKey(card.label) | translate }}
           </span>
         </div>
       </div>

@@ -5,7 +5,17 @@ export const EUROPE = {
 
   dnk: {
     flag: 'dk',
-    name: 'Denmark',
+    name: {
+      en: 'Denmark',
+      es: 'Dinamarca',
+      de: 'Dänemark',
+      zh: '丹麦',
+      fr: 'Danemark',
+      it: 'Danimarca',
+      pt: 'Dinamarca',
+      ru: 'Дания',
+      ja: 'デンマーク',
+    },
     prefix: '+45',
     continent: 'europe',
     region: 'scandinavia',
@@ -13,7 +23,17 @@ export const EUROPE = {
 
   nor: {
     flag: 'no',
-    name: 'Norway',
+    name: {
+      en: 'Norway',
+      es: 'Noruega',
+      de: 'Norwegen',
+      zh: '挪威',
+      fr: 'Norvège',
+      it: 'Norvegia',
+      pt: 'Noruega',
+      ru: 'Норвегия',
+      ja: 'ノルウェー',
+    },
     prefix: '+47',
     continent: 'europe',
     region: 'scandinavia',
@@ -21,7 +41,17 @@ export const EUROPE = {
 
   swe: {
     flag: 'se',
-    name: 'Sweden',
+    name: {
+      en: 'Sweden',
+      es: 'Suecia',
+      de: 'Schweden',
+      zh: '瑞典',
+      fr: 'Suède',
+      it: 'Svezia',
+      pt: 'Suécia',
+      ru: 'Швеция',
+      ja: 'スウェーデン',
+    },
     prefix: '+46',
     continent: 'europe',
     region: 'scandinavia',
@@ -31,7 +61,17 @@ export const EUROPE = {
 
   aut: {
     flag: 'at',
-    name: 'Austria',
+    name: {
+      en: 'Austria',
+      es: 'Austria',
+      de: 'Österreich',
+      zh: '奥地利',
+      fr: 'Autriche',
+      it: 'Austria',
+      pt: 'Áustria',
+      ru: 'Австрия',
+      ja: 'オーストリア',
+    },
     prefix: '+43',
     continent: 'europe',
     region: 'central_europe',
@@ -39,7 +79,17 @@ export const EUROPE = {
 
   bel: {
     flag: 'be',
-    name: 'Belgium',
+    name: {
+      en: 'Belgium',
+      es: 'Bélgica',
+      de: 'Belgien',
+      zh: '比利时',
+      fr: 'Belgique',
+      it: 'Belgio',
+      pt: 'Bélgica',
+      ru: 'Бельгия',
+      ja: 'ベルギー',
+    },
     prefix: '+32',
     continent: 'europe',
     region: 'western_europe',
@@ -47,7 +97,17 @@ export const EUROPE = {
 
   fra: {
     flag: 'fr',
-    name: 'France',
+    name: {
+      en: 'France',
+      es: 'Francia',
+      de: 'Frankreich',
+      zh: '法国',
+      fr: 'France',
+      it: 'Francia',
+      pt: 'França',
+      ru: 'Франция',
+      ja: 'フランス',
+    },
     prefix: '+33',
     continent: 'europe',
     region: 'western_europe',
@@ -55,7 +115,17 @@ export const EUROPE = {
 
   deu: {
     flag: 'de',
-    name: 'Germany',
+    name: {
+      en: 'Germany',
+      es: 'Alemania',
+      de: 'Deutschland',
+      zh: '德国',
+      fr: 'Allemagne',
+      it: 'Germania',
+      pt: 'Alemanha',
+      ru: 'Германия',
+      ja: 'ドイツ',
+    },
     prefix: '+49',
     continent: 'europe',
     region: 'central_europe',
@@ -63,7 +133,17 @@ export const EUROPE = {
 
   lie: {
     flag: 'li',
-    name: 'Liechtenstein',
+    name: {
+      en: 'Liechtenstein',
+      es: 'Liechtenstein',
+      de: 'Liechtenstein',
+      zh: '列支敦士登',
+      fr: 'Liechtenstein',
+      it: 'Liechtenstein',
+      pt: 'Liechtenstein',
+      ru: 'Лихтенштейн',
+      ja: 'リヒテンシュタイン',
+    },
     prefix: '+423',
     continent: 'europe',
     region: 'central_europe',
@@ -71,7 +151,17 @@ export const EUROPE = {
 
   lux: {
     flag: 'lu',
-    name: 'Luxembourg',
+    name: {
+      en: 'Luxembourg',
+      es: 'Luxemburgo',
+      de: 'Luxemburg',
+      zh: '卢森堡',
+      fr: 'Luxembourg',
+      it: 'Lussemburgo',
+      pt: 'Luxemburgo',
+      ru: 'Люксембург',
+      ja: 'ルクセンブルク',
+    },
     prefix: '+352',
     continent: 'europe',
     region: 'western_europe',
@@ -79,7 +169,17 @@ export const EUROPE = {
 
   mco: {
     flag: 'mc',
-    name: 'Monaco',
+    name: {
+      en: 'Monaco',
+      es: 'Mónaco',
+      de: 'Monaco',
+      zh: '摩纳哥',
+      fr: 'Monaco',
+      it: 'Monaco',
+      pt: 'Mónaco',
+      ru: 'Монако',
+      ja: 'モナコ',
+    },
     prefix: '+377',
     continent: 'europe',
     region: 'western_europe',
@@ -87,7 +187,17 @@ export const EUROPE = {
 
   nld: {
     flag: 'nl',
-    name: 'Netherlands',
+    name: {
+      en: 'Netherlands',
+      es: 'Países Bajos',
+      de: 'Niederlande',
+      zh: '荷兰',
+      fr: 'Pays-Bas',
+      it: 'Paesi Bassi',
+      pt: 'Países Baixos',
+      ru: 'Нидерланды',
+      ja: 'オランダ',
+    },
     prefix: '+31',
     continent: 'europe',
     region: 'western_europe',
@@ -95,7 +205,17 @@ export const EUROPE = {
 
   che: {
     flag: 'ch',
-    name: 'Switzerland',
+    name: {
+      en: 'Switzerland',
+      es: 'Suiza',
+      de: 'Schweiz',
+      zh: '瑞士',
+      fr: 'Suisse',
+      it: 'Svizzera',
+      pt: 'Suíça',
+      ru: 'Швейцария',
+      ja: 'スイス',
+    },
     prefix: '+41',
     continent: 'europe',
     region: 'central_europe',
@@ -105,7 +225,17 @@ export const EUROPE = {
 
   alb: {
     flag: 'al',
-    name: 'Albania',
+    name: {
+      en: 'Albania',
+      es: 'Albania',
+      de: 'Albanien',
+      zh: '阿尔巴尼亚',
+      fr: 'Albanie',
+      it: 'Albania',
+      pt: 'Albânia',
+      ru: 'Албания',
+      ja: 'アルバニア',
+    },
     prefix: '+355',
     continent: 'europe',
     region: 'southern_europe',
@@ -113,7 +243,17 @@ export const EUROPE = {
 
   and: {
     flag: 'ad',
-    name: 'Andorra',
+    name: {
+      en: 'Andorra',
+      es: 'Andorra',
+      de: 'Andorra',
+      zh: '安道尔',
+      fr: 'Andorre',
+      it: 'Andorra',
+      pt: 'Andorra',
+      ru: 'Андорра',
+      ja: 'アンドラ',
+    },
     prefix: '+376',
     continent: 'europe',
     region: 'southern_europe',
@@ -121,7 +261,17 @@ export const EUROPE = {
 
   bih: {
     flag: 'ba',
-    name: 'Bosnia and Herzegovina',
+    name: {
+      en: 'Bosnia and Herzegovina',
+      es: 'Bosnia y Herzegovina',
+      de: 'Bosnien und Herzegowina',
+      zh: '波斯尼亚和黑塞哥维那',
+      fr: 'Bosnie-Herzégovine',
+      it: 'Bosnia ed Erzegovina',
+      pt: 'Bósnia e Herzegovina',
+      ru: 'Босния и Герцеговина',
+      ja: 'ボスニア・ヘルツェゴビナ',
+    },
     prefix: '+387',
     continent: 'europe',
     region: 'southern_europe',
@@ -129,7 +279,17 @@ export const EUROPE = {
 
   hrv: {
     flag: 'hr',
-    name: 'Croatia',
+    name: {
+      en: 'Croatia',
+      es: 'Croacia',
+      de: 'Kroatien',
+      zh: '克罗地亚',
+      fr: 'Croatie',
+      it: 'Croazia',
+      pt: 'Croácia',
+      ru: 'Хорватия',
+      ja: 'クロアチア',
+    },
     prefix: '+385',
     continent: 'europe',
     region: 'southern_europe',
@@ -137,7 +297,17 @@ export const EUROPE = {
 
   grc: {
     flag: 'gr',
-    name: 'Greece',
+    name: {
+      en: 'Greece',
+      es: 'Grecia',
+      de: 'Griechenland',
+      zh: '希腊',
+      fr: 'Grèce',
+      it: 'Grecia',
+      pt: 'Grécia',
+      ru: 'Греция',
+      ja: 'ギリシャ',
+    },
     prefix: '+30',
     continent: 'europe',
     region: 'southern_europe',
@@ -145,7 +315,17 @@ export const EUROPE = {
 
   ita: {
     flag: 'it',
-    name: 'Italy',
+    name: {
+      en: 'Italy',
+      es: 'Italia',
+      de: 'Italien',
+      zh: '意大利',
+      fr: 'Italie',
+      it: 'Italia',
+      pt: 'Itália',
+      ru: 'Италия',
+      ja: 'イタリア',
+    },
     prefix: '+39',
     continent: 'europe',
     region: 'southern_europe',
@@ -153,7 +333,17 @@ export const EUROPE = {
 
   mlt: {
     flag: 'mt',
-    name: 'Malta',
+    name: {
+      en: 'Malta',
+      es: 'Malta',
+      de: 'Malta',
+      zh: '马耳他',
+      fr: 'Malte',
+      it: 'Malta',
+      pt: 'Malta',
+      ru: 'Мальта',
+      ja: 'マルタ',
+    },
     prefix: '+356',
     continent: 'europe',
     region: 'southern_europe',
@@ -161,7 +351,17 @@ export const EUROPE = {
 
   mne: {
     flag: 'me',
-    name: 'Montenegro',
+    name: {
+      en: 'Montenegro',
+      es: 'Montenegro',
+      de: 'Montenegro',
+      zh: '黑山',
+      fr: 'Monténégro',
+      it: 'Montenegro',
+      pt: 'Montenegro',
+      ru: 'Черногория',
+      ja: 'モンテネグロ',
+    },
     prefix: '+382',
     continent: 'europe',
     region: 'southern_europe',
@@ -169,7 +369,17 @@ export const EUROPE = {
 
   prt: {
     flag: 'pt',
-    name: 'Portugal',
+    name: {
+      en: 'Portugal',
+      es: 'Portugal',
+      de: 'Portugal',
+      zh: '葡萄牙',
+      fr: 'Portugal',
+      it: 'Portogallo',
+      pt: 'Portugal',
+      ru: 'Португалия',
+      ja: 'ポルトガル',
+    },
     prefix: '+351',
     continent: 'europe',
     region: 'southern_europe',
@@ -177,7 +387,17 @@ export const EUROPE = {
 
   smr: {
     flag: 'sm',
-    name: 'San Marino',
+    name: {
+      en: 'San Marino',
+      es: 'San Marino',
+      de: 'San Marino',
+      zh: '圣马力诺',
+      fr: 'Saint-Marin',
+      it: 'San Marino',
+      pt: 'San Marino',
+      ru: 'Сан-Марино',
+      ja: 'サンマリノ',
+    },
     prefix: '+378',
     continent: 'europe',
     region: 'southern_europe',
@@ -185,7 +405,17 @@ export const EUROPE = {
 
   srb: {
     flag: 'rs',
-    name: 'Serbia',
+    name: {
+      en: 'Serbia',
+      es: 'Serbia',
+      de: 'Serbien',
+      zh: '塞尔维亚',
+      fr: 'Serbie',
+      it: 'Serbia',
+      pt: 'Sérvia',
+      ru: 'Сербия',
+      ja: 'セルビア',
+    },
     prefix: '+381',
     continent: 'europe',
     region: 'southern_europe',
@@ -193,7 +423,17 @@ export const EUROPE = {
 
   svn: {
     flag: 'si',
-    name: 'Slovenia',
+    name: {
+      en: 'Slovenia',
+      es: 'Eslovenia',
+      de: 'Slowenien',
+      zh: '斯洛文尼亚',
+      fr: 'Slovénie',
+      it: 'Slovenia',
+      pt: 'Eslovénia',
+      ru: 'Словения',
+      ja: 'スロベニア',
+    },
     prefix: '+386',
     continent: 'europe',
     region: 'central_europe',
@@ -201,7 +441,17 @@ export const EUROPE = {
 
   esp: {
     flag: 'es',
-    name: 'Spain',
+    name: {
+      en: 'Spain',
+      es: 'España',
+      de: 'Spanien',
+      zh: '西班牙',
+      fr: 'Espagne',
+      it: 'Spagna',
+      pt: 'Espanha',
+      ru: 'Испания',
+      ja: 'スペイン',
+    },
     prefix: '+34',
     continent: 'europe',
     region: 'southern_europe',
@@ -209,7 +459,17 @@ export const EUROPE = {
 
   mkd: {
     flag: 'mk',
-    name: 'North Macedonia',
+    name: {
+      en: 'North Macedonia',
+      es: 'Macedonia del Norte',
+      de: 'Nordmazedonien',
+      zh: '北马其顿',
+      fr: 'Macédoine du Nord',
+      it: 'Macedonia del Nord',
+      pt: 'Macedónia do Norte',
+      ru: 'Северная Македония',
+      ja: '北マケドニア',
+    },
     prefix: '+389',
     continent: 'europe',
     region: 'southern_europe',
@@ -219,7 +479,17 @@ export const EUROPE = {
 
   gbr: {
     flag: 'gb',
-    name: 'United Kingdom',
+    name: {
+      en: 'United Kingdom',
+      es: 'Reino Unido',
+      de: 'Vereinigtes Königreich',
+      zh: '英国',
+      fr: 'Royaume-Uni',
+      it: 'Regno Unito',
+      pt: 'Reino Unido',
+      ru: 'Великобритания',
+      ja: 'イギリス',
+    },
     prefix: '+44',
     continent: 'europe',
     region: 'northern_europe',
@@ -227,7 +497,17 @@ export const EUROPE = {
 
   eng: {
     flag: 'gb-eng',
-    name: 'England',
+    name: {
+      en: 'England',
+      es: 'Inglaterra',
+      de: 'England',
+      zh: '英格兰',
+      fr: 'Angleterre',
+      it: 'Inghilterra',
+      pt: 'Inglaterra',
+      ru: 'Англия',
+      ja: 'イングランド',
+    },
     prefix: '+44',
     continent: 'europe',
     region: 'northern_europe',
@@ -235,7 +515,17 @@ export const EUROPE = {
 
   sct: {
     flag: 'gb-sct',
-    name: 'Scotland',
+    name: {
+      en: 'Scotland',
+      es: 'Escocia',
+      de: 'Schottland',
+      zh: '苏格兰',
+      fr: 'Écosse',
+      it: 'Scozia',
+      pt: 'Escócia',
+      ru: 'Шотландия',
+      ja: 'スコットランド',
+    },
     prefix: '+44',
     continent: 'europe',
     region: 'northern_europe',
@@ -243,7 +533,17 @@ export const EUROPE = {
 
   est: {
     flag: 'ee',
-    name: 'Estonia',
+    name: {
+      en: 'Estonia',
+      es: 'Estonia',
+      de: 'Estland',
+      zh: '爱沙尼亚',
+      fr: 'Estonie',
+      it: 'Estonia',
+      pt: 'Estónia',
+      ru: 'Эстония',
+      ja: 'エストニア',
+    },
     prefix: '+372',
     continent: 'europe',
     region: 'baltics',
@@ -251,7 +551,17 @@ export const EUROPE = {
 
   fin: {
     flag: 'fi',
-    name: 'Finland',
+    name: {
+      en: 'Finland',
+      es: 'Finlandia',
+      de: 'Finnland',
+      zh: '芬兰',
+      fr: 'Finlande',
+      it: 'Finlandia',
+      pt: 'Finlândia',
+      ru: 'Финляндия',
+      ja: 'フィンランド',
+    },
     prefix: '+358',
     continent: 'europe',
     region: 'scandinavia',
@@ -259,7 +569,17 @@ export const EUROPE = {
 
   irl: {
     flag: 'ie',
-    name: 'Ireland',
+    name: {
+      en: 'Ireland',
+      es: 'Irlanda',
+      de: 'Irland',
+      zh: '爱尔兰',
+      fr: 'Irlande',
+      it: 'Irlanda',
+      pt: 'Irlanda',
+      ru: 'Ирландия',
+      ja: 'アイルランド',
+    },
     prefix: '+353',
     continent: 'europe',
     region: 'northern_europe',
@@ -267,7 +587,17 @@ export const EUROPE = {
 
   isl: {
     flag: 'is',
-    name: 'Iceland',
+    name: {
+      en: 'Iceland',
+      es: 'Islandia',
+      de: 'Island',
+      zh: '冰岛',
+      fr: 'Islande',
+      it: 'Islanda',
+      pt: 'Islândia',
+      ru: 'Исландия',
+      ja: 'アイスランド',
+    },
     prefix: '+354',
     continent: 'europe',
     region: 'scandinavia',
@@ -275,7 +605,17 @@ export const EUROPE = {
 
   lva: {
     flag: 'lv',
-    name: 'Latvia',
+    name: {
+      en: 'Latvia',
+      es: 'Letonia',
+      de: 'Lettland',
+      zh: '拉脱维亚',
+      fr: 'Lettonie',
+      it: 'Lettonia',
+      pt: 'Letónia',
+      ru: 'Латвия',
+      ja: 'ラトビア',
+    },
     prefix: '+371',
     continent: 'europe',
     region: 'baltics',
@@ -283,7 +623,17 @@ export const EUROPE = {
 
   ltu: {
     flag: 'lt',
-    name: 'Lithuania',
+    name: {
+      en: 'Lithuania',
+      es: 'Lituania',
+      de: 'Litauen',
+      zh: '立陶宛',
+      fr: 'Lituanie',
+      it: 'Lituania',
+      pt: 'Lituânia',
+      ru: 'Литва',
+      ja: 'リトアニア',
+    },
     prefix: '+370',
     continent: 'europe',
     region: 'baltics',
@@ -291,7 +641,17 @@ export const EUROPE = {
 
   nir: {
     flag: 'gb-nir',
-    name: 'Northern Ireland',
+    name: {
+      en: 'Northern Ireland',
+      es: 'Irlanda del Norte',
+      de: 'Nordirland',
+      zh: '北爱尔兰',
+      fr: 'Irlande du Nord',
+      it: 'Irlanda del Nord',
+      pt: 'Irlanda do Norte',
+      ru: 'Северная Ирландия',
+      ja: '北アイルランド',
+    },
     prefix: '+44',
     continent: 'europe',
     region: 'northern_europe',
@@ -299,7 +659,17 @@ export const EUROPE = {
 
   wls: {
     flag: 'gb-wls',
-    name: 'Wales',
+    name: {
+      en: 'Wales',
+      es: 'Gales',
+      de: 'Wales',
+      zh: '威尔士',
+      fr: 'Pays de Galles',
+      it: 'Galles',
+      pt: 'País de Gales',
+      ru: 'Уэльс',
+      ja: 'ウェールズ',
+    },
     prefix: '+44',
     continent: 'europe',
     region: 'northern_europe',
@@ -309,7 +679,17 @@ export const EUROPE = {
 
   blr: {
     flag: 'by',
-    name: 'Belarus',
+    name: {
+      en: 'Belarus',
+      es: 'Bielorrusia',
+      de: 'Belarus',
+      zh: '白俄罗斯',
+      fr: 'Biélorussie',
+      it: 'Bielorussia',
+      pt: 'Bielorrússia',
+      ru: 'Беларусь',
+      ja: 'ベラルーシ',
+    },
     prefix: '+375',
     continent: 'europe',
     region: 'eastern_europe',
@@ -317,7 +697,17 @@ export const EUROPE = {
 
   bgr: {
     flag: 'bg',
-    name: 'Bulgaria',
+    name: {
+      en: 'Bulgaria',
+      es: 'Bulgaria',
+      de: 'Bulgarien',
+      zh: '保加利亚',
+      fr: 'Bulgarie',
+      it: 'Bulgaria',
+      pt: 'Bulgária',
+      ru: 'Болгария',
+      ja: 'ブルガリア',
+    },
     prefix: '+359',
     continent: 'europe',
     region: 'eastern_europe',
@@ -325,7 +715,17 @@ export const EUROPE = {
 
   cze: {
     flag: 'cz',
-    name: 'Czech Republic',
+    name: {
+      en: 'Czech Republic',
+      es: 'República Checa',
+      de: 'Tschechien',
+      zh: '捷克',
+      fr: 'Tchéquie',
+      it: 'Cechia',
+      pt: 'Chéquia',
+      ru: 'Чехия',
+      ja: 'チェコ',
+    },
     prefix: '+420',
     continent: 'europe',
     region: 'central_europe',
@@ -333,7 +733,17 @@ export const EUROPE = {
 
   hun: {
     flag: 'hu',
-    name: 'Hungary',
+    name: {
+      en: 'Hungary',
+      es: 'Hungría',
+      de: 'Ungarn',
+      zh: '匈牙利',
+      fr: 'Hongrie',
+      it: 'Ungheria',
+      pt: 'Hungria',
+      ru: 'Венгрия',
+      ja: 'ハンガリー',
+    },
     prefix: '+36',
     continent: 'europe',
     region: 'central_europe',
@@ -341,7 +751,17 @@ export const EUROPE = {
 
   mda: {
     flag: 'md',
-    name: 'Moldova',
+    name: {
+      en: 'Moldova',
+      es: 'Moldavia',
+      de: 'Moldau',
+      zh: '摩尔多瓦',
+      fr: 'Moldavie',
+      it: 'Moldavia',
+      pt: 'Moldávia',
+      ru: 'Молдова',
+      ja: 'モルドバ',
+    },
     prefix: '+373',
     continent: 'europe',
     region: 'eastern_europe',
@@ -349,7 +769,17 @@ export const EUROPE = {
 
   pol: {
     flag: 'pl',
-    name: 'Poland',
+    name: {
+      en: 'Poland',
+      es: 'Polonia',
+      de: 'Polen',
+      zh: '波兰',
+      fr: 'Pologne',
+      it: 'Polonia',
+      pt: 'Polónia',
+      ru: 'Польша',
+      ja: 'ポーランド',
+    },
     prefix: '+48',
     continent: 'europe',
     region: 'central_europe',
@@ -357,7 +787,17 @@ export const EUROPE = {
 
   rou: {
     flag: 'ro',
-    name: 'Romania',
+    name: {
+      en: 'Romania',
+      es: 'Rumanía',
+      de: 'Rumänien',
+      zh: '罗马尼亚',
+      fr: 'Roumanie',
+      it: 'Romania',
+      pt: 'Roménia',
+      ru: 'Румыния',
+      ja: 'ルーマニア',
+    },
     prefix: '+40',
     continent: 'europe',
     region: 'eastern_europe',
@@ -365,7 +805,17 @@ export const EUROPE = {
 
   rus: {
     flag: 'ru',
-    name: 'Russia',
+    name: {
+      en: 'Russia',
+      es: 'Rusia',
+      de: 'Russland',
+      zh: '俄罗斯',
+      fr: 'Russie',
+      it: 'Russia',
+      pt: 'Rússia',
+      ru: 'Россия',
+      ja: 'ロシア',
+    },
     prefix: '+7',
     continent: 'europe',
     region: 'eastern_europe',
@@ -373,7 +823,17 @@ export const EUROPE = {
 
   svk: {
     flag: 'sk',
-    name: 'Slovakia',
+    name: {
+      en: 'Slovakia',
+      es: 'Eslovaquia',
+      de: 'Slowakei',
+      zh: '斯洛伐克',
+      fr: 'Slovaquie',
+      it: 'Slovacchia',
+      pt: 'Eslováquia',
+      ru: 'Словакия',
+      ja: 'スロバキア',
+    },
     prefix: '+421',
     continent: 'europe',
     region: 'central_europe',
@@ -381,7 +841,17 @@ export const EUROPE = {
 
   ukr: {
     flag: 'ua',
-    name: 'Ukraine',
+    name: {
+      en: 'Ukraine',
+      es: 'Ucrania',
+      de: 'Ukraine',
+      zh: '乌克兰',
+      fr: 'Ukraine',
+      it: 'Ucraina',
+      pt: 'Ucrânia',
+      ru: 'Украина',
+      ja: 'ウクライナ',
+    },
     prefix: '+380',
     continent: 'europe',
     region: 'eastern_europe',

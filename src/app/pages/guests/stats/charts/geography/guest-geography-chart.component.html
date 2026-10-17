@@ -8,7 +8,7 @@
       [class.active]="selectedView === view"
       class="stats-nav-btns"
     >
-      {{ geographyViewLabels[view] }}
+      {{ geographyViewLabels[view] | translate }}
     </button>
   </div>
 
@@ -23,7 +23,13 @@
         [class.active]="selectedRanking === ranking"
         class="stats-nav-btns-small"
       >
-        {{ ranking === 'all' ? 'All' : ranking === 'top' ? 'Top' : 'Bottom' }}
+        {{
+          ranking === 'all'
+            ? ('STATS.GEOGRAPHY.RANKINGS.ALL' | translate)
+            : ranking === 'top'
+              ? ('STATS.GEOGRAPHY.RANKINGS.TOP' | translate)
+              : ('STATS.GEOGRAPHY.RANKINGS.BOTTOM' | translate)
+        }}
       </button>
     </ng-container>
 
@@ -36,7 +42,13 @@
         [class.active]="selectedRanking === ranking"
         class="stats-nav-btns-small"
       >
-        {{ ranking === 'topFemale' ? 'Top Female' : ranking === 'topMale' ? 'Top Male' : 'Most Consecutive' }}
+        {{
+          ranking === 'topFemale'
+            ? ('STATS.GEOGRAPHY.RANKINGS.TOP_FEMALE' | translate)
+            : ranking === 'topMale'
+              ? ('STATS.GEOGRAPHY.RANKINGS.TOP_MALE' | translate)
+              : ('STATS.GEOGRAPHY.RANKINGS.MOST_CONSECUTIVE' | translate)
+        }}
       </button>
     </ng-container>
   </div>

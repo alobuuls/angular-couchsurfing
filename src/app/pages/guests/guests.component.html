@@ -3,20 +3,20 @@
   <form [formGroup]="filtersForm" class="filters-form" (ngSubmit)="onFiltersSubmit()">
     <!-- CONTINENT -->
     <mat-form-field appearance="outline">
-      <mat-label>Continent</mat-label>
+      <mat-label>{{ 'GUESTS_FILTERS.CONTINENT' | translate }}</mat-label>
 
       <mat-icon class="material-symbols-outlined" matPrefix>public</mat-icon>
 
       <mat-select formControlName="continent">
         <mat-option value="">
           <i class="fa-solid fa-globe"></i>
-          All continents
+          {{ 'GUESTS_FILTERS.ALL_CONTINENTS' | translate }}
         </mat-option>
 
         <mat-option *ngFor="let continent of continents" [value]="continent">
           <span class="continent-option">
             <i [class]="continentIcons[continent]"></i>
-            {{ continent | titlecase }}
+            {{ 'CONTINENTS.' + continent | translate }}
           </span>
         </mat-option>
       </mat-select>
@@ -24,24 +24,24 @@
 
     <!-- REGION -->
     <mat-form-field appearance="outline">
-      <mat-label>Region</mat-label>
+      <mat-label>{{ 'GUESTS_FILTERS.REGION' | translate }}</mat-label>
       <mat-icon class="material-symbols-outlined" matPrefix>map</mat-icon>
 
       <mat-select formControlName="region">
         <mat-option value="">
           <mat-icon class="material-symbols-outlined">public</mat-icon>
-          All regions
+          {{ 'GUESTS_FILTERS.ALL_REGIONS' | translate }}
         </mat-option>
 
         <mat-option *ngFor="let region of filteredRegions" [value]="region">
-          {{ regionNames[region] }}
+          {{ getRegionName(region) }}
         </mat-option>
       </mat-select>
     </mat-form-field>
 
     <!-- COUNTRY -->
     <mat-form-field appearance="outline">
-      <mat-label>Country</mat-label>
+      <mat-label>{{ 'GUESTS_FILTERS.COUNTRY' | translate }}</mat-label>
       <mat-icon class="material-symbols-outlined" matPrefix>public</mat-icon>
       <input matInput formControlName="country" [matAutocomplete]="autoCountry" />
 
@@ -52,92 +52,147 @@
       >
         <mat-option value="">
           <mat-icon class="material-symbols-outlined">public</mat-icon>
-          All Countries
+          {{ 'GUESTS_FILTERS.ALL_COUNTRIES' | translate }}
         </mat-option>
         <mat-option *ngFor="let country of filteredCountries" [value]="country.countryCode">
           <span [class]="country.countryCode | flag"></span>
-          {{ country.name }}
+          {{ getCountryName(country) }}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
 
     <!-- GROUP TYPE -->
     <mat-form-field appearance="outline">
-      <mat-label>Group Type</mat-label>
+      <mat-label>{{ 'GUESTS_FILTERS.GROUP_TYPE' | translate }}</mat-label>
       <mat-icon class="material-symbols-outlined" matPrefix>groups</mat-icon>
 
       <mat-select formControlName="groupType">
-        <mat-option value=""> <mat-icon class="material-symbols-outlined">groups</mat-icon>All groups</mat-option>
-        <mat-option value="solo"> <mat-icon class="material-symbols-outlined">person</mat-icon>Solo</mat-option>
-        <mat-option value="couple"> <mat-icon class="material-symbols-outlined">favorite</mat-icon>Couple</mat-option>
-        <mat-option value="friends"> <mat-icon class="material-symbols-outlined">group</mat-icon>Friends</mat-option>
+        <mat-option value="">
+          <mat-icon class="material-symbols-outlined">groups</mat-icon
+          >{{ 'GUESTS_FILTERS.ALL_GROUPS' | translate }}</mat-option
+        >
+        <mat-option value="solo">
+          <mat-icon class="material-symbols-outlined">person</mat-icon
+          >{{ 'GUESTS_FILTERS.SOLO' | translate }}</mat-option
+        >
+        <mat-option value="couple">
+          <mat-icon class="material-symbols-outlined">favorite</mat-icon
+          >{{ 'GUESTS_FILTERS.COUPLE' | translate }}</mat-option
+        >
+        <mat-option value="friends">
+          <mat-icon class="material-symbols-outlined">group</mat-icon
+          >{{ 'GUESTS_FILTERS.FRIENDS' | translate }}</mat-option
+        >
         <mat-option value="family">
-          <mat-icon class="material-symbols-outlined">family_restroom</mat-icon>Family</mat-option
+          <mat-icon class="material-symbols-outlined">family_restroom</mat-icon
+          >{{ 'GUESTS_FILTERS.FAMILY' | translate }}</mat-option
         >
       </mat-select>
     </mat-form-field>
 
     <!-- FROM -->
     <mat-form-field appearance="outline">
-      <mat-label>Visited From</mat-label>
+      <mat-label>{{ 'GUESTS_FILTERS.VISITED_FROM' | translate }}</mat-label>
       <mat-icon class="material-symbols-outlined" matPrefix>calendar_month</mat-icon>
 
-      <input matInput [matDatepicker]="fromPicker" formControlName="from" />
+      <input
+        matInput
+        [matDatepicker]="fromPicker"
+        formControlName="from"
+        [attr.aria-label]="'GUESTS_FILTERS.VISITED_FROM' | translate"
+      />
       <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
       <mat-datepicker #fromPicker></mat-datepicker>
     </mat-form-field>
 
     <!-- TO -->
     <mat-form-field appearance="outline">
-      <mat-label>Visited To</mat-label>
+      <mat-label>{{ 'GUESTS_FILTERS.VISITED_TO' | translate }}</mat-label>
 
       <mat-icon class="material-symbols-outlined" matPrefix>calendar_month</mat-icon>
-      <input matInput [matDatepicker]="toPicker" formControlName="to" />
+      <input
+        matInput
+        [matDatepicker]="toPicker"
+        formControlName="to"
+        [attr.aria-label]="'GUESTS_FILTERS.VISITED_TO' | translate"
+      />
       <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
       <mat-datepicker #toPicker></mat-datepicker>
     </mat-form-field>
 
     <!-- FIRST TIME -->
     <mat-form-field appearance="outline">
-      <mat-label>First Time</mat-label>
+      <mat-label>{{ 'GUESTS_FILTERS.FIRST_TIME' | translate }}</mat-label>
       <mat-icon class="material-symbols-outlined" matPrefix>editor_choice</mat-icon>
       <mat-select formControlName="isFirstTime">
-        <mat-option value=""> <mat-icon class="material-symbols-outlined">editor_choice</mat-icon>All</mat-option>
-        <mat-option [value]="true"> <mat-icon class="material-symbols-outlined">check_circle</mat-icon>Yes</mat-option>
-        <mat-option [value]="false"> <mat-icon class="material-symbols-outlined">cancel</mat-icon>No</mat-option>
+        <mat-option value="">
+          <mat-icon class="material-symbols-outlined">editor_choice</mat-icon>
+          {{ 'GUESTS_FILTERS.ALL' | translate }}</mat-option
+        >
+        <mat-option [value]="true">
+          <mat-icon class="material-symbols-outlined">check_circle</mat-icon>
+          {{ 'GUESTS_FILTERS.YES' | translate }}</mat-option
+        >
+        <mat-option [value]="false">
+          <mat-icon class="material-symbols-outlined">cancel</mat-icon>
+          {{ 'GUESTS_FILTERS.NO' | translate }}</mat-option
+        >
       </mat-select>
     </mat-form-field>
 
     <!-- HANG OUT -->
     <mat-form-field appearance="outline">
-      <mat-label>Hang Out</mat-label>
+      <mat-label>{{ 'GUESTS_FILTERS.HANG_OUT' | translate }}</mat-label>
       <mat-icon class="material-symbols-outlined" matPrefix>door_open</mat-icon>
       <mat-select formControlName="hangOut">
-        <mat-option value=""> <mat-icon class="material-symbols-outlined">door_open</mat-icon>All</mat-option>
-        <mat-option [value]="true"> <mat-icon class="material-symbols-outlined">check_circle</mat-icon>Yes</mat-option>
-        <mat-option [value]="false"> <mat-icon class="material-symbols-outlined">cancel</mat-icon>No</mat-option>
+        <mat-option value="">
+          <mat-icon class="material-symbols-outlined">door_open</mat-icon
+          >{{ 'GUESTS_FILTERS.ALL' | translate }}</mat-option
+        >
+        <mat-option [value]="true">
+          <mat-icon class="material-symbols-outlined">check_circle</mat-icon
+          >{{ 'GUESTS_FILTERS.YES' | translate }}</mat-option
+        >
+        <mat-option [value]="false">
+          <mat-icon class="material-symbols-outlined">cancel</mat-icon>{{ 'GUESTS_FILTERS.NO' | translate }}</mat-option
+        >
       </mat-select>
     </mat-form-field>
 
     <!-- AMBASSADOR -->
     <mat-form-field appearance="outline">
-      <mat-label>Ambassador</mat-label>
+      <mat-label>{{ 'GUESTS_FILTERS.AMBASSADOR' | translate }}</mat-label>
       <mat-icon class="material-symbols-outlined" matPrefix>badge</mat-icon>
       <mat-select formControlName="ambassador">
-        <mat-option value=""> <mat-icon class="material-symbols-outlined">badge</mat-icon>All</mat-option>
-        <mat-option [value]="true"> <mat-icon class="material-symbols-outlined">check_circle</mat-icon>Yes</mat-option>
-        <mat-option [value]="false"> <mat-icon class="material-symbols-outlined">cancel</mat-icon>No</mat-option>
+        <mat-option value="">
+          <mat-icon class="material-symbols-outlined">badge</mat-icon>{{ 'GUESTS_FILTERS.ALL' | translate }}</mat-option
+        >
+        <mat-option [value]="true">
+          <mat-icon class="material-symbols-outlined">check_circle</mat-icon
+          >{{ 'GUESTS_FILTERS.YES' | translate }}</mat-option
+        >
+        <mat-option [value]="false">
+          <mat-icon class="material-symbols-outlined">cancel</mat-icon>{{ 'GUESTS_FILTERS.NO' | translate }}</mat-option
+        >
       </mat-select>
     </mat-form-field>
 
     <!-- DID THEY REQUEST -->
     <mat-form-field appearance="outline">
-      <mat-label>Did they request?</mat-label>
+      <mat-label>{{ 'GUESTS_FILTERS.DID_THEY_REQUEST' | translate }}</mat-label>
       <mat-icon class="material-symbols-outlined" matPrefix>mark_email_unread</mat-icon>
       <mat-select formControlName="didTheyReq">
-        <mat-option value=""> <mat-icon class="material-symbols-outlined">mark_email_unread</mat-icon>All</mat-option>
-        <mat-option [value]="true"> <mat-icon class="material-symbols-outlined">check_circle</mat-icon>Yes</mat-option>
-        <mat-option [value]="false"> <mat-icon class="material-symbols-outlined">cancel</mat-icon>No</mat-option>
+        <mat-option value="">
+          <mat-icon class="material-symbols-outlined">mark_email_unread</mat-icon
+          >{{ 'GUESTS_FILTERS.ALL' | translate }}</mat-option
+        >
+        <mat-option [value]="true">
+          <mat-icon class="material-symbols-outlined">check_circle</mat-icon
+          >{{ 'GUESTS_FILTERS.YES' | translate }}</mat-option
+        >
+        <mat-option [value]="false">
+          <mat-icon class="material-symbols-outlined">cancel</mat-icon>{{ 'GUESTS_FILTERS.NO' | translate }}</mat-option
+        >
       </mat-select>
     </mat-form-field>
 
@@ -145,12 +200,12 @@
     <div class="filters-actions">
       <button type="button" mat-stroked-button (click)="clearFilters()" class="btn-clear">
         <mat-icon class="material-symbols-outlined">clear</mat-icon>
-        Clear
+        {{ 'GUESTS_FILTERS.CLEAR' | translate }}
       </button>
 
       <button type="submit" mat-raised-button class="btn-search">
         <mat-icon class="material-symbols-outlined">search</mat-icon>
-        Search
+        {{ 'GUESTS_FILTERS.SEARCH' | translate }}
       </button>
     </div>
   </form>
@@ -168,7 +223,13 @@
     </button>
 
     <!-- STATS BUTTON -->
-    <a [routerLink]="['/guests/stats']" class="btn-stats" mat-icon-button aria-label="See stats" matTooltip="See stats">
+    <a
+      [routerLink]="['/guests/stats']"
+      class="btn-stats"
+      mat-icon-button
+      [attr.aria-label]="'GUESTS_ACTIONS.SEE_STATS' | translate"
+      [matTooltip]="'GUESTS_ACTIONS.SEE_STATS' | translate"
+    >
       <mat-icon class="material-symbols-outlined" fontIcon="leaderboard"></mat-icon>
     </a>
 
@@ -177,34 +238,45 @@
       [routerLink]="['/guests/add']"
       class="btn-add"
       mat-icon-button
-      aria-label="Create Guest"
-      matTooltip="Create Guest"
+      [attr.aria-label]="'GUESTS_ACTIONS.CREATE_GUEST' | translate"
+      [matTooltip]="'GUESTS_ACTIONS.CREATE_GUEST' | translate"
     >
       <mat-icon class="material-symbols-outlined" fontIcon="add"></mat-icon>
     </a>
   </div>
 
   <!-- CARDS -->
-  <guests-cards *ngIf="currentView === 'cards'" [data]="cardsData" (loadMore)="loadMoreCards()"> </guests-cards>
+  <guests-cards
+    *ngIf="currentView === 'cards'"
+    [data]="cardsData"
+    [cardsHasMore]="cardsHasMore"
+    (loadMore)="loadMoreCards()"
+  >
+  </guests-cards>
 
   <!-- cards loading -->
   <app-loading
     *ngIf="currentView === 'cards' && cardsLoading"
     class="cards-loading"
-    [messages]="['Loading your guests', 'Getting your guests ready', 'Almost there', 'Your cards are coming']"
+    [messages]="[
+      'GUESTS_LOADING.CARDS_1' | translate,
+      'GUESTS_LOADING.CARDS_2' | translate,
+      'GUESTS_LOADING.CARDS_3' | translate,
+      'GUESTS_LOADING.CARDS_4' | translate,
+    ]"
   ></app-loading>
-
-  <!-- cards end -->
-  <div *ngIf="currentView === 'cards' && !cardsHasMore && cardsData.length" class="cards-end">
-    No more guests to show.
-  </div>
 
   <!-- MAP -->
   <div *ngIf="currentView === 'map'" class="map-view">
     <!-- MAP LOADING -->
     <app-loading
       *ngIf="mapLoading"
-      [messages]="['Loading the map', 'Finding your guests', 'Preparing your map', 'Almost ready']"
+      [messages]="[
+        'GUESTS_LOADING.MAP_1' | translate,
+        'GUESTS_LOADING.MAP_2' | translate,
+        'GUESTS_LOADING.MAP_3' | translate,
+        'GUESTS_LOADING.MAP_4' | translate,
+      ]"
     ></app-loading>
 
     <!-- MAP -->
@@ -213,10 +285,13 @@
     <!-- MAP LIMIT -->
     <div *ngIf="!mapLoading" class="map-limit">
       <mat-form-field appearance="outline">
-        <mat-label>Guests to display</mat-label>
+        <mat-label> {{ 'GUESTS_VIEW.GUESTS_TO_DISPLAY' | translate }}</mat-label>
 
         <mat-select [value]="mapLimit" (selectionChange)="onMapLimitChange($event.value)">
-          <mat-option *ngFor="let limit of mapLimitOptions" [value]="limit"> {{ limit }} guests </mat-option>
+          <mat-option *ngFor="let limit of mapLimitOptions" [value]="limit">
+            {{ limit }}
+            {{ (limit === 1 ? 'GUESTS_VIEW.GUESTS_COUNT_SINGULAR' : 'GUESTS_VIEW.GUESTS_COUNT_PLURAL') | translate }}
+          </mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -225,13 +300,20 @@
   <!-- LOADING -->
   <app-loading
     *ngIf="vm.status === 'loading' && currentView === 'table'"
-    [messages]="['Loading guests', 'Searching your guests', 'Getting the results', 'Almost there']"
+    [messages]="[
+      'GUESTS_LOADING.TABLE_1' | translate,
+      'GUESTS_LOADING.TABLE_2' | translate,
+      'GUESTS_LOADING.TABLE_3' | translate,
+      'GUESTS_LOADING.TABLE_4' | translate,
+    ]"
   ></app-loading>
 
   <!-- EMPTY -->
   <div *ngIf="vm.status === 'success' && !vm.data.length">
-    <h1><strong>No guests found!</strong></h1>
-    <h1>Try changing your search criteria.</h1>
+    <h1>
+      <strong>{{ 'GUESTS_VIEW.NO_GUESTS_FOUND' | translate }}</strong>
+    </h1>
+    <h1>{{ 'GUESTS_VIEW.CHANGE_SEARCH' | translate }}</h1>
   </div>
 
   <!-- TABLE -->

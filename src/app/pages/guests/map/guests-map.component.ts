@@ -1,23 +1,28 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { environment } from '@env/environment';
-
-// Library
-import * as L from 'leaflet';
-import { union } from '@turf/union';
-import { featureCollection } from '@turf/helpers';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 // Services
 import { MapService } from '@services/map.service';
+import { LanguageService } from '@services/language.service';
 
 // Interfaces
 import { IGuestTableRow } from '@interfaces/data-structure-api';
 import { IAdminRegionsGeoJson, IWorldGeoJson } from '@interfaces/map-interface';
+import { REGION_NAMES } from '@config/world/regions';
 
 // Country data
 import { WORLD } from '@config/world';
 
 // Types
 import { ICountry } from '@type/word.types';
+
+// Libraries
+import * as L from 'leaflet';
+import { union } from '@turf/union';
+import { featureCollection } from '@turf/helpers';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'guests-map',
@@ -28,6 +33,11 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
   @Input() data: IGuestTableRow[] = [];
 
   private readonly _map = inject(MapService);
+  private readonly _language = inject(LanguageService);
+  private readonly _translate = inject(TranslateService);
+  private readonly _router = inject(Router);
+
+  private languageSubscription?: Subscription;
 
   private mapContainer?: HTMLDivElement;
   private geoJsonData?: IWorldGeoJson;
@@ -82,26 +92,25 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
    */
   private readonly iso3ByCountry = new Map<ICountry, string>();
 
+  private topGuestCountryIso3 = '';
+  private guestIdsByCountry: Record<string, string[]> = {};
+
   @ViewChild('mapCtn')
   set mapCtn(element: ElementRef<HTMLDivElement> | undefined) {
-    if (!element) {
-      return;
-    }
-
+    if (!element) return;
     this.mapContainer = element.nativeElement;
 
     this.tryInitMap();
   }
 
   // LIFECYCLE
-
   ngOnInit(): void {
     this.buildCountryLookups();
-
     this.guestCounts = this.getGuestCounts();
 
-    this.getWorldMap();
+    this.watchLanguageChanges();
 
+    this.getWorldMap();
     this.getAdminRegionsMap();
   }
 
@@ -109,26 +118,77 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     if (!changes['data'] || changes['data'].firstChange) {
       return;
     }
-
     this.guestCounts = this.getGuestCounts();
-
     this.updateCountryStyles();
   }
 
   ngOnDestroy(): void {
-    this.resizeObserver?.disconnect();
+    this.languageSubscription?.unsubscribe();
+    this.languageSubscription = undefined;
 
+    this.resizeObserver?.disconnect();
     this.resizeObserver = undefined;
+
+    this.themeObserver?.disconnect();
+    this.themeObserver = undefined;
 
     this.map?.remove();
 
     this.map = undefined;
     this.geoLayer = undefined;
+    this.tileLayer = undefined;
     this.geoJsonData = undefined;
     this.adminRegionsGeoJsonData = undefined;
+    this.adminRegionsLayer = undefined;
     this.mapContainer = undefined;
+  }
 
-    this.themeObserver?.disconnect();
+  private watchLanguageChanges(): void {
+    this.languageSubscription = this._translate.onLangChange.subscribe(() => this.updateTooltipsLanguage());
+  }
+
+  private updateTooltipsLanguage(): void {
+    // COUNTRIES
+    this.geoLayer?.eachLayer((layer: L.Layer) => {
+      const feature = (layer as any).feature;
+      if (!feature) return;
+      const config = this.getCountryConfig(feature);
+      const country = config.country;
+
+      const countryName =
+        country?.name[this._language.currentLanguage] ??
+        country?.name.en ??
+        feature.properties?.ADMIN ??
+        feature.properties?.name ??
+        this._translate.instant('MAP.UNKNOWN_COUNTRY');
+
+      layer.unbindTooltip();
+
+      layer.bindTooltip(`<strong>${countryName}</strong>`, {
+        sticky: true,
+        direction: 'top',
+        opacity: 1,
+        className: 'country-hover-tooltip',
+      });
+    });
+
+    // UK ADMINISTRATIVE REGIONS
+    this.adminRegionsLayer?.eachLayer((layer: L.Layer) => {
+      const feature = (layer as any).feature;
+      const code = feature?.properties?.gu_a3?.toLowerCase();
+
+      if (!code) return;
+      const regionName = this._translate.instant(`UK_REGIONS.${code}`);
+
+      layer.unbindTooltip();
+
+      layer.bindTooltip(`<strong>${regionName}</strong>`, {
+        sticky: true,
+        direction: 'top',
+        opacity: 1,
+        className: 'country-hover-tooltip',
+      });
+    });
   }
 
   // COUNTRY LOOKUPS
@@ -157,7 +217,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
        * Nombre
        */
       if (country.name) {
-        this.countriesByName[this.normalizeCountryName(country.name)] = country;
+        this.countriesByName[this.normalizeCountryName(country.name.en)] = country;
       }
     });
   }
@@ -361,6 +421,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
     // GEOJSON
     this.createGeoLayer();
+    this.createAdminRegionsLayer();
 
     // RESIZE OBSERVER
     this.setupResizeObserver();
@@ -428,29 +489,36 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     const iso = this.getFeatureCode(feature);
     const count = iso ? (this.guestCounts[iso] ?? 0) : 0;
 
-    // 0 GUESTS
+    const borderColor = this.getMapColor('--map-country-border', '#ffffff');
+
+    // Highlight the country with the most guests.
+    if (iso === this.topGuestCountryIso3 && count > 0) {
+      return {
+        color: borderColor,
+        weight: 1.5,
+        opacity: 1,
+        fillColor: this.getMapColor('--map-country-winner', '#f59e0b'),
+        fillOpacity: 0.95,
+        interactive: true,
+      };
+    }
     if (count === 0) {
       return {
-        color: '#ffffff',
-        weight: 1,
-        opacity: 0.45,
-        fillColor: '#000000',
-        fillOpacity: 0.35,
-
-        // IMPORTANTE:
-        // Necesitamos que Leaflet detecte el mouse
-        // para poder mostrar el tooltip.
+        color: borderColor,
+        weight: 0.7,
+        opacity: 0.8,
+        fillColor: this.getMapColor('--map-country-empty', '#e5e7eb'),
+        fillOpacity: 0.55,
         interactive: true,
       };
     }
 
-    // HAS GUESTS
     return {
-      color: '#ffffff',
-      weight: 0.5,
+      color: borderColor,
+      weight: 0.7,
       opacity: 1,
       fillColor: this.getCountryColor(count),
-      fillOpacity: 0.75,
+      fillOpacity: 0.85,
       interactive: true,
     };
   }
@@ -458,15 +526,14 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
   // COUNTRY COLOR
   private getCountryColor(count: number): string {
     if (count < 3) {
-      return '#2c420373';
+      return this.getMapColor('--map-country-low', '#b3c9e8');
     }
+
     if (count < 5) {
-      return '#0b96a55f';
+      return this.getMapColor('--map-country-medium', '#729bd1');
     }
-    if (count < 10) {
-      return '#2c0768a1';
-    }
-    return '#ff0000bb';
+
+    return this.getMapColor('--map-country-high', '#3265a8');
   }
 
   // UPDATE COLORS
@@ -501,13 +568,19 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
         }
 
         const count = this.guestCounts[code] ?? 0;
+        const isWinningCountry = this.topGuestCountryIso3 === 'gbr' && (this.guestCounts['gbr'] ?? 0) > 0;
+
         if (layer instanceof L.Path) {
           layer.setStyle({
-            color: '#ffffff',
-            weight: 0.5,
+            color: this.getMapColor('--map-country-border', '#ffffff'),
+            weight: isWinningCountry ? 1.5 : 0.7,
             opacity: 1,
-            fillColor: count > 0 ? this.getCountryColor(count) : '#000000',
-            fillOpacity: count > 0 ? 0.85 : 0.35,
+            fillColor: isWinningCountry
+              ? this.getMapColor('--map-country-winner', '#f59e0b')
+              : count > 0
+                ? this.getCountryColor(count)
+                : this.getMapColor('--map-country-empty', '#e5e7eb'),
+            fillOpacity: isWinningCountry ? 0.95 : count > 0 ? 0.85 : 0.55,
           });
         }
       });
@@ -519,7 +592,13 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     const config = this.getCountryConfig(feature);
     const country = config.country;
     const countryName =
-      country?.name ?? feature?.properties?.name ?? feature?.properties?.ADMIN ?? feature?.properties?.NAME_EN ?? feature?.properties?.NAME ?? 'Unknown country';
+      country?.name[this._language.currentLanguage] ??
+      country?.name.en ??
+      feature?.properties?.name ??
+      feature?.properties?.ADMIN ??
+      feature?.properties?.NAME_EN ??
+      feature?.properties?.NAME ??
+      this._translate.instant('MAP.UNKNOWN_COUNTRY');
 
     const iso3 = config.iso3;
 
@@ -535,22 +614,18 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     layer.on({
       mouseover: (event: any) => {
         const target = event.target;
-        const currentCount = iso3 ? (this.guestCounts[iso3] ?? 0) : 0;
 
         target.setStyle({
           weight: 1.5,
-          color: '#ffffff',
-          fillOpacity: currentCount > 0 ? 0.95 : 0.35,
+          color: this.getMapColor('--color-text', '#000000'),
+          fillColor: this.getMapColor('--color-hover-country', '#590000'),
         });
 
         target.bringToFront();
       },
 
       mouseout: (event: any) => {
-        if (!this.geoLayer) {
-          return;
-        }
-
+        if (!this.geoLayer) return;
         this.geoLayer.resetStyle(event.target);
       },
     });
@@ -560,48 +635,54 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
       const currentCount = iso3 ? (this.guestCounts[iso3] ?? 0) : 0;
 
       // If there are not guest, the popup is not
-      if (currentCount === 0 || !country) {
-        return;
-      }
-
-      this.showCountryPopup(layer, countryName, country, currentCount, iso3);
+      if (currentCount === 0 || !country) return;
+      this.showCountryPopup(layer, country?.name[this._language.currentLanguage] ?? country?.name.en ?? countryName, country, currentCount, iso3);
     });
   }
 
   // COUNTRY POPUP
   private showCountryPopup(layer: L.Layer, countryName: string, country: ICountry, count: number, iso3: string): void {
-    const region = String(country.region);
-    const continent = String(country.continent);
+    const lang = this._language.currentLanguage;
+    const translatedCountry = countryName;
+    const region = REGION_NAMES[country.region]?.[lang] ?? REGION_NAMES[country.region]?.en ?? country.region;
+    const continent = this._translate.instant(`CONTINENTS.${country.continent}`);
+    const txtBtnGuest = count === 1 ? this._translate.instant('MAP.VIEW_GUEST') : this._translate.instant('MAP.VIEW_GUESTS');
+
     const html = `
-      <div class="country-popup">
-
-        <div class="country-popup-title">
-          ${countryName}
-        </div>
-
-        <div class="country-popup-code">
-          ${iso3.toUpperCase()}
-        </div>
-
-        <div class="country-popup-divider"></div>
-
-        <div class="country-popup-row">
-          <span>Guests</span>
-          <strong>${count}</strong>
-        </div>
-
-        <div class="country-popup-row">
-          <span>Region</span>
-          <strong>${this.formatLabel(region)}</strong>
-        </div>
-
-        <div class="country-popup-row">
-          <span>Continent</span>
-          <strong>${this.formatLabel(continent)}</strong>
-        </div>
-
+    <div class="country-popup">
+      <div class="country-popup-title">
+        ${translatedCountry}
       </div>
-    `;
+
+      <div class="country-popup-code">
+        ${iso3.toUpperCase()}
+      </div>
+
+      <div class="country-popup-divider"></div>
+
+      <div class="country-popup-row">
+        <span>${this._translate.instant('MAP.GUESTS')}</span>
+        <strong>${count}</strong>
+      </div>
+
+      <div class="country-popup-row">
+        <span>${this._translate.instant('MAP.REGION')}</span>
+        <strong>${region}</strong>
+      </div>
+
+      <div class="country-popup-row">
+        <span>${this._translate.instant('MAP.CONTINENT')}</span>
+        <strong>${continent}</strong>
+      </div>
+
+      <a
+        class="view-country-guests"
+        data-country-code="${iso3.toLowerCase()}"
+      >
+        ${txtBtnGuest}
+      </a>
+    </div>
+  `;
 
     layer.bindPopup(html, {
       closeButton: true,
@@ -610,6 +691,40 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
       className: 'country-popup-container',
       maxWidth: 280,
     });
+
+    // Connect the dynamically generated Leaflet button.
+    layer.once('popupopen', (event: any) => {
+      const popupElement = event.popup.getElement() as HTMLElement | undefined;
+
+      const button = popupElement?.querySelector('.view-country-guests') as HTMLButtonElement | null;
+
+      button?.addEventListener(
+        'click',
+        () => {
+          const countryCode = button.dataset['countryCode'];
+
+          if (!countryCode) return;
+
+          const guestIds = this.guestIdsByCountry[countryCode] ?? [];
+
+          // If there is exactly one guest, open their detail page.
+          if (count === 1 && guestIds.length === 1) {
+            void this._router.navigate(['/guests', guestIds[0]]);
+            return;
+          }
+
+          // Otherwise, show the guests in cards view.
+          void this._router.navigate(['/guests'], {
+            queryParams: {
+              view: 'cards',
+              country: countryCode,
+            },
+          });
+        },
+        { once: true }
+      );
+    });
+
     layer.openPopup();
   }
 
@@ -621,43 +736,106 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
   // GUEST COUNTS
   private getGuestCounts(): Record<string, number> {
     const counts: Record<string, number> = {};
+    const arrivals: { country: string; timestamp: number }[] = [];
+
+    this.guestIdsByCountry = {};
+
     for (const row of this.data) {
-      if (!row.people) {
-        continue;
-      }
+      if (!row.people) continue;
+
+      const timestamp = Date.parse(row.visitedDate);
+
       for (const person of row.people) {
         const rawCode = person.hometown?.code?.toLowerCase().trim();
-        if (!rawCode) {
-          continue;
-        }
 
-        // UK ADMINISTRATIVE REGIONS
-        if (this.ukRegionCodes.includes(rawCode)) {
-          counts[rawCode] = (counts[rawCode] ?? 0) + 1;
-          continue;
-        }
+        if (!rawCode) continue;
+
         let iso3 = '';
 
-        // ISO3
-        if (rawCode.length === 3 && this.countriesByIso3[rawCode]) {
+        // Keep individual UK region counts and group them under Great Britain.
+        if (this.ukRegionCodes.includes(rawCode)) {
+          counts[rawCode] = (counts[rawCode] ?? 0) + 1;
+          iso3 = 'gbr';
+        } else if (rawCode.length === 3 && this.countriesByIso3[rawCode]) {
           iso3 = rawCode;
-        }
-        // ISO2
-        if (!iso3 && rawCode.length === 2) {
+        } else if (rawCode.length === 2) {
           const country = this.countriesByIso2[rawCode];
+
           if (country) {
             iso3 = this.iso3ByCountry.get(country) ?? '';
           }
         }
 
-        // Si no encontramos el país
-        if (!iso3) {
-          console.warn(`Country code not found in WORLD: ${rawCode}`);
-          continue;
-        }
+        if (!iso3) continue;
+
+        // Count guests and keep their IDs for country navigation.
         counts[iso3] = (counts[iso3] ?? 0) + 1;
+
+        if (person.guestId) {
+          (this.guestIdsByCountry[iso3] ??= []).push(person.guestId);
+        }
+
+        // Store valid arrival dates to determine when each country reached its current total.
+        if (Number.isFinite(timestamp)) {
+          arrivals.push({
+            country: iso3,
+            timestamp,
+          });
+        }
       }
     }
+
+    // Process arrivals chronologically, from oldest to newest.
+    arrivals.sort((a, b) => a.timestamp - b.timestamp);
+
+    const historicalCounts: Record<string, number> = {};
+    const reachedCurrentCountAt: Record<string, number> = {};
+
+    for (const arrival of arrivals) {
+      const country = arrival.country;
+
+      historicalCounts[country] = (historicalCounts[country] ?? 0) + 1;
+
+      // Save the first date each country reached its current guest count.
+      if (historicalCounts[country] === counts[country] && reachedCurrentCountAt[country] === undefined) {
+        reachedCurrentCountAt[country] = arrival.timestamp;
+      }
+    }
+
+    const countryCodes = Object.keys(counts).filter(code => !this.ukRegionCodes.includes(code));
+
+    countryCodes.sort((a, b) => {
+      // The country with the most guests wins.
+      const countDifference = counts[b] - counts[a];
+
+      if (countDifference !== 0) {
+        return countDifference;
+      }
+
+      // If tied, the country that reached its current total first wins.
+      const dateA = reachedCurrentCountAt[a] ?? Infinity;
+      const dateB = reachedCurrentCountAt[b] ?? Infinity;
+
+      if (dateA !== dateB) {
+        return dateA - dateB;
+      }
+
+      // Use alphabetical order as a fallback when dates cannot break the tie.
+      return a.localeCompare(b);
+    });
+
+    this.topGuestCountryIso3 = countryCodes[0] ?? '';
+
+    // Display ranking details for debugging.
+    console.table(
+      countryCodes.map(country => ({
+        country: country.toUpperCase(),
+        guests: counts[country],
+        reachedCurrentCountAt: reachedCurrentCountAt[country] ? new Date(reachedCurrentCountAt[country]).toLocaleDateString() : 'Unknown',
+        winner: country === this.topGuestCountryIso3,
+      }))
+    );
+
     return counts;
   }
 
@@ -760,23 +938,14 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
         },
       }
     ).addTo(this.map);
+    this.updateCountryStyles();
   }
 
   private setupAdminRegionInteraction(feature: any, layer: L.Layer): void {
     const code = feature.properties?.gu_a3?.toLowerCase();
+    if (!code) return;
 
-    if (!code) {
-      return;
-    }
-
-    const names: Record<string, string> = {
-      sct: 'Scotland',
-      wls: 'Wales',
-      nir: 'Northern Ireland',
-      eng: 'England',
-    };
-
-    const countryName = names[code] ?? 'United Kingdom';
+    const countryName = this._translate.instant(`UK_REGIONS.${code}`);
 
     // HOVER
     layer.bindTooltip(`<strong>${countryName}</strong>`, {
@@ -801,17 +970,8 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
         target.bringToFront();
       },
 
-      mouseout: (event: any) => {
-        const target = event.target;
-        const currentCount = this.guestCounts[code] ?? 0;
-
-        target.setStyle({
-          weight: currentCount > 0 ? 2 : 1,
-          color: '#ffffff',
-          opacity: currentCount > 0 ? 1 : 0.45,
-          fillColor: currentCount > 0 ? this.getCountryColor(currentCount) : '#000000',
-          fillOpacity: currentCount > 0 ? 0.85 : 0.35,
-        });
+      mouseout: () => {
+        this.updateCountryStyles();
       },
     });
 
@@ -829,35 +989,27 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
   private showAdminRegionPopup(layer: L.Layer, countryName: string, code: string, count: number): void {
     const html = `
-    <div class="country-popup">
+      <div class="country-popup">
+        <div class="country-popup-title">${countryName}</div>
+        <div class="country-popup-code">${code.toUpperCase()}</div>
+        <div class="country-popup-divider"></div>
 
-      <div class="country-popup-title">
-        ${countryName}
+        <div class="country-popup-row">
+          <span>${this._translate.instant('MAP.GUESTS')}</span>
+          <strong>${count}</strong>
+        </div>
+
+        <div class="country-popup-row">
+          <span>${this._translate.instant('MAP.REGION')}</span>
+          <strong>${this._translate.instant('MAP.UNITED_KINGDOM')}</strong>
+        </div>
+
+        <div class="country-popup-row">
+          <span>${this._translate.instant('MAP.CONTINENT')}</span>
+          <strong>${this._translate.instant('CONTINENTS.europe')}</strong>
+        </div>
       </div>
-
-      <div class="country-popup-code">
-        ${code.toUpperCase()}
-      </div>
-
-      <div class="country-popup-divider"></div>
-
-      <div class="country-popup-row">
-        <span>Guests</span>
-        <strong>${count}</strong>
-      </div>
-
-      <div class="country-popup-row">
-        <span>Region</span>
-        <strong>United Kingdom</strong>
-      </div>
-
-      <div class="country-popup-row">
-        <span>Continent</span>
-        <strong>Europe</strong>
-      </div>
-
-    </div>
-  `;
+    `;
 
     layer.bindPopup(html, {
       closeButton: true,
@@ -875,7 +1027,10 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
     const isDark = document.documentElement.classList.contains('dark-theme') || document.body.classList.contains('dark-theme');
 
-    if (this.isDarkMap === isDark && this.tileLayer) return;
+    if (this.isDarkMap === isDark && this.tileLayer) {
+      this.updateCountryStyles();
+      return;
+    }
 
     this.isDarkMap = isDark;
     this.tileLayer?.remove();
@@ -890,6 +1045,9 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
       updateWhenZooming: true,
       updateWhenIdle: true,
     }).addTo(this.map);
+
+    // Refresh country colors when the map theme changes.
+    this.updateCountryStyles();
   }
 
   private watchThemeChanges(): void {
@@ -904,5 +1062,15 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
     this.themeObserver.observe(document.documentElement, options);
     this.themeObserver.observe(document.body, options);
+  }
+
+  private getMapColor(variable: string, fallback: string): string {
+    if (!this.mapContainer) {
+      return fallback;
+    }
+
+    const color = getComputedStyle(this.mapContainer).getPropertyValue(variable).trim();
+
+    return color || fallback;
   }
 }

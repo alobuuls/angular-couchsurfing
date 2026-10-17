@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, QueryList, ViewChild, ViewChildren, OnChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, QueryList, ViewChild, ViewChildren, OnChanges, inject } from '@angular/core';
 
 // Interfaces
 import { IGroupEdit, IGuestDetail, IGuestsFormSubmit } from '@interfaces/guests.interface';
@@ -9,6 +9,7 @@ import { GuestFormComponent } from '@pages/guests/form/guest-form/guest-form.com
 
 // Services
 import { AlertsService } from '@services/alerts.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'guests-form',
@@ -39,7 +40,8 @@ export class GuestsFormComponent implements OnChanges {
   // Add Form
   limitGroupMembers = 5;
 
-  constructor(private _alerts: AlertsService) {}
+  private _alerts = inject(AlertsService);
+  private _translate = inject(TranslateService);
 
   ngOnChanges(): void {
     if (this.mode === 'edit') {
@@ -122,7 +124,7 @@ export class GuestsFormComponent implements OnChanges {
     if (this.formsToShow >= this.limitGroupMembers) {
       this._alerts.showToast({
         icon: 'warning',
-        title: 'You can add max 5 members',
+        title: this._translate.instant('GUESTS_FORM.MAX_MEMBERS'),
       });
 
       return;
