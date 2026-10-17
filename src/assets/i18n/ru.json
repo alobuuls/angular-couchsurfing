@@ -122,7 +122,9 @@
     "REGION": "Регион",
     "CONTINENT": "Континент",
     "UNITED_KINGDOM": "Соединённое Королевство",
-    "UNKNOWN_COUNTRY": "Неизвестная страна"
+    "UNKNOWN_COUNTRY": "Неизвестная страна",
+    "VIEW_GUESTS": "Посмотреть гостей",
+    "VIEW_GUEST": "Посмотреть гостя"
   },
   "GUESTS_CARDS": {
     "GUEST": "гость",

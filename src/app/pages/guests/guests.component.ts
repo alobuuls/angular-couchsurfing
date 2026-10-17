@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { combineLatestWith, map, switchMap } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
@@ -93,7 +93,6 @@ export class GuestsComponent implements OnInit {
   });
 
   private fb = inject(FormBuilder);
-  private _router = inject(Router);
   private _route = inject(ActivatedRoute);
   private _guests = inject(GuestsService);
   private _sortService = inject(GuestSortService);
@@ -308,7 +307,22 @@ export class GuestsComponent implements OnInit {
       return group ? this._guests.removeGroupById(id) : this._guests.removeGuestById(id);
     });
     if (!deleted) return;
+
+    // Refresh the table data
     this.page$.next({ ...this.page$.value });
+
+    // Remove cache data, so the other views reload when opened
+    this.resetCards();
+    this.mapData = [];
+
+    // Reload the data for the current view
+    if (this.currentView === 'cards') {
+      this.loadMoreCards();
+    }
+
+    if (this.currentView === 'map') {
+      this.loadMapData();
+    }
   }
 
   // AUTOCOMPLETE

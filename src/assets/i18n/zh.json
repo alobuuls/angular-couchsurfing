@@ -122,7 +122,9 @@
     "REGION": "地区",
     "CONTINENT": "洲",
     "UNITED_KINGDOM": "英国",
-    "UNKNOWN_COUNTRY": "未知国家"
+    "UNKNOWN_COUNTRY": "未知国家",
+    "VIEW_GUESTS": "查看客人",
+    "VIEW_GUEST": "查看客人"
   },
   "GUESTS_CARDS": {
     "GUEST": "位客人",

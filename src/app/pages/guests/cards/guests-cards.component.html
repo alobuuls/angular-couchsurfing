@@ -365,3 +365,8 @@
     </div>
   </div>
 </div>
+
+<!-- cards end -->
+<div *ngIf="!cardsHasMore && data.length" class="cards-end">
+  {{ 'GUESTS_VIEW.NO_MORE_GUESTS' | translate }}
+</div>
