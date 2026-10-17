@@ -122,6 +122,9 @@
   --color-rating: #e7ad00;
   --color-female: #bd6db1;
   --color-male: #4e90b6;
+
+  /* Map */
+  --color-hover-country: var(--color-accent);
 }
 
 //  Coastal Nomad — Dark
@@ -162,6 +165,9 @@
   --color-rating: #e7ad00;
   --color-female: #bd6db1;
   --color-male: #4e90b6;
+
+  /* Map */
+  --color-hover-country: #590000;
 
   /* Angular Material */
   --mat-paginator-container-background-color: var(--color-surface);
@@ -428,6 +434,42 @@
   --color-rating: #e7ad00;
   --color-female: #bd6db1;
   --color-male: #4e90b6;
+}
+
+/* MAP COLORS */
+//  — LIGHT THEMES
+:root,
+.theme-ocean:not(.dark-theme),
+.theme-pink:not(.dark-theme),
+.theme-lavender:not(.dark-theme) {
+  --map-country-empty: color-mix(in srgb, var(--color-text) 5%, var(--color-surface));
+  --map-country-low: color-mix(in srgb, var(--color-primary-light) 75%, var(--color-surface));
+  --map-country-medium: color-mix(in srgb, var(--color-secondary) 60%, var(--color-surface));
+  --map-country-high: color-mix(in srgb, var(--color-primary) 95%, var(--color-surface));
+  --map-country-winner: color-mix(in srgb, var(--color-primary) 50%, rgba(255, 0, 0, 0.7));
+  --map-country-border: color-mix(in srgb, var(--color-text) 90%, var(--color-surface));
+}
+
+// DARK THEMES
+.dark-theme {
+  --map-country-empty: color-mix(in srgb, var(--color-surface) 95%, var(--color-background));
+  --map-country-low: color-mix(in srgb, var(--color-primary-dark) 75%, transparent);
+  --map-country-medium: color-mix(in srgb, var(--color-secondary) 60%, var(--color-surface));
+  --map-country-high: color-mix(in srgb, var(--color-primary) 95%, var(--color-surface));
+  --map-country-winner: color-mix(in srgb, var(--color-primary) 50%, rgba(255, 166, 0, 0.7));
+  --map-country-border: color-mix(in srgb, var(--color-text) 90%, #000000);
+}
+
+/* Ensure the selected palette's dark values win. */
+.theme-ocean.dark-theme,
+.theme-pink.dark-theme,
+.theme-lavender.dark-theme {
+  --map-country-empty: color-mix(in srgb, var(--color-surface) 95%, var(--color-background));
+  --map-country-low: color-mix(in srgb, var(--color-primary-dark) 75%, transparent);
+  --map-country-medium: color-mix(in srgb, var(--color-secondary) 60%, var(--color-surface));
+  --map-country-high: color-mix(in srgb, var(--color-primary) 95%, var(--color-surface));
+  --map-country-winner: color-mix(in srgb, var(--color-primary) 50%, rgba(255, 166, 0, 0.7));
+  --map-country-border: color-mix(in srgb, var(--color-text) 90%, #000000);
 }
 
 /* =========================================================

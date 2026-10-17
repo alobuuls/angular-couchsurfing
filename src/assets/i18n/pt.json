@@ -122,7 +122,9 @@
     "REGION": "Região",
     "CONTINENT": "Continente",
     "UNITED_KINGDOM": "Reino Unido",
-    "UNKNOWN_COUNTRY": "País desconhecido"
+    "UNKNOWN_COUNTRY": "País desconhecido",
+    "VIEW_GUESTS": "Ver hóspedes",
+    "VIEW_GUEST": "Ver hóspede"
   },
   "GUESTS_CARDS": {
     "GUEST": "hóspede",

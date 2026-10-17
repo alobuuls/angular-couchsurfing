@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
 // Interfaces
-import { IGuestTableRow, IGuestYearGroup } from '@interfaces/data-structure-api';
+import { ICurrentView, IGuestTableRow, IGuestYearGroup } from '@interfaces/data-structure-api';
 import { ICardGuest } from '@interfaces/guests.interface';
 
 // Services
@@ -54,6 +54,8 @@ export class GuestsCardsComponent implements OnDestroy {
 
     return locales[language] ?? 'en-US';
   }
+
+  @Input() cardsHasMore: boolean = false;
 
   @Input()
   set data(value: IGuestTableRow[]) {

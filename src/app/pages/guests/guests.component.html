@@ -246,7 +246,13 @@
   </div>
 
   <!-- CARDS -->
-  <guests-cards *ngIf="currentView === 'cards'" [data]="cardsData" (loadMore)="loadMoreCards()"> </guests-cards>
+  <guests-cards
+    *ngIf="currentView === 'cards'"
+    [data]="cardsData"
+    [cardsHasMore]="cardsHasMore"
+    (loadMore)="loadMoreCards()"
+  >
+  </guests-cards>
 
   <!-- cards loading -->
   <app-loading
@@ -259,11 +265,6 @@
       'GUESTS_LOADING.CARDS_4' | translate,
     ]"
   ></app-loading>
-
-  <!-- cards end -->
-  <div *ngIf="currentView === 'cards' && !cardsHasMore && cardsData.length" class="cards-end">
-    {{ 'GUESTS_VIEW.NO_MORE_GUESTS' | translate }}
-  </div>
 
   <!-- MAP -->
   <div *ngIf="currentView === 'map'" class="map-view">
