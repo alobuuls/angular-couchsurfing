@@ -114,7 +114,7 @@
         >
           <mat-icon class="material-symbols-outlined" aria-hidden="true" fontIcon="language"></mat-icon>
 
-          <span>{{ currentLanguage.toUpperCase() }}</span>
+          <span>{{ currentLanguage | uppercase }}</span>
         </button>
 
         <div class="languages" [class.active]="showLanguageSelection">
@@ -125,7 +125,7 @@
             *ngFor="let btnLang of btnsLang"
           >
             <span [ngClass]="'fi fi-' + btnLang.flag"></span>
-            {{ btnLang.translationKey | translate }}
+            {{ btnLang.txt }}
           </button>
         </div>
       </div>

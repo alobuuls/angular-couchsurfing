@@ -1,13 +1,15 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, inject, Input, Output } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 
 // Interfaces
 import { IGuestListItem, IApiCsPag } from '@interfaces/guests.interface';
 import { IGuestTableRow } from '@interfaces/data-structure-api';
+import { Continents } from '@type/word.types';
 
 // Services
 import { FormatService } from '@services/format.service';
+import { GeonameService } from '@services/geoname.service';
 
 // Helpers
 import { isGroup } from '@utils';
@@ -26,6 +28,7 @@ export class GuestsTableComponent {
   @Input() offset = 0;
 
   private _data: IGuestTableRow[] = [];
+  private readonly _geoname = inject(GeonameService);
 
   @Input() set data(value: IGuestTableRow[]) {
     this._data = value ?? [];
@@ -55,6 +58,10 @@ export class GuestsTableComponent {
     'rating',
     'actions',
   ];
+
+  getContinentName(continent: Continents): string {
+    return this._geoname.getContinentName(continent);
+  }
 
   openCouchsurfing(profileId: string): void {
     window.open(`${profileId}`, '_blank');

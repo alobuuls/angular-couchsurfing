@@ -13,6 +13,7 @@ export * from '@config/world/america';
 export * from '@config/world/asia';
 export * from '@config/world/europe';
 export * from '@config/world/oceania';
+export * from '@config/world/continents';
 
 export const WORLD: Record<string, ICountry> = {
   ...AFRICA,

@@ -137,20 +137,20 @@
         <!-- GENDER -->
         <section class="card-section">
           <h4 class="subtitle">
-            {{ 'GUEST_FORM.FIELDS.GENDER' | translate }}
+            {{ 'GENDER.TXT' | translate }}
           </h4>
 
           <mat-radio-group formControlName="gender">
             <mat-radio-button value="male">
-              {{ 'GUEST_FORM.GENDER_OPTIONS.MALE' | translate }}
+              {{ 'GENDER.MALE' | translate }}
             </mat-radio-button>
 
             <mat-radio-button value="female">
-              {{ 'GUEST_FORM.GENDER_OPTIONS.FEMALE' | translate }}
+              {{ 'GENDER.FEMALE' | translate }}
             </mat-radio-button>
 
             <mat-radio-button value="trans">
-              {{ 'GUEST_FORM.GENDER_OPTIONS.TRANS' | translate }}
+              {{ 'GENDER.TRANS' | translate }}
             </mat-radio-button>
           </mat-radio-group>
 
@@ -194,7 +194,7 @@
           <mat-autocomplete #autoHometown="matAutocomplete" [displayWith]="displayCountryCode">
             <mat-option *ngFor="let country of filteredCountries" [value]="country.countryCode">
               <span [class]="country.countryCode | flag"></span>
-              {{ getCountryName(country) }}
+              {{ getCountryName(country.countryCode) }}
             </mat-option>
           </mat-autocomplete>
 
@@ -261,7 +261,7 @@
           <mat-autocomplete #autoLiving="matAutocomplete" [displayWith]="displayCountryCode">
             <mat-option *ngFor="let country of filteredLiving" [value]="country.countryCode">
               <span [class]="country.countryCode | flag"></span>
-              {{ getCountryName(country) }}
+              {{ getCountryName(country.countryCode) }}
             </mat-option>
           </mat-autocomplete>
 
@@ -328,7 +328,7 @@
           <mat-autocomplete #autoCountryWeMet="matAutocomplete" [displayWith]="displayCountryCode">
             <mat-option *ngFor="let country of filteredCountryWeMet" [value]="country.countryCode">
               <span [class]="country.countryCode | flag"></span>
-              {{ getCountryName(country) }}
+              {{ getCountryName(country.countryCode) }}
             </mat-option>
           </mat-autocomplete>
 

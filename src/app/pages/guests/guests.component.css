@@ -109,3 +109,8 @@
     color: var(--color-text);
   }
 }
+
+.map-view {
+  position: relative;
+  z-index: 3;
+}

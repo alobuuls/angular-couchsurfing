@@ -8,7 +8,6 @@
     "NO": "No.",
     "HANG_OUT": "Hang Out",
     "NIGHTS": "Nights",
-    "GENDER": "Gender",
     "AGE": "Age",
     "FULL_NAME": "Full Name",
     "CONTINENT": "Continent",
@@ -26,13 +25,6 @@
     "WHATSAPP_UNAVAILABLE": "WhatsApp unavailable",
     "BIRTHDATE": "Birthdate",
     "CURRENT_AGE": "Current Age"
-  },
-  "CONTINENTS": {
-    "africa": "Africa",
-    "asia": "Asia",
-    "europe": "Europe",
-    "america": "America",
-    "oceania": "Oceania"
   },
   "PAGINATOR": {
     "ITEMS_PER_PAGE": "Items per page:",
@@ -99,17 +91,6 @@
   },
   "DATE": {
     "DAY": "Day"
-  },
-  "LANGUAGES": {
-    "EN": "English",
-    "ES": "Spanish",
-    "DE": "German",
-    "ZH": "Chinese",
-    "FR": "French",
-    "IT": "Italian",
-    "PT": "Portuguese",
-    "RU": "Russian",
-    "JA": "Japanese"
   },
   "UK_REGIONS": {
     "sct": "Scotland",
@@ -206,12 +187,6 @@
       "SUBTITLE": "TRAVELER PROFILE",
       "TITLE": "Personal Information",
       "FULL_NAME": "Full Name",
-      "GENDER": "Gender",
-      "GENDERS": {
-        "MALE": "Male",
-        "FEMALE": "Female",
-        "TRANS": "Trans"
-      },
       "BIRTH_DATE": "Birth Date",
       "PHONE_NUMBER": "Phone Number",
       "GAY": "Gay",
@@ -327,7 +302,6 @@
       "INSTAGRAM": "Instagram",
       "CS_PROFILE_URL": "CS Profile URL",
       "BIRTH_DATE": "Birth Date",
-      "GENDER": "Gender",
       "HOMETOWN_COUNTRY": "Hometown Country",
       "HOMETOWN_STATE": "Hometown State",
       "HOMETOWN_CITY": "Hometown City",
@@ -348,11 +322,6 @@
       "THEIR_REFERENCE": "Their Reference",
       "MY_REFERENCE": "My Reference",
       "COMMENTS": "Leave a comment"
-    },
-    "GENDER_OPTIONS": {
-      "MALE": "Male",
-      "FEMALE": "Female",
-      "TRANS": "Trans"
     },
     "CHECKBOXES": {
       "FIRST_TIME": "First Time",
@@ -483,19 +452,13 @@
         "GROUPS": "Groups"
       },
       "GROUPS": {
+        "SOLO": "Solo",
         "COUPLE": "Couple",
         "FRIENDS": "Friends",
         "FAMILY": "Family"
       },
-      "GENDER": {
-        "MALE": "Male",
-        "FEMALE": "Female",
-        "TRANS": "Trans",
-        "GAY": "Gay"
-      },
       "LABELS": {
         "AGE": "Age",
-        "GENDER": "Gender",
         "COUNTRY": "Country",
         "VISIT": "Visit",
         "VISITED_DATE": "Visit Date",
@@ -546,25 +509,11 @@
         "NUMBER_OF_GUESTS": "Number of Guests",
         "FEMALE_GUESTS": "Female Guests",
         "MALE_GUESTS": "Male Guests",
-        "GENDER": "Gender",
         "GROUP": "Group",
         "VISIT": "Visit",
         "VISIT_DATE": "Visit Date",
         "GUESTS": "Guests",
         "CONSECUTIVE_VISITS": "{{streak}} Consecutive Visits"
-      },
-      "GENDER": {
-        "FEMALE": "Female",
-        "MALE": "Male",
-        "GAY": "Gay",
-        "TRANS": "Trans"
-      },
-      "CONTINENTS": {
-        "AMERICA": "America",
-        "EUROPE": "Europe",
-        "AFRICA": "Africa",
-        "ASIA": "Asia",
-        "OCEANIA": "Oceania"
       },
       "RANKING_LABELS": {
         "FIRST": "1st",
@@ -645,14 +594,8 @@
         "UNRATED": "Unrated",
         "RATING": "Rating",
         "RATING_VALUE": "Rating: {{rating}} ⭐",
-        "GENDER": "Gender: {{gender}}",
         "COUNTRY": "Country: {{country}}",
         "VISIT": "Visit: {{date}}"
-      },
-      "GENDERS": {
-        "MALE": "Male",
-        "FEMALE": "Female",
-        "TRANS": "Trans"
       }
     },
     "TIMELINE": {
@@ -677,7 +620,6 @@
         "OTHER": "Other",
         "NUMBER_OF_GUESTS": "Number of Guests",
         "COUNTRY": "Country: {{country}}",
-        "GENDER": "Gender: {{gender}}",
         "VISIT": "Visit: {{date}}",
         "GROUP_NAME": "{{name}} and {{group}}"
       },
@@ -713,28 +655,23 @@
       "LABELS": {
         "OVERALL": "Overall",
         "SOLO": "Solo",
+        "GUESTS": "Guests",
+        "GUESTS_COUNT": "Guests: {{count}}",
         "MAXIMUM_GUESTS_TOGETHER": "Maximum Guests Together",
         "SAME_ARRIVAL": "Same Arrival",
         "FIRST": "1st",
         "SECOND": "2nd",
         "THIRD": "3rd",
         "OTHERS": "Others",
-        "GUESTS": "Guests",
         "STAY_TYPE": "Stay Type",
         "OVERLAPPING_GUESTS": "Overlapping Guests",
         "ARRIVAL_DATE": "Arrival Date",
-        "TOTAL_NIGHTS": "Total nights: {{nights}}",
+        "TOTAL_NIGHTS": "Total nights: {{count}}",
         "COUNTRY": "Country: {{country}}",
         "VISIT": "Visit: {{date}}",
         "GROUP": "Group: {{group}}",
         "CONNECTIONS": "Connections: {{count}}",
         "GROUP_NAME": "{{name}} and {{group}}"
-      },
-      "GENDERS": {
-        "MALE": "Male",
-        "FEMALE": "Female",
-        "OTHER": "Other",
-        "UNKNOWN": "Unknown"
       },
       "GROUP_LABELS": {
         "SOLO": "Solo",
@@ -843,5 +780,22 @@
       "ALMOST_READY": "Almost ready",
       "JUST_A_MOMENT": "Just a moment"
     }
+  },
+  "GENDER": {
+    "TXT": "Gender",
+    "LABEL": "Gender: {{gender}}",
+    "MALE": "Male",
+    "FEMALE": "Female",
+    "TRANS": "Trans",
+    "GAY": "Gay"
+  },
+  "404": {
+    "ERR": "Error",
+    "MSG": "The page you're looking for may have been deleted, renamed, or is temporarily unavailable.",
+    "TRY": "Please try:",
+    "OR": "or",
+    "BTN_BACK": "Go back to the previous page",
+    "BTN_HOME": "Return to the home page",
+    "GOOD_LUCK": "Good luck 😁"
   }
 }

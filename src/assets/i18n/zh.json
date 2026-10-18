@@ -1,19 +1,18 @@
 {
   "MENU": {
     "GUESTS": "客人",
-    "HOSTED": "房东",
+    "HOSTED": "接待过的客人",
     "PERSONAL": "个人"
   },
   "GUESTS_TABLE": {
     "NO": "编号",
-    "HANG_OUT": "一起出去玩",
-    "NIGHTS": "住宿晚数",
-    "GENDER": "性别",
+    "HANG_OUT": "一起活动",
+    "NIGHTS": "晚数",
     "AGE": "年龄",
     "FULL_NAME": "全名",
-    "CONTINENT": "大洲",
+    "CONTINENT": "洲",
     "HOMETOWN": "家乡",
-    "LIVING_IN": "现居地",
+    "LIVING_IN": "居住地",
     "VISITED": "访问日期",
     "RATING": "评分",
     "ACTIONS": "操作",
@@ -27,25 +26,18 @@
     "BIRTHDATE": "出生日期",
     "CURRENT_AGE": "当前年龄"
   },
-  "CONTINENTS": {
-    "africa": "非洲",
-    "asia": "亚洲",
-    "europe": "欧洲",
-    "america": "美洲",
-    "oceania": "大洋洲"
-  },
   "PAGINATOR": {
     "ITEMS_PER_PAGE": "每页项目数：",
     "NEXT_PAGE": "下一页",
     "PREVIOUS_PAGE": "上一页",
     "FIRST_PAGE": "第一页",
     "LAST_PAGE": "最后一页",
-    "RANGE_EMPTY": "共 {{length}} 项，当前显示 0 项",
-    "RANGE_LABEL": "第 {{start}} – {{end}} 项，共 {{length}} 项"
+    "RANGE_EMPTY": "共 {{length}} 项，当前为 0 项",
+    "RANGE_LABEL": "第 {{start}}–{{end}} 项，共 {{length}} 项"
   },
   "GUESTS_FILTERS": {
-    "CONTINENT": "大洲",
-    "ALL_CONTINENTS": "所有大洲",
+    "CONTINENT": "洲",
+    "ALL_CONTINENTS": "所有洲",
     "REGION": "地区",
     "ALL_REGIONS": "所有地区",
     "COUNTRY": "国家",
@@ -58,10 +50,10 @@
     "FAMILY": "家庭",
     "VISITED_FROM": "访问开始日期",
     "VISITED_TO": "访问结束日期",
-    "FIRST_TIME": "首次",
-    "HANG_OUT": "一起出去玩",
+    "FIRST_TIME": "首次访问",
+    "HANG_OUT": "一起活动",
     "AMBASSADOR": "大使",
-    "DID_THEY_REQUEST": "他们提出申请了吗？",
+    "DID_THEY_REQUEST": "他们是否提出了请求？",
     "ALL": "全部",
     "YES": "是",
     "NO": "否",
@@ -74,42 +66,31 @@
   },
   "GUESTS_VIEW": {
     "NO_MORE_GUESTS": "没有更多客人可显示。",
-    "GUESTS_TO_DISPLAY": "要显示的客人",
+    "GUESTS_TO_DISPLAY": "要显示的客人数量",
     "GUESTS_COUNT_SINGULAR": "位客人",
     "GUESTS_COUNT_PLURAL": "位客人",
     "NO_GUESTS_FOUND": "未找到客人！",
-    "CHANGE_SEARCH": "请尝试更改搜索条件。",
+    "CHANGE_SEARCH": "尝试更改搜索条件。",
     "CHANGE_TO_CARDS": "切换到卡片视图",
     "CHANGE_TO_MAP": "切换到地图视图",
     "CHANGE_TO_TABLE": "切换到表格视图"
   },
   "GUESTS_LOADING": {
-    "CARDS_1": "正在加载你的客人",
+    "CARDS_1": "正在加载您的客人",
     "CARDS_2": "正在准备客人信息",
-    "CARDS_3": "马上就好",
+    "CARDS_3": "即将完成",
     "CARDS_4": "客人卡片即将显示",
     "MAP_1": "正在加载地图",
-    "MAP_2": "正在查找你的客人",
+    "MAP_2": "正在查找您的客人",
     "MAP_3": "正在准备地图",
-    "MAP_4": "即将完成",
+    "MAP_4": "即将准备就绪",
     "TABLE_1": "正在加载客人",
-    "TABLE_2": "正在查找你的客人",
+    "TABLE_2": "正在搜索您的客人",
     "TABLE_3": "正在获取结果",
     "TABLE_4": "即将完成"
   },
   "DATE": {
     "DAY": "日"
-  },
-  "LANGUAGES": {
-    "EN": "英语",
-    "ES": "西班牙语",
-    "DE": "德语",
-    "ZH": "中文",
-    "FR": "法语",
-    "IT": "意大利语",
-    "PT": "葡萄牙语",
-    "RU": "俄语",
-    "JA": "日语"
   },
   "UK_REGIONS": {
     "sct": "苏格兰",
@@ -129,17 +110,17 @@
   "GUESTS_CARDS": {
     "GUEST": "位客人",
     "GUESTS": "位客人",
-    "VISIT": "次拜访",
-    "VISITS": "次拜访",
-    "READ_MORE": "展开阅读",
+    "VISIT": "次访问",
+    "VISITS": "次访问",
+    "READ_MORE": "阅读更多",
     "SHOW_LESS": "收起",
     "TRIP": "行程",
-    "VISITED_DATE": "拜访日期",
-    "NIGHTS": "住宿晚数",
-    "STAYED": "曾接待住宿",
-    "HANG_OUT": "曾一起活动",
-    "FIRST_TIME": "首次见面",
-    "GROUP_TYPE": "出行类型",
+    "VISITED_DATE": "访问日期",
+    "NIGHTS": "晚数",
+    "STAYED": "曾留宿",
+    "HANG_OUT": "一起活动",
+    "FIRST_TIME": "首次访问",
+    "GROUP_TYPE": "群组类型",
     "MEMBERS": "成员",
     "AMBASSADOR": "大使",
     "PERSONAL_INFORMATION": "个人信息",
@@ -149,24 +130,24 @@
     "INSTAGRAM": "Instagram",
     "COUCHSURFING": "Couchsurfing",
     "GAY": "同性恋",
-    "DID_THEY_REQUEST": "对方是否请求住宿？",
-    "I_SENT_THE_REQUEST": "我提出了住宿请求",
+    "DID_THEY_REQUEST": "他们是否请求留宿？",
+    "I_SENT_THE_REQUEST": "我提出了请求",
     "LOCATION": "地点",
     "CONTINENT": "洲",
     "REGION": "地区",
     "HOMETOWN": "家乡",
-    "LIVING_IN": "现居地",
+    "LIVING_IN": "居住地",
     "WE_MET": "相识地点",
     "OCCUPATION": "职业",
     "GIFT": "礼物",
-    "COMMENTS": "备注",
-    "REFERENCES": "评价与推荐",
-    "THEIR_REFERENCE": "对方的评价",
+    "COMMENTS": "评论",
+    "REFERENCES": "评价",
+    "THEIR_REFERENCE": "他们的评价",
     "MY_REFERENCE": "我的评价",
     "GROUP_TYPES": {
-      "solo": "独自出行",
+      "solo": "独自旅行",
       "couple": "情侣",
-      "friends": "朋友结伴",
+      "friends": "朋友",
       "family": "家庭"
     },
     "LOADING_1": "正在加载详细信息",
@@ -184,7 +165,7 @@
       "MESSAGE_1": "正在加载客人详情",
       "MESSAGE_2": "正在准备所有内容",
       "MESSAGE_3": "即将完成",
-      "MESSAGE_4": "正在准备客人档案"
+      "MESSAGE_4": "正在准备客人资料"
     },
     "PASSPORT": {
       "SUBTITLE": "国际客人",
@@ -195,61 +176,55 @@
       "AMBASSADOR": "大使"
     },
     "SOCIAL": {
-      "COUCHSURFING": "查看 Couchsurfing 个人主页",
-      "INSTAGRAM": "查看 Instagram 个人主页",
+      "COUCHSURFING": "查看 Couchsurfing 个人资料",
+      "INSTAGRAM": "查看 Instagram 个人资料",
       "WHATSAPP": "查看 WhatsApp 个人资料"
     },
     "DIVIDER": {
-      "IDENTITY": "身份信息"
+      "IDENTITY": "身份"
     },
     "PERSONAL": {
-      "SUBTITLE": "旅行者档案",
+      "SUBTITLE": "旅行者资料",
       "TITLE": "个人信息",
       "FULL_NAME": "全名",
-      "GENDER": "性别",
-      "GENDERS": {
-        "MALE": "男性",
-        "FEMALE": "女性",
-        "TRANS": "跨性别"
-      },
       "BIRTH_DATE": "出生日期",
       "PHONE_NUMBER": "电话号码",
       "GAY": "同性恋",
-      "STAY_REQUEST": "住宿请求",
-      "REQUESTED_STAY": "对方请求过住宿",
-      "SENT_REQUEST": "我提出过住宿请求"
+      "STAY_REQUEST": "留宿请求",
+      "REQUESTED_STAY": "他们请求了留宿",
+      "SENT_REQUEST": "我提出了请求"
     },
     "COMMON": {
       "YES": "是",
       "NO": "否"
     },
     "LOCATION": {
-      "SUBTITLE": "出生地与居住地",
+      "SUBTITLE": "来源与居住地",
       "TITLE": "地点与坐标",
       "CONTINENT": "洲",
       "REGION": "地区",
       "HOMETOWN": "家乡",
-      "CURRENTLY_LIVING_IN": "目前居住地",
+      "CURRENTLY_LIVING_IN": "当前居住地",
       "WE_MET_IN": "相识地点"
     },
     "TRIP": {
-      "SUBTITLE": "旅行记录条目",
+      "SUBTITLE": "旅行记录",
       "TITLE": "行程记录",
-      "DATE_OF_VISIT": "拜访日期",
-      "NIGHTS": "住宿晚数",
-      "GROUP_TYPE": "出行类型",
+      "DATE_OF_VISIT": "访问日期",
+      "NIGHTS": "晚数",
+      "GROUP_TYPE": "群组类型",
       "GROUP_TYPES": {
-        "SOLO": "独自出行",
+        "SOLO": "独自旅行",
         "COUPLE": "情侣",
-        "FRIENDS": "朋友结伴",
+        "FRIENDS": "朋友",
         "FAMILY": "家庭"
       },
-      "STAYED": "是否接待住宿？",
-      "HUNG_OUT": "是否一起活动",
-      "FIRST_VISIT": "首次拜访"
+      "STAYED": "是否留宿？",
+      "HUNG_OUT": "一起活动",
+      "FIRST_VISIT": "首次访问"
     },
     "OCCUPATION": {
-      "SUBTITLE": "职业档案",
+      "SUBTITLE": "职业资料",
       "TITLE": "职业"
     },
     "RATING": {
@@ -257,17 +232,17 @@
       "TITLE": "客人评分"
     },
     "GIFTS": {
-      "SUBTITLE": "旅行纪念",
+      "SUBTITLE": "旅行回忆",
       "TITLE": "礼物"
     },
     "COMMENTS": {
       "SUBTITLE": "个人备注",
-      "TITLE": "备注"
+      "TITLE": "评论"
     },
     "REFERENCES": {
-      "SUBTITLE": "社区互动",
-      "TITLE": "评价与推荐",
-      "THEIR_REFERENCE": "对方的评价",
+      "SUBTITLE": "社区联系",
+      "TITLE": "评价",
+      "THEIR_REFERENCE": "他们的评价",
       "MY_REFERENCE": "我的评价"
     },
     "FOOTER": {
@@ -276,113 +251,107 @@
     "GROUP": {
       "HEADER": {
         "SUBTITLE": "国际客人记录",
-        "TITLE": "团体护照"
+        "TITLE": "群组护照"
       },
       "TRIP": {
         "SUBTITLE": "共同旅程",
-        "TITLE": "团体行程"
+        "TITLE": "群组行程"
       },
       "MEMBERS": {
-        "SUBTITLE": "同行伙伴",
-        "TITLE": "团体成员",
+        "SUBTITLE": "旅行同伴",
+        "TITLE": "群组成员",
         "GUEST_FALLBACK": "客人",
         "WHATSAPP": "WhatsApp",
-        "LIVING_IN": "现居地"
+        "LIVING_IN": "居住地"
       }
     }
   },
   "GUESTS_FORM": {
-    "GROUP_TYPE_TITLE": "他们是如何一起出行的？",
+    "GROUP_TYPE_TITLE": "他们是如何旅行的？",
     "GROUP_TYPES": {
-      "SOLO": "独自出行",
+      "SOLO": "独自旅行",
       "COUPLE": "情侣",
-      "FRIENDS": "朋友结伴",
+      "FRIENDS": "朋友",
       "FAMILY": "家庭"
     },
     "ADD_GUEST": "添加另一位客人",
     "CREATE": "创建",
     "UPDATE": "更新",
-    "MAX_MEMBERS": "最多可添加 5 位成员"
+    "MAX_MEMBERS": "最多可以添加 5 位成员"
   },
   "TRIP_FORM": {
     "TITLE": "行程信息",
-    "VISITED_DATE": "拜访日期",
-    "VISITED_DATE_REQUIRED": "拜访日期为必填项",
+    "VISITED_DATE": "访问日期",
+    "VISITED_DATE_REQUIRED": "必须填写访问日期",
     "TODAY": "今天",
-    "STAYED": "是否接待住宿？",
-    "NIGHTS": "住宿晚数"
+    "STAYED": "是否留宿？",
+    "NIGHTS": "晚数"
   },
   "GUEST_FORM": {
     "SECTIONS": {
       "PERSONAL": "个人信息",
-      "LOCATION": "地点信息",
-      "OCCUPATION": "职业信息",
-      "CONTACT": "联系方式",
-      "ADDITIONAL": "其他信息",
+      "LOCATION": "地点",
+      "OCCUPATION": "职业",
+      "CONTACT": "联系信息",
+      "ADDITIONAL": "附加信息",
       "RATING_GIFTS": "评分与礼物",
-      "REFERENCES_COMMENTS": "评价与备注"
+      "REFERENCES_COMMENTS": "评价与评论"
     },
     "FIELDS": {
       "FULL_NAME": "全名",
       "INSTAGRAM": "Instagram",
-      "CS_PROFILE_URL": "Couchsurfing 个人主页链接",
+      "CS_PROFILE_URL": "CS 个人资料网址",
       "BIRTH_DATE": "出生日期",
-      "GENDER": "性别",
       "HOMETOWN_COUNTRY": "家乡所在国家",
-      "HOMETOWN_STATE": "家乡所在州或省",
+      "HOMETOWN_STATE": "家乡所在州或地区",
       "HOMETOWN_CITY": "家乡城市",
-      "LIVING_COUNTRY": "现居国家",
-      "LIVING_STATE": "现居州或省",
-      "LIVING_CITY": "现居城市",
+      "LIVING_COUNTRY": "居住国家",
+      "LIVING_STATE": "居住州或地区",
+      "LIVING_CITY": "居住城市",
       "COUNTRY_WE_MET": "相识国家",
-      "STATE_WE_MET": "相识地点所在州或省",
+      "STATE_WE_MET": "相识州或地区",
       "CITY_WE_MET": "相识城市",
-      "LOCATION_WE_MET": "具体相识地点",
+      "LOCATION_WE_MET": "相识地点",
       "OCCUPATION_AREA": "职业领域",
       "OCCUPATIONS": "职业",
-      "OTHER_OCCUPATION": "填写其他职业",
-      "ENTER_OCCUPATION": "输入职业",
-      "PREFIX": "国家电话区号",
+      "OTHER_OCCUPATION": "填写您的职业",
+      "ENTER_OCCUPATION": "输入您的职业",
+      "PREFIX": "国家或地区代码",
       "WHATSAPP": "WhatsApp",
       "GIFTS": "礼物",
-      "THEIR_REFERENCE": "对方的评价",
+      "THEIR_REFERENCE": "他们的评价",
       "MY_REFERENCE": "我的评价",
-      "COMMENTS": "添加备注"
-    },
-    "GENDER_OPTIONS": {
-      "MALE": "男性",
-      "FEMALE": "女性",
-      "TRANS": "跨性别"
+      "COMMENTS": "留下评论"
     },
     "CHECKBOXES": {
-      "FIRST_TIME": "首次见面",
-      "STAY_REQUEST": "对方是否请求住宿？",
+      "FIRST_TIME": "首次访问",
+      "STAY_REQUEST": "他们是否请求留宿？",
       "HANG_OUT": "一起活动",
       "AMBASSADOR": "大使",
       "GAY": "同性恋"
     },
     "BUTTONS": {
-      "CLEAR_GIFTS": "清空"
+      "CLEAR_GIFTS": "清除"
     },
     "HINTS": {
       "GIFTS_COUNT": "{{count}}/15 件礼物"
     },
     "ERRORS": {
-      "FULL_NAME_REQUIRED": "全名为必填项",
-      "FULL_NAME_MAX": "最多可输入 100 个字符",
-      "INSTAGRAM_MAX": "最多可输入 30 个字符",
-      "CS_PROFILE_REQUIRED": "Couchsurfing 个人主页链接为必填项",
-      "CS_PROFILE_MAX": "最多可输入 50 个字符",
-      "GENDER_REQUIRED": "性别为必填项",
-      "COUNTRY_REQUIRED": "国家为必填项",
-      "LOCATION_MAX": "最多可输入 100 个字符",
-      "OCCUPATION_REQUIRED": "职业领域为必填项",
-      "PREFIX_REQUIRED": "国家电话区号为必填项",
-      "WHATSAPP_REQUIRED": "WhatsApp 号码为必填项",
+      "FULL_NAME_REQUIRED": "必须填写全名",
+      "FULL_NAME_MAX": "最多 100 个字符",
+      "INSTAGRAM_MAX": "最多 30 个字符",
+      "CS_PROFILE_REQUIRED": "必须填写 CS 个人资料网址",
+      "CS_PROFILE_MAX": "最多 50 个字符",
+      "GENDER_REQUIRED": "必须选择性别",
+      "COUNTRY_REQUIRED": "必须选择国家",
+      "LOCATION_MAX": "最多 100 个字符",
+      "OCCUPATION_REQUIRED": "必须填写职业领域",
+      "PREFIX_REQUIRED": "必须填写国家或地区代码",
+      "WHATSAPP_REQUIRED": "必须填写 WhatsApp",
       "PHONE_INVALID": "电话号码无效",
-      "WHATSAPP_MAX": "最多可输入 16 个字符",
-      "REFERENCE_MAX": "评价最多可输入 500 个字符",
-      "COMMENTS_MAX": "备注最多可输入 500 个字符"
+      "WHATSAPP_MAX": "最多 16 个字符",
+      "REFERENCE_MAX": "最多 500 个字符",
+      "COMMENTS_MAX": "最多 500 个字符"
     },
     "RATING": {
       "1": "非常差",
@@ -393,57 +362,58 @@
     },
     "TOASTS": {
       "MAX_GIFTS": "最多只能添加 15 件礼物",
-      "DUPLICATE_GIFT": "这件礼物已经添加过了",
+      "DUPLICATE_GIFT": "这件礼物已添加",
       "GIFT_EXISTS": "这件礼物已存在",
-      "NO_GIFTS": "没有可清空的礼物",
+      "NO_GIFTS": "没有可清除的礼物",
       "GIFTS_CLEARED": "礼物列表已清空"
     },
     "ANNOUNCEMENTS": {
-      "GIFT_REMOVED": "已移除礼物"
+      "GIFT_REMOVED": "礼物已移除"
     }
   },
   "STATS": {
     "TITLE": "统计数据",
     "NAV": {
-      "SUMMARY": "查看概览",
+      "SUMMARY": "查看摘要",
       "DEMOGRAPHICS": "查看人口统计",
       "GEOGRAPHY": "查看地理分布",
       "GIFTS": "查看礼物",
       "RANKINGS": "查看排名",
       "RATINGS": "查看评分",
       "TIMELINE": "查看时间线",
-      "STAYS": "查看住宿记录",
+      "STAYS": "查看留宿记录",
       "BIRTHDAYS": "查看生日"
     },
     "LOADING": {
-      "SUMMARY": "正在加载统计数据",
-      "ANALYZING": "正在分析客人数据",
+      "SUMMARY": "正在加载您的统计数据",
+      "ANALYZING": "正在分析您的客人数据",
       "CHARTS": "正在准备图表",
-      "READY": "即将完成"
+      "READY": "即将准备就绪"
     },
     "EMPTY": {
-      "TITLE": "暂无可用数据",
-      "MESSAGE": "此图表暂无可用信息。"
+      "TITLE": "没有可用数据",
+      "MESSAGE": "此图表没有可用的信息。"
     },
+
     "SUMMARY": {
       "VIEWS": {
-        "TOTAL": "总览",
+        "TOTAL": "总计",
         "NIGHTS": "住宿晚数",
         "RATING": "评分",
         "GIFTS": "礼物"
       },
       "CARDS": {
-        "VIEW": "查看",
+        "VIEW": "视图",
         "TOTAL_GUESTS": "客人总数",
-        "SOLO_GUESTS": "个人客人",
+        "SOLO_GUESTS": "独自旅行的客人",
         "GROUP_GUESTS": "团体客人",
-        "TOTAL_VISITS": "拜访总次数",
+        "TOTAL_VISITS": "到访总次数",
         "TOTAL_NIGHTS": "住宿总晚数"
       },
       "CHARTS": {
         "GUEST_TYPES": {
           "GENERAL": "总体",
-          "SOLO": "个人客人",
+          "SOLO": "独自旅行",
           "GROUPS": "团体"
         },
         "AVERAGE_NIGHTS": "平均住宿晚数",
@@ -456,52 +426,46 @@
     },
     "DEMOGRAPHICS": {
       "VIEWS": {
-        "TOTALS": "总览",
+        "TOTALS": "总计",
         "OLDEST": "年龄最大",
         "YOUNGEST": "年龄最小",
-        "FIRST_LAST": "最早 / 最晚"
+        "FIRST_LAST": "首次 / 最近一次"
       },
       "TOTALS": {
         "GUESTS": "客人",
-        "VISITS": "拜访次数",
+        "VISITS": "到访次数",
         "NIGHTS": "住宿晚数"
       },
       "AGE": {
         "AGE": "年龄",
         "GUESTS": "客人",
-        "VISITS": "拜访次数",
+        "VISITS": "到访次数",
         "NIGHTS": "住宿晚数"
       },
       "FIRST_LAST": {
-        "FIRST": "最早",
-        "LAST": "最晚"
+        "FIRST": "首次",
+        "LAST": "最近一次"
       },
       "SUBVIEWS": {
         "OVERALL": "总体",
-        "SOLO": "个人客人",
+        "SOLO": "独自旅行",
         "GROUPS": "团体"
       },
       "GROUPS": {
+        "SOLO": "独自旅行",
         "COUPLE": "情侣",
-        "FRIENDS": "朋友结伴",
+        "FRIENDS": "朋友",
         "FAMILY": "家庭"
-      },
-      "GENDER": {
-        "MALE": "男性",
-        "FEMALE": "女性",
-        "TRANS": "跨性别",
-        "GAY": "同性恋"
       },
       "LABELS": {
         "AGE": "年龄",
-        "GENDER": "性别",
         "COUNTRY": "国家",
-        "VISIT": "拜访",
-        "VISITED_DATE": "拜访日期",
-        "VISIT_DATE": "拜访日期",
+        "VISIT": "到访",
+        "VISITED_DATE": "到访日期",
+        "VISIT_DATE": "到访日期",
         "GROUP": "团体",
         "GROUPS": "团体",
-        "SOLO_GUESTS": "个人客人",
+        "SOLO_GUESTS": "独自旅行的客人",
         "OVERALL_DEMOGRAPHICS": "总体人口统计",
         "CATEGORY": "类别"
       },
@@ -513,15 +477,15 @@
         "YOUNGEST": "年龄最小",
         "SECOND_YOUNGEST": "年龄第二小",
         "THIRD_YOUNGEST": "年龄第三小",
-        "FIRST": "最早",
-        "LAST": "最晚"
+        "FIRST": "首次",
+        "LAST": "最近一次"
       }
     },
     "GEOGRAPHY": {
       "VIEWS": {
-        "CONTINENTS": "洲",
-        "REGIONS": "地区",
-        "COUNTRIES": "国家",
+        "CONTINENTS": "各大洲",
+        "REGIONS": "各地区",
+        "COUNTRIES": "各国家",
         "LIVING_IN": "现居地",
         "HOMETOWN": "家乡"
       },
@@ -531,39 +495,25 @@
         "BOTTOM": "排名靠后",
         "TOP_FEMALE": "女性排名靠前",
         "TOP_MALE": "男性排名靠前",
-        "MOST_CONSECUTIVE": "连续拜访次数最多"
+        "MOST_CONSECUTIVE": "连续次数最多"
       },
       "TITLES": {
-        "GUESTS_BY_CONTINENT": "按洲统计客人",
-        "GUESTS_BY_REGION": "按地区统计客人",
-        "GUESTS_BY_COUNTRY": "按国家统计客人",
-        "GUESTS_LIVING_IN": "按现居地统计客人",
-        "GUESTS_HOMETOWN": "按家乡统计客人",
-        "MOST_CONSECUTIVE_VISITS": "{{country}} — 连续拜访 {{streak}} 次"
+        "GUESTS_BY_CONTINENT": "按大洲统计的客人",
+        "GUESTS_BY_REGION": "按地区统计的客人",
+        "GUESTS_BY_COUNTRY": "按国家统计的客人",
+        "GUESTS_LIVING_IN": "客人的现居地",
+        "GUESTS_HOMETOWN": "客人的家乡",
+        "MOST_CONSECUTIVE_VISITS": "{{country}} — 连续到访 {{streak}} 次"
       },
       "LABELS": {
         "NUMBER_OF_GUESTS": "客人数量",
         "FEMALE_GUESTS": "女性客人",
         "MALE_GUESTS": "男性客人",
-        "GENDER": "性别",
         "GROUP": "团体",
-        "VISIT": "拜访",
-        "VISIT_DATE": "拜访日期",
+        "VISIT": "到访",
+        "VISIT_DATE": "到访日期",
         "GUESTS": "客人",
-        "CONSECUTIVE_VISITS": "连续拜访 {{streak}} 次"
-      },
-      "GENDER": {
-        "FEMALE": "女性",
-        "MALE": "男性",
-        "GAY": "同性恋",
-        "TRANS": "跨性别"
-      },
-      "CONTINENTS": {
-        "AMERICA": "美洲",
-        "EUROPE": "欧洲",
-        "AFRICA": "非洲",
-        "ASIA": "亚洲",
-        "OCEANIA": "大洋洲"
+        "CONSECUTIVE_VISITS": "连续到访 {{streak}} 次"
       },
       "RANKING_LABELS": {
         "FIRST": "第 1 名",
@@ -575,68 +525,68 @@
     "GIFTS": {
       "VIEWS": {
         "GROUPS": "团体",
-        "SOLO": "个人客人"
+        "SOLO": "独自旅行"
       },
       "TITLES": {
         "GROUPS": "团体收到的礼物",
-        "SOLO": "个人客人收到的礼物"
+        "SOLO": "独自旅行的客人收到的礼物"
       },
       "LABELS": {
         "GIFTS_COUNT": "{{count}} 件礼物",
         "GROUP": "团体",
         "COUNTRY": "国家",
-        "VISIT": "拜访",
+        "VISIT": "到访",
         "GIFTS_RECEIVED": "收到的礼物：",
         "UNKNOWN": "未知",
         "GROUP_TYPES": {
           "COUPLE": "情侣",
-          "FRIENDS": "朋友结伴",
+          "FRIENDS": "朋友",
           "FAMILY": "家庭",
-          "SOLO": "独自出行"
+          "SOLO": "独自旅行"
         }
       }
     },
     "RANKINGS": {
       "VIEWS": {
-        "PEOPLE": "个人",
+        "PEOPLE": "所有人",
         "WOMEN": "女性",
         "MEN": "男性",
         "GROUPS": "团体"
       },
       "SUBVIEWS": {
         "OVERALL": "总体",
-        "SOLO": "个人客人"
+        "SOLO": "独自旅行"
       },
       "GROUP_TYPES": {
         "OVERALL": "总体",
         "COUPLE": "情侣",
         "FAMILY": "家庭",
-        "FRIENDS": "朋友结伴"
+        "FRIENDS": "朋友"
       },
       "TITLES": {
-        "PEOPLE": "个人排名",
+        "PEOPLE": "所有人排名",
         "WOMEN": "女性排名",
         "MEN": "男性排名",
         "GROUPS": "团体排名"
       },
       "LABELS": {
         "DATASET": "{{title}} - {{subview}}",
-        "OVERALL_RANKING": "总体排名：第 {{position}} 名",
-        "VISIT": "拜访日期：{{date}}",
-        "RANKING_POSITION": "排名"
+        "OVERALL_RANKING": "总体排名：{{position}}",
+        "VISIT": "到访：{{date}}",
+        "RANKING_POSITION": "排名位置"
       }
     },
     "RATINGS": {
       "VIEWS": {
-        "DISTRIBUTION": "评分分布",
-        "LOWEST": "最低评分",
-        "HIGHEST": "最高评分"
+        "DISTRIBUTION": "分布",
+        "LOWEST": "最低",
+        "HIGHEST": "最高"
       },
       "GROUP_TYPES": {
         "OVERALL": "总体",
-        "SOLO": "个人客人",
+        "SOLO": "独自旅行",
         "COUPLE": "情侣",
-        "FRIENDS": "朋友结伴",
+        "FRIENDS": "朋友",
         "FAMILY": "家庭"
       },
       "LABELS": {
@@ -644,40 +594,33 @@
         "UNRATED": "未评分",
         "RATING": "评分",
         "RATING_VALUE": "评分：{{rating}} ⭐",
-        "GENDER": "性别：{{gender}}",
         "COUNTRY": "国家：{{country}}",
-        "VISIT": "拜访日期：{{date}}"
-      },
-      "GENDERS": {
-        "MALE": "男性",
-        "FEMALE": "女性",
-        "TRANS": "跨性别"
+        "VISIT": "到访：{{date}}"
       }
     },
     "TIMELINE": {
       "VIEWS": {
-        "YEARS": "按年份",
-        "MONTHS": "按月份",
-        "DAYS": "按日期",
+        "YEARS": "年份",
+        "MONTHS": "月份",
+        "DAYS": "日期",
         "SAMEARRIVALDAY": "同一天抵达",
-        "SAMESTAY": "同期住宿"
+        "SAMESTAY": "同一住宿期间"
       },
       "TITLES": {
         "YEARS": "按年份统计客人",
         "MONTHS": "按月份统计客人",
         "DAYS": "按每月日期统计客人",
         "SAMEARRIVALDAY": "同一天抵达的客人",
-        "SAMESTAY": "同期住宿的客人"
+        "SAMESTAY": "同一住宿期间的客人"
       },
       "LABELS": {
-        "FIRST": "第 1 位",
-        "SECOND": "第 2 位",
-        "THIRD": "第 3 位",
+        "FIRST": "第 1 名",
+        "SECOND": "第 2 名",
+        "THIRD": "第 3 名",
         "OTHER": "其他",
         "NUMBER_OF_GUESTS": "客人数量",
         "COUNTRY": "国家：{{country}}",
-        "GENDER": "性别：{{gender}}",
-        "VISIT": "拜访日期：{{date}}",
+        "VISIT": "到访：{{date}}",
         "GROUP_NAME": "{{name}} 和 {{group}}"
       },
       "GROUP_LABELS": {
@@ -690,53 +633,48 @@
       "VIEWS": {
         "LONGEST": "住宿时间最长",
         "SHORTEST": "住宿时间最短",
-        "MAXPEOPLETOGETHER": "同时住宿人数",
-        "SAMEARRIVAL": "同日抵达",
-        "SAMEDATES": "日期重叠"
+        "MAXPEOPLETOGETHER": "同时到访人数",
+        "SAMEARRIVAL": "同一天抵达",
+        "SAMEDATES": "相同日期"
       },
       "SUBVIEWS": {
         "OVERALL": "总体",
-        "SOLO": "个人客人",
+        "SOLO": "独自旅行",
         "COUPLE": "情侣",
-        "FRIENDS": "朋友结伴",
+        "FRIENDS": "朋友",
         "FAMILY": "家庭"
       },
       "GROUP": "团体",
       "TITLES": {
-        "LONGEST": "住宿时间最长的记录",
-        "SHORTEST": "住宿时间最短的记录",
-        "MAXIMUM_GUESTS_TOGETHER": "同时住宿人数最多的记录",
-        "GUESTS_WITH_SAME_ARRIVAL_DATE": "同一天抵达的客人",
-        "SAME_DATES_GROUP": "日期重叠 - 团体 {{group}}"
+        "LONGEST": "住宿时间最长",
+        "SHORTEST": "住宿时间最短",
+        "MAXIMUM_GUESTS_TOGETHER": "同时到访的客人最多人数",
+        "GUESTS_WITH_SAME_ARRIVAL_DATE": "抵达日期相同的客人",
+        "SAME_DATES_GROUP": "相同日期 - 团体 {{group}}"
       },
       "LABELS": {
         "OVERALL": "总体",
-        "SOLO": "个人客人",
-        "MAXIMUM_GUESTS_TOGETHER": "同时住宿人数最多",
-        "SAME_ARRIVAL": "同日抵达",
-        "FIRST": "第 1 位",
-        "SECOND": "第 2 位",
-        "THIRD": "第 3 位",
-        "OTHERS": "其他",
+        "SOLO": "独自旅行",
         "GUESTS": "客人",
+        "GUESTS_COUNT": "客人：{{count}}",
+        "MAXIMUM_GUESTS_TOGETHER": "同时到访的客人最多人数",
+        "SAME_ARRIVAL": "同一天抵达",
+        "FIRST": "第 1 名",
+        "SECOND": "第 2 名",
+        "THIRD": "第 3 名",
+        "OTHERS": "其他",
         "STAY_TYPE": "住宿类型",
         "OVERLAPPING_GUESTS": "住宿时间重叠的客人",
         "ARRIVAL_DATE": "抵达日期",
-        "TOTAL_NIGHTS": "住宿总晚数：{{nights}}",
+        "TOTAL_NIGHTS": "住宿总晚数：{{count}}",
         "COUNTRY": "国家：{{country}}",
-        "VISIT": "拜访日期：{{date}}",
+        "VISIT": "到访：{{date}}",
         "GROUP": "团体：{{group}}",
-        "CONNECTIONS": "关联次数：{{count}}",
+        "CONNECTIONS": "关联数：{{count}}",
         "GROUP_NAME": "{{name}} 和 {{group}}"
       },
-      "GENDERS": {
-        "MALE": "男性",
-        "FEMALE": "女性",
-        "OTHER": "其他",
-        "UNKNOWN": "未知"
-      },
       "GROUP_LABELS": {
-        "SOLO": "独自出行",
+        "SOLO": "独自旅行",
         "COUPLE": "情侣",
         "FRIENDS": "朋友",
         "FAMILY": "家庭"
@@ -745,8 +683,8 @@
     "BIRTHDAYS": {
       "VIEWS": {
         "CALENDAR": "日历",
-        "REPEATED": "重复日期",
-        "UNUSUAL": "特殊日期"
+        "REPEATED": "重复生日",
+        "UNUSUAL": "特殊生日"
       },
       "MONTHS": {
         "JANUARY": "一月",
@@ -764,12 +702,12 @@
       },
       "TITLES": {
         "CALENDAR": "生日日历",
-        "REPEATED": "相同日期的生日",
+        "REPEATED": "重复生日",
         "UNUSUAL": "特殊生日"
       },
       "LABELS": {
         "CALENDAR": "生日日历",
-        "REPEATED_BIRTHDAYS": "相同日期的生日",
+        "REPEATED_BIRTHDAYS": "重复生日",
         "UNUSUAL_BIRTHDAYS": "特殊生日",
         "GUESTS": "客人"
       },
@@ -778,7 +716,7 @@
         "DAY": "日期"
       },
       "TOOLTIPS": {
-        "GUESTS": "客人数量：{{count}}",
+        "GUESTS": "客人：{{count}}",
         "REASON": "原因：{{reason}}"
       }
     }
@@ -790,20 +728,20 @@
       "DELETE": "删除"
     },
     "VALIDATION": {
-      "TYPE_NAME_EXACTLY": "请准确输入“{{name}}”。"
+      "TYPE_NAME_EXACTLY": "您必须准确输入“{{name}}”。"
     },
     "DELETE_GUEST": {
       "CONFIRMATION": {
-        "MESSAGE": "确定要删除吗？",
-        "CONFIRM_BUTTON": "我要删除这位客人"
+        "MESSAGE": "您确定要删除吗？",
+        "CONFIRM_BUTTON": "我想删除这位客人"
       },
       "WARNING": {
-        "TITLE": "继续之前，请仔细阅读",
-        "MESSAGE": "此操作将永久删除客人 <strong class=\"danger\">{{name}}</strong>。",
-        "CONFIRM_BUTTON": "我已了解后果"
+        "TITLE": "继续之前请仔细阅读",
+        "MESSAGE": "这将永久删除客人 <strong class=\"danger\">{{name}}</strong>。",
+        "CONFIRM_BUTTON": "我了解后果"
       },
       "TYPE_TO_CONFIRM": {
-        "TITLE": "请输入“<strong class=\"danger\">{{name}}</strong>”以确认删除",
+        "TITLE": "要确认，请输入“<strong class=\"danger\">{{name}}</strong>”",
         "CONFIRM_BUTTON": "删除客人"
       },
       "SUCCESS": {
@@ -817,30 +755,47 @@
       "GROUP_ERROR": "创建团体时出错"
     },
     "EDIT": {
-      "GUEST_SUCCESS": "客人信息更新成功",
-      "GUEST_ERROR": "更新客人信息时出错",
-      "GROUP_SUCCESS": "团体信息更新成功",
-      "GROUP_ERROR": "更新团体信息时出错"
+      "GUEST_SUCCESS": "客人更新成功",
+      "GUEST_ERROR": "更新客人时出错",
+      "GROUP_SUCCESS": "团体更新成功",
+      "GROUP_ERROR": "更新团体时出错"
     }
   },
   "ERRORS": {
     "HTTP": {
-      "400": "⚠️ 请求无效。部分数据缺失或不正确，请检查后重试。",
-      "401": "🔐 登录会话无效或已过期。请重新登录后继续。",
-      "403": "🚫 访问被拒绝。你没有权限查看此资源。",
-      "404": "🔍 找不到你要查找的内容。请检查网址或重试。",
-      "500": "💥 服务器发生错误。我们正在处理，请稍后重试。",
-      "502": "📡 连接错误。请检查你的网络连接。",
-      "DEFAULT": "❌ 发生了意外错误，请重试。"
+      "400": "⚠️ 请求无效。部分数据缺失或不正确。请检查后重试。",
+      "401": "🔐 会话无效或已过期。请登录后继续。",
+      "403": "🚫 访问被拒绝。您没有权限查看此资源。",
+      "404": "🔍 找不到您要查找的内容。请检查网址或重试。",
+      "500": "💥 服务器错误。我们正在修复，请稍后重试。",
+      "502": "📡 连接错误。请检查您的互联网连接。",
+      "DEFAULT": "❌ 发生意外错误。请重试。"
     }
   },
   "LOADING": {
     "MESSAGES": {
       "INITIAL": "正在加载",
-      "ALMOST_THERE": "即将完成",
+      "ALMOST_THERE": "马上就好",
       "WORKING": "正在处理中",
-      "ALMOST_READY": "马上就好",
-      "JUST_A_MOMENT": "请稍候片刻"
+      "ALMOST_READY": "即将准备就绪",
+      "JUST_A_MOMENT": "请稍等片刻"
     }
+  },
+  "GENDER": {
+    "TXT": "性别",
+    "LABEL": "性别：{{gender}}",
+    "MALE": "男性",
+    "FEMALE": "女性",
+    "TRANS": "跨性别",
+    "GAY": "同性恋"
+  },
+  "404": {
+    "ERR": "错误",
+    "MSG": "您要查找的页面可能已被删除、重命名，或暂时无法访问。",
+    "TRY": "请尝试：",
+    "OR": "或",
+    "BTN_BACK": "返回上一页",
+    "BTN_HOME": "返回首页",
+    "GOOD_LUCK": "祝您好运 😁"
   }
 }

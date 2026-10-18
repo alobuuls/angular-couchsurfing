@@ -1,0 +1,801 @@
+{
+  "MENU": {
+    "GUESTS": "אורחים",
+    "HOSTED": "אירוח",
+    "PERSONAL": "אישי"
+  },
+  "GUESTS_TABLE": {
+    "NO": "מס׳",
+    "HANG_OUT": "בילוי משותף",
+    "NIGHTS": "לילות",
+    "AGE": "גיל",
+    "FULL_NAME": "שם מלא",
+    "CONTINENT": "יבשת",
+    "HOMETOWN": "עיר מוצא",
+    "LIVING_IN": "מקום מגורים",
+    "VISITED": "ביקרו",
+    "RATING": "דירוג",
+    "ACTIONS": "פעולות",
+    "VIEW_GUEST": "צפייה באורח",
+    "EDIT_GUEST": "עריכת אורח",
+    "DELETE_GUEST": "מחיקת אורח",
+    "VIEW_CS_PROFILE": "צפייה בפרופיל Couchsurfing",
+    "CS_UNAVAILABLE": "פרופיל Couchsurfing אינו זמין",
+    "SEND_WHATSAPP": "שליחת הודעת WhatsApp",
+    "WHATSAPP_UNAVAILABLE": "WhatsApp אינו זמין",
+    "BIRTHDATE": "תאריך לידה",
+    "CURRENT_AGE": "גיל נוכחי"
+  },
+  "PAGINATOR": {
+    "ITEMS_PER_PAGE": "פריטים בעמוד:",
+    "NEXT_PAGE": "העמוד הבא",
+    "PREVIOUS_PAGE": "העמוד הקודם",
+    "FIRST_PAGE": "העמוד הראשון",
+    "LAST_PAGE": "העמוד האחרון",
+    "RANGE_EMPTY": "0 מתוך {{length}}",
+    "RANGE_LABEL": "{{start}} – {{end}} מתוך {{length}}"
+  },
+  "GUESTS_FILTERS": {
+    "CONTINENT": "יבשת",
+    "ALL_CONTINENTS": "כל היבשות",
+    "REGION": "אזור",
+    "ALL_REGIONS": "כל האזורים",
+    "COUNTRY": "מדינה",
+    "ALL_COUNTRIES": "כל המדינות",
+    "GROUP_TYPE": "סוג קבוצה",
+    "ALL_GROUPS": "כל הקבוצות",
+    "SOLO": "לבד",
+    "COUPLE": "זוג",
+    "FRIENDS": "חברים",
+    "FAMILY": "משפחה",
+    "VISITED_FROM": "ביקרו מתאריך",
+    "VISITED_TO": "ביקרו עד תאריך",
+    "FIRST_TIME": "ביקור ראשון",
+    "HANG_OUT": "בילוי משותף",
+    "AMBASSADOR": "שגריר",
+    "DID_THEY_REQUEST": "האם הם ביקשו אירוח?",
+    "ALL": "הכול",
+    "YES": "כן",
+    "NO": "לא",
+    "CLEAR": "ניקוי",
+    "SEARCH": "חיפוש"
+  },
+  "GUESTS_ACTIONS": {
+    "SEE_STATS": "צפייה בסטטיסטיקות",
+    "CREATE_GUEST": "יצירת אורח"
+  },
+  "GUESTS_VIEW": {
+    "NO_MORE_GUESTS": "אין עוד אורחים להצגה.",
+    "GUESTS_TO_DISPLAY": "מספר האורחים להצגה",
+    "GUESTS_COUNT_SINGULAR": "אורח",
+    "GUESTS_COUNT_PLURAL": "אורחים",
+    "NO_GUESTS_FOUND": "לא נמצאו אורחים!",
+    "CHANGE_SEARCH": "נסו לשנות את קריטריוני החיפוש.",
+    "CHANGE_TO_CARDS": "מעבר לתצוגת כרטיסים",
+    "CHANGE_TO_MAP": "מעבר לתצוגת מפה",
+    "CHANGE_TO_TABLE": "מעבר לתצוגת טבלה"
+  },
+  "GUESTS_LOADING": {
+    "CARDS_1": "האורחים שלכם נטענים",
+    "CARDS_2": "מכינים את האורחים שלכם",
+    "CARDS_3": "כמעט סיימנו",
+    "CARDS_4": "הכרטיסים שלכם בדרך",
+    "MAP_1": "המפה נטענת",
+    "MAP_2": "מאתרים את האורחים שלכם",
+    "MAP_3": "מכינים את המפה",
+    "MAP_4": "כמעט מוכנה",
+    "TABLE_1": "האורחים נטענים",
+    "TABLE_2": "מחפשים את האורחים שלכם",
+    "TABLE_3": "מכינים את התוצאות",
+    "TABLE_4": "כמעט סיימנו"
+  },
+  "DATE": {
+    "DAY": "יום"
+  },
+  "UK_REGIONS": {
+    "sct": "סקוטלנד",
+    "wls": "ויילס",
+    "nir": "צפון אירלנד",
+    "eng": "אנגליה"
+  },
+  "MAP": {
+    "GUESTS": "אורחים",
+    "REGION": "אזור",
+    "CONTINENT": "יבשת",
+    "UNITED_KINGDOM": "הממלכה המאוחדת",
+    "UNKNOWN_COUNTRY": "מדינה לא ידועה",
+    "VIEW_GUESTS": "צפייה באורחים",
+    "VIEW_GUEST": "צפייה באורח"
+  },
+  "GUESTS_CARDS": {
+    "GUEST": "אורח",
+    "GUESTS": "אורחים",
+    "VISIT": "ביקור",
+    "VISITS": "ביקורים",
+    "READ_MORE": "הצגת מידע נוסף",
+    "SHOW_LESS": "הצגת פחות",
+    "TRIP": "נסיעה",
+    "VISITED_DATE": "תאריך הביקור",
+    "NIGHTS": "לילות",
+    "STAYED": "התארחו",
+    "HANG_OUT": "בילוי משותף",
+    "FIRST_TIME": "ביקור ראשון",
+    "GROUP_TYPE": "סוג קבוצה",
+    "MEMBERS": "חברים בקבוצה",
+    "AMBASSADOR": "שגריר",
+    "PERSONAL_INFORMATION": "מידע אישי",
+    "FULL_NAME": "שם מלא",
+    "BIRTH_DATE": "תאריך לידה",
+    "WHATSAPP": "WhatsApp",
+    "INSTAGRAM": "Instagram",
+    "COUCHSURFING": "Couchsurfing",
+    "GAY": "הומו",
+    "DID_THEY_REQUEST": "האם הם ביקשו להתארח?",
+    "I_SENT_THE_REQUEST": "אני שלחתי את הבקשה",
+    "LOCATION": "מיקום",
+    "CONTINENT": "יבשת",
+    "REGION": "אזור",
+    "HOMETOWN": "עיר מוצא",
+    "LIVING_IN": "מקום מגורים",
+    "WE_MET": "המקום שבו נפגשנו",
+    "OCCUPATION": "מקצוע",
+    "GIFT": "מתנה",
+    "COMMENTS": "הערות",
+    "REFERENCES": "המלצות",
+    "THEIR_REFERENCE": "ההמלצה שלהם",
+    "MY_REFERENCE": "ההמלצה שלי",
+    "GROUP_TYPES": {
+      "solo": "לבד",
+      "couple": "זוג",
+      "friends": "חברים",
+      "family": "משפחה"
+    },
+    "LOADING_1": "טוענים את הפרטים",
+    "LOADING_2": "מוצאים מידע נוסף",
+    "LOADING_3": "כמעט סיימנו"
+  },
+  "GUEST_DETAIL": {
+    "TITLE": "פרטי האורח",
+    "HEADER": {
+      "SUBTITLE": "ארכיון מטיילים",
+      "TITLE": "דרכון האורח",
+      "RECORD": "רישום נסיעות"
+    },
+    "LOADING": {
+      "MESSAGE_1": "טוענים את פרטי האורח",
+      "MESSAGE_2": "מכינים את כל הפרטים",
+      "MESSAGE_3": "כמעט סיימנו",
+      "MESSAGE_4": "מכינים את פרופיל האורח"
+    },
+    "PASSPORT": {
+      "SUBTITLE": "אורח בינלאומי",
+      "TITLE": "דרכון אישי"
+    },
+    "IDENTITY": {
+      "SUBTITLE": "זהות המטייל",
+      "AMBASSADOR": "שגריר"
+    },
+    "SOCIAL": {
+      "COUCHSURFING": "צפייה בפרופיל Couchsurfing",
+      "INSTAGRAM": "צפייה בפרופיל Instagram",
+      "WHATSAPP": "צפייה בפרופיל WhatsApp"
+    },
+    "DIVIDER": {
+      "IDENTITY": "זהות"
+    },
+    "PERSONAL": {
+      "SUBTITLE": "פרופיל המטייל",
+      "TITLE": "מידע אישי",
+      "FULL_NAME": "שם מלא",
+      "BIRTH_DATE": "תאריך לידה",
+      "PHONE_NUMBER": "מספר טלפון",
+      "GAY": "הומו",
+      "STAY_REQUEST": "בקשת אירוח",
+      "REQUESTED_STAY": "הם ביקשו להתארח",
+      "SENT_REQUEST": "אני שלחתי את הבקשה"
+    },
+    "COMMON": {
+      "YES": "כן",
+      "NO": "לא"
+    },
+    "LOCATION": {
+      "SUBTITLE": "מוצא ומקום מגורים",
+      "TITLE": "מקומות וקואורדינטות",
+      "CONTINENT": "יבשת",
+      "REGION": "אזור",
+      "HOMETOWN": "עיר מוצא",
+      "CURRENTLY_LIVING_IN": "מקום מגורים נוכחי",
+      "WE_MET_IN": "המקום שבו נפגשנו"
+    },
+    "TRIP": {
+      "SUBTITLE": "רישום מסע",
+      "TITLE": "רישום נסיעה",
+      "DATE_OF_VISIT": "תאריך הביקור",
+      "NIGHTS": "לילות",
+      "GROUP_TYPE": "סוג קבוצה",
+      "GROUP_TYPES": {
+        "SOLO": "לבד",
+        "COUPLE": "זוג",
+        "FRIENDS": "חברים",
+        "FAMILY": "משפחה"
+      },
+      "STAYED": "האם התארחו?",
+      "HUNG_OUT": "בילוי משותף",
+      "FIRST_VISIT": "ביקור ראשון"
+    },
+    "OCCUPATION": {
+      "SUBTITLE": "פרופיל מקצועי",
+      "TITLE": "מקצוע"
+    },
+    "RATING": {
+      "SUBTITLE": "משוב מהקהילה",
+      "TITLE": "דירוג האורח"
+    },
+    "GIFTS": {
+      "SUBTITLE": "זיכרונות מהמסע",
+      "TITLE": "מתנות"
+    },
+    "COMMENTS": {
+      "SUBTITLE": "הערות אישיות",
+      "TITLE": "הערות"
+    },
+    "REFERENCES": {
+      "SUBTITLE": "קשרים בקהילה",
+      "TITLE": "המלצות",
+      "THEIR_REFERENCE": "ההמלצה שלהם",
+      "MY_REFERENCE": "ההמלצה שלי"
+    },
+    "FOOTER": {
+      "PHRASE": "כל מפגש מספר סיפור"
+    },
+    "GROUP": {
+      "HEADER": {
+        "SUBTITLE": "רישום אורחים בינלאומי",
+        "TITLE": "דרכון הקבוצה"
+      },
+      "TRIP": {
+        "SUBTITLE": "מסע משותף",
+        "TITLE": "נסיעה קבוצתית"
+      },
+      "MEMBERS": {
+        "SUBTITLE": "שותפים למסע",
+        "TITLE": "חברי הקבוצה",
+        "GUEST_FALLBACK": "אורח",
+        "WHATSAPP": "WhatsApp",
+        "LIVING_IN": "מקום מגורים"
+      }
+    }
+  },
+  "GUESTS_FORM": {
+    "GROUP_TYPE_TITLE": "איך הם נסעו?",
+    "GROUP_TYPES": {
+      "SOLO": "לבד",
+      "COUPLE": "זוג",
+      "FRIENDS": "חברים",
+      "FAMILY": "משפחה"
+    },
+    "ADD_GUEST": "הוספת אורח נוסף",
+    "CREATE": "יצירה",
+    "UPDATE": "עדכון",
+    "MAX_MEMBERS": "ניתן להוסיף עד 5 חברים"
+  },
+  "TRIP_FORM": {
+    "TITLE": "פרטי הנסיעה",
+    "VISITED_DATE": "תאריך הביקור",
+    "VISITED_DATE_REQUIRED": "יש להזין את תאריך הביקור",
+    "TODAY": "היום",
+    "STAYED": "האם התארחו?",
+    "NIGHTS": "לילות"
+  },
+  "GUEST_FORM": {
+    "SECTIONS": {
+      "PERSONAL": "מידע אישי",
+      "LOCATION": "מיקום",
+      "OCCUPATION": "מקצוע",
+      "CONTACT": "פרטי קשר",
+      "ADDITIONAL": "מידע נוסף",
+      "RATING_GIFTS": "דירוג ומתנות",
+      "REFERENCES_COMMENTS": "המלצות והערות"
+    },
+    "FIELDS": {
+      "FULL_NAME": "שם מלא",
+      "INSTAGRAM": "Instagram",
+      "CS_PROFILE_URL": "כתובת URL של פרופיל Couchsurfing",
+      "BIRTH_DATE": "תאריך לידה",
+      "HOMETOWN_COUNTRY": "מדינת המוצא",
+      "HOMETOWN_STATE": "מחוז המוצא",
+      "HOMETOWN_CITY": "עיר המוצא",
+      "LIVING_COUNTRY": "מדינת המגורים",
+      "LIVING_STATE": "מחוז המגורים",
+      "LIVING_CITY": "עיר המגורים",
+      "COUNTRY_WE_MET": "המדינה שבה נפגשנו",
+      "STATE_WE_MET": "המחוז שבו נפגשנו",
+      "CITY_WE_MET": "העיר שבה נפגשנו",
+      "LOCATION_WE_MET": "המיקום שבו נפגשנו",
+      "OCCUPATION_AREA": "תחום העיסוק",
+      "OCCUPATIONS": "מקצועות",
+      "OTHER_OCCUPATION": "כתבו את המקצוע שלכם",
+      "ENTER_OCCUPATION": "הזינו את המקצוע שלכם",
+      "PREFIX": "קידומת",
+      "WHATSAPP": "WhatsApp",
+      "GIFTS": "מתנות",
+      "THEIR_REFERENCE": "ההמלצה שלהם",
+      "MY_REFERENCE": "ההמלצה שלי",
+      "COMMENTS": "השאירו הערה"
+    },
+    "CHECKBOXES": {
+      "FIRST_TIME": "ביקור ראשון",
+      "STAY_REQUEST": "האם הם ביקשו להתארח?",
+      "HANG_OUT": "בילוי משותף",
+      "AMBASSADOR": "שגריר",
+      "GAY": "הומו"
+    },
+    "BUTTONS": {
+      "CLEAR_GIFTS": "ניקוי"
+    },
+    "HINTS": {
+      "GIFTS_COUNT": "{{count}}/15 מתנות"
+    },
+    "ERRORS": {
+      "FULL_NAME_REQUIRED": "יש להזין שם מלא",
+      "FULL_NAME_MAX": "עד 100 תווים",
+      "INSTAGRAM_MAX": "עד 30 תווים",
+      "CS_PROFILE_REQUIRED": "יש להזין כתובת URL של פרופיל Couchsurfing",
+      "CS_PROFILE_MAX": "עד 50 תווים",
+      "GENDER_REQUIRED": "יש לבחור מגדר",
+      "COUNTRY_REQUIRED": "יש לבחור מדינה",
+      "LOCATION_MAX": "עד 100 תווים",
+      "OCCUPATION_REQUIRED": "יש להזין תחום עיסוק",
+      "PREFIX_REQUIRED": "יש להזין קידומת",
+      "WHATSAPP_REQUIRED": "יש להזין מספר WhatsApp",
+      "PHONE_INVALID": "מספר טלפון לא תקין",
+      "WHATSAPP_MAX": "עד 16 תווים",
+      "REFERENCE_MAX": "עד 500 תווים",
+      "COMMENTS_MAX": "עד 500 תווים"
+    },
+    "RATING": {
+      "1": "גרוע מאוד",
+      "2": "גרוע",
+      "3": "רגיל",
+      "4": "טוב",
+      "5": "מצוין"
+    },
+    "TOASTS": {
+      "MAX_GIFTS": "ניתן להוסיף עד 15 מתנות",
+      "DUPLICATE_GIFT": "המתנה הזו כבר נוספה",
+      "GIFT_EXISTS": "המתנה הזו כבר קיימת",
+      "NO_GIFTS": "אין מתנות לניקוי",
+      "GIFTS_CLEARED": "רשימת המתנות נוקתה"
+    },
+    "ANNOUNCEMENTS": {
+      "GIFT_REMOVED": "המתנה הוסרה"
+    }
+  },
+  "STATS": {
+    "TITLE": "סטטיסטיקות",
+    "NAV": {
+      "SUMMARY": "צפייה בסיכום",
+      "DEMOGRAPHICS": "צפייה בדמוגרפיה",
+      "GEOGRAPHY": "צפייה בגאוגרפיה",
+      "GIFTS": "צפייה במתנות",
+      "RANKINGS": "צפייה בדירוגים",
+      "RATINGS": "צפייה בציונים",
+      "TIMELINE": "צפייה בציר הזמן",
+      "STAYS": "צפייה באירוחים",
+      "BIRTHDAYS": "צפייה בימי הולדת"
+    },
+    "LOADING": {
+      "SUMMARY": "טוענים את הסטטיסטיקות שלכם",
+      "ANALYZING": "מנתחים את נתוני האורחים שלכם",
+      "CHARTS": "מכינים את התרשימים שלכם",
+      "READY": "כמעט מוכן"
+    },
+    "EMPTY": {
+      "TITLE": "אין נתונים זמינים",
+      "MESSAGE": "אין מידע זמין עבור התרשים הזה."
+    },
+
+    "SUMMARY": {
+      "VIEWS": {
+        "TOTAL": "סה״כ",
+        "NIGHTS": "לילות",
+        "RATING": "דירוג",
+        "GIFTS": "מתנות"
+      },
+      "CARDS": {
+        "VIEW": "תצוגה",
+        "TOTAL_GUESTS": "סך כל האורחים",
+        "SOLO_GUESTS": "אורחים שנסעו לבד",
+        "GROUP_GUESTS": "אורחים בקבוצות",
+        "TOTAL_VISITS": "סך כל הביקורים",
+        "TOTAL_NIGHTS": "סך כל הלילות"
+      },
+      "CHARTS": {
+        "GUEST_TYPES": {
+          "GENERAL": "כללי",
+          "SOLO": "לבד",
+          "GROUPS": "קבוצות"
+        },
+        "AVERAGE_NIGHTS": "ממוצע לילות",
+        "AVERAGE_RATING": "דירוג ממוצע",
+        "GIFTS": {
+          "RECEIVED": "התקבלו",
+          "WITHOUT_GIFT": "ללא מתנה"
+        }
+      }
+    },
+    "DEMOGRAPHICS": {
+      "VIEWS": {
+        "TOTALS": "סיכומים",
+        "OLDEST": "המבוגרים ביותר",
+        "YOUNGEST": "הצעירים ביותר",
+        "FIRST_LAST": "ראשון / אחרון"
+      },
+      "TOTALS": {
+        "GUESTS": "אורחים",
+        "VISITS": "ביקורים",
+        "NIGHTS": "לילות"
+      },
+      "AGE": {
+        "AGE": "גיל",
+        "GUESTS": "אורחים",
+        "VISITS": "ביקורים",
+        "NIGHTS": "לילות"
+      },
+      "FIRST_LAST": {
+        "FIRST": "ראשון",
+        "LAST": "אחרון"
+      },
+      "SUBVIEWS": {
+        "OVERALL": "כללי",
+        "SOLO": "לבד",
+        "GROUPS": "קבוצות"
+      },
+      "GROUPS": {
+        "SOLO": "לבד",
+        "COUPLE": "זוג",
+        "FRIENDS": "חברים",
+        "FAMILY": "משפחה"
+      },
+      "LABELS": {
+        "AGE": "גיל",
+        "COUNTRY": "מדינה",
+        "VISIT": "ביקור",
+        "VISITED_DATE": "תאריך הביקור",
+        "VISIT_DATE": "תאריך הביקור",
+        "GROUP": "קבוצה",
+        "GROUPS": "קבוצות",
+        "SOLO_GUESTS": "אורחים שנסעו לבד",
+        "OVERALL_DEMOGRAPHICS": "נתונים דמוגרפיים כלליים",
+        "CATEGORY": "קטגוריה"
+      },
+      "RANKING": {
+        "OLDEST": "המבוגר ביותר",
+        "SECOND_OLDEST": "השני המבוגר ביותר",
+        "THIRD_OLDEST": "השלישי המבוגר ביותר",
+        "OTHER": "אחרים",
+        "YOUNGEST": "הצעיר ביותר",
+        "SECOND_YOUNGEST": "השני הצעיר ביותר",
+        "THIRD_YOUNGEST": "השלישי הצעיר ביותר",
+        "FIRST": "ראשון",
+        "LAST": "אחרון"
+      }
+    },
+    "GEOGRAPHY": {
+      "VIEWS": {
+        "CONTINENTS": "יבשות",
+        "REGIONS": "אזורים",
+        "COUNTRIES": "מדינות",
+        "LIVING_IN": "מקום מגורים",
+        "HOMETOWN": "עיר מוצא"
+      },
+      "RANKINGS": {
+        "ALL": "הכול",
+        "TOP": "המובילים",
+        "BOTTOM": "האחרונים",
+        "TOP_FEMALE": "הנשים המובילות",
+        "TOP_MALE": "הגברים המובילים",
+        "MOST_CONSECUTIVE": "מספר הביקורים הרצופים הגבוה ביותר"
+      },
+      "TITLES": {
+        "GUESTS_BY_CONTINENT": "אורחים לפי יבשת",
+        "GUESTS_BY_REGION": "אורחים לפי אזור",
+        "GUESTS_BY_COUNTRY": "אורחים לפי מדינה",
+        "GUESTS_LIVING_IN": "אורחים לפי מקום מגורים",
+        "GUESTS_HOMETOWN": "ערי המוצא של האורחים",
+        "MOST_CONSECUTIVE_VISITS": "{{country}} — {{streak}} ביקורים רצופים"
+      },
+      "LABELS": {
+        "NUMBER_OF_GUESTS": "מספר האורחים",
+        "FEMALE_GUESTS": "אורחות",
+        "MALE_GUESTS": "אורחים גברים",
+        "GROUP": "קבוצה",
+        "VISIT": "ביקור",
+        "VISIT_DATE": "תאריך הביקור",
+        "GUESTS": "אורחים",
+        "CONSECUTIVE_VISITS": "{{streak}} ביקורים רצופים"
+      },
+      "RANKING_LABELS": {
+        "FIRST": "1",
+        "SECOND": "2",
+        "THIRD": "3",
+        "OTHERS": "אחרים"
+      }
+    },
+    "GIFTS": {
+      "VIEWS": {
+        "GROUPS": "קבוצות",
+        "SOLO": "לבד"
+      },
+      "TITLES": {
+        "GROUPS": "מתנות שהתקבלו על ידי קבוצות",
+        "SOLO": "מתנות שהתקבלו מאורחים שנסעו לבד"
+      },
+      "LABELS": {
+        "GIFTS_COUNT": "{{count}} מתנות",
+        "GROUP": "קבוצה",
+        "COUNTRY": "מדינה",
+        "VISIT": "ביקור",
+        "GIFTS_RECEIVED": "מתנות שהתקבלו:",
+        "UNKNOWN": "לא ידוע",
+        "GROUP_TYPES": {
+          "COUPLE": "זוג",
+          "FRIENDS": "חברים",
+          "FAMILY": "משפחה",
+          "SOLO": "לבד"
+        }
+      }
+    },
+    "RANKINGS": {
+      "VIEWS": {
+        "PEOPLE": "אנשים",
+        "WOMEN": "נשים",
+        "MEN": "גברים",
+        "GROUPS": "קבוצות"
+      },
+      "SUBVIEWS": {
+        "OVERALL": "כללי",
+        "SOLO": "לבד"
+      },
+      "GROUP_TYPES": {
+        "OVERALL": "כללי",
+        "COUPLE": "זוג",
+        "FAMILY": "משפחה",
+        "FRIENDS": "חברים"
+      },
+      "TITLES": {
+        "PEOPLE": "דירוג אנשים",
+        "WOMEN": "דירוג נשים",
+        "MEN": "דירוג גברים",
+        "GROUPS": "דירוג קבוצות"
+      },
+      "LABELS": {
+        "DATASET": "{{title}} - {{subview}}",
+        "OVERALL_RANKING": "דירוג כללי: {{position}}",
+        "VISIT": "ביקור: {{date}}",
+        "RANKING_POSITION": "מיקום בדירוג"
+      }
+    },
+    "RATINGS": {
+      "VIEWS": {
+        "DISTRIBUTION": "התפלגות",
+        "LOWEST": "הנמוכים ביותר",
+        "HIGHEST": "הגבוהים ביותר"
+      },
+      "GROUP_TYPES": {
+        "OVERALL": "כללי",
+        "SOLO": "לבד",
+        "COUPLE": "זוג",
+        "FRIENDS": "חברים",
+        "FAMILY": "משפחה"
+      },
+      "LABELS": {
+        "GUESTS": "אורחים",
+        "UNRATED": "ללא דירוג",
+        "RATING": "דירוג",
+        "RATING_VALUE": "דירוג: {{rating}} ⭐",
+        "COUNTRY": "מדינה: {{country}}",
+        "VISIT": "ביקור: {{date}}"
+      }
+    },
+    "TIMELINE": {
+      "VIEWS": {
+        "YEARS": "שנים",
+        "MONTHS": "חודשים",
+        "DAYS": "ימים",
+        "SAMEARRIVALDAY": "אותו יום הגעה",
+        "SAMESTAY": "אותה שהייה"
+      },
+      "TITLES": {
+        "YEARS": "אורחים לפי שנה",
+        "MONTHS": "אורחים לפי חודש",
+        "DAYS": "אורחים לפי יום בחודש",
+        "SAMEARRIVALDAY": "אורחים שהגיעו באותו יום",
+        "SAMESTAY": "אורחים שחלקו את אותה שהייה"
+      },
+      "LABELS": {
+        "FIRST": "1",
+        "SECOND": "2",
+        "THIRD": "3",
+        "OTHER": "אחרים",
+        "NUMBER_OF_GUESTS": "מספר האורחים",
+        "COUNTRY": "מדינה: {{country}}",
+        "VISIT": "ביקור: {{date}}",
+        "GROUP_NAME": "{{name}} ו{{group}}"
+      },
+      "GROUP_LABELS": {
+        "COUPLE": "זוג",
+        "FRIENDS": "חבר",
+        "FAMILY": "משפחה"
+      }
+    },
+    "STAYS": {
+      "VIEWS": {
+        "LONGEST": "השהיות הארוכות ביותר",
+        "SHORTEST": "השהיות הקצרות ביותר",
+        "MAXPEOPLETOGETHER": "מספר האנשים יחד",
+        "SAMEARRIVAL": "אותה הגעה",
+        "SAMEDATES": "אותם תאריכים"
+      },
+      "SUBVIEWS": {
+        "OVERALL": "כללי",
+        "SOLO": "לבד",
+        "COUPLE": "זוג",
+        "FRIENDS": "חברים",
+        "FAMILY": "משפחה"
+      },
+      "GROUP": "קבוצה",
+      "TITLES": {
+        "LONGEST": "השהיות הארוכות ביותר",
+        "SHORTEST": "השהיות הקצרות ביותר",
+        "MAXIMUM_GUESTS_TOGETHER": "המספר המרבי של אורחים יחד",
+        "GUESTS_WITH_SAME_ARRIVAL_DATE": "אורחים עם אותו תאריך הגעה",
+        "SAME_DATES_GROUP": "אותם תאריכים - קבוצה {{group}}"
+      },
+      "LABELS": {
+        "OVERALL": "כללי",
+        "SOLO": "לבד",
+        "GUESTS": "אורחים",
+        "GUESTS_COUNT": "אורחים: {{count}}",
+        "MAXIMUM_GUESTS_TOGETHER": "המספר המרבי של אורחים יחד",
+        "SAME_ARRIVAL": "אותה הגעה",
+        "FIRST": "1",
+        "SECOND": "2",
+        "THIRD": "3",
+        "OTHERS": "אחרים",
+        "STAY_TYPE": "סוג שהייה",
+        "OVERLAPPING_GUESTS": "אורחים עם שהיות חופפות",
+        "ARRIVAL_DATE": "תאריך הגעה",
+        "TOTAL_NIGHTS": "סך הלילות: {{count}}",
+        "COUNTRY": "מדינה: {{country}}",
+        "VISIT": "ביקור: {{date}}",
+        "GROUP": "קבוצה: {{group}}",
+        "CONNECTIONS": "קשרים: {{count}}",
+        "GROUP_NAME": "{{name}} ו{{group}}"
+      },
+      "GROUP_LABELS": {
+        "SOLO": "לבד",
+        "COUPLE": "זוג",
+        "FRIENDS": "חבר",
+        "FAMILY": "משפחה"
+      }
+    },
+    "BIRTHDAYS": {
+      "VIEWS": {
+        "CALENDAR": "לוח שנה",
+        "REPEATED": "ימי הולדת חוזרים",
+        "UNUSUAL": "ימי הולדת חריגים"
+      },
+      "MONTHS": {
+        "JANUARY": "ינואר",
+        "FEBRUARY": "פברואר",
+        "MARCH": "מרץ",
+        "APRIL": "אפריל",
+        "MAY": "מאי",
+        "JUNE": "יוני",
+        "JULY": "יולי",
+        "AUGUST": "אוגוסט",
+        "SEPTEMBER": "ספטמבר",
+        "OCTOBER": "אוקטובר",
+        "NOVEMBER": "נובמבר",
+        "DECEMBER": "דצמבר"
+      },
+      "TITLES": {
+        "CALENDAR": "לוח ימי הולדת",
+        "REPEATED": "ימי הולדת חוזרים",
+        "UNUSUAL": "ימי הולדת חריגים"
+      },
+      "LABELS": {
+        "CALENDAR": "לוח ימי הולדת",
+        "REPEATED_BIRTHDAYS": "ימי הולדת חוזרים",
+        "UNUSUAL_BIRTHDAYS": "ימי הולדת חריגים",
+        "GUESTS": "אורחים"
+      },
+      "AXES": {
+        "MONTH": "חודש",
+        "DAY": "יום"
+      },
+      "TOOLTIPS": {
+        "GUESTS": "אורחים: {{count}}",
+        "REASON": "סיבה: {{reason}}"
+      }
+    }
+  },
+  "ALERTS": {
+    "BUTTONS": {
+      "SAVE": "שמירה",
+      "CLOSE": "סגירה",
+      "DELETE": "מחיקה"
+    },
+    "VALIDATION": {
+      "TYPE_NAME_EXACTLY": "יש להקליד בדיוק את השם \"{{name}}\"."
+    },
+    "DELETE_GUEST": {
+      "CONFIRMATION": {
+        "MESSAGE": "האם אתם בטוחים שברצונכם למחוק?",
+        "CONFIRM_BUTTON": "אני רוצה למחוק את האורח הזה"
+      },
+      "WARNING": {
+        "TITLE": "קראו בעיון לפני שתמשיכו",
+        "MESSAGE": "פעולה זו תמחק לצמיתות את האורח <strong class=\"danger\">{{name}}</strong>.",
+        "CONFIRM_BUTTON": "אני מבין את ההשלכות"
+      },
+      "TYPE_TO_CONFIRM": {
+        "TITLE": "לאישור, הקלידו \"<strong class=\"danger\">{{name}}</strong>\"",
+        "CONFIRM_BUTTON": "מחיקת אורח"
+      },
+      "SUCCESS": {
+        "MESSAGE": "האורח <strong class=\"danger\">{{name}}</strong> נמחק בהצלחה"
+      }
+    },
+    "CREATE": {
+      "GUEST_SUCCESS": "האורח נוצר בהצלחה",
+      "GUEST_ERROR": "שגיאה ביצירת האורח",
+      "GROUP_SUCCESS": "הקבוצה נוצרה בהצלחה",
+      "GROUP_ERROR": "שגיאה ביצירת הקבוצה"
+    },
+    "EDIT": {
+      "GUEST_SUCCESS": "פרטי האורח עודכנו בהצלחה",
+      "GUEST_ERROR": "שגיאה בעדכון פרטי האורח",
+      "GROUP_SUCCESS": "פרטי הקבוצה עודכנו בהצלחה",
+      "GROUP_ERROR": "שגיאה בעדכון פרטי הקבוצה"
+    }
+  },
+  "ERRORS": {
+    "HTTP": {
+      "400": "⚠️ בקשה לא תקינה. חסרים נתונים או שחלק מהנתונים שגויים. בדקו ונסו שוב.",
+      "401": "🔐 ההפעלה אינה תקפה או שפג תוקפה. התחברו כדי להמשיך.",
+      "403": "🚫 הגישה נדחתה. אין לכם הרשאה לצפות במשאב הזה.",
+      "404": "🔍 לא הצלחנו למצוא את מה שחיפשתם. בדקו את כתובת ה-URL או נסו שוב.",
+      "500": "💥 שגיאת שרת. אנחנו פועלים לתיקון הבעיה. נסו שוב מאוחר יותר.",
+      "502": "📡 שגיאת חיבור. בדקו את החיבור לאינטרנט.",
+      "DEFAULT": "❌ אירעה שגיאה בלתי צפויה. נסו שוב."
+    }
+  },
+  "LOADING": {
+    "MESSAGES": {
+      "INITIAL": "טוען",
+      "ALMOST_THERE": "כמעט סיימנו",
+      "WORKING": "אנחנו עובדים על זה",
+      "ALMOST_READY": "כמעט מוכן",
+      "JUST_A_MOMENT": "רק רגע"
+    }
+  },
+  "GENDER": {
+    "TXT": "מגדר",
+    "LABEL": "מגדר: {{gender}}",
+    "MALE": "גבר",
+    "FEMALE": "אישה",
+    "TRANS": "טרנס",
+    "GAY": "הומו"
+  },
+  "404": {
+    "ERR": "שגיאה",
+    "MSG": "ייתכן שהדף שאתם מחפשים נמחק, שונה שמו או שאינו זמין באופן זמני.",
+    "TRY": "נסו:",
+    "OR": "או",
+    "BTN_BACK": "חזרה לדף הקודם",
+    "BTN_HOME": "חזרה לדף הבית",
+    "GOOD_LUCK": "בהצלחה 😁"
+  }
+}

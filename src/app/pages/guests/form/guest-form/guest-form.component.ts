@@ -15,6 +15,7 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 // Services
 import { AlertsService } from '@services/alerts.service';
 import { CityService, ICity, IState } from '@services/city.service';
+import { FormatService } from '@services/format.service';
 
 // Interfaces
 import { IBodyGuest, IGuestDetail } from '@interfaces/guests.interface';
@@ -119,6 +120,7 @@ export class GuestFormComponent implements OnInit {
   private announcer = inject(LiveAnnouncer);
   private _city = inject(CityService);
   private _translate = inject(TranslateService);
+  private readonly _format = inject(FormatService);
 
   get f() {
     return this.formCreateGuest.controls;
@@ -156,8 +158,10 @@ export class GuestFormComponent implements OnInit {
     this.initForm();
     this.loadDataCountries();
 
+    // Refresh country autocomplete labels when the language changes.
     this._translate.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.sortCountriesByLanguage();
+      this.refreshCountryAutocompleteDisplays();
     });
 
     this.filteredCountries = this.countries;
@@ -332,11 +336,11 @@ export class GuestFormComponent implements OnInit {
     return errors?.['maxlength']?.['requiredLength'] || 0;
   }
 
-  // Display Autocomplete Country & Prefix
+  // Display the selected country in the current language
   displayCountryCode = (countryCode: string | null): string => {
     if (!countryCode) return '';
     const country = this.countries.find(country => country.countryCode === countryCode);
-    return country?.name?.en ?? '';
+    return country ? this.getCountryName(country.countryCode) : '';
   };
 
   displayPrefix = (value: string | (ICountry & { countryCode: CountriesCodes }) | null): string => {
@@ -348,6 +352,29 @@ export class GuestFormComponent implements OnInit {
     }
     return value.prefix;
   };
+
+  // Refresh selected country labels without triggering value change listeners
+  private refreshCountryAutocompleteDisplays(): void {
+    const countryControls = ['hometownCode', 'livingInCode', 'countryCodeWeMet'];
+
+    countryControls.forEach(controlName => {
+      const control = this.formCreateGuest.get(controlName);
+      const countryCode = control?.value;
+
+      // Only refresh values that match a valid country code
+      if (typeof countryCode !== 'string' || !this.countries.some(country => country.countryCode === countryCode)) {
+        return;
+      }
+
+      // Keep the selected code and refresh its displayed label
+      control?.setValue(countryCode, { emitEvent: false });
+    });
+
+    // Refresh the selected prefix country reference.
+    const prefix = this.prefixCodeCtrl?.value;
+
+    this.selectedPrefixCountry = this.countries.find(country => country.prefix === prefix);
+  }
 
   private onOccupation(): void {
     this.formCreateGuest
@@ -383,20 +410,13 @@ export class GuestFormComponent implements OnInit {
     this.sortCountriesByLanguage();
   }
 
-  getCountryName(country: ICountry): string {
-    const currentLang = this._translate.currentLang || 'en';
-    const lang: Language = LANG.includes(currentLang as Language) ? (currentLang as Language) : 'en';
-
-    return country.name[lang] || country.name.en;
-  }
-
   private sortCountriesByLanguage(): void {
     const currentLang = this._translate.currentLang || 'en';
 
     const lang: Language = LANG.includes(currentLang as Language) ? (currentLang as Language) : 'en';
 
     const sortByCountryName = (countries: Array<ICountry & { countryCode: CountriesCodes }>) => {
-      return [...countries].sort((a, b) => this.getCountryName(a).localeCompare(this.getCountryName(b), lang));
+      return [...countries].sort((a, b) => this.getCountryName(a.countryCode).localeCompare(this.getCountryName(b.countryCode), lang));
     };
 
     this.countries = sortByCountryName(this.countries);
@@ -631,7 +651,7 @@ export class GuestFormComponent implements OnInit {
 
     this.filteredPrefixCountries = this.countries.filter(
       country =>
-        this.getCountryName(country).toLowerCase().includes(value) ||
+        this.getCountryName(country.countryCode).toLowerCase().includes(value) ||
         country.name.en.toLowerCase().includes(value) ||
         country.countryCode.toLowerCase().includes(value) ||
         country.prefix.includes(value)
@@ -655,11 +675,18 @@ export class GuestFormComponent implements OnInit {
     this.formCreateGuest.patchValue({ continent: '', region: '', hometownState: '', hometownCity: '' });
   }
 
+  getCountryName(code: string): string {
+    return this._format.formatCountry(code);
+  }
+
   filterHometowns(event: Event): void {
     const value = (event.target as HTMLInputElement).value.toLowerCase().trim();
 
     this.filteredCountries = this.countries.filter(
-      country => this.getCountryName(country).toLowerCase().includes(value) || country.name.en.toLowerCase().includes(value) || country.countryCode.toLowerCase().includes(value)
+      country =>
+        this.getCountryName(country.countryCode).toLowerCase().includes(value) ||
+        country.name.en.toLowerCase().includes(value) ||
+        country.countryCode.toLowerCase().includes(value)
     );
   }
 
@@ -667,7 +694,10 @@ export class GuestFormComponent implements OnInit {
     const value = (event.target as HTMLInputElement).value.toLowerCase().trim();
 
     this.filteredLiving = this.countries.filter(
-      country => this.getCountryName(country).toLowerCase().includes(value) || country.name.en.toLowerCase().includes(value) || country.countryCode.toLowerCase().includes(value)
+      country =>
+        this.getCountryName(country.countryCode).toLowerCase().includes(value) ||
+        country.name.en.toLowerCase().includes(value) ||
+        country.countryCode.toLowerCase().includes(value)
     );
   }
 
@@ -675,7 +705,10 @@ export class GuestFormComponent implements OnInit {
     const value = (event.target as HTMLInputElement).value.toLowerCase().trim();
 
     this.filteredCountryWeMet = this.countries.filter(
-      country => this.getCountryName(country).toLowerCase().includes(value) || country.name.en.toLowerCase().includes(value) || country.countryCode.toLowerCase().includes(value)
+      country =>
+        this.getCountryName(country.countryCode).toLowerCase().includes(value) ||
+        country.name.en.toLowerCase().includes(value) ||
+        country.countryCode.toLowerCase().includes(value)
     );
   }
 

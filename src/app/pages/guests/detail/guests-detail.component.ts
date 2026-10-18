@@ -3,11 +3,13 @@ import { ActivatedRoute } from '@angular/router';
 
 // Services
 import { GuestsService } from '@services/guests.service';
+import { GeonameService } from '@services/geoname.service';
 
 // Interfaces
 import { IGroupMember, IGuestDetail } from '@interfaces/guests.interface';
 import { IErrResp, ReqStatus } from '@interfaces/data-structure-api';
 import { FormatService } from '@services/format.service';
+import { Continents, Regions } from '@type/word.types';
 
 @Component({
   selector: 'guests-detail',
@@ -24,9 +26,18 @@ export class GuestsDetailComponent implements OnInit {
   _format = inject(FormatService);
   private route = inject(ActivatedRoute);
   private _guests = inject(GuestsService);
+  private readonly _geoname = inject(GeonameService);
 
   ngOnInit(): void {
     this.getById();
+  }
+
+  getRegionName(region: Regions): string {
+    return this._geoname.getRegionName(region);
+  }
+
+  getContinentName(continent: Continents): string {
+    return this._geoname.getContinentName(continent);
   }
 
   private getById(): void {

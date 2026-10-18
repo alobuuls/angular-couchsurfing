@@ -346,8 +346,8 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges, On
                   this._translate.instant('STATS.TIMELINE.LABELS.COUNTRY', {
                     country: this._format.formatCountry(node.country),
                   }),
-                  this._translate.instant('STATS.TIMELINE.LABELS.GENDER', {
-                    gender: node.gender,
+                  this._translate.instant('GENDER.LABEL', {
+                    gender: this._format.formatGender(node.gender),
                   }),
                   this._translate.instant('STATS.TIMELINE.LABELS.VISIT', {
                     date: this._format.formatDate(node.visitedDate),

@@ -254,12 +254,12 @@
                     <ul>
                       <li *ngIf="member.continent">
                         <strong>{{ 'GUESTS_CARDS.CONTINENT' | translate }}: </strong>
-                        {{ member.continent | titlecase }}
+                        {{ getContinentName(member.continent) }}
                       </li>
 
                       <li *ngIf="member.region">
                         <strong>{{ 'GUESTS_CARDS.REGION' | translate }}: </strong>
-                        {{ member.region | titlecase }}
+                        {{ getRegionName(member.region) | translate }}
                       </li>
 
                       <li *ngIf="member.hometownCode || member.hometown">

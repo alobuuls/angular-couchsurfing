@@ -1,9 +1,10 @@
-import { Component, ElementRef, HostListener, inject } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, ElementRef, HostListener, inject, OnInit } from '@angular/core';
 
 /* Services */
 import { ThemePalette, ThemeService } from '@services/theme.service';
 import { LanguageService } from '@services/language.service';
+
+// Interfaces
 import { Language } from '@type/word.types';
 
 @Component({
@@ -11,33 +12,60 @@ import { Language } from '@type/word.types';
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.css'],
 })
-export class MenuComponent {
+export class MenuComponent implements OnInit {
   private readonly _theme = inject(ThemeService);
   private readonly _language = inject(LanguageService);
-  private readonly _elementRef = inject(ElementRef);
+  private readonly ctnPaletteTheme = inject(ElementRef);
 
-  btnsLang: { selectedLang: Language; flag: string; translationKey: string }[] = [
-    { selectedLang: 'en', flag: 'us', translationKey: 'LANGUAGES.EN' },
-    { selectedLang: 'es', flag: 'es', translationKey: 'LANGUAGES.ES' },
-    { selectedLang: 'de', flag: 'de', translationKey: 'LANGUAGES.DE' },
-    { selectedLang: 'zh', flag: 'cn', translationKey: 'LANGUAGES.ZH' },
-    { selectedLang: 'fr', flag: 'fr', translationKey: 'LANGUAGES.FR' },
-    { selectedLang: 'it', flag: 'it', translationKey: 'LANGUAGES.IT' },
-    { selectedLang: 'pt', flag: 'pt', translationKey: 'LANGUAGES.PT' },
-    { selectedLang: 'ru', flag: 'ru', translationKey: 'LANGUAGES.RU' },
-    { selectedLang: 'ja', flag: 'jp', translationKey: 'LANGUAGES.JA' },
+  showThemeSelection: boolean = false;
+  showLanguageSelection: boolean = false;
+
+  btnsLang: { selectedLang: Language; flag: string; txt: string }[] = [
+    { selectedLang: 'es', flag: 'es', txt: 'Español' },
+    { selectedLang: 'en', flag: 'us', txt: 'English' },
+    { selectedLang: 'fr', flag: 'fr', txt: 'Français' },
+    { selectedLang: 'it', flag: 'it', txt: 'Italiano' },
+    { selectedLang: 'pt', flag: 'pt', txt: 'Português' },
+    { selectedLang: 'de', flag: 'de', txt: 'Deutsch' },
+    { selectedLang: 'ru', flag: 'ru', txt: 'Русский' },
+    { selectedLang: 'zh', flag: 'cn', txt: '中文' },
+    { selectedLang: 'ja', flag: 'jp', txt: '日本語' },
+    { selectedLang: 'hi', flag: 'in', txt: 'हिन्दी' },
+    { selectedLang: 'ko', flag: 'kr', txt: '한국어' },
+    { selectedLang: 'he', flag: 'il', txt: 'עברית' },
   ];
 
-  showThemeSelection = false;
-  showLanguageSelection = false;
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const clickedInside = this.ctnPaletteTheme.nativeElement.contains(event.target);
+
+    if (!clickedInside) {
+      this.showThemeSelection = false;
+      this.showLanguageSelection = false;
+    }
+  }
+  get currentPalette(): ThemePalette {
+    return this._theme.palette;
+  }
+  get currentLanguage(): Language {
+    return this._language.currentLanguage;
+  }
+
+  get themeIcon(): string {
+    return this._theme.theme === 'light' ? 'dark_mode' : 'light_mode';
+  }
+
+  get themeLabel(): string {
+    return this._theme.theme === 'light' ? 'Switch to dark theme' : 'Switch to light theme';
+  }
+
+  ngOnInit(): void {
+    this._language.initLanguage();
+  }
 
   selectPalette(palette: ThemePalette): void {
     this._theme.setPalette(palette);
     this.showThemeSelection = false;
-  }
-
-  get currentPalette(): ThemePalette {
-    return this._theme.palette;
   }
 
   selectLanguage(language: Language): void {
@@ -45,23 +73,9 @@ export class MenuComponent {
     this.showLanguageSelection = false;
   }
 
-  get currentLanguage(): Language {
-    return this._language.currentLanguage;
-  }
-
   toggleLanguageSelection(): void {
     this.showLanguageSelection = !this.showLanguageSelection;
     this.showThemeSelection = false;
-  }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    const clickedInside = this._elementRef.nativeElement.contains(event.target);
-
-    if (!clickedInside) {
-      this.showThemeSelection = false;
-      this.showLanguageSelection = false;
-    }
   }
 
   toggleThemeSelection(): void {
@@ -71,13 +85,5 @@ export class MenuComponent {
   toggleTheme(): void {
     const newTheme = this._theme.theme === 'light' ? 'dark' : 'light';
     this._theme.setTheme(newTheme);
-  }
-
-  get themeIcon(): string {
-    return this._theme.theme === 'light' ? 'dark_mode' : 'light_mode';
-  }
-
-  get themeLabel(): string {
-    return this._theme.theme === 'light' ? 'Switch to dark theme' : 'Switch to light theme';
   }
 }
