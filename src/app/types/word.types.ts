@@ -1,18 +1,12 @@
 import { WORLD } from '@config/world';
 
-export const LANG = ['en', 'es', 'de', 'zh', 'fr', 'it', 'pt', 'ru', 'ja'] as const;
+export const LANG = ['en', 'es', 'de', 'zh', 'fr', 'it', 'pt', 'ru', 'ja', 'ko', 'he', 'hi'] as const;
 export type Language = (typeof LANG)[number];
-export interface ICountry {
-  flag: string;
-  name: Record<Language, string>;
-  prefix: string;
-  continent: Continents;
-  region: Regions;
-}
 
 export type CountriesCodes = keyof typeof WORLD;
 
-export type Continents = 'africa' | 'america' | 'asia' | 'europe' | 'oceania';
+export const CONTINENTS = ['africa', 'america', 'asia', 'europe', 'oceania'] as const;
+export type Continents = (typeof CONTINENTS)[number];
 
 export type Regions =
   // 🌍 Africa
@@ -49,3 +43,11 @@ export type Regions =
   | 'micronesia'
   | 'polynesia'
   | 'oceania';
+
+export interface ICountry {
+  flag: string;
+  name: Record<Language, string>;
+  prefix: string;
+  continent: Continents;
+  region: Regions;
+}

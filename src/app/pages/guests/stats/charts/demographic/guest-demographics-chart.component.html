@@ -21,7 +21,7 @@
       [class.active]="selectedTotalsView === view"
       class="stats-nav-btns-small"
     >
-      {{ view | translate }}
+      {{ getSubViewLabel(view) }}
     </button>
   </div>
 
@@ -34,7 +34,7 @@
       [class.active]="selectedAgeView === view"
       class="stats-nav-btns-small"
     >
-      {{ view | translate }}
+      {{ getSubViewLabel(view) }}
     </button>
   </div>
 
@@ -47,7 +47,7 @@
       [class.active]="selectedFirstLastView === view"
       class="stats-nav-btns-small"
     >
-      {{ view | translate }}
+      {{ getSubViewLabel(view) }}
     </button>
   </div>
 

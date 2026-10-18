@@ -82,7 +82,7 @@
             </h2>
 
             <p class="identity-subtitle" *ngIf="guest.occupation?.length">
-              {{ guest.occupation.join(' · ') }}
+              {{ _format.formatOccupations(guest.occupation) }}
             </p>
 
             <!-- Living in flag and location -->
@@ -171,7 +171,7 @@
             </div>
 
             <div class="passport-field" *ngIf="guest.gender">
-              <span class="field-label">{{ 'GUEST_DETAIL.PERSONAL.GENDER' | translate }}</span>
+              <span class="field-label">{{ 'GENDER.TXT' | translate }}</span>
               <span class="field-value">
                 <i
                   [class]="
@@ -180,7 +180,7 @@
                       : 'fa-solid fa-person-dress gender-female'
                   "
                 ></i>
-                {{ 'GUEST_DETAIL.PERSONAL.GENDERS.' + guest.gender.toUpperCase() | translate }}
+                {{ 'GENDER.' + guest.gender.toUpperCase() | translate }}
               </span>
             </div>
 
@@ -253,12 +253,12 @@
           <div class="passport-grid">
             <div class="passport-field" *ngIf="guest.continent">
               <span class="field-label">{{ 'GUEST_DETAIL.LOCATION.CONTINENT' | translate }}</span>
-              <span class="field-value">{{ guest.continent | titlecase }}</span>
+              <span class="field-value">{{ getContinentName(guest.continent) | translate }}</span>
             </div>
 
             <div class="passport-field" *ngIf="guest.region">
               <span class="field-label">{{ 'GUEST_DETAIL.LOCATION.REGION' | translate }}</span>
-              <span class="field-value">{{ formatRegion(guest.region) | titlecase }}</span>
+              <span class="field-value">{{ getRegionName(guest.region) | translate }}</span>
             </div>
 
             <div class="passport-field" *ngIf="guest.hometownCode || guest.hometown">
@@ -410,7 +410,7 @@
           <div class="list">
             <span class="passport-tag" *ngFor="let occupation of guest.occupation">
               <mat-icon class="material-symbols-outlined" fontIcon="work"></mat-icon>
-              {{ occupation }}
+              {{ _format.formatOccupation(occupation) }}
             </span>
           </div>
         </section>
@@ -663,7 +663,7 @@
 
                 <div class="passport-grid">
                   <div class="passport-field" *ngIf="member.gender">
-                    <span class="field-label">{{ 'GUEST_DETAIL.PERSONAL.GENDER' | translate }}</span>
+                    <span class="field-label">{{ 'GENDER.TXT' | translate }}</span>
                     <span class="field-value">
                       <i
                         [class]="
@@ -672,7 +672,7 @@
                             : 'fa-solid fa-person-dress gender-female'
                         "
                       ></i>
-                      {{ 'GUEST_DETAIL.PERSONAL.GENDERS.' + member.gender.toUpperCase() | translate }}
+                      {{ 'GENDER.' + member.gender.toUpperCase() | translate }}
                     </span>
                   </div>
 
@@ -732,7 +732,7 @@
                 <div class="passport-grid">
                   <div class="passport-field" *ngIf="member.continent">
                     <span class="field-label">{{ 'GUEST_DETAIL.LOCATION.CONTINENT' | translate }}</span>
-                    <span class="field-value">{{ member.continent | titlecase }}</span>
+                    <span class="field-value">{{ getContinentName(member.continent) }}</span>
                   </div>
 
                   <div class="passport-field" *ngIf="member.region">
@@ -763,6 +763,18 @@
                       {{ member.livingIn }}
                     </span>
                   </div>
+
+                  <div class="passport-field" *ngIf="member.countryCodeWeMet">
+                    <span class="field-label">{{ 'GUEST_DETAIL.LOCATION.WE_MET_IN' | translate }}</span>
+                    <span class="field-value">
+                      <span
+                        *ngIf="member.cityWeMet"
+                        [class]="member.countryCodeWeMet | flag"
+                        [matTooltip]="_format.formatCountry(member.countryCodeWeMet)"
+                      ></span>
+                      {{ member.cityWeMet }}, {{ member.locationWeMet }}
+                    </span>
+                  </div>
                 </div>
               </section>
 
@@ -773,7 +785,7 @@
                 <div class="list">
                   <span class="passport-tag" *ngFor="let occupation of member.occupation">
                     <mat-icon class="material-symbols-outlined" fontIcon="work"></mat-icon>
-                    {{ occupation }}
+                    {{ _format.formatOccupation(occupation) }}
                   </span>
                 </div>
               </section>

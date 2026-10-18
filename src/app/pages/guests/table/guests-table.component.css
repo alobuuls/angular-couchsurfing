@@ -187,8 +187,12 @@ tr:nth-of-type(even) {
   background-color: color-mix(in srgb, var(--color-primary) 5%, var(--color-surface));
 }
 
-.ctn-stars .material-symbols-outlined {
-  transition: -webkit-text-stroke 0.2s ease;
+.ctn-stars {
+  display: flex;
+
+  & .material-symbols-outlined {
+    transition: -webkit-text-stroke 0.2s ease;
+  }
 }
 
 .mat-mdc-row:hover {

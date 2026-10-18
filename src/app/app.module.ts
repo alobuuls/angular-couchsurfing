@@ -11,7 +11,10 @@ import localeFr from '@angular/common/locales/fr';
 import localeIt from '@angular/common/locales/it';
 import localePt from '@angular/common/locales/pt';
 import localeRu from '@angular/common/locales/ru';
-import localeJp from '@angular/common/locales/ja';
+import localeJa from '@angular/common/locales/ja';
+import localeHi from '@angular/common/locales/hi';
+import localeKo from '@angular/common/locales/ko';
+import localeHe from '@angular/common/locales/he';
 // Modules
 import { CoreModule } from '@core/core.module';
 import { SharedModule } from '@shared/shared.module';
@@ -38,7 +41,10 @@ registerLocaleData(localeFr, 'fr-FR');
 registerLocaleData(localeIt, 'it-IT');
 registerLocaleData(localePt, 'pt-PT');
 registerLocaleData(localeRu, 'ru-RU');
-registerLocaleData(localeJp, 'ja-JP');
+registerLocaleData(localeJa, 'ja-JP');
+registerLocaleData(localeHi, 'hi-IN');
+registerLocaleData(localeKo, 'ko-KR');
+registerLocaleData(localeHe, 'he-IL');
 
 @NgModule({
   declarations: [AppComponent, NotFoundComponent],

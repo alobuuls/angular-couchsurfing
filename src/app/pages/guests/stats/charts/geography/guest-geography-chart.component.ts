@@ -16,14 +16,14 @@ import {
   IGeographyRegion,
   IGeographyView,
 } from '@interfaces/stats-interface';
-import { IQueryParamsGuests } from '@interfaces/guests.interface';
 
 // Services
 import { FormatService } from '@services/format.service';
+import { GeonameService } from '@services/geoname.service';
 
 // Constants
 import { REGION_NAMES } from '@config/world/regions';
-import { CountriesCodes, Language, Regions } from '@type/word.types';
+import { Continents, CountriesCodes, Language, Regions } from '@type/word.types';
 import { WORLD } from '@config/world';
 
 // Helpers
@@ -38,9 +38,9 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
   private _format = inject(FormatService);
   private _router = inject(Router);
   private _translate = inject(TranslateService);
+  private _geoname = inject(GeonameService);
 
   private langChangeSubscription?: Subscription;
-
   @Input() geography!: IGeographyDistribution;
 
   @ViewChild('geographyChart')
@@ -74,9 +74,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
     const code = item.code.toLowerCase();
 
     // When the item is already a continent.
-    if (this.selectedView === 'continents') {
-      return code;
-    }
+    if (this.selectedView === 'continents') return code;
 
     // When the item is a region.
     if (this.selectedView === 'regions') {
@@ -162,6 +160,10 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
     this.destroyChart();
   }
 
+  getContinentName(continent: Continents): string {
+    return this._geoname.getContinentName(continent);
+  }
+
   selectView(view: IGeographyView): void {
     this.selectedView = view;
 
@@ -243,13 +245,12 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
       type: config.type,
       data: {
         labels: geographyData.map(item => {
-          if ('name' in item) {
-            return item.name;
-          }
+          if ('name' in item) return item.name;
 
-          if (this.selectedView === 'regions') {
+          if (this.selectedView === 'continents') return this.getContinentName(item.code.toLowerCase() as Continents);
+
+          if (this.selectedView === 'regions')
             return REGION_NAMES[item.code as Regions]?.[this._translate.currentLang as Language] ?? REGION_NAMES[item.code as Regions]?.en ?? item.code;
-          }
 
           if (this.selectedView === 'countries') {
             const code = item.code.toLowerCase() as CountriesCodes;
@@ -271,16 +272,12 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
       options: {
         responsive: true,
         onClick: (_event, elements) => {
-          if (!elements.length) {
-            return;
-          }
+          if (!elements.length) return;
 
           const index = elements[0].index;
           const item = geographyData[index];
 
-          if (!item) {
-            return;
-          }
+          if (!item) return;
 
           if (this.selectedView === 'continents') {
             const continent = item as IGeographyContinent;
@@ -329,7 +326,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
 
                           if (regions.some(region => this.getContinent(region) === 'america')) {
                             labels.push({
-                              text: this._translate.instant('STATS.GEOGRAPHY.CONTINENTS.AMERICA'),
+                              text: this._geoname.getContinentName('america'),
                               fillStyle: CONTINENT_COLORS.america.background,
                               strokeStyle: CONTINENT_COLORS.america.border,
                               lineWidth: 1,
@@ -339,7 +336,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
 
                           if (regions.some(region => this.getContinent(region) === 'europe')) {
                             labels.push({
-                              text: this._translate.instant('STATS.GEOGRAPHY.CONTINENTS.EUROPE'),
+                              text: this._geoname.getContinentName('europe'),
                               fillStyle: CONTINENT_COLORS.europe.background,
                               strokeStyle: CONTINENT_COLORS.europe.border,
                               lineWidth: 1,
@@ -349,7 +346,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
 
                           if (regions.some(region => this.getContinent(region) === 'africa')) {
                             labels.push({
-                              text: this._translate.instant('STATS.GEOGRAPHY.CONTINENTS.AFRICA'),
+                              text: this._geoname.getContinentName('africa'),
                               fillStyle: CONTINENT_COLORS.africa.background,
                               strokeStyle: CONTINENT_COLORS.africa.border,
                               lineWidth: 1,
@@ -359,7 +356,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
 
                           if (regions.some(region => this.getContinent(region) === 'asia')) {
                             labels.push({
-                              text: this._translate.instant('STATS.GEOGRAPHY.CONTINENTS.ASIA'),
+                              text: this._geoname.getContinentName('asia'),
                               fillStyle: CONTINENT_COLORS.asia.background,
                               strokeStyle: CONTINENT_COLORS.asia.border,
                               lineWidth: 1,
@@ -369,7 +366,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
 
                           if (regions.some(region => this.getContinent(region) === 'oceania')) {
                             labels.push({
-                              text: this._translate.instant('STATS.GEOGRAPHY.CONTINENTS.OCEANIA'),
+                              text: this._geoname.getContinentName('oceania'),
                               fillStyle: CONTINENT_COLORS.oceania.background,
                               strokeStyle: CONTINENT_COLORS.oceania.border,
                               lineWidth: 1,
@@ -420,7 +417,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
 
                           if (countries.some(country => this.getContinent(country) === 'america')) {
                             labels.push({
-                              text: this._translate.instant('STATS.GEOGRAPHY.CONTINENTS.AMERICA'),
+                              text: this._geoname.getContinentName('america'),
                               fillStyle: CONTINENT_COLORS.america.background,
                               strokeStyle: CONTINENT_COLORS.america.border,
                               lineWidth: 1,
@@ -430,7 +427,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
 
                           if (countries.some(country => this.getContinent(country) === 'europe')) {
                             labels.push({
-                              text: this._translate.instant('STATS.GEOGRAPHY.CONTINENTS.EUROPE'),
+                              text: this._geoname.getContinentName('europe'),
                               fillStyle: CONTINENT_COLORS.europe.background,
                               strokeStyle: CONTINENT_COLORS.europe.border,
                               lineWidth: 1,
@@ -440,7 +437,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
 
                           if (countries.some(country => this.getContinent(country) === 'africa')) {
                             labels.push({
-                              text: this._translate.instant('STATS.GEOGRAPHY.CONTINENTS.AFRICA'),
+                              text: this._geoname.getContinentName('africa'),
                               fillStyle: CONTINENT_COLORS.africa.background,
                               strokeStyle: CONTINENT_COLORS.africa.border,
                               lineWidth: 1,
@@ -450,7 +447,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
 
                           if (countries.some(country => this.getContinent(country) === 'asia')) {
                             labels.push({
-                              text: this._translate.instant('STATS.GEOGRAPHY.CONTINENTS.ASIA'),
+                              text: this._geoname.getContinentName('asia'),
                               fillStyle: CONTINENT_COLORS.asia.background,
                               strokeStyle: CONTINENT_COLORS.asia.border,
                               lineWidth: 1,
@@ -460,7 +457,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
 
                           if (countries.some(country => this.getContinent(country) === 'oceania')) {
                             labels.push({
-                              text: this._translate.instant('STATS.GEOGRAPHY.CONTINENTS.OCEANIA'),
+                              text: this._geoname.getContinentName('oceania'),
                               fillStyle: CONTINENT_COLORS.oceania.background,
                               strokeStyle: CONTINENT_COLORS.oceania.border,
                               lineWidth: 1,
@@ -564,7 +561,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
   }
 
   private getTranslatedGender(gender: string): string {
-    const key = `STATS.GEOGRAPHY.GENDER.${gender.toUpperCase()}`;
+    const key = `GENDER.${gender.toUpperCase()}`;
     const translated = this._translate.instant(key);
 
     return translated === key ? gender : translated;
@@ -652,21 +649,15 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
     return data as IGeographyCountry[];
   }
 
-  getCountryName(code: string): string {
-    const countryCode = code.toLowerCase() as CountriesCodes;
-    const lang = this._translate.currentLang as Language;
-
-    return WORLD[countryCode]?.name?.[lang] ?? WORLD[countryCode]?.name?.en ?? code;
+  getCountryName(code: string) {
+    return this._format.formatCountry(code);
   }
 
   // COUNTRY - MOST CONSECUTIVE
   private createMostConsecutiveChart(): void {
     const consecutive = this.geography.countries.mostConsecutive;
 
-    if (!consecutive || !consecutive.guests.length) {
-      return;
-    }
-
+    if (!consecutive || !consecutive.guests.length) return;
     this.destroyChart();
 
     const countryName = this.getCountryName(consecutive.code);
@@ -749,7 +740,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
 
                 if (guests.some(guest => guest.gender.toLowerCase() === 'female')) {
                   labels.push({
-                    text: this._translate.instant('STATS.GEOGRAPHY.GENDER.FEMALE'),
+                    text: this._translate.instant('GENDER.FEMALE'),
                     fillStyle: GENDER_COLORS.female.background,
                     strokeStyle: GENDER_COLORS.female.border,
                     lineWidth: 1,
@@ -759,7 +750,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
 
                 if (guests.some(guest => guest.gender.toLowerCase() === 'male')) {
                   labels.push({
-                    text: this._translate.instant('STATS.GEOGRAPHY.GENDER.MALE'),
+                    text: this._translate.instant('GENDER.MALE'),
                     fillStyle: GENDER_COLORS.male.background,
                     strokeStyle: GENDER_COLORS.male.border,
                     lineWidth: 1,
@@ -769,7 +760,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
 
                 if (guests.some(guest => guest.gender.toLowerCase() === 'gay')) {
                   labels.push({
-                    text: this._translate.instant('STATS.GEOGRAPHY.GENDER.GAY'),
+                    text: this._translate.instant('GENDER.GAY'),
                     fillStyle: GENDER_COLORS.gay.background,
                     strokeStyle: GENDER_COLORS.gay.border,
                     lineWidth: 1,
@@ -779,7 +770,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
 
                 if (guests.some(guest => guest.gender.toLowerCase() === 'trans')) {
                   labels.push({
-                    text: this._translate.instant('STATS.GEOGRAPHY.GENDER.TRANS'),
+                    text: this._translate.instant('GENDER.TRANS'),
                     fillStyle: GENDER_COLORS.trans.background,
                     strokeStyle: GENDER_COLORS.trans.border,
                     lineWidth: 1,
@@ -798,8 +789,8 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
 
                 return [
                   guest.fullName,
-                  `${this._translate.instant('STATS.GEOGRAPHY.LABELS.GENDER')}: ${this.getTranslatedGender(guest.gender)}`,
-                  `${this._translate.instant('STATS.GEOGRAPHY.LABELS.GROUP')}: ${guest.groupType}`,
+                  `${this._translate.instant('GENDER.TXT')}: ${this.getTranslatedGender(guest.gender)}`,
+                  `${this._translate.instant('STATS.GEOGRAPHY.LABELS.GROUP')}: ${this._translate.instant(`STATS.DEMOGRAPHICS.GROUPS.${guest.groupType.toUpperCase()}`)}`,
                   `${this._translate.instant('STATS.GEOGRAPHY.LABELS.VISIT')}: ${this._format.formatDate(guest.visitedDate)}`,
                 ];
               },
@@ -840,20 +831,9 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
   }
 
   // Click on chart
-  private readonly continentNavigation: Record<string, IQueryParamsGuests['continent']> = {
-    america: 'america',
-    asia: 'asia',
-    africa: 'africa',
-    europe: 'europe',
-    oceania: 'oceania',
-  };
-
   private navigateToContinent(continent: string): void {
-    const filters = this.continentNavigation[continent];
-
-    if (!filters) {
-      return;
-    }
+    const filters = continent;
+    if (!filters) return;
 
     this._router.navigate(['/guests'], {
       queryParams: {
@@ -863,44 +843,9 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
     });
   }
 
-  private readonly regionNavigation: Record<string, IQueryParamsGuests['region']> = {
-    northern_africa: 'northern_africa',
-    western_africa: 'western_africa',
-    central_africa: 'central_africa',
-    eastern_africa: 'eastern_africa',
-    southern_africa: 'southern_africa',
-
-    north_america: 'north_america',
-    south_america: 'south_america',
-    caribbean: 'caribbean',
-    central_america: 'central_america',
-
-    central_asia: 'central_asia',
-    east_asia: 'east_asia',
-    south_asia: 'south_asia',
-    southeast_asia: 'southeast_asia',
-    west_asia: 'west_asia',
-
-    northern_europe: 'northern_europe',
-    scandinavia: 'scandinavia',
-    baltics: 'baltics',
-    central_europe: 'central_europe',
-    western_europe: 'western_europe',
-    eastern_europe: 'eastern_europe',
-    southern_europe: 'southern_europe',
-
-    melanesia: 'melanesia',
-    micronesia: 'micronesia',
-    polynesia: 'polynesia',
-    oceania: 'oceania',
-  };
-
   private navigateToRegion(region: string): void {
-    const filters = this.regionNavigation[region];
-
-    if (!filters) {
-      return;
-    }
+    const filters = region;
+    if (!filters) return;
 
     this._router.navigate(['/guests'], {
       queryParams: {
@@ -920,9 +865,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
   }
 
   private navigateToLivingIn(location: string): void {
-    if (!location) {
-      return;
-    }
+    if (!location) return;
 
     this._router.navigate(['/guests'], {
       queryParams: {
@@ -933,9 +876,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
   }
 
   private navigateToHometown(location: string): void {
-    if (!location) {
-      return;
-    }
+    if (!location) return;
 
     this._router.navigate(['/guests'], {
       queryParams: {

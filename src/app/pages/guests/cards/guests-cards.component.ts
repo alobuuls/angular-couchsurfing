@@ -1,15 +1,17 @@
 import { Component, EventEmitter, HostListener, Input, Output, inject } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
-
-// Interfaces
-import { ICurrentView, IGuestTableRow, IGuestYearGroup } from '@interfaces/data-structure-api';
-import { ICardGuest } from '@interfaces/guests.interface';
 
 // Services
 import { GuestsService } from '@services/guests.service';
 import { FormatService } from '@services/format.service';
+import { GeonameService } from '@services/geoname.service';
+import { LanguageService } from '@services/language.service';
+
+// Interfaces
+import { IGuestTableRow, IGuestYearGroup } from '@interfaces/data-structure-api';
+import { ICardGuest } from '@interfaces/guests.interface';
+import { Continents, Regions } from '@type/word.types';
 
 @Component({
   selector: 'guests-cards',
@@ -18,41 +20,25 @@ import { FormatService } from '@services/format.service';
 })
 export class GuestsCardsComponent implements OnDestroy {
   _format = inject(FormatService);
+
   private _guests = inject(GuestsService);
   private readonly _translate = inject(TranslateService);
+  private readonly _language = inject(LanguageService);
+  private readonly _geoname = inject(GeonameService);
+
   private _data: IGuestTableRow[] = [];
+  private readonly _langChangeSubscription = this._translate.onLangChange.subscribe(() => this.groupGuestsByDate());
 
-  dateLocale = 'en-US';
+  getRegionName(region: Regions): string {
+    return this._geoname.getRegionName(region);
+  }
 
-  private _langChangeSubscription!: Subscription;
-
-  constructor() {
-    this.dateLocale = this.getDateLocale(this._translate.currentLang || 'en');
-
-    this._langChangeSubscription = this._translate.onLangChange.subscribe(({ lang }) => {
-      this.dateLocale = this.getDateLocale(lang);
-      this.groupGuestsByDate();
-    });
+  getContinentName(continent: Continents): string {
+    return this._geoname.getContinentName(continent);
   }
 
   ngOnDestroy(): void {
     this._langChangeSubscription.unsubscribe();
-  }
-
-  private getDateLocale(language: string): string {
-    const locales: Record<string, string> = {
-      en: 'en-US',
-      es: 'es-ES',
-      de: 'de-DE',
-      zh: 'zh-CN',
-      fr: 'fr-FR',
-      it: 'it-IT',
-      pt: 'pt-PT',
-      ru: 'ru-RU',
-      ja: 'ja-JP',
-    };
-
-    return locales[language] ?? 'en-US';
   }
 
   @Input() cardsHasMore: boolean = false;
@@ -139,35 +125,22 @@ export class GuestsCardsComponent implements OnDestroy {
   }
 
   private getMonthName(month: number): string {
-    return new Intl.DateTimeFormat(this.dateLocale, {
+    return new Intl.DateTimeFormat(this._language.currentLocale, {
       month: 'long',
     }).format(new Date(2024, month, 1));
   }
 
   formatDate(value: Date | string): string {
     if (!value) return '';
-
     const date = new Date(value);
-
     if (Number.isNaN(date.getTime())) return '';
-
-    return new Intl.DateTimeFormat(this.dateLocale, {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    }).format(date);
+    return this._format.formatDate(date.toISOString());
   }
 
   // Open / close a card
   private getCardId(guest: IGuestTableRow): string | undefined {
-    if ('groupId' in guest) {
-      return guest.groupId;
-    }
-
-    if ('guestId' in guest) {
-      return guest.guestId;
-    }
-
+    if ('groupId' in guest) return guest.groupId;
+    if ('guestId' in guest) return guest.guestId;
     return undefined;
   }
 
@@ -182,10 +155,7 @@ export class GuestsCardsComponent implements OnDestroy {
     }
 
     this.openCards.add(cardId);
-
-    if (this.cardDetails.has(cardId)) {
-      return;
-    }
+    if (this.cardDetails.has(cardId)) return;
 
     if (guest.groupType === 'solo') {
       this._guests.getGuestById(guest.guestId).subscribe(response => {
@@ -204,9 +174,7 @@ export class GuestsCardsComponent implements OnDestroy {
 
   isCardOpen(guest: IGuestTableRow): boolean {
     const cardId = this.getCardId(guest);
-
     if (!cardId) return false;
-
     return this.openCards.has(cardId);
   }
 

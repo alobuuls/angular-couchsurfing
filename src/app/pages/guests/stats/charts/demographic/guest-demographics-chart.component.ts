@@ -3,8 +3,9 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
-import Chart from 'chart.js/auto';
-import 'chartjs-adapter-date-fns';
+// Services
+import { FormatService } from '@services/format.service';
+import { LanguageService } from '@services/language.service';
 
 // Interfaces
 import { IDemographicsDistribution, IDemographicsView, IDemographicsTotalsView, IDemographicGender, IDemographicsOldestView } from '@interfaces/stats-interface';
@@ -13,8 +14,11 @@ import { IQueryParamsGuests } from '@interfaces/guests.interface';
 // Helpers
 import { CHART_NEUTRAL_COLOR, CHART_UNKNOWN_COLOR, GENDER_COLORS, getColorWithOpacity, getRankingColors, GROUP_COLORS, RANKING_COLORS } from '@utils';
 
-// Services
-import { FormatService } from '@services/format.service';
+// Libraries
+import Chart from 'chart.js/auto';
+import 'chartjs-adapter-date-fns';
+import { enUS, es, de, zhCN, fr, it, pt, ru, ja } from 'date-fns/locale';
+import type { Locale } from 'date-fns';
 
 @Component({
   selector: 'guest-demographics-chart',
@@ -25,6 +29,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
   private _format = inject(FormatService);
   private _router = inject(Router);
   private _translate = inject(TranslateService);
+  private _language = inject(LanguageService);
 
   private langChangeSubscription?: Subscription;
 
@@ -106,6 +111,10 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
     if (changes['demographics'] && this.demographicsChart) {
       this.createChart();
     }
+  }
+
+  getSubViewLabel(view: string): string {
+    return this._translate.instant(`STATS.DEMOGRAPHICS.SUBVIEWS.${view.toUpperCase()}`);
   }
 
   selectView(view: IDemographicsView): void {
@@ -234,10 +243,10 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
     const overall = this.demographics.totals.overall;
 
     const labels = [
-      this._translate.instant('STATS.DEMOGRAPHICS.GENDER.MALE'),
-      this._translate.instant('STATS.DEMOGRAPHICS.GENDER.FEMALE'),
-      this._translate.instant('STATS.DEMOGRAPHICS.GENDER.TRANS'),
-      this._translate.instant('STATS.DEMOGRAPHICS.GENDER.GAY'),
+      this._translate.instant('GENDER.MALE'),
+      this._translate.instant('GENDER.FEMALE'),
+      this._translate.instant('GENDER.TRANS'),
+      this._translate.instant('GENDER.GAY'),
     ];
 
     return new Chart(this.demographicsChart.nativeElement, {
@@ -248,7 +257,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         labels,
         datasets: [
           {
-            label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.OVERALL_DEMOGRAPHICS'),
+            label: this._translate.instant('GENDER.TXT'),
 
             // Values used to calculate each section of the doughnut.
             data: [overall.male, overall.female, overall.trans, overall.isGay],
@@ -304,28 +313,28 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         ],
         datasets: [
           {
-            label: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.MALE'),
+            label: this._translate.instant('GENDER.MALE'),
             data: [groups.solo.male, groups.couple.male, groups.friends.male, groups.family.male],
             backgroundColor: getColorWithOpacity(GENDER_COLORS.male),
             borderColor: GENDER_COLORS.male.border,
             borderWidth: 1,
           },
           {
-            label: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.FEMALE'),
+            label: this._translate.instant('GENDER.FEMALE'),
             data: [groups.solo.female, groups.couple.female, groups.friends.female, groups.family.female],
             backgroundColor: getColorWithOpacity(GENDER_COLORS.female),
             borderColor: GENDER_COLORS.female.border,
             borderWidth: 1,
           },
           {
-            label: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.TRANS'),
+            label: this._translate.instant('GENDER.TRANS'),
             data: [groups.solo.trans, groups.couple.trans, groups.friends.trans, groups.family.trans],
             backgroundColor: getColorWithOpacity(GENDER_COLORS.trans),
             borderColor: GENDER_COLORS.trans.border,
             borderWidth: 1,
           },
           {
-            label: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.GAY'),
+            label: this._translate.instant('GENDER.GAY'),
             data: [groups.solo.isGay, groups.couple.isGay, groups.friends.isGay, groups.family.isGay],
             backgroundColor: getColorWithOpacity(GENDER_COLORS.gay),
             borderColor: GENDER_COLORS.gay.border,
@@ -500,10 +509,11 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             callbacks: {
               label: context => {
                 const person = oldestPeople[context.dataIndex];
+                const genderLabel = this._format.formatGender(person.gender);
 
                 return [
                   `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE')}: ${person.age}`,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GENDER')}: ${person.gender}`,
+                  `${this._translate.instant('GENDER.TXT')}: ${genderLabel}`,
                   `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(person.country)}`,
                   `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(person.visitedDate)}`,
                 ];
@@ -644,6 +654,11 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         scales: {
           x: {
             type: 'time',
+            adapters: {
+              date: {
+                locale: this._language.dateFnsLocale,
+              },
+            },
             title: {
               display: true,
               text: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISITED_DATE'),
@@ -666,7 +681,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (oldestPeople.some(person => person.demographic === 'male')) {
                   labels.push({
-                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.MALE'),
+                    text: this._translate.instant('GENDER.MALE'),
                     fillStyle: this.genderColors.male.background,
                     strokeStyle: this.genderColors.male.border,
                     lineWidth: 1,
@@ -676,7 +691,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (oldestPeople.some(person => person.demographic === 'female')) {
                   labels.push({
-                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.FEMALE'),
+                    text: this._translate.instant('GENDER.FEMALE'),
                     fillStyle: this.genderColors.female.background,
                     strokeStyle: this.genderColors.female.border,
                     lineWidth: 1,
@@ -686,7 +701,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (oldestPeople.some(person => person.demographic === 'isGay')) {
                   labels.push({
-                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.GAY'),
+                    text: this._translate.instant('GENDER.GAY'),
                     fillStyle: this.genderColors.isGay.background,
                     strokeStyle: this.genderColors.isGay.border,
                     lineWidth: 1,
@@ -696,7 +711,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (oldestPeople.some(person => person.demographic === 'trans')) {
                   labels.push({
-                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.TRANS'),
+                    text: this._translate.instant('GENDER.TRANS'),
                     fillStyle: this.genderColors.trans.background,
                     strokeStyle: this.genderColors.trans.border,
                     lineWidth: 1,
@@ -716,7 +731,9 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                 const tooltip = [person.name, `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE')}: ${person.age}`];
 
                 if (person.demographic === 'isGay' || person.demographic === 'trans') {
-                  tooltip.push(`${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GENDER')}: ${person.gender}`);
+                  const genderLabel = this._format.formatGender(person.gender);
+
+                  tooltip.push(`${this._translate.instant('GENDER.TXT')}: ${genderLabel}`);
                 }
 
                 tooltip.push(
@@ -898,7 +915,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                 return [
                   person.name,
                   `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE')}: ${person.age}`,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GENDER')}: ${person.gender}`,
+                  `${this._translate.instant('GENDER.TXT')}: ${this._format.formatGender(person.gender)}`,
                   `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(person.country)}`,
                   `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(person.visitedDate)}`,
                 ];
@@ -1049,7 +1066,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 return [
                   `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE')}: ${person.age}`,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GENDER')}: ${person.gender}`,
+                  `${this._translate.instant('GENDER.TXT')}: ${this._format.formatGender(person.gender)}`,
                   `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(person.country)}`,
                   `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(person.visitedDate)}`,
                 ];
@@ -1136,6 +1153,11 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
           // X axis represents the guest's visit date.
           x: {
             type: 'time',
+            adapters: {
+              date: {
+                locale: this._language.dateFnsLocale,
+              },
+            },
             title: {
               display: true,
               text: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT_DATE'),
@@ -1160,7 +1182,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (soloPeople.some(person => person.demographic === 'male')) {
                   labels.push({
-                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.MALE'),
+                    text: this._translate.instant('GENDER.MALE'),
                     fillStyle: getColorWithOpacity(this.genderColors.male),
                     strokeStyle: this.genderColors.male.border,
                     lineWidth: 1,
@@ -1170,7 +1192,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (soloPeople.some(person => person.demographic === 'female')) {
                   labels.push({
-                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.FEMALE'),
+                    text: this._translate.instant('GENDER.FEMALE'),
                     fillStyle: getColorWithOpacity(this.genderColors.female),
                     strokeStyle: this.genderColors.female.border,
                     lineWidth: 1,
@@ -1180,7 +1202,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (soloPeople.some(person => person.demographic === 'trans')) {
                   labels.push({
-                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.TRANS'),
+                    text: this._translate.instant('GENDER.TRANS'),
                     fillStyle: getColorWithOpacity(this.genderColors.trans),
                     strokeStyle: this.genderColors.trans.border,
                     lineWidth: 1,
@@ -1190,7 +1212,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (soloPeople.some(person => person.demographic === 'isGay')) {
                   labels.push({
-                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.GAY'),
+                    text: this._translate.instant('GENDER.GAY'),
                     fillStyle: getColorWithOpacity(this.genderColors.isGay),
                     strokeStyle: this.genderColors.isGay.border,
                     lineWidth: 1,
@@ -1383,7 +1405,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                 return [
                   person.name,
                   `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE')}: ${person.age}`,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GENDER')}: ${person.gender}`,
+                  `${this._translate.instant('GENDER.TXT')}: ${this._format.formatGender(person.gender)}`,
                   `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(person.country)}`,
                   `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(person.visitedDate)}`,
                 ];
@@ -1455,6 +1477,11 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
           // X axis represents the visit date.
           x: {
             type: 'time',
+            adapters: {
+              date: {
+                locale: this._language.dateFnsLocale,
+              },
+            },
             title: {
               display: true,
               text: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT_DATE'),
@@ -1487,22 +1514,22 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                 const genders = [
                   {
                     key: 'male' as const,
-                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.MALE'),
+                    text: this._translate.instant('GENDER.MALE'),
                     color: this.genderColors.male,
                   },
                   {
                     key: 'female' as const,
-                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.FEMALE'),
+                    text: this._translate.instant('GENDER.FEMALE'),
                     color: this.genderColors.female,
                   },
                   {
                     key: 'trans' as const,
-                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.TRANS'),
+                    text: this._translate.instant('GENDER.TRANS'),
                     color: this.genderColors.trans,
                   },
                   {
                     key: 'isGay' as const,
-                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.GAY'),
+                    text: this._translate.instant('GENDER.GAY'),
                     color: this.genderColors.isGay,
                   },
                 ];
@@ -1539,14 +1566,12 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
                 };
 
                 const groupLabel = point.person.groupType === 'solo' ? '' : ` and ${this.groupLabels[point.person.groupType]}`;
-
                 const firstLastLabel = this._translate.instant(point.type === 'First' ? 'STATS.DEMOGRAPHICS.RANKING.FIRST' : 'STATS.DEMOGRAPHICS.RANKING.LAST');
-
-                const genderLabel = this._translate.instant(`STATS.DEMOGRAPHICS.GENDER.${this.getGenderTranslationKey(point.person.gender)}`);
+                const genderLabel = this._format.formatGender(point.person.gender);
 
                 return [
                   `${firstLastLabel}: ${point.person.fullName}${groupLabel}`,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GENDER')}: ${genderLabel}`,
+                  this._translate.instant('GENDER.LABEL', { gender: genderLabel }),
                   `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(point.person.hometownCode)}`,
                   `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(point.person.visitedDate)}`,
                 ];
@@ -1566,28 +1591,28 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
     const categories = [
       {
         key: 'Solo Female',
-        label: `${this._translate.instant('STATS.DEMOGRAPHICS.GENDER.FEMALE')} (${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.SOLO_GUESTS')})`,
+        label: `${this._translate.instant('GENDER.FEMALE')} (${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.SOLO_GUESTS')})`,
         first: solo.female.first,
         last: solo.female.last,
         color: this.genderColors.female,
       },
       {
         key: 'Solo Male',
-        label: `${this._translate.instant('STATS.DEMOGRAPHICS.GENDER.MALE')} (${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.SOLO_GUESTS')})`,
+        label: `${this._translate.instant('GENDER.MALE')} (${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.SOLO_GUESTS')})`,
         first: solo.male.first,
         last: solo.male.last,
         color: this.genderColors.male,
       },
       {
         key: 'Solo Trans',
-        label: `${this._translate.instant('STATS.DEMOGRAPHICS.GENDER.TRANS')} (${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.SOLO_GUESTS')})`,
+        label: `${this._translate.instant('GENDER.TRANS')} (${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.SOLO_GUESTS')})`,
         first: solo.trans.first,
         last: solo.trans.last,
         color: this.genderColors.trans,
       },
       {
         key: 'Solo Gay',
-        label: `${this._translate.instant('STATS.DEMOGRAPHICS.GENDER.GAY')} (${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.SOLO_GUESTS')})`,
+        label: `${this._translate.instant('GENDER.GAY')} (${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.SOLO_GUESTS')})`,
         first: solo.isGay.first,
         last: solo.isGay.last,
         color: this.genderColors.isGay,
@@ -1642,6 +1667,11 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         scales: {
           x: {
             type: 'time',
+            adapters: {
+              date: {
+                locale: this._language.dateFnsLocale,
+              },
+            },
             title: {
               display: true,
               text: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT_DATE'),
@@ -1671,7 +1701,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (validCategories.some(category => category.key === 'Solo Female')) {
                   labels.push({
-                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.FEMALE'),
+                    text: this._translate.instant('GENDER.FEMALE'),
                     fillStyle: getColorWithOpacity(this.genderColors.female),
                     strokeStyle: this.genderColors.female.border,
                     lineWidth: 1,
@@ -1681,7 +1711,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (validCategories.some(category => category.key === 'Solo Male')) {
                   labels.push({
-                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.MALE'),
+                    text: this._translate.instant('GENDER.MALE'),
                     fillStyle: getColorWithOpacity(this.genderColors.male),
                     strokeStyle: this.genderColors.male.border,
                     lineWidth: 1,
@@ -1691,7 +1721,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (validCategories.some(category => category.key === 'Solo Trans')) {
                   labels.push({
-                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.TRANS'),
+                    text: this._translate.instant('GENDER.TRANS'),
                     fillStyle: getColorWithOpacity(this.genderColors.trans),
                     strokeStyle: this.genderColors.trans.border,
                     lineWidth: 1,
@@ -1701,7 +1731,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
                 if (validCategories.some(category => category.key === 'Solo Gay')) {
                   labels.push({
-                    text: this._translate.instant('STATS.DEMOGRAPHICS.GENDER.GAY'),
+                    text: this._translate.instant('GENDER.GAY'),
                     fillStyle: getColorWithOpacity(this.genderColors.isGay),
                     strokeStyle: this.genderColors.isGay.border,
                     lineWidth: 1,
@@ -1809,6 +1839,11 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         scales: {
           x: {
             type: 'time',
+            adapters: {
+              date: {
+                locale: this._language.dateFnsLocale,
+              },
+            },
             title: {
               display: true,
               text: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT_DATE'),
@@ -1864,20 +1899,15 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
               label: context => {
                 const category = chartCategories[context.datasetIndex];
                 const person = context.dataIndex === 0 ? category.first : category.last;
-
-                if (!person) {
-                  return '';
-                }
+                if (!person) return '';
 
                 const firstLastLabel = this._translate.instant(context.dataIndex === 0 ? 'STATS.DEMOGRAPHICS.RANKING.FIRST' : 'STATS.DEMOGRAPHICS.RANKING.LAST');
-
                 const groupLabel = person.groupType === 'solo' ? '' : ` and ${this.groupLabels[person.groupType]}`;
-
-                const genderLabel = this._translate.instant(`STATS.DEMOGRAPHICS.GENDER.${this.getGenderTranslationKey(person.gender)}`);
+                const genderLabel = this._format.formatGender(person.gender);
 
                 return [
                   `${firstLastLabel}: ${person.fullName} ${groupLabel}`,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GENDER')}: ${genderLabel}`,
+                  `${this._translate.instant('GENDER.TXT')}: ${genderLabel}`,
                   `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(person.hometownCode)}`,
                   `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(person.visitedDate)}`,
                 ];

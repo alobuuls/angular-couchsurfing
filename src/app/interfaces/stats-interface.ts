@@ -36,7 +36,7 @@ export type IRankingGenderView = 'overall' | 'solo';
 export interface IRankingGuest {
   guestId: string;
   fullName: string;
-  gender: 'male' | 'female';
+  gender: 'male' | 'female' | 'trans';
   groupId: string | null;
   groupType: string;
   hometownCode: string;

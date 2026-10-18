@@ -728,7 +728,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
 
   // Translate a gender, keeping the original value if no translation exists.
   private translateGender(gender: string): string {
-    const key = `STATS.STAYS.GENDERS.${gender.toUpperCase()}`;
+    const key = `GENDER.${gender.toUpperCase()}`;
     const translated = this._translate.instant(key);
 
     return translated === key ? gender.charAt(0).toUpperCase() + gender.slice(1) : translated;

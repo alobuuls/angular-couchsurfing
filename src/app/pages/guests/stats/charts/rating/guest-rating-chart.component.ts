@@ -270,9 +270,7 @@ export class GuestRatingChartComponent implements AfterViewInit, OnChanges, OnDe
 
                   this._translate.instant('STATS.RATINGS.LABELS.RATING_VALUE', { rating: guest.rating }),
 
-                  this._translate.instant('STATS.RATINGS.LABELS.GENDER', {
-                    gender: this._translate.instant(`STATS.RATINGS.GENDERS.${String(guest.gender).toUpperCase()}`),
-                  }),
+                  `${this._translate.instant('GENDER.TXT')}: ${this._format.formatGender(guest.gender)}`,
 
                   this._translate.instant('STATS.RATINGS.LABELS.COUNTRY', {
                     country: this._format.formatCountry(guest.hometownCode),

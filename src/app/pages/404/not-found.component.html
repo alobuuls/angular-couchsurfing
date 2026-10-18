@@ -3,16 +3,15 @@
   <div class="overlay"></div>
 
   <div class="terminal">
-    <h1>Error <span class="errorcode">404</span></h1>
+    <h1>{{ '404.ERR' | translate }} <span class="errorcode">404</span></h1>
+
+    <p class="output">{{ '404.MSG' | translate }}</p>
     <p class="output">
-      La página que estás buscando puede haber sido eliminada, haber cambiado de nombre o estar temporalmente no
-      disponible.
+      {{ '404.TRY' | translate }}
+      <a class="returning-link" (click)="goBack()">{{ '404.BTN_BACK' | translate }}</a> {{ '404.OR' | translate }}
+      <a class="returning-link" [routerLink]="['/']">{{ '404.BTN_HOME' | translate }}</a
+      >.
     </p>
-    <p class="output">
-      Por favor intenta:
-      <a class="returning-link" (click)="goBack()">Volver a la pag anterior</a> o
-      <a class="returning-link" [routerLink]="['/']">Volver al inicio</a>.
-    </p>
-    <p class="output">Buena suerte 😁</p>
+    <p class="output">{{ '404.GOOD_LUCK' | translate }}</p>
   </div>
 </section>

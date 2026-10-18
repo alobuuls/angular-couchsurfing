@@ -328,7 +328,8 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges, On
 
   // Formats the guest name according to the selected ranking view.
   private getGuestDisplayName(item: IRankingItem): string {
-    return item.guest.fullName;
+    const country = this._format.formatCountry(item.guest.hometownCode);
+    return `${item.guest.fullName} (${country})`;
   }
 
   // Destroys the current Chart.js instance.

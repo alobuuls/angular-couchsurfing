@@ -12,6 +12,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'Norte da África',
     ru: 'Северная Африка',
     ja: '北アフリカ',
+    hi: 'उत्तरी अफ्रीका',
+    ko: '북아프리카',
+    he: 'צפון אפריקה',
   },
   western_africa: {
     en: 'Western Africa',
@@ -23,6 +26,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'África Ocidental',
     ru: 'Западная Африка',
     ja: '西アフリカ',
+    hi: 'पश्चिमी अफ्रीका',
+    ko: '서아프리카',
+    he: 'מערב אפריקה',
   },
   central_africa: {
     en: 'Central Africa',
@@ -34,6 +40,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'África Central',
     ru: 'Центральная Африка',
     ja: '中央アフリカ',
+    hi: 'मध्य अफ्रीका',
+    ko: '중앙아프리카',
+    he: 'מרכז אפריקה',
   },
   eastern_africa: {
     en: 'Eastern Africa',
@@ -45,6 +54,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'África Oriental',
     ru: 'Восточная Африка',
     ja: '東アフリカ',
+    hi: 'पूर्वी अफ्रीका',
+    ko: '동아프리카',
+    he: 'מזרח אפריקה',
   },
   southern_africa: {
     en: 'Southern Africa',
@@ -56,6 +68,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'África Austral',
     ru: 'Южная Африка',
     ja: '南部アフリカ',
+    hi: 'दक्षिणी अफ्रीका',
+    ko: '남부 아프리카',
+    he: 'דרום אפריקה',
   },
 
   // 🌎 America
@@ -69,6 +84,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'América do Norte',
     ru: 'Северная Америка',
     ja: '北アメリカ',
+    hi: 'उत्तरी अमेरिका',
+    ko: '북아메리카',
+    he: 'צפון אמריקה',
   },
   south_america: {
     en: 'South America',
@@ -80,6 +98,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'América do Sul',
     ru: 'Южная Америка',
     ja: '南アメリカ',
+    hi: 'दक्षिण अमेरिका',
+    ko: '남아메리카',
+    he: 'דרום אמריקה',
   },
   caribbean: {
     en: 'Caribbean',
@@ -91,6 +112,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'Caribe',
     ru: 'Карибский бассейн',
     ja: 'カリブ海地域',
+    hi: 'कैरेबियन',
+    ko: '카리브해',
+    he: 'האיים הקריביים',
   },
   central_america: {
     en: 'Central America',
@@ -102,6 +126,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'América Central',
     ru: 'Центральная Америка',
     ja: '中央アメリカ',
+    hi: 'मध्य अमेरिका',
+    ko: '중앙아메리카',
+    he: 'מרכז אמריקה',
   },
 
   // 🌏 Asia
@@ -115,6 +142,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'Ásia Central',
     ru: 'Центральная Азия',
     ja: '中央アジア',
+    hi: 'मध्य एशिया',
+    ko: '중앙아시아',
+    he: 'מרכז אסיה',
   },
   east_asia: {
     en: 'East Asia',
@@ -126,6 +156,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'Ásia Oriental',
     ru: 'Восточная Азия',
     ja: '東アジア',
+    hi: 'पूर्वी एशिया',
+    ko: '동아시아',
+    he: 'מזרח אסיה',
   },
   south_asia: {
     en: 'South Asia',
@@ -137,6 +170,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'Ásia Meridional',
     ru: 'Южная Азия',
     ja: '南アジア',
+    hi: 'दक्षिण एशिया',
+    ko: '남아시아',
+    he: 'דרום אסיה',
   },
   southeast_asia: {
     en: 'Southeast Asia',
@@ -148,6 +184,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'Sudeste Asiático',
     ru: 'Юго-Восточная Азия',
     ja: '東南アジア',
+    hi: 'दक्षिण-पूर्व एशिया',
+    ko: '동남아시아',
+    he: 'דרום-מזרח אסיה',
   },
   west_asia: {
     en: 'West Asia',
@@ -159,6 +198,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'Ásia Ocidental',
     ru: 'Западная Азия',
     ja: '西アジア',
+    hi: 'पश्चिमी एशिया',
+    ko: '서아시아',
+    he: 'מערב אסיה',
   },
 
   // 🇪🇺 Europe
@@ -172,6 +214,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'Europa do Norte',
     ru: 'Северная Европа',
     ja: '北ヨーロッパ',
+    hi: 'उत्तरी यूरोप',
+    ko: '북유럽',
+    he: 'צפון אירופה',
   },
   scandinavia: {
     en: 'Scandinavia',
@@ -183,6 +228,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'Escandinávia',
     ru: 'Скандинавия',
     ja: 'スカンジナビア',
+    hi: 'स्कैंडिनेविया',
+    ko: '스칸디나비아',
+    he: 'סקנדינביה',
   },
   baltics: {
     en: 'Baltics',
@@ -194,6 +242,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'Países Bálticos',
     ru: 'Страны Балтии',
     ja: 'バルト三国',
+    hi: 'बाल्टिक देश',
+    ko: '발트 3국',
+    he: 'המדינות הבלטיות',
   },
   central_europe: {
     en: 'Central Europe',
@@ -205,6 +256,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'Europa Central',
     ru: 'Центральная Европа',
     ja: '中央ヨーロッパ',
+    hi: 'मध्य यूरोप',
+    ko: '중앙유럽',
+    he: 'מרכז אירופה',
   },
   western_europe: {
     en: 'Western Europe',
@@ -216,6 +270,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'Europa Ocidental',
     ru: 'Западная Европа',
     ja: '西ヨーロッパ',
+    hi: 'पश्चिमी यूरोप',
+    ko: '서유럽',
+    he: 'מערב אירופה',
   },
   eastern_europe: {
     en: 'Eastern Europe',
@@ -227,6 +284,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'Europa Oriental',
     ru: 'Восточная Европа',
     ja: '東ヨーロッパ',
+    hi: 'पूर्वी यूरोप',
+    ko: '동유럽',
+    he: 'מזרח אירופה',
   },
   southern_europe: {
     en: 'Southern Europe',
@@ -238,6 +298,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'Europa do Sul',
     ru: 'Южная Европа',
     ja: '南ヨーロッパ',
+    hi: 'दक्षिणी यूरोप',
+    ko: '남유럽',
+    he: 'דרום אירופה',
   },
 
   // 🌊 Oceania
@@ -251,6 +314,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'Melanésia',
     ru: 'Меланезия',
     ja: 'メラネシア',
+    hi: 'मेलानेशिया',
+    ko: '멜라네시아',
+    he: 'מלנזיה',
   },
   micronesia: {
     en: 'Micronesia',
@@ -262,6 +328,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'Micronésia',
     ru: 'Микронезия',
     ja: 'ミクロネシア',
+    hi: 'माइक्रोनेशिया',
+    ko: '미크로네시아',
+    he: 'מיקרונזיה',
   },
   polynesia: {
     en: 'Polynesia',
@@ -273,6 +342,9 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'Polinésia',
     ru: 'Полинезия',
     ja: 'ポリネシア',
+    hi: 'पॉलिनेशिया',
+    ko: '폴리네시아',
+    he: 'פולינזיה',
   },
   oceania: {
     en: 'Oceania',
@@ -284,5 +356,8 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     pt: 'Oceania',
     ru: 'Океания',
     ja: 'オセアニア',
+    hi: 'ओशिनिया',
+    ko: '오세아니아',
+    he: 'אוקיאניה',
   },
 };
