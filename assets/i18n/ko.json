@@ -1,0 +1,801 @@
+{
+  "MENU": {
+    "GUESTS": "게스트",
+    "HOSTED": "호스팅",
+    "PERSONAL": "개인"
+  },
+  "GUESTS_TABLE": {
+    "NO": "번호",
+    "HANG_OUT": "함께 시간 보내기",
+    "NIGHTS": "숙박 일수",
+    "AGE": "나이",
+    "FULL_NAME": "전체 이름",
+    "CONTINENT": "대륙",
+    "HOMETOWN": "고향",
+    "LIVING_IN": "거주지",
+    "VISITED": "방문일",
+    "RATING": "평점",
+    "ACTIONS": "작업",
+    "VIEW_GUEST": "게스트 보기",
+    "EDIT_GUEST": "게스트 수정",
+    "DELETE_GUEST": "게스트 삭제",
+    "VIEW_CS_PROFILE": "Couchsurfing 프로필 보기",
+    "CS_UNAVAILABLE": "Couchsurfing 프로필을 사용할 수 없습니다",
+    "SEND_WHATSAPP": "WhatsApp 메시지 보내기",
+    "WHATSAPP_UNAVAILABLE": "WhatsApp을 사용할 수 없습니다",
+    "BIRTHDATE": "생년월일",
+    "CURRENT_AGE": "현재 나이"
+  },
+  "PAGINATOR": {
+    "ITEMS_PER_PAGE": "페이지당 항목 수:",
+    "NEXT_PAGE": "다음 페이지",
+    "PREVIOUS_PAGE": "이전 페이지",
+    "FIRST_PAGE": "첫 페이지",
+    "LAST_PAGE": "마지막 페이지",
+    "RANGE_EMPTY": "{{length}}개 중 0개",
+    "RANGE_LABEL": "{{length}}개 중 {{start}}–{{end}}"
+  },
+  "GUESTS_FILTERS": {
+    "CONTINENT": "대륙",
+    "ALL_CONTINENTS": "모든 대륙",
+    "REGION": "지역",
+    "ALL_REGIONS": "모든 지역",
+    "COUNTRY": "국가",
+    "ALL_COUNTRIES": "모든 국가",
+    "GROUP_TYPE": "그룹 유형",
+    "ALL_GROUPS": "모든 그룹",
+    "SOLO": "개인",
+    "COUPLE": "커플",
+    "FRIENDS": "친구",
+    "FAMILY": "가족",
+    "VISITED_FROM": "방문 시작일",
+    "VISITED_TO": "방문 종료일",
+    "FIRST_TIME": "첫 방문",
+    "HANG_OUT": "함께 시간 보내기",
+    "AMBASSADOR": "앰배서더",
+    "DID_THEY_REQUEST": "숙박을 요청했나요?",
+    "ALL": "전체",
+    "YES": "예",
+    "NO": "아니요",
+    "CLEAR": "지우기",
+    "SEARCH": "검색"
+  },
+  "GUESTS_ACTIONS": {
+    "SEE_STATS": "통계 보기",
+    "CREATE_GUEST": "게스트 추가"
+  },
+  "GUESTS_VIEW": {
+    "NO_MORE_GUESTS": "더 이상 표시할 게스트가 없습니다.",
+    "GUESTS_TO_DISPLAY": "표시할 게스트 수",
+    "GUESTS_COUNT_SINGULAR": "명의 게스트",
+    "GUESTS_COUNT_PLURAL": "명의 게스트",
+    "NO_GUESTS_FOUND": "게스트를 찾을 수 없습니다!",
+    "CHANGE_SEARCH": "검색 조건을 변경해 보세요.",
+    "CHANGE_TO_CARDS": "카드 보기로 전환",
+    "CHANGE_TO_MAP": "지도 보기로 전환",
+    "CHANGE_TO_TABLE": "표 보기로 전환"
+  },
+  "GUESTS_LOADING": {
+    "CARDS_1": "게스트를 불러오는 중",
+    "CARDS_2": "게스트를 준비하는 중",
+    "CARDS_3": "거의 완료되었습니다",
+    "CARDS_4": "곧 카드가 표시됩니다",
+    "MAP_1": "지도를 불러오는 중",
+    "MAP_2": "게스트를 찾는 중",
+    "MAP_3": "지도를 준비하는 중",
+    "MAP_4": "곧 준비됩니다",
+    "TABLE_1": "게스트를 불러오는 중",
+    "TABLE_2": "게스트를 검색하는 중",
+    "TABLE_3": "결과를 가져오는 중",
+    "TABLE_4": "거의 완료되었습니다"
+  },
+  "DATE": {
+    "DAY": "일"
+  },
+  "UK_REGIONS": {
+    "sct": "스코틀랜드",
+    "wls": "웨일스",
+    "nir": "북아일랜드",
+    "eng": "잉글랜드"
+  },
+  "MAP": {
+    "GUESTS": "게스트",
+    "REGION": "지역",
+    "CONTINENT": "대륙",
+    "UNITED_KINGDOM": "영국",
+    "UNKNOWN_COUNTRY": "알 수 없는 국가",
+    "VIEW_GUESTS": "게스트 보기",
+    "VIEW_GUEST": "게스트 보기"
+  },
+  "GUESTS_CARDS": {
+    "GUEST": "명",
+    "GUESTS": "명",
+    "VISIT": "회 방문",
+    "VISITS": "회 방문",
+    "READ_MORE": "더 보기",
+    "SHOW_LESS": "간략히 보기",
+    "TRIP": "여행",
+    "VISITED_DATE": "방문 날짜",
+    "NIGHTS": "숙박 일수",
+    "STAYED": "숙박 여부",
+    "HANG_OUT": "함께 시간 보내기",
+    "FIRST_TIME": "첫 방문",
+    "GROUP_TYPE": "그룹 유형",
+    "MEMBERS": "구성원",
+    "AMBASSADOR": "앰배서더",
+    "PERSONAL_INFORMATION": "개인 정보",
+    "FULL_NAME": "전체 이름",
+    "BIRTH_DATE": "생년월일",
+    "WHATSAPP": "WhatsApp",
+    "INSTAGRAM": "Instagram",
+    "COUCHSURFING": "Couchsurfing",
+    "GAY": "게이",
+    "DID_THEY_REQUEST": "숙박을 요청했나요?",
+    "I_SENT_THE_REQUEST": "내가 숙박을 요청했습니다",
+    "LOCATION": "위치",
+    "CONTINENT": "대륙",
+    "REGION": "지역",
+    "HOMETOWN": "고향",
+    "LIVING_IN": "거주지",
+    "WE_MET": "만난 장소",
+    "OCCUPATION": "직업",
+    "GIFT": "선물",
+    "COMMENTS": "댓글",
+    "REFERENCES": "추천글",
+    "THEIR_REFERENCE": "상대방의 추천글",
+    "MY_REFERENCE": "내 추천글",
+    "GROUP_TYPES": {
+      "solo": "개인",
+      "couple": "커플",
+      "friends": "친구",
+      "family": "가족"
+    },
+    "LOADING_1": "세부 정보를 불러오는 중",
+    "LOADING_2": "추가 정보를 가져오는 중",
+    "LOADING_3": "거의 완료되었습니다"
+  },
+  "GUEST_DETAIL": {
+    "TITLE": "게스트 상세 정보",
+    "HEADER": {
+      "SUBTITLE": "여행자 기록 보관소",
+      "TITLE": "게스트 여권",
+      "RECORD": "여행 기록"
+    },
+    "LOADING": {
+      "MESSAGE_1": "게스트 정보를 불러오는 중",
+      "MESSAGE_2": "모든 항목을 준비하는 중",
+      "MESSAGE_3": "거의 완료되었습니다",
+      "MESSAGE_4": "게스트 프로필을 준비하는 중"
+    },
+    "PASSPORT": {
+      "SUBTITLE": "해외 게스트",
+      "TITLE": "개인 여권"
+    },
+    "IDENTITY": {
+      "SUBTITLE": "여행자 신원",
+      "AMBASSADOR": "앰배서더"
+    },
+    "SOCIAL": {
+      "COUCHSURFING": "Couchsurfing 프로필 보기",
+      "INSTAGRAM": "Instagram 프로필 보기",
+      "WHATSAPP": "WhatsApp 프로필 보기"
+    },
+    "DIVIDER": {
+      "IDENTITY": "신원"
+    },
+    "PERSONAL": {
+      "SUBTITLE": "여행자 프로필",
+      "TITLE": "개인 정보",
+      "FULL_NAME": "전체 이름",
+      "BIRTH_DATE": "생년월일",
+      "PHONE_NUMBER": "전화번호",
+      "GAY": "게이",
+      "STAY_REQUEST": "숙박 요청",
+      "REQUESTED_STAY": "상대방이 숙박을 요청했습니다",
+      "SENT_REQUEST": "내가 숙박을 요청했습니다"
+    },
+    "COMMON": {
+      "YES": "예",
+      "NO": "아니요"
+    },
+    "LOCATION": {
+      "SUBTITLE": "출신지 및 거주지",
+      "TITLE": "장소 및 좌표",
+      "CONTINENT": "대륙",
+      "REGION": "지역",
+      "HOMETOWN": "고향",
+      "CURRENTLY_LIVING_IN": "현재 거주지",
+      "WE_MET_IN": "만난 장소"
+    },
+    "TRIP": {
+      "SUBTITLE": "여행 기록 항목",
+      "TITLE": "여행 기록",
+      "DATE_OF_VISIT": "방문 날짜",
+      "NIGHTS": "숙박 일수",
+      "GROUP_TYPE": "그룹 유형",
+      "GROUP_TYPES": {
+        "SOLO": "개인",
+        "COUPLE": "커플",
+        "FRIENDS": "친구",
+        "FAMILY": "가족"
+      },
+      "STAYED": "숙박했나요?",
+      "HUNG_OUT": "함께 시간을 보냈나요?",
+      "FIRST_VISIT": "첫 방문"
+    },
+    "OCCUPATION": {
+      "SUBTITLE": "직업 프로필",
+      "TITLE": "직업"
+    },
+    "RATING": {
+      "SUBTITLE": "커뮤니티 피드백",
+      "TITLE": "게스트 평점"
+    },
+    "GIFTS": {
+      "SUBTITLE": "여행의 추억",
+      "TITLE": "선물"
+    },
+    "COMMENTS": {
+      "SUBTITLE": "개인 메모",
+      "TITLE": "댓글"
+    },
+    "REFERENCES": {
+      "SUBTITLE": "커뮤니티 연결",
+      "TITLE": "추천글",
+      "THEIR_REFERENCE": "상대방의 추천글",
+      "MY_REFERENCE": "내 추천글"
+    },
+    "FOOTER": {
+      "PHRASE": "모든 만남에는 이야기가 있습니다"
+    },
+    "GROUP": {
+      "HEADER": {
+        "SUBTITLE": "해외 게스트 기록",
+        "TITLE": "그룹 여권"
+      },
+      "TRIP": {
+        "SUBTITLE": "함께한 여행",
+        "TITLE": "그룹 여행"
+      },
+      "MEMBERS": {
+        "SUBTITLE": "여행 동반자",
+        "TITLE": "그룹 구성원",
+        "GUEST_FALLBACK": "게스트",
+        "WHATSAPP": "WhatsApp",
+        "LIVING_IN": "거주지"
+      }
+    }
+  },
+  "GUESTS_FORM": {
+    "GROUP_TYPE_TITLE": "어떤 형태로 여행했나요?",
+    "GROUP_TYPES": {
+      "SOLO": "개인",
+      "COUPLE": "커플",
+      "FRIENDS": "친구",
+      "FAMILY": "가족"
+    },
+    "ADD_GUEST": "게스트 추가",
+    "CREATE": "생성",
+    "UPDATE": "수정",
+    "MAX_MEMBERS": "최대 5명까지 추가할 수 있습니다"
+  },
+  "TRIP_FORM": {
+    "TITLE": "여행 정보",
+    "VISITED_DATE": "방문 날짜",
+    "VISITED_DATE_REQUIRED": "방문 날짜는 필수 항목입니다",
+    "TODAY": "오늘",
+    "STAYED": "숙박했나요?",
+    "NIGHTS": "숙박 일수"
+  },
+  "GUEST_FORM": {
+    "SECTIONS": {
+      "PERSONAL": "개인 정보",
+      "LOCATION": "위치",
+      "OCCUPATION": "직업",
+      "CONTACT": "연락처 정보",
+      "ADDITIONAL": "추가 정보",
+      "RATING_GIFTS": "평점 및 선물",
+      "REFERENCES_COMMENTS": "추천글 및 댓글"
+    },
+    "FIELDS": {
+      "FULL_NAME": "전체 이름",
+      "INSTAGRAM": "Instagram",
+      "CS_PROFILE_URL": "CS 프로필 URL",
+      "BIRTH_DATE": "생년월일",
+      "HOMETOWN_COUNTRY": "고향 국가",
+      "HOMETOWN_STATE": "고향 주/도",
+      "HOMETOWN_CITY": "고향 도시",
+      "LIVING_COUNTRY": "거주 국가",
+      "LIVING_STATE": "거주 주/도",
+      "LIVING_CITY": "거주 도시",
+      "COUNTRY_WE_MET": "만난 국가",
+      "STATE_WE_MET": "만난 주/도",
+      "CITY_WE_MET": "만난 도시",
+      "LOCATION_WE_MET": "만난 장소",
+      "OCCUPATION_AREA": "직업 분야",
+      "OCCUPATIONS": "직업",
+      "OTHER_OCCUPATION": "직업을 입력하세요",
+      "ENTER_OCCUPATION": "직업 입력",
+      "PREFIX": "국가 전화번호 접두사",
+      "WHATSAPP": "WhatsApp",
+      "GIFTS": "선물",
+      "THEIR_REFERENCE": "상대방의 추천글",
+      "MY_REFERENCE": "내 추천글",
+      "COMMENTS": "댓글 남기기"
+    },
+    "CHECKBOXES": {
+      "FIRST_TIME": "첫 방문",
+      "STAY_REQUEST": "숙박을 요청했나요?",
+      "HANG_OUT": "함께 시간 보내기",
+      "AMBASSADOR": "앰배서더",
+      "GAY": "게이"
+    },
+    "BUTTONS": {
+      "CLEAR_GIFTS": "지우기"
+    },
+    "HINTS": {
+      "GIFTS_COUNT": "선물 {{count}}/15개"
+    },
+    "ERRORS": {
+      "FULL_NAME_REQUIRED": "전체 이름은 필수 항목입니다",
+      "FULL_NAME_MAX": "최대 100자까지 입력할 수 있습니다",
+      "INSTAGRAM_MAX": "최대 30자까지 입력할 수 있습니다",
+      "CS_PROFILE_REQUIRED": "CS 프로필 URL은 필수 항목입니다",
+      "CS_PROFILE_MAX": "최대 50자까지 입력할 수 있습니다",
+      "GENDER_REQUIRED": "성별은 필수 항목입니다",
+      "COUNTRY_REQUIRED": "국가는 필수 항목입니다",
+      "LOCATION_MAX": "최대 100자까지 입력할 수 있습니다",
+      "OCCUPATION_REQUIRED": "직업 분야는 필수 항목입니다",
+      "PREFIX_REQUIRED": "국가 전화번호 접두사는 필수 항목입니다",
+      "WHATSAPP_REQUIRED": "WhatsApp 번호는 필수 항목입니다",
+      "PHONE_INVALID": "유효하지 않은 전화번호입니다",
+      "WHATSAPP_MAX": "최대 16자까지 입력할 수 있습니다",
+      "REFERENCE_MAX": "최대 500자까지 입력할 수 있습니다",
+      "COMMENTS_MAX": "최대 500자까지 입력할 수 있습니다"
+    },
+    "RATING": {
+      "1": "매우 나쁨",
+      "2": "나쁨",
+      "3": "보통",
+      "4": "좋음",
+      "5": "매우 좋음"
+    },
+    "TOASTS": {
+      "MAX_GIFTS": "선물은 최대 15개까지 추가할 수 있습니다",
+      "DUPLICATE_GIFT": "이미 추가된 선물입니다",
+      "GIFT_EXISTS": "이미 존재하는 선물입니다",
+      "NO_GIFTS": "삭제할 선물이 없습니다",
+      "GIFTS_CLEARED": "선물 목록을 지웠습니다"
+    },
+    "ANNOUNCEMENTS": {
+      "GIFT_REMOVED": "선물을 삭제했습니다"
+    }
+  },
+  "STATS": {
+    "TITLE": "통계",
+    "NAV": {
+      "SUMMARY": "요약 보기",
+      "DEMOGRAPHICS": "인구 통계 보기",
+      "GEOGRAPHY": "지리 정보 보기",
+      "GIFTS": "선물 보기",
+      "RANKINGS": "순위 보기",
+      "RATINGS": "평점 보기",
+      "TIMELINE": "타임라인 보기",
+      "STAYS": "숙박 정보 보기",
+      "BIRTHDAYS": "생일 보기"
+    },
+    "LOADING": {
+      "SUMMARY": "통계를 불러오는 중",
+      "ANALYZING": "게스트 데이터를 분석하는 중",
+      "CHARTS": "차트를 준비하는 중",
+      "READY": "곧 준비됩니다"
+    },
+    "EMPTY": {
+      "TITLE": "사용 가능한 데이터가 없습니다",
+      "MESSAGE": "이 차트에 표시할 정보가 없습니다."
+    },
+
+    "SUMMARY": {
+      "VIEWS": {
+        "TOTAL": "전체",
+        "NIGHTS": "숙박 일수",
+        "RATING": "평점",
+        "GIFTS": "선물"
+      },
+      "CARDS": {
+        "VIEW": "보기",
+        "TOTAL_GUESTS": "전체 게스트",
+        "SOLO_GUESTS": "개별 게스트",
+        "GROUP_GUESTS": "그룹 게스트",
+        "TOTAL_VISITS": "전체 방문 횟수",
+        "TOTAL_NIGHTS": "전체 숙박 일수"
+      },
+      "CHARTS": {
+        "GUEST_TYPES": {
+          "GENERAL": "전체",
+          "SOLO": "개별",
+          "GROUPS": "그룹"
+        },
+        "AVERAGE_NIGHTS": "평균 숙박 일수",
+        "AVERAGE_RATING": "평균 평점",
+        "GIFTS": {
+          "RECEIVED": "받은 선물",
+          "WITHOUT_GIFT": "선물 없음"
+        }
+      }
+    },
+    "DEMOGRAPHICS": {
+      "VIEWS": {
+        "TOTALS": "전체 합계",
+        "OLDEST": "최고령",
+        "YOUNGEST": "최연소",
+        "FIRST_LAST": "첫 번째 / 마지막"
+      },
+      "TOTALS": {
+        "GUESTS": "게스트",
+        "VISITS": "방문 횟수",
+        "NIGHTS": "숙박 일수"
+      },
+      "AGE": {
+        "AGE": "나이",
+        "GUESTS": "게스트",
+        "VISITS": "방문 횟수",
+        "NIGHTS": "숙박 일수"
+      },
+      "FIRST_LAST": {
+        "FIRST": "첫 번째",
+        "LAST": "마지막"
+      },
+      "SUBVIEWS": {
+        "OVERALL": "전체",
+        "SOLO": "개별",
+        "GROUPS": "그룹"
+      },
+      "GROUPS": {
+        "SOLO": "개별",
+        "COUPLE": "커플",
+        "FRIENDS": "친구",
+        "FAMILY": "가족"
+      },
+      "LABELS": {
+        "AGE": "나이",
+        "COUNTRY": "국가",
+        "VISIT": "방문",
+        "VISITED_DATE": "방문 날짜",
+        "VISIT_DATE": "방문 날짜",
+        "GROUP": "그룹",
+        "GROUPS": "그룹",
+        "SOLO_GUESTS": "개별 게스트",
+        "OVERALL_DEMOGRAPHICS": "전체 인구 통계",
+        "CATEGORY": "카테고리"
+      },
+      "RANKING": {
+        "OLDEST": "최고령",
+        "SECOND_OLDEST": "두 번째로 나이가 많은 게스트",
+        "THIRD_OLDEST": "세 번째로 나이가 많은 게스트",
+        "OTHER": "기타",
+        "YOUNGEST": "최연소",
+        "SECOND_YOUNGEST": "두 번째로 나이가 적은 게스트",
+        "THIRD_YOUNGEST": "세 번째로 나이가 적은 게스트",
+        "FIRST": "첫 번째",
+        "LAST": "마지막"
+      }
+    },
+    "GEOGRAPHY": {
+      "VIEWS": {
+        "CONTINENTS": "대륙",
+        "REGIONS": "지역",
+        "COUNTRIES": "국가",
+        "LIVING_IN": "거주지",
+        "HOMETOWN": "출신지"
+      },
+      "RANKINGS": {
+        "ALL": "전체",
+        "TOP": "상위",
+        "BOTTOM": "하위",
+        "TOP_FEMALE": "여성 상위",
+        "TOP_MALE": "남성 상위",
+        "MOST_CONSECUTIVE": "최장 연속 방문"
+      },
+      "TITLES": {
+        "GUESTS_BY_CONTINENT": "대륙별 게스트",
+        "GUESTS_BY_REGION": "지역별 게스트",
+        "GUESTS_BY_COUNTRY": "국가별 게스트",
+        "GUESTS_LIVING_IN": "거주지별 게스트",
+        "GUESTS_HOMETOWN": "출신지별 게스트",
+        "MOST_CONSECUTIVE_VISITS": "{{country}} — 연속 방문 {{streak}}회"
+      },
+      "LABELS": {
+        "NUMBER_OF_GUESTS": "게스트 수",
+        "FEMALE_GUESTS": "여성 게스트",
+        "MALE_GUESTS": "남성 게스트",
+        "GROUP": "그룹",
+        "VISIT": "방문",
+        "VISIT_DATE": "방문 날짜",
+        "GUESTS": "게스트",
+        "CONSECUTIVE_VISITS": "연속 방문 {{streak}}회"
+      },
+      "RANKING_LABELS": {
+        "FIRST": "1위",
+        "SECOND": "2위",
+        "THIRD": "3위",
+        "OTHERS": "기타"
+      }
+    },
+    "GIFTS": {
+      "VIEWS": {
+        "GROUPS": "그룹",
+        "SOLO": "개별"
+      },
+      "TITLES": {
+        "GROUPS": "그룹이 받은 선물",
+        "SOLO": "개별 게스트가 받은 선물"
+      },
+      "LABELS": {
+        "GIFTS_COUNT": "선물 {{count}}개",
+        "GROUP": "그룹",
+        "COUNTRY": "국가",
+        "VISIT": "방문",
+        "GIFTS_RECEIVED": "받은 선물:",
+        "UNKNOWN": "알 수 없음",
+        "GROUP_TYPES": {
+          "COUPLE": "커플",
+          "FRIENDS": "친구",
+          "FAMILY": "가족",
+          "SOLO": "개별"
+        }
+      }
+    },
+    "RANKINGS": {
+      "VIEWS": {
+        "PEOPLE": "전체 인원",
+        "WOMEN": "여성",
+        "MEN": "남성",
+        "GROUPS": "그룹"
+      },
+      "SUBVIEWS": {
+        "OVERALL": "전체",
+        "SOLO": "개별"
+      },
+      "GROUP_TYPES": {
+        "OVERALL": "전체",
+        "COUPLE": "커플",
+        "FAMILY": "가족",
+        "FRIENDS": "친구"
+      },
+      "TITLES": {
+        "PEOPLE": "전체 인원 순위",
+        "WOMEN": "여성 순위",
+        "MEN": "남성 순위",
+        "GROUPS": "그룹 순위"
+      },
+      "LABELS": {
+        "DATASET": "{{title}} - {{subview}}",
+        "OVERALL_RANKING": "전체 순위: {{position}}",
+        "VISIT": "방문: {{date}}",
+        "RANKING_POSITION": "순위"
+      }
+    },
+    "RATINGS": {
+      "VIEWS": {
+        "DISTRIBUTION": "분포",
+        "LOWEST": "최저",
+        "HIGHEST": "최고"
+      },
+      "GROUP_TYPES": {
+        "OVERALL": "전체",
+        "SOLO": "개별",
+        "COUPLE": "커플",
+        "FRIENDS": "친구",
+        "FAMILY": "가족"
+      },
+      "LABELS": {
+        "GUESTS": "게스트",
+        "UNRATED": "평가 없음",
+        "RATING": "평점",
+        "RATING_VALUE": "평점: {{rating}} ⭐",
+        "COUNTRY": "국가: {{country}}",
+        "VISIT": "방문: {{date}}"
+      }
+    },
+    "TIMELINE": {
+      "VIEWS": {
+        "YEARS": "연도",
+        "MONTHS": "월",
+        "DAYS": "일",
+        "SAMEARRIVALDAY": "같은 도착일",
+        "SAMESTAY": "같은 숙박 기간"
+      },
+      "TITLES": {
+        "YEARS": "연도별 게스트",
+        "MONTHS": "월별 게스트",
+        "DAYS": "날짜별 게스트",
+        "SAMEARRIVALDAY": "같은 날 도착한 게스트",
+        "SAMESTAY": "같은 숙박 기간을 공유한 게스트"
+      },
+      "LABELS": {
+        "FIRST": "1위",
+        "SECOND": "2위",
+        "THIRD": "3위",
+        "OTHER": "기타",
+        "NUMBER_OF_GUESTS": "게스트 수",
+        "COUNTRY": "국가: {{country}}",
+        "VISIT": "방문: {{date}}",
+        "GROUP_NAME": "{{name}} 및 {{group}}"
+      },
+      "GROUP_LABELS": {
+        "COUPLE": "커플",
+        "FRIENDS": "친구",
+        "FAMILY": "가족"
+      }
+    },
+    "STAYS": {
+      "VIEWS": {
+        "LONGEST": "최장 숙박",
+        "SHORTEST": "최단 숙박",
+        "MAXPEOPLETOGETHER": "함께 머문 인원",
+        "SAMEARRIVAL": "같은 도착일",
+        "SAMEDATES": "같은 날짜"
+      },
+      "SUBVIEWS": {
+        "OVERALL": "전체",
+        "SOLO": "개별",
+        "COUPLE": "커플",
+        "FRIENDS": "친구",
+        "FAMILY": "가족"
+      },
+      "GROUP": "그룹",
+      "TITLES": {
+        "LONGEST": "최장 숙박",
+        "SHORTEST": "최단 숙박",
+        "MAXIMUM_GUESTS_TOGETHER": "함께 머문 최대 게스트 수",
+        "GUESTS_WITH_SAME_ARRIVAL_DATE": "도착일이 같은 게스트",
+        "SAME_DATES_GROUP": "같은 날짜 - 그룹 {{group}}"
+      },
+      "LABELS": {
+        "OVERALL": "전체",
+        "SOLO": "개별",
+        "GUESTS": "게스트",
+        "GUESTS_COUNT": "게스트: {{count}}",
+        "MAXIMUM_GUESTS_TOGETHER": "함께 머문 최대 게스트 수",
+        "SAME_ARRIVAL": "같은 도착일",
+        "FIRST": "1위",
+        "SECOND": "2위",
+        "THIRD": "3위",
+        "OTHERS": "기타",
+        "STAY_TYPE": "숙박 유형",
+        "OVERLAPPING_GUESTS": "숙박 기간이 겹치는 게스트",
+        "ARRIVAL_DATE": "도착일",
+        "TOTAL_NIGHTS": "총 숙박 일수: {{count}}",
+        "COUNTRY": "국가: {{country}}",
+        "VISIT": "방문: {{date}}",
+        "GROUP": "그룹: {{group}}",
+        "CONNECTIONS": "연결 수: {{count}}",
+        "GROUP_NAME": "{{name}} 및 {{group}}"
+      },
+      "GROUP_LABELS": {
+        "SOLO": "개별",
+        "COUPLE": "커플",
+        "FRIENDS": "친구",
+        "FAMILY": "가족"
+      }
+    },
+    "BIRTHDAYS": {
+      "VIEWS": {
+        "CALENDAR": "달력",
+        "REPEATED": "반복",
+        "UNUSUAL": "특이한 날짜"
+      },
+      "MONTHS": {
+        "JANUARY": "1월",
+        "FEBRUARY": "2월",
+        "MARCH": "3월",
+        "APRIL": "4월",
+        "MAY": "5월",
+        "JUNE": "6월",
+        "JULY": "7월",
+        "AUGUST": "8월",
+        "SEPTEMBER": "9월",
+        "OCTOBER": "10월",
+        "NOVEMBER": "11월",
+        "DECEMBER": "12월"
+      },
+      "TITLES": {
+        "CALENDAR": "생일 달력",
+        "REPEATED": "반복되는 생일",
+        "UNUSUAL": "특이한 생일"
+      },
+      "LABELS": {
+        "CALENDAR": "생일 달력",
+        "REPEATED_BIRTHDAYS": "반복되는 생일",
+        "UNUSUAL_BIRTHDAYS": "특이한 생일",
+        "GUESTS": "게스트"
+      },
+      "AXES": {
+        "MONTH": "월",
+        "DAY": "일"
+      },
+      "TOOLTIPS": {
+        "GUESTS": "게스트: {{count}}",
+        "REASON": "이유: {{reason}}"
+      }
+    }
+  },
+  "ALERTS": {
+    "BUTTONS": {
+      "SAVE": "저장",
+      "CLOSE": "닫기",
+      "DELETE": "삭제"
+    },
+    "VALIDATION": {
+      "TYPE_NAME_EXACTLY": "\"{{name}}\"을(를) 정확히 입력해야 합니다."
+    },
+    "DELETE_GUEST": {
+      "CONFIRMATION": {
+        "MESSAGE": "정말 삭제하시겠습니까?",
+        "CONFIRM_BUTTON": "이 게스트를 삭제하겠습니다"
+      },
+      "WARNING": {
+        "TITLE": "계속하기 전에 주의 깊게 읽어 주세요",
+        "MESSAGE": "게스트 <strong class=\"danger\">{{name}}</strong>이(가) 영구적으로 삭제됩니다.",
+        "CONFIRM_BUTTON": "결과를 이해했습니다"
+      },
+      "TYPE_TO_CONFIRM": {
+        "TITLE": "확인하려면 \"<strong class=\"danger\">{{name}}</strong>\"을(를) 입력하세요",
+        "CONFIRM_BUTTON": "게스트 삭제"
+      },
+      "SUCCESS": {
+        "MESSAGE": "<strong class=\"danger\">{{name}}</strong>이(가) 성공적으로 삭제되었습니다"
+      }
+    },
+    "CREATE": {
+      "GUEST_SUCCESS": "게스트가 성공적으로 생성되었습니다",
+      "GUEST_ERROR": "게스트 생성 중 오류가 발생했습니다",
+      "GROUP_SUCCESS": "그룹이 성공적으로 생성되었습니다",
+      "GROUP_ERROR": "그룹 생성 중 오류가 발생했습니다"
+    },
+    "EDIT": {
+      "GUEST_SUCCESS": "게스트 정보가 성공적으로 수정되었습니다",
+      "GUEST_ERROR": "게스트 정보 수정 중 오류가 발생했습니다",
+      "GROUP_SUCCESS": "그룹 정보가 성공적으로 수정되었습니다",
+      "GROUP_ERROR": "그룹 정보 수정 중 오류가 발생했습니다"
+    }
+  },
+  "ERRORS": {
+    "HTTP": {
+      "400": "⚠️ 잘못된 요청입니다. 일부 데이터가 누락되었거나 올바르지 않습니다. 확인한 후 다시 시도해 주세요.",
+      "401": "🔐 세션이 유효하지 않거나 만료되었습니다. 계속하려면 로그인해 주세요.",
+      "403": "🚫 접근이 거부되었습니다. 이 리소스를 볼 권한이 없습니다.",
+      "404": "🔍 찾으시는 항목을 찾을 수 없습니다. URL을 확인하거나 다시 시도해 주세요.",
+      "500": "💥 서버 오류가 발생했습니다. 문제를 해결하고 있습니다. 나중에 다시 시도해 주세요.",
+      "502": "📡 연결 오류입니다. 인터넷 연결을 확인해 주세요.",
+      "DEFAULT": "❌ 예기치 않은 오류가 발생했습니다. 다시 시도해 주세요."
+    }
+  },
+  "LOADING": {
+    "MESSAGES": {
+      "INITIAL": "로딩 중",
+      "ALMOST_THERE": "거의 완료되었습니다",
+      "WORKING": "처리 중입니다",
+      "ALMOST_READY": "거의 준비되었습니다",
+      "JUST_A_MOMENT": "잠시만 기다려 주세요"
+    }
+  },
+  "GENDER": {
+    "TXT": "성별",
+    "LABEL": "성별: {{gender}}",
+    "MALE": "남성",
+    "FEMALE": "여성",
+    "TRANS": "트랜스젠더",
+    "GAY": "게이"
+  },
+  "404": {
+    "ERR": "오류",
+    "MSG": "찾으시는 페이지가 삭제되었거나 이름이 변경되었거나 일시적으로 사용할 수 없습니다.",
+    "TRY": "다음 방법을 시도해 보세요:",
+    "OR": "또는",
+    "BTN_BACK": "이전 페이지로 돌아가기",
+    "BTN_HOME": "홈 페이지로 돌아가기",
+    "GOOD_LUCK": "행운을 빕니다 😁"
+  }
+}

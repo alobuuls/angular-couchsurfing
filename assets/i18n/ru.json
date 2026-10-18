@@ -1,20 +1,19 @@
 {
   "MENU": {
     "GUESTS": "Гости",
-    "HOSTED": "Хозяева",
+    "HOSTED": "Принятые гости",
     "PERSONAL": "Личное"
   },
   "GUESTS_TABLE": {
     "NO": "№",
-    "HANG_OUT": "Проводить время вместе",
+    "HANG_OUT": "Проводили время вместе",
     "NIGHTS": "Ночи",
-    "GENDER": "Пол",
     "AGE": "Возраст",
     "FULL_NAME": "Полное имя",
     "CONTINENT": "Континент",
     "HOMETOWN": "Родной город",
-    "LIVING_IN": "Текущее место жительства",
-    "VISITED": "Дата визита",
+    "LIVING_IN": "Место жительства",
+    "VISITED": "Посещено",
     "RATING": "Оценка",
     "ACTIONS": "Действия",
     "VIEW_GUEST": "Просмотреть гостя",
@@ -26,13 +25,6 @@
     "WHATSAPP_UNAVAILABLE": "WhatsApp недоступен",
     "BIRTHDATE": "Дата рождения",
     "CURRENT_AGE": "Текущий возраст"
-  },
-  "CONTINENTS": {
-    "africa": "Африка",
-    "asia": "Азия",
-    "europe": "Европа",
-    "america": "Америка",
-    "oceania": "Океания"
   },
   "PAGINATOR": {
     "ITEMS_PER_PAGE": "Элементов на странице:",
@@ -52,16 +44,16 @@
     "ALL_COUNTRIES": "Все страны",
     "GROUP_TYPE": "Тип группы",
     "ALL_GROUPS": "Все группы",
-    "SOLO": "Путешествующий в одиночку",
+    "SOLO": "Один",
     "COUPLE": "Пара",
     "FRIENDS": "Друзья",
     "FAMILY": "Семья",
     "VISITED_FROM": "Посещено с",
     "VISITED_TO": "Посещено по",
     "FIRST_TIME": "Впервые",
-    "HANG_OUT": "Проводить время вместе",
+    "HANG_OUT": "Проводили время вместе",
     "AMBASSADOR": "Амбассадор",
-    "DID_THEY_REQUEST": "Они сами попросили?",
+    "DID_THEY_REQUEST": "Они просили о проживании?",
     "ALL": "Все",
     "YES": "Да",
     "NO": "Нет",
@@ -74,20 +66,20 @@
   },
   "GUESTS_VIEW": {
     "NO_MORE_GUESTS": "Больше нет гостей для отображения.",
-    "GUESTS_TO_DISPLAY": "Гости для отображения",
+    "GUESTS_TO_DISPLAY": "Количество гостей для отображения",
     "GUESTS_COUNT_SINGULAR": "гость",
     "GUESTS_COUNT_PLURAL": "гостей",
     "NO_GUESTS_FOUND": "Гости не найдены!",
-    "CHANGE_SEARCH": "Попробуйте изменить параметры поиска.",
-    "CHANGE_TO_CARDS": "Переключить на просмотр карточек",
-    "CHANGE_TO_MAP": "Переключить на просмотр карты",
-    "CHANGE_TO_TABLE": "Переключить на просмотр таблицы"
+    "CHANGE_SEARCH": "Попробуйте изменить критерии поиска.",
+    "CHANGE_TO_CARDS": "Переключить на карточки",
+    "CHANGE_TO_MAP": "Переключить на карту",
+    "CHANGE_TO_TABLE": "Переключить на таблицу"
   },
   "GUESTS_LOADING": {
     "CARDS_1": "Загружаем ваших гостей",
-    "CARDS_2": "Подготавливаем информацию о гостях",
+    "CARDS_2": "Подготавливаем список гостей",
     "CARDS_3": "Почти готово",
-    "CARDS_4": "Ваши карточки уже в пути",
+    "CARDS_4": "Карточки скоро появятся",
     "MAP_1": "Загружаем карту",
     "MAP_2": "Ищем ваших гостей",
     "MAP_3": "Подготавливаем карту",
@@ -99,17 +91,6 @@
   },
   "DATE": {
     "DAY": "День"
-  },
-  "LANGUAGES": {
-    "EN": "Английский",
-    "ES": "Испанский",
-    "DE": "Немецкий",
-    "ZH": "Китайский",
-    "FR": "Французский",
-    "IT": "Итальянский",
-    "PT": "Португальский",
-    "RU": "Русский",
-    "JA": "Японский"
   },
   "UK_REGIONS": {
     "sct": "Шотландия",
@@ -123,22 +104,22 @@
     "CONTINENT": "Континент",
     "UNITED_KINGDOM": "Соединённое Королевство",
     "UNKNOWN_COUNTRY": "Неизвестная страна",
-    "VIEW_GUESTS": "Посмотреть гостей",
-    "VIEW_GUEST": "Посмотреть гостя"
+    "VIEW_GUESTS": "Просмотреть гостей",
+    "VIEW_GUEST": "Просмотреть гостя"
   },
   "GUESTS_CARDS": {
     "GUEST": "гость",
-    "GUESTS": "гости",
+    "GUESTS": "гостей",
     "VISIT": "визит",
-    "VISITS": "визиты",
+    "VISITS": "визитов",
     "READ_MORE": "Читать далее",
     "SHOW_LESS": "Свернуть",
     "TRIP": "ПОЕЗДКА",
-    "VISITED_DATE": "Дата визита",
+    "VISITED_DATE": "Дата посещения",
     "NIGHTS": "Ночи",
-    "STAYED": "Останавливался у меня",
+    "STAYED": "Останавливался",
     "HANG_OUT": "Проводили время вместе",
-    "FIRST_TIME": "Первая встреча",
+    "FIRST_TIME": "Впервые",
     "GROUP_TYPE": "Тип группы",
     "MEMBERS": "УЧАСТНИКИ",
     "AMBASSADOR": "Амбассадор",
@@ -149,14 +130,14 @@
     "INSTAGRAM": "Instagram",
     "COUCHSURFING": "Couchsurfing",
     "GAY": "Гей",
-    "DID_THEY_REQUEST": "Они просили принять их у себя?",
+    "DID_THEY_REQUEST": "Они просили о проживании?",
     "I_SENT_THE_REQUEST": "Я отправил(а) запрос",
     "LOCATION": "МЕСТОПОЛОЖЕНИЕ",
     "CONTINENT": "Континент",
     "REGION": "Регион",
     "HOMETOWN": "Родной город",
-    "LIVING_IN": "Где живёт",
-    "WE_MET": "Где мы познакомились",
+    "LIVING_IN": "Место жительства",
+    "WE_MET": "Мы познакомились",
     "OCCUPATION": "ПРОФЕССИЯ",
     "GIFT": "ПОДАРОК",
     "COMMENTS": "КОММЕНТАРИИ",
@@ -164,13 +145,13 @@
     "THEIR_REFERENCE": "Их рекомендация",
     "MY_REFERENCE": "Моя рекомендация",
     "GROUP_TYPES": {
-      "solo": "Один человек",
+      "solo": "Один",
       "couple": "Пара",
       "friends": "Друзья",
       "family": "Семья"
     },
-    "LOADING_1": "Загрузка сведений",
-    "LOADING_2": "Загрузка дополнительной информации",
+    "LOADING_1": "Загружаем сведения",
+    "LOADING_2": "Получаем дополнительную информацию",
     "LOADING_3": "Почти готово"
   },
   "GUEST_DETAIL": {
@@ -178,16 +159,16 @@
     "HEADER": {
       "SUBTITLE": "АРХИВ ПУТЕШЕСТВЕННИКОВ",
       "TITLE": "Паспорт гостя",
-      "RECORD": "ИСТОРИЯ ПУТЕШЕСТВИЙ"
+      "RECORD": "ЗАПИСЬ О ПУТЕШЕСТВИИ"
     },
     "LOADING": {
-      "MESSAGE_1": "Загрузка информации о госте",
-      "MESSAGE_2": "Подготовка всех данных",
+      "MESSAGE_1": "Загружаем информацию о госте",
+      "MESSAGE_2": "Подготавливаем всё необходимое",
       "MESSAGE_3": "Почти готово",
-      "MESSAGE_4": "Подготовка профиля гостя"
+      "MESSAGE_4": "Подготавливаем профиль гостя"
     },
     "PASSPORT": {
-      "SUBTITLE": "ИНОСТРАННЫЙ ГОСТЬ",
+      "SUBTITLE": "МЕЖДУНАРОДНЫЙ ГОСТЬ",
       "TITLE": "Личный паспорт"
     },
     "IDENTITY": {
@@ -195,9 +176,9 @@
       "AMBASSADOR": "Амбассадор"
     },
     "SOCIAL": {
-      "COUCHSURFING": "Открыть профиль Couchsurfing",
-      "INSTAGRAM": "Открыть профиль Instagram",
-      "WHATSAPP": "Открыть профиль WhatsApp"
+      "COUCHSURFING": "Просмотреть профиль Couchsurfing",
+      "INSTAGRAM": "Просмотреть профиль Instagram",
+      "WHATSAPP": "Просмотреть профиль WhatsApp"
     },
     "DIVIDER": {
       "IDENTITY": "ЛИЧНОСТЬ"
@@ -206,17 +187,11 @@
       "SUBTITLE": "ПРОФИЛЬ ПУТЕШЕСТВЕННИКА",
       "TITLE": "Личная информация",
       "FULL_NAME": "Полное имя",
-      "GENDER": "Пол",
-      "GENDERS": {
-        "MALE": "Мужской",
-        "FEMALE": "Женский",
-        "TRANS": "Трансгендерный"
-      },
       "BIRTH_DATE": "Дата рождения",
       "PHONE_NUMBER": "Номер телефона",
       "GAY": "Гей",
       "STAY_REQUEST": "Запрос на проживание",
-      "REQUESTED_STAY": "Он(а) попросил(а) принять его/её у себя",
+      "REQUESTED_STAY": "Они попросили о проживании",
       "SENT_REQUEST": "Я отправил(а) запрос"
     },
     "COMMON": {
@@ -224,29 +199,29 @@
       "NO": "Нет"
     },
     "LOCATION": {
-      "SUBTITLE": "МЕСТО ПРОИСХОЖДЕНИЯ И ПРОЖИВАНИЯ",
+      "SUBTITLE": "ПРОИСХОЖДЕНИЕ И МЕСТО ЖИТЕЛЬСТВА",
       "TITLE": "Места и координаты",
       "CONTINENT": "Континент",
       "REGION": "Регион",
       "HOMETOWN": "Родной город",
-      "CURRENTLY_LIVING_IN": "Где живёт сейчас",
-      "WE_MET_IN": "Где мы познакомились"
+      "CURRENTLY_LIVING_IN": "Текущее место жительства",
+      "WE_MET_IN": "Место нашего знакомства"
     },
     "TRIP": {
       "SUBTITLE": "ЗАПИСЬ О ПОЕЗДКЕ",
       "TITLE": "История поездки",
-      "DATE_OF_VISIT": "Дата визита",
-      "NIGHTS": "Количество ночей",
+      "DATE_OF_VISIT": "Дата посещения",
+      "NIGHTS": "Ночи",
       "GROUP_TYPE": "Тип группы",
       "GROUP_TYPES": {
-        "SOLO": "Один человек",
+        "SOLO": "Один",
         "COUPLE": "Пара",
         "FRIENDS": "Друзья",
         "FAMILY": "Семья"
       },
-      "STAYED": "Останавливался у меня?",
+      "STAYED": "Останавливался?",
       "HUNG_OUT": "Проводили время вместе",
-      "FIRST_VISIT": "Первый визит"
+      "FIRST_VISIT": "Первое посещение"
     },
     "OCCUPATION": {
       "SUBTITLE": "ПРОФЕССИОНАЛЬНЫЙ ПРОФИЛЬ",
@@ -271,30 +246,30 @@
       "MY_REFERENCE": "Моя рекомендация"
     },
     "FOOTER": {
-      "PHRASE": "Каждая встреча — это своя история"
+      "PHRASE": "Каждая встреча рассказывает свою историю"
     },
     "GROUP": {
       "HEADER": {
-        "SUBTITLE": "ЗАПИСЬ ОБ ИНОСТРАННЫХ ГОСТЯХ",
+        "SUBTITLE": "ЗАПИСЬ О МЕЖДУНАРОДНОМ ГОСТЕ",
         "TITLE": "Паспорт группы"
       },
       "TRIP": {
         "SUBTITLE": "СОВМЕСТНОЕ ПУТЕШЕСТВИЕ",
-        "TITLE": "Поездка группы"
+        "TITLE": "Групповая поездка"
       },
       "MEMBERS": {
         "SUBTITLE": "ПОПУТЧИКИ",
         "TITLE": "Участники группы",
         "GUEST_FALLBACK": "Гость",
         "WHATSAPP": "WhatsApp",
-        "LIVING_IN": "Где живёт"
+        "LIVING_IN": "Место жительства"
       }
     }
   },
   "GUESTS_FORM": {
     "GROUP_TYPE_TITLE": "Как они путешествовали?",
     "GROUP_TYPES": {
-      "SOLO": "Один человек",
+      "SOLO": "Один",
       "COUPLE": "Пара",
       "FRIENDS": "Друзья",
       "FAMILY": "Семья"
@@ -306,11 +281,11 @@
   },
   "TRIP_FORM": {
     "TITLE": "Информация о поездке",
-    "VISITED_DATE": "Дата визита",
-    "VISITED_DATE_REQUIRED": "Укажите дату визита",
+    "VISITED_DATE": "Дата посещения",
+    "VISITED_DATE_REQUIRED": "Необходимо указать дату посещения",
     "TODAY": "Сегодня",
-    "STAYED": "Останавливался у меня?",
-    "NIGHTS": "Количество ночей"
+    "STAYED": "Останавливался?",
+    "NIGHTS": "Ночи"
   },
   "GUEST_FORM": {
     "SECTIONS": {
@@ -325,38 +300,32 @@
     "FIELDS": {
       "FULL_NAME": "Полное имя",
       "INSTAGRAM": "Instagram",
-      "CS_PROFILE_URL": "Ссылка на профиль Couchsurfing",
+      "CS_PROFILE_URL": "Ссылка на профиль CS",
       "BIRTH_DATE": "Дата рождения",
-      "GENDER": "Пол",
-      "HOMETOWN_COUNTRY": "Страна происхождения",
-      "HOMETOWN_STATE": "Регион происхождения",
+      "HOMETOWN_COUNTRY": "Страна родного города",
+      "HOMETOWN_STATE": "Штат или регион родного города",
       "HOMETOWN_CITY": "Родной город",
       "LIVING_COUNTRY": "Страна проживания",
-      "LIVING_STATE": "Регион проживания",
+      "LIVING_STATE": "Штат или регион проживания",
       "LIVING_CITY": "Город проживания",
-      "COUNTRY_WE_MET": "Страна, где мы познакомились",
-      "STATE_WE_MET": "Регион, где мы познакомились",
-      "CITY_WE_MET": "Город, где мы познакомились",
-      "LOCATION_WE_MET": "Место, где мы познакомились",
-      "OCCUPATION_AREA": "Профессиональная область",
+      "COUNTRY_WE_MET": "Страна знакомства",
+      "STATE_WE_MET": "Штат или регион знакомства",
+      "CITY_WE_MET": "Город знакомства",
+      "LOCATION_WE_MET": "Место знакомства",
+      "OCCUPATION_AREA": "Сфера деятельности",
       "OCCUPATIONS": "Профессия(и)",
       "OTHER_OCCUPATION": "Укажите свою профессию",
-      "ENTER_OCCUPATION": "Введите профессию",
-      "PREFIX": "Телефонный код страны",
+      "ENTER_OCCUPATION": "Введите свою профессию",
+      "PREFIX": "Телефонный код",
       "WHATSAPP": "WhatsApp",
       "GIFTS": "Подарки",
       "THEIR_REFERENCE": "Их рекомендация",
       "MY_REFERENCE": "Моя рекомендация",
       "COMMENTS": "Оставить комментарий"
     },
-    "GENDER_OPTIONS": {
-      "MALE": "Мужской",
-      "FEMALE": "Женский",
-      "TRANS": "Трансгендерный"
-    },
     "CHECKBOXES": {
-      "FIRST_TIME": "Первая встреча",
-      "STAY_REQUEST": "Они просили принять их у себя?",
+      "FIRST_TIME": "Впервые",
+      "STAY_REQUEST": "Они просили о проживании?",
       "HANG_OUT": "Проводили время вместе",
       "AMBASSADOR": "Амбассадор",
       "GAY": "Гей"
@@ -368,24 +337,24 @@
       "GIFTS_COUNT": "{{count}}/15 подарков"
     },
     "ERRORS": {
-      "FULL_NAME_REQUIRED": "Укажите полное имя",
+      "FULL_NAME_REQUIRED": "Необходимо указать полное имя",
       "FULL_NAME_MAX": "Максимум 100 символов",
       "INSTAGRAM_MAX": "Максимум 30 символов",
-      "CS_PROFILE_REQUIRED": "Укажите ссылку на профиль Couchsurfing",
+      "CS_PROFILE_REQUIRED": "Необходимо указать ссылку на профиль CS",
       "CS_PROFILE_MAX": "Максимум 50 символов",
-      "GENDER_REQUIRED": "Укажите пол",
-      "COUNTRY_REQUIRED": "Укажите страну",
+      "GENDER_REQUIRED": "Необходимо указать пол",
+      "COUNTRY_REQUIRED": "Необходимо указать страну",
       "LOCATION_MAX": "Максимум 100 символов",
-      "OCCUPATION_REQUIRED": "Укажите профессиональную область",
-      "PREFIX_REQUIRED": "Укажите телефонный код страны",
-      "WHATSAPP_REQUIRED": "Укажите номер WhatsApp",
+      "OCCUPATION_REQUIRED": "Необходимо указать сферу деятельности",
+      "PREFIX_REQUIRED": "Необходимо указать телефонный код",
+      "WHATSAPP_REQUIRED": "Необходимо указать WhatsApp",
       "PHONE_INVALID": "Неверный номер телефона",
       "WHATSAPP_MAX": "Максимум 16 символов",
       "REFERENCE_MAX": "Максимум 500 символов",
       "COMMENTS_MAX": "Максимум 500 символов"
     },
     "RATING": {
-      "1": "Ужасно",
+      "1": "Очень плохо",
       "2": "Плохо",
       "3": "Нормально",
       "4": "Хорошо",
@@ -405,26 +374,27 @@
   "STATS": {
     "TITLE": "Статистика",
     "NAV": {
-      "SUMMARY": "Общая сводка",
+      "SUMMARY": "Обзор",
       "DEMOGRAPHICS": "Демография",
       "GEOGRAPHY": "География",
       "GIFTS": "Подарки",
       "RANKINGS": "Рейтинги",
       "RATINGS": "Оценки",
       "TIMELINE": "Хронология",
-      "STAYS": "Проживание",
+      "STAYS": "Проживания",
       "BIRTHDAYS": "Дни рождения"
     },
     "LOADING": {
-      "SUMMARY": "Загрузка статистики",
-      "ANALYZING": "Анализ данных о гостях",
-      "CHARTS": "Подготовка диаграмм",
+      "SUMMARY": "Загружаем вашу статистику",
+      "ANALYZING": "Анализируем данные о ваших гостях",
+      "CHARTS": "Подготавливаем диаграммы",
       "READY": "Почти готово"
     },
     "EMPTY": {
-      "TITLE": "Нет данных",
+      "TITLE": "Нет доступных данных",
       "MESSAGE": "Для этой диаграммы нет доступной информации."
     },
+
     "SUMMARY": {
       "VIEWS": {
         "TOTAL": "Всего",
@@ -435,15 +405,15 @@
       "CARDS": {
         "VIEW": "Просмотр",
         "TOTAL_GUESTS": "Всего гостей",
-        "SOLO_GUESTS": "Индивидуальные гости",
+        "SOLO_GUESTS": "Гости, путешествовавшие в одиночку",
         "GROUP_GUESTS": "Гости в группах",
-        "TOTAL_VISITS": "Всего визитов",
+        "TOTAL_VISITS": "Всего посещений",
         "TOTAL_NIGHTS": "Всего ночей"
       },
       "CHARTS": {
         "GUEST_TYPES": {
-          "GENERAL": "Общие данные",
-          "SOLO": "Индивидуальные гости",
+          "GENERAL": "Общее",
+          "SOLO": "В одиночку",
           "GROUPS": "Группы"
         },
         "AVERAGE_NIGHTS": "Среднее количество ночей",
@@ -456,20 +426,20 @@
     },
     "DEMOGRAPHICS": {
       "VIEWS": {
-        "TOTALS": "Общие итоги",
+        "TOTALS": "Итоги",
         "OLDEST": "Самые старшие",
         "YOUNGEST": "Самые младшие",
         "FIRST_LAST": "Первый / Последний"
       },
       "TOTALS": {
         "GUESTS": "Гости",
-        "VISITS": "Визиты",
+        "VISITS": "Посещения",
         "NIGHTS": "Ночи"
       },
       "AGE": {
         "AGE": "Возраст",
         "GUESTS": "Гости",
-        "VISITS": "Визиты",
+        "VISITS": "Посещения",
         "NIGHTS": "Ночи"
       },
       "FIRST_LAST": {
@@ -478,31 +448,25 @@
       },
       "SUBVIEWS": {
         "OVERALL": "Все",
-        "SOLO": "Индивидуальные",
+        "SOLO": "В одиночку",
         "GROUPS": "Группы"
       },
       "GROUPS": {
+        "SOLO": "В одиночку",
         "COUPLE": "Пара",
         "FRIENDS": "Друзья",
         "FAMILY": "Семья"
       },
-      "GENDER": {
-        "MALE": "Мужской",
-        "FEMALE": "Женский",
-        "TRANS": "Трансгендерный",
-        "GAY": "Гей"
-      },
       "LABELS": {
         "AGE": "Возраст",
-        "GENDER": "Пол",
         "COUNTRY": "Страна",
-        "VISIT": "Визит",
-        "VISITED_DATE": "Дата визита",
-        "VISIT_DATE": "Дата визита",
+        "VISIT": "Посещение",
+        "VISITED_DATE": "Дата посещения",
+        "VISIT_DATE": "Дата посещения",
         "GROUP": "Группа",
         "GROUPS": "Группы",
-        "SOLO_GUESTS": "Индивидуальные гости",
-        "OVERALL_DEMOGRAPHICS": "Общая демографическая статистика",
+        "SOLO_GUESTS": "Гости, путешествовавшие в одиночку",
+        "OVERALL_DEMOGRAPHICS": "Общая демография",
         "CATEGORY": "Категория"
       },
       "RANKING": {
@@ -522,48 +486,34 @@
         "CONTINENTS": "Континенты",
         "REGIONS": "Регионы",
         "COUNTRIES": "Страны",
-        "LIVING_IN": "Где живут",
-        "HOMETOWN": "Родные города"
+        "LIVING_IN": "Место жительства",
+        "HOMETOWN": "Родной город"
       },
       "RANKINGS": {
         "ALL": "Все",
         "TOP": "Лидеры",
-        "BOTTOM": "Аутсайдеры",
-        "TOP_FEMALE": "Женщины-лидеры",
-        "TOP_MALE": "Мужчины-лидеры",
-        "MOST_CONSECUTIVE": "Больше всего визитов подряд"
+        "BOTTOM": "Последние",
+        "TOP_FEMALE": "Лидеры среди женщин",
+        "TOP_MALE": "Лидеры среди мужчин",
+        "MOST_CONSECUTIVE": "Наибольшее количество посещений подряд"
       },
       "TITLES": {
         "GUESTS_BY_CONTINENT": "Гости по континентам",
         "GUESTS_BY_REGION": "Гости по регионам",
         "GUESTS_BY_COUNTRY": "Гости по странам",
-        "GUESTS_LIVING_IN": "Гости по месту проживания",
+        "GUESTS_LIVING_IN": "Гости по месту жительства",
         "GUESTS_HOMETOWN": "Родные города гостей",
-        "MOST_CONSECUTIVE_VISITS": "{{country}} — {{streak}} визитов подряд"
+        "MOST_CONSECUTIVE_VISITS": "{{country}} — {{streak}} посещений подряд"
       },
       "LABELS": {
         "NUMBER_OF_GUESTS": "Количество гостей",
-        "FEMALE_GUESTS": "Гости женского пола",
-        "MALE_GUESTS": "Гости мужского пола",
-        "GENDER": "Пол",
+        "FEMALE_GUESTS": "Гости-женщины",
+        "MALE_GUESTS": "Гости-мужчины",
         "GROUP": "Группа",
-        "VISIT": "Визит",
-        "VISIT_DATE": "Дата визита",
+        "VISIT": "Посещение",
+        "VISIT_DATE": "Дата посещения",
         "GUESTS": "Гости",
-        "CONSECUTIVE_VISITS": "{{streak}} визитов подряд"
-      },
-      "GENDER": {
-        "FEMALE": "Женский",
-        "MALE": "Мужской",
-        "GAY": "Гей",
-        "TRANS": "Трансгендерный"
-      },
-      "CONTINENTS": {
-        "AMERICA": "Америка",
-        "EUROPE": "Европа",
-        "AFRICA": "Африка",
-        "ASIA": "Азия",
-        "OCEANIA": "Океания"
+        "CONSECUTIVE_VISITS": "{{streak}} посещений подряд"
       },
       "RANKING_LABELS": {
         "FIRST": "1-е место",
@@ -575,24 +525,24 @@
     "GIFTS": {
       "VIEWS": {
         "GROUPS": "Группы",
-        "SOLO": "Индивидуальные"
+        "SOLO": "В одиночку"
       },
       "TITLES": {
         "GROUPS": "Подарки, полученные группами",
-        "SOLO": "Подарки, полученные индивидуальными гостями"
+        "SOLO": "Подарки, полученные гостями, путешествовавшими в одиночку"
       },
       "LABELS": {
-        "GIFTS_COUNT": "Подарки: {{count}}",
+        "GIFTS_COUNT": "{{count}} подарков",
         "GROUP": "Группа",
         "COUNTRY": "Страна",
-        "VISIT": "Визит",
+        "VISIT": "Посещение",
         "GIFTS_RECEIVED": "Полученные подарки:",
         "UNKNOWN": "Неизвестно",
         "GROUP_TYPES": {
           "COUPLE": "Пара",
           "FRIENDS": "Друзья",
           "FAMILY": "Семья",
-          "SOLO": "Один человек"
+          "SOLO": "В одиночку"
         }
       }
     },
@@ -605,7 +555,7 @@
       },
       "SUBVIEWS": {
         "OVERALL": "Все",
-        "SOLO": "Индивидуальные"
+        "SOLO": "В одиночку"
       },
       "GROUP_TYPES": {
         "OVERALL": "Все",
@@ -622,7 +572,7 @@
       "LABELS": {
         "DATASET": "{{title}} — {{subview}}",
         "OVERALL_RANKING": "Общий рейтинг: {{position}}",
-        "VISIT": "Визит: {{date}}",
+        "VISIT": "Посещение: {{date}}",
         "RANKING_POSITION": "Место в рейтинге"
       }
     },
@@ -634,7 +584,7 @@
       },
       "GROUP_TYPES": {
         "OVERALL": "Все",
-        "SOLO": "Один человек",
+        "SOLO": "В одиночку",
         "COUPLE": "Пара",
         "FRIENDS": "Друзья",
         "FAMILY": "Семья"
@@ -644,14 +594,8 @@
         "UNRATED": "Без оценки",
         "RATING": "Оценка",
         "RATING_VALUE": "Оценка: {{rating}} ⭐",
-        "GENDER": "Пол: {{gender}}",
         "COUNTRY": "Страна: {{country}}",
-        "VISIT": "Визит: {{date}}"
-      },
-      "GENDERS": {
-        "MALE": "Мужской",
-        "FEMALE": "Женский",
-        "TRANS": "Трансгендерный"
+        "VISIT": "Посещение: {{date}}"
       }
     },
     "TIMELINE": {
@@ -660,24 +604,23 @@
         "MONTHS": "Месяцы",
         "DAYS": "Дни",
         "SAMEARRIVALDAY": "Один день прибытия",
-        "SAMESTAY": "Совместное проживание"
+        "SAMESTAY": "Одно и то же проживание"
       },
       "TITLES": {
         "YEARS": "Гости по годам",
         "MONTHS": "Гости по месяцам",
         "DAYS": "Гости по дням месяца",
         "SAMEARRIVALDAY": "Гости, прибывшие в один день",
-        "SAMESTAY": "Гости, проживавшие одновременно"
+        "SAMESTAY": "Гости, проживавшие вместе в один период"
       },
       "LABELS": {
         "FIRST": "1-й",
         "SECOND": "2-й",
         "THIRD": "3-й",
-        "OTHER": "Другой",
+        "OTHER": "Другие",
         "NUMBER_OF_GUESTS": "Количество гостей",
         "COUNTRY": "Страна: {{country}}",
-        "GENDER": "Пол: {{gender}}",
-        "VISIT": "Визит: {{date}}",
+        "VISIT": "Посещение: {{date}}",
         "GROUP_NAME": "{{name}} и {{group}}"
       },
       "GROUP_LABELS": {
@@ -696,7 +639,7 @@
       },
       "SUBVIEWS": {
         "OVERALL": "Все",
-        "SOLO": "Один человек",
+        "SOLO": "В одиночку",
         "COUPLE": "Пара",
         "FRIENDS": "Друзья",
         "FAMILY": "Семья"
@@ -705,38 +648,33 @@
       "TITLES": {
         "LONGEST": "Самые длительные проживания",
         "SHORTEST": "Самые короткие проживания",
-        "MAXIMUM_GUESTS_TOGETHER": "Максимальное количество гостей одновременно",
+        "MAXIMUM_GUESTS_TOGETHER": "Максимальное количество гостей вместе",
         "GUESTS_WITH_SAME_ARRIVAL_DATE": "Гости с одинаковой датой прибытия",
         "SAME_DATES_GROUP": "Одинаковые даты — группа {{group}}"
       },
       "LABELS": {
         "OVERALL": "Все",
-        "SOLO": "Один человек",
-        "MAXIMUM_GUESTS_TOGETHER": "Максимальное количество гостей одновременно",
+        "SOLO": "В одиночку",
+        "GUESTS": "Гости",
+        "GUESTS_COUNT": "Гости: {{count}}",
+        "MAXIMUM_GUESTS_TOGETHER": "Максимальное количество гостей вместе",
         "SAME_ARRIVAL": "Одинаковая дата прибытия",
         "FIRST": "1-й",
         "SECOND": "2-й",
         "THIRD": "3-й",
         "OTHERS": "Остальные",
-        "GUESTS": "Гости",
         "STAY_TYPE": "Тип проживания",
-        "OVERLAPPING_GUESTS": "Гости с пересекающимися периодами проживания",
+        "OVERLAPPING_GUESTS": "Гости с пересекающимися датами проживания",
         "ARRIVAL_DATE": "Дата прибытия",
-        "TOTAL_NIGHTS": "Всего ночей: {{nights}}",
+        "TOTAL_NIGHTS": "Всего ночей: {{count}}",
         "COUNTRY": "Страна: {{country}}",
-        "VISIT": "Визит: {{date}}",
+        "VISIT": "Посещение: {{date}}",
         "GROUP": "Группа: {{group}}",
         "CONNECTIONS": "Связи: {{count}}",
         "GROUP_NAME": "{{name}} и {{group}}"
       },
-      "GENDERS": {
-        "MALE": "Мужской",
-        "FEMALE": "Женский",
-        "OTHER": "Другой",
-        "UNKNOWN": "Неизвестно"
-      },
       "GROUP_LABELS": {
-        "SOLO": "Один человек",
+        "SOLO": "В одиночку",
         "COUPLE": "Пара",
         "FRIENDS": "Друг",
         "FAMILY": "Семья"
@@ -764,12 +702,12 @@
       },
       "TITLES": {
         "CALENDAR": "Календарь дней рождения",
-        "REPEATED": "Совпадающие дни рождения",
+        "REPEATED": "Повторяющиеся дни рождения",
         "UNUSUAL": "Необычные дни рождения"
       },
       "LABELS": {
         "CALENDAR": "Календарь дней рождения",
-        "REPEATED_BIRTHDAYS": "Совпадающие дни рождения",
+        "REPEATED_BIRTHDAYS": "Повторяющиеся дни рождения",
         "UNUSUAL_BIRTHDAYS": "Необычные дни рождения",
         "GUESTS": "Гости"
       },
@@ -790,11 +728,11 @@
       "DELETE": "Удалить"
     },
     "VALIDATION": {
-      "TYPE_NAME_EXACTLY": "Введите точно \"{{name}}\"."
+      "TYPE_NAME_EXACTLY": "Необходимо ввести точно «{{name}}»."
     },
     "DELETE_GUEST": {
       "CONFIRMATION": {
-        "MESSAGE": "Вы уверены, что хотите удалить гостя?",
+        "MESSAGE": "Вы уверены, что хотите удалить?",
         "CONFIRM_BUTTON": "Я хочу удалить этого гостя"
       },
       "WARNING": {
@@ -803,11 +741,11 @@
         "CONFIRM_BUTTON": "Я понимаю последствия"
       },
       "TYPE_TO_CONFIRM": {
-        "TITLE": "Для подтверждения введите \"<strong class=\"danger\">{{name}}</strong>\"",
+        "TITLE": "Для подтверждения введите «<strong class=\"danger\">{{name}}</strong>»",
         "CONFIRM_BUTTON": "Удалить гостя"
       },
       "SUCCESS": {
-        "MESSAGE": "Гость <strong class=\"danger\">{{name}}</strong> успешно удалён"
+        "MESSAGE": "<strong class=\"danger\">{{name}}</strong> успешно удалён"
       }
     },
     "CREATE": {
@@ -838,9 +776,26 @@
     "MESSAGES": {
       "INITIAL": "Загрузка",
       "ALMOST_THERE": "Почти готово",
-      "WORKING": "Выполняется обработка",
+      "WORKING": "Мы работаем над этим",
       "ALMOST_READY": "Почти готово",
-      "JUST_A_MOMENT": "Секундочку"
+      "JUST_A_MOMENT": "Подождите немного"
     }
+  },
+  "GENDER": {
+    "TXT": "Пол",
+    "LABEL": "Пол: {{gender}}",
+    "MALE": "Мужской",
+    "FEMALE": "Женский",
+    "TRANS": "Трансгендер",
+    "GAY": "Гей"
+  },
+  "404": {
+    "ERR": "Ошибка",
+    "MSG": "Страница, которую вы ищете, могла быть удалена, переименована или временно недоступна.",
+    "TRY": "Попробуйте:",
+    "OR": "или",
+    "BTN_BACK": "Вернуться на предыдущую страницу",
+    "BTN_HOME": "Вернуться на главную страницу",
+    "GOOD_LUCK": "Удачи 😁"
   }
 }
