@@ -41,12 +41,6 @@ table {
   gap: 6px;
 }
 
-.btn-edit,
-.btn-delete,
-.btn-detail {
-  color: #ffffff;
-}
-
 /* Couchsurfing / WhatsApp buttons */
 .btn-whatsapp,
 .btn-cs {
@@ -96,17 +90,51 @@ table {
   background-color: var(--color-couchsurfing);
 }
 
-/* Edit /  Detail /  Delete */
-.btn-edit {
-  background-color: var(--color-primary);
-}
-
-.btn-detail {
-  background-color: var(--color-secondary);
-}
-
+/* EDIT / DETAIL / DELETE */
+.btn-edit,
+.btn-detail,
 .btn-delete {
-  background-color: var(--color-danger);
+  border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+  border-radius: 50%;
+
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.12),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+
+  & > mat-icon {
+    color: inherit;
+  }
+
+  &:hover:not(:disabled) {
+    border-color: currentColor;
+
+    box-shadow:
+      0 3px 7px rgba(0, 0, 0, 0.18),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+}
+
+/* EDIT — Primary blue */
+.btn-edit {
+  background-color: color-mix(in srgb, var(--color-primary) 25%, var(--color-surface));
+  color: var(--color-primary-light);
+}
+
+/* DETAIL — Secondary blue */
+.btn-detail {
+  background-color: color-mix(in srgb, var(--color-secondary) 20%, var(--color-surface));
+  color: var(--color-secondary);
+}
+
+/* DELETE — Soft danger red */
+.btn-delete {
+  background-color: color-mix(in srgb, var(--color-danger) 25%, var(--color-surface));
+  color: var(--color-danger);
 }
 
 /* GENDER */
@@ -123,19 +151,7 @@ table {
   color: var(--color-female);
 }
 
-.nights-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 1.5rem;
-  height: 1.5rem;
-  padding: 0 0.35rem;
-  border-radius: 999px;
-  background-color: color-mix(in srgb, var(--color-secondary) 80%, #ffffff);
-  color: #ffffff;
-  font-size: 0.75rem;
-}
-
+/* ROW NUMBER BADGE */
 .no-badge {
   display: inline-flex;
   align-items: center;
@@ -144,9 +160,33 @@ table {
   height: 1.5rem;
   padding: 0 0.35rem;
   border-radius: 999px;
-  background-color: var(--color-primary);
-  color: #ffffff;
+
+  background-color: color-mix(in srgb, var(--color-primary) 12%, var(--color-surface));
+  color: var(--color-text);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 35%, var(--color-border));
+
   font-size: 0.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* NIGHTS BADGE */
+.nights-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+
+  background-color: color-mix(in srgb, var(--color-accent) 22%, var(--color-surface));
+  color: var(--color-text);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 45%, var(--color-border));
+
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
 /* TABLE INTERACTION */

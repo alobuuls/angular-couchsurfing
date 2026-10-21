@@ -35,21 +35,21 @@
 /* ADD */
 .btn-add {
   background-color: var(--color-secondary);
-  color: #ffffff;
+  color: color-mix(in srgb, var(--color-primary) 30%, #000000);
 
   &:hover {
-    background-color: color-mix(in srgb, var(--color-secondary) 85%, black);
+    background-color: color-mix(in srgb, var(--color-secondary) 85%, #000000);
   }
 
   &:active {
-    background-color: color-mix(in srgb, var(--color-secondary) 75%, black);
+    background-color: color-mix(in srgb, var(--color-secondary) 75%, #000000);
   }
 }
 
 /* STATS */
 .btn-stats {
   background-color: var(--color-primary);
-  color: #ffffff;
+  color: color-mix(in srgb, var(--color-primary) 20%, #ffffff);
 
   &:hover {
     background-color: var(--color-primary-hover);
@@ -63,50 +63,80 @@
 /* TOGGLE */
 .btn-toggle {
   background-color: var(--color-accent);
-  color: var(--color-text);
+  color: color-mix(in srgb, var(--color-primary) 30%, #000000);
 
   &:hover {
-    background-color: color-mix(in srgb, var(--color-accent) 85%, black);
+    background-color: color-mix(in srgb, var(--color-accent) 85%, #000000);
   }
 
   &:active {
-    background-color: color-mix(in srgb, var(--color-accent) 75%, black);
+    background-color: color-mix(in srgb, var(--color-accent) 75%, #000000);
   }
+}
+
+.filters-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 /* SEARCH */
 .btn-search {
-  background-color: var(--color-primary) !important;
+  background-color: var(--color-primary-dark) !important;
   color: #ffffff !important;
 
+  .mdc-button__label {
+    color: #ffffff !important;
+  }
+
   &:hover,
-  &:focus {
-    background-color: var(--color-primary-hover) !important;
+  &:focus-visible {
+    background-color: color-mix(in srgb, var(--color-primary-dark) 85%, #000000) !important;
+    color: #ffffff !important;
   }
 
   &:disabled {
     background-color: var(--color-border) !important;
-    color: var(--color-text-muted) !important;
-    cursor: not-allowed;
+    color: var(--color-text) !important;
   }
 }
 
 /* CLEAR */
 .btn-clear {
   background-color: transparent;
-  color: var(--color-text);
-  border-color: var(--color-border);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
 
-  &:hover {
-    background-color: color-mix(in srgb, var(--color-card-hover) 30%, #ffffff);
-    border-color: var(--color-primary-light);
-    color: var(--color-primary-dark);
-  }
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease;
 
-  &:active {
-    background-color: color-mix(in srgb, var(--color-primary-light) 20%, var(--color-surface));
+  &:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--color-primary) 8%, var(--color-surface));
     border-color: var(--color-primary);
     color: var(--color-text);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  }
+
+  &:active:not(:disabled) {
+    background-color: color-mix(in srgb, var(--color-primary) 15%, var(--color-surface));
+    border-color: var(--color-primary-dark);
+    color: var(--color-primary-dark);
+    box-shadow: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary-light);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
   }
 }
 
