@@ -16,30 +16,71 @@ export class ThemeService {
   private readonly paletteKey = 'themePalette';
 
   private currentTheme: ThemeMode = 'light';
-  private currentPalette: ThemePalette = 'coastal';
+  private currentPalette: ThemePalette = 'ocean';
+
+  private systemThemeQuery?: MediaQueryList;
+
+  // Detects system theme changes while automatic mode is active.
+  private readonly onSystemThemeChange = (event: MediaQueryListEvent): void => {
+    this.applyTheme(event.matches ? 'dark' : 'light');
+  };
 
   // Initializes the theme and palette.
   initTheme(): void {
-    const savedTheme = localStorage.getItem(this.themeKey) as ThemeMode | null;
-    const savedPalette = localStorage.getItem(this.paletteKey) as ThemePalette | null;
+    const savedTheme = localStorage.getItem(this.themeKey);
+    const savedPalette = localStorage.getItem(this.paletteKey);
 
     if (savedTheme === 'light' || savedTheme === 'dark') {
-      this.setTheme(savedTheme);
+      // Respect the user's saved preference.
+      this.applyTheme(savedTheme);
     } else {
+      // No manual preference: follow the system.
       this.applySystemTheme();
     }
 
+    // Restore the saved palette.
     if (savedPalette === 'coastal' || savedPalette === 'ocean' || savedPalette === 'pink' || savedPalette === 'lavender') {
       this.setPalette(savedPalette);
+    } else {
+      this.setPalette('ocean');
     }
   }
 
-  // Applies the selected light or dark mode.
-  setTheme(theme: ThemeMode): void {
+  // Applies a theme and notifies subscribers.
+  private applyTheme(theme: ThemeMode): void {
     this.currentTheme = theme;
+
     document.documentElement.classList.toggle('dark-theme', theme === 'dark');
-    localStorage.setItem(this.themeKey, theme);
+
     this.themeSubject.next(theme);
+  }
+
+  // Follows the system until the user chooses a theme manually.
+  private applySystemTheme(): void {
+    this.stopListeningToSystemTheme();
+
+    this.systemThemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+    // Apply the current system preference immediately.
+    this.applyTheme(this.systemThemeQuery.matches ? 'dark' : 'light');
+
+    // Listen for future system changes.
+    this.systemThemeQuery.addEventListener('change', this.onSystemThemeChange);
+  }
+
+  // Stops following the system after a manual selection.
+  private stopListeningToSystemTheme(): void {
+    this.systemThemeQuery?.removeEventListener('change', this.onSystemThemeChange);
+
+    this.systemThemeQuery = undefined;
+  }
+
+  // Applies and saves the user's manual choice.
+  setTheme(theme: ThemeMode): void {
+    this.stopListeningToSystemTheme();
+
+    this.applyTheme(theme);
+    localStorage.setItem(this.themeKey, theme);
   }
 
   // Returns the current mode.
@@ -50,26 +91,20 @@ export class ThemeService {
   // Applies the selected color palette.
   setPalette(palette: ThemePalette): void {
     this.currentPalette = palette;
-    const root = document.documentElement;
-    root.classList.remove('theme-ocean', 'theme-pink', 'theme-lavender');
 
-    if (palette !== 'coastal') {
+    const root = document.documentElement;
+
+    root.classList.remove('theme-coastal', 'theme-pink', 'theme-lavender');
+
+    if (palette !== 'ocean') {
       root.classList.add(`theme-${palette}`);
     }
+
     localStorage.setItem(this.paletteKey, palette);
   }
 
   // Returns the current palette.
   get palette(): ThemePalette {
     return this.currentPalette;
-  }
-
-  // Uses the device preference if no mode has been saved.
-  private applySystemTheme(): void {
-    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    this.currentTheme = isDark ? 'dark' : 'light';
-    document.documentElement.classList.toggle('dark-theme', isDark);
-    this.themeSubject.next(this.currentTheme);
   }
 }

@@ -1,56 +1,5 @@
 @use '@angular/material' as mat;
 
-//  COLOR PALETTES
-$coastal-primary: (
-  50: #e0f2f1,
-  100: #b2dfdb,
-  200: #80cbc4,
-  300: #69aaa4,
-  400: #4d9792,
-  500: #277c7a,
-  600: #236f6d,
-  700: #1f625f,
-  800: #1a5552,
-  900: #185957,
-  contrast: (
-    50: #263634,
-    100: #263634,
-    200: #263634,
-    300: #263634,
-    400: #ffffff,
-    500: #ffffff,
-    600: #ffffff,
-    700: #ffffff,
-    800: #ffffff,
-    900: #ffffff,
-  ),
-);
-
-$coastal-secondary: (
-  50: #f9ebe5,
-  100: #f0d1c5,
-  200: #e5b3a0,
-  300: #d9967e,
-  400: #d18468,
-  500: #c97855,
-  600: #b86648,
-  700: #a55c43,
-  800: #914f3a,
-  900: #7d4331,
-  contrast: (
-    50: #263634,
-    100: #263634,
-    200: #263634,
-    300: #263634,
-    400: #263634,
-    500: #ffffff,
-    600: #ffffff,
-    700: #ffffff,
-    800: #ffffff,
-    900: #ffffff,
-  ),
-);
-
 // OCEAN BLUE PALETTES
 $ocean-primary: (
   50: #e3edf9,
@@ -204,57 +153,88 @@ $lavender-secondary: (
   ),
 );
 
-//  PALETTE CONFIGURATION
-// coastal nomad
-$primary: mat.define-palette($coastal-primary, 500);
-$accent: mat.define-palette($coastal-secondary, 500);
+//  COLOR PALETTES
+$coastal-primary: (
+  50: #e0f2f1,
+  100: #b2dfdb,
+  200: #80cbc4,
+  300: #69aaa4,
+  400: #4d9792,
+  500: #277c7a,
+  600: #236f6d,
+  700: #1f625f,
+  800: #1a5552,
+  900: #185957,
+  contrast: (
+    50: #263634,
+    100: #263634,
+    200: #263634,
+    300: #263634,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+  ),
+);
 
-// occean blue
+$coastal-secondary: (
+  50: #f9ebe5,
+  100: #f0d1c5,
+  200: #e5b3a0,
+  300: #d9967e,
+  400: #d18468,
+  500: #c97855,
+  600: #b86648,
+  700: #a55c43,
+  800: #914f3a,
+  900: #7d4331,
+  contrast: (
+    50: #263634,
+    100: #263634,
+    200: #263634,
+    300: #263634,
+    400: #263634,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+  ),
+);
+
+/* PALETTE CONFIGURATION */
+
+// Ocean Blue
 $ocean-primary-color: mat.define-palette($ocean-primary, 400);
 $ocean-accent-color: mat.define-palette($ocean-secondary, 400);
 
-// pink blossom
+// Pink Blossom
 $pink-primary-color: mat.define-palette($pink-primary, 500);
 $pink-accent-color: mat.define-palette($pink-secondary, 500);
 
-// lavender nomad
+// Lavender Nomad
 $lavender-primary-color: mat.define-palette($lavender-primary, 400);
 $lavender-accent-color: mat.define-palette($lavender-secondary, 400);
 
-// FONT
-$coastal-typography: mat.define-typography-config(
+// Coastal Nomad
+$coastal-primary-color: mat.define-palette($coastal-primary, 500);
+$coastal-accent-color: mat.define-palette($coastal-secondary, 500);
+
+/* FONT */
+$ocean-typography: mat.define-typography-config(
   $font-family: 'Roboto, Helvetica Neue, sans-serif',
 );
 
-// COASTAL NOMAD
-$coastal-light-theme: mat.define-light-theme(
-  (
-    color: (
-      primary: $primary,
-      accent: $accent,
-    ),
-    typography: $coastal-typography,
-  )
-);
-
-$coastal-dark-theme: mat.define-dark-theme(
-  (
-    color: (
-      primary: $primary,
-      accent: $accent,
-    ),
-    typography: $coastal-typography,
-  )
-);
-
-//  OCEAN BLUE
+/* OCEAN BLUE */
 $ocean-light-theme: mat.define-light-theme(
   (
     color: (
       primary: $ocean-primary-color,
       accent: $ocean-accent-color,
     ),
-    typography: $coastal-typography,
+    typography: $ocean-typography,
   )
 );
 
@@ -264,18 +244,18 @@ $ocean-dark-theme: mat.define-dark-theme(
       primary: $ocean-primary-color,
       accent: $ocean-accent-color,
     ),
-    typography: $coastal-typography,
+    typography: $ocean-typography,
   )
 );
 
-// PINK BLOSSOM
+/* PINK BLOSSOM */
 $pink-light-theme: mat.define-light-theme(
   (
     color: (
       primary: $pink-primary-color,
       accent: $pink-accent-color,
     ),
-    typography: $coastal-typography,
+    typography: $ocean-typography,
   )
 );
 
@@ -285,18 +265,18 @@ $pink-dark-theme: mat.define-dark-theme(
       primary: $pink-primary-color,
       accent: $pink-accent-color,
     ),
-    typography: $coastal-typography,
+    typography: $ocean-typography,
   )
 );
 
-// LAVENDER NOMAD
+/* LAVENDER NOMAD */
 $lavender-light-theme: mat.define-light-theme(
   (
     color: (
       primary: $lavender-primary-color,
       accent: $lavender-accent-color,
     ),
-    typography: $coastal-typography,
+    typography: $ocean-typography,
   )
 );
 
@@ -306,40 +286,64 @@ $lavender-dark-theme: mat.define-dark-theme(
       primary: $lavender-primary-color,
       accent: $lavender-accent-color,
     ),
-    typography: $coastal-typography,
+    typography: $ocean-typography,
   )
 );
 
-//  MATERIAL CORE
+/* COASTAL NOMAD */
+$coastal-light-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $coastal-primary-color,
+      accent: $coastal-accent-color,
+    ),
+    typography: $ocean-typography,
+  )
+);
+
+$coastal-dark-theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: $coastal-primary-color,
+      accent: $coastal-accent-color,
+    ),
+    typography: $ocean-typography,
+  )
+);
+
+/* MATERIAL CORE */
 @include mat.core();
 
-//  COASTAL NOMAD
-@include mat.all-component-themes($coastal-light-theme);
+/* OCEAN BLUE — Default */
+@include mat.all-component-themes($ocean-light-theme);
 
 .dark-theme {
-  @include mat.all-component-colors($coastal-dark-theme);
-}
-
-// OCEAN BLUE
-:root.theme-ocean:not(.dark-theme) {
-  @include mat.all-component-colors($ocean-light-theme);
-}
-:root.theme-ocean.dark-theme {
   @include mat.all-component-colors($ocean-dark-theme);
 }
 
-// PINK BLOSSOM
+/* PINK BLOSSOM */
 :root.theme-pink:not(.dark-theme) {
   @include mat.all-component-colors($pink-light-theme);
 }
+
 :root.theme-pink.dark-theme {
   @include mat.all-component-colors($pink-dark-theme);
 }
 
-// LAVENDER NOMAD
+/* LAVENDER NOMAD */
 :root.theme-lavender:not(.dark-theme) {
   @include mat.all-component-colors($lavender-light-theme);
 }
+
 :root.theme-lavender.dark-theme {
   @include mat.all-component-colors($lavender-dark-theme);
+}
+
+/* COASTAL NOMAD */
+:root.theme-coastal:not(.dark-theme) {
+  @include mat.all-component-colors($coastal-light-theme);
+}
+
+:root.theme-coastal.dark-theme {
+  @include mat.all-component-colors($coastal-dark-theme);
 }

@@ -79,21 +79,21 @@
   3. THEME COLORS
    ========================================================= */
 
-//  Coastal Nomad — Light
+//  Ocean Blue — Light
 :root {
   /* Brand */
-  --color-primary: #277c7a;
+  --color-primary: #2457a7;
   --color-primary-light: color-mix(in srgb, var(--color-primary) 60%, #ffffff);
   --color-primary-dark: color-mix(in srgb, var(--color-primary) 75%, #000000);
-  --color-secondary: #c97855;
-  --color-accent: #e5b85c;
+  --color-secondary: #438dca;
+  --color-accent: #e5bd63;
 
   /* Backgrounds & Surfaces */
-  --color-background: #f5f1e8;
+  --color-background: #eaf5fc;
   --color-surface: #ffffff;
 
   /* Text */
-  --color-text: #2b2d2f;
+  --color-text: #233448;
   --color-text-secondary: color-mix(in srgb, var(--color-text) 70%, var(--color-surface));
   --color-text-muted: color-mix(in srgb, var(--color-text) 50%, var(--color-surface));
 
@@ -124,106 +124,11 @@
   --color-male: #4e90b6;
 
   /* Map */
-  --color-hover-country: var(--color-accent);
-}
-
-//  Coastal Nomad — Dark
-.dark-theme {
-  /* Brand */
-  --color-primary: #2f7773;
-  --color-primary-light: color-mix(in srgb, var(--color-primary) 70%, #ffffff);
-  --color-primary-dark: color-mix(in srgb, var(--color-primary) 70%, #000000);
-  --color-secondary: #cb623b;
-  --color-accent: #d8ae57;
-
-  /* Backgrounds & Surfaces */
-  --color-background: color-mix(in srgb, #101214 94%, var(--color-primary));
-  --color-surface: color-mix(in srgb, #191d1f 90%, var(--color-primary));
-
-  /* Text */
-  --color-text: #e8efec;
-  --color-text-secondary: color-mix(in srgb, var(--color-text) 72%, var(--color-background));
-  --color-text-muted: color-mix(in srgb, var(--color-text) 50%, var(--color-background));
-
-  /* Borders */
-  --color-border: color-mix(in srgb, var(--color-text) 15%, var(--color-surface));
-
-  /* Interaction */
-  --color-primary-hover: color-mix(in srgb, var(--color-primary) 75%, var(--color-primary-light));
-  --color-primary-active: var(--color-primary-dark);
-
-  /* Feedback */
-  --color-success: #69a87d;
-  --color-danger: #d8756b;
-  --color-warning: var(--color-accent);
-  --color-info: var(--color-primary-light);
-
-  /* Cards */
-  --color-card-hover: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface));
-
-  /* Styles */
-  --color-rating: #e7ad00;
-  --color-female: #bd6db1;
-  --color-male: #4e90b6;
-
-  /* Map */
   --color-hover-country: #590000;
-
-  /* Angular Material */
-  --mat-paginator-container-background-color: var(--color-surface);
-  --mat-paginator-container-text-color: var(--color-text);
-  --mdc-filled-text-field-container-color: var(--color-surface);
-  --mat-select-panel-background-color: var(--color-surface);
-  --mat-option-label-text-color: var(--color-text);
-  --mat-autocomplete-background-color: var(--color-surface);
-  --mat-datepicker-calendar-container-background-color: var(--color-surface);
-  --mat-datepicker-calendar-date-text-color: var(--color-text);
-  --mat-datepicker-calendar-body-label-text-color: var(--color-text-secondary);
-  --mat-datepicker-calendar-header-text-color: var(--color-text-secondary);
-}
-
-//  Ocean Blue — Light
-.theme-ocean {
-  /* Brand */
-  --color-primary: #2457a7;
-  --color-primary-light: color-mix(in srgb, var(--color-primary) 60%, #ffffff);
-  --color-primary-dark: color-mix(in srgb, var(--color-primary) 75%, #000000);
-  --color-secondary: #438dca;
-  --color-accent: #e5bd63;
-
-  /* Backgrounds & Surfaces */
-  --color-background: #eaf5fc;
-  --color-surface: #ffffff;
-
-  /* Text */
-  --color-text: #233448;
-  --color-text-secondary: color-mix(in srgb, var(--color-text) 70%, var(--color-surface));
-  --color-text-muted: color-mix(in srgb, var(--color-text) 50%, var(--color-surface));
-
-  /* Borders */
-  --color-border: color-mix(in srgb, var(--color-text) 15%, var(--color-surface));
-
-  /* Interaction */
-  --color-primary-hover: color-mix(in srgb, var(--color-primary) 85%, var(--color-primary-dark));
-  --color-primary-active: var(--color-primary-dark);
-
-  /* Feedback */
-  --color-success: #4f8f67;
-  --color-danger: #c95c52;
-  --color-warning: var(--color-accent);
-  --color-info: var(--color-primary);
-
-  /* Cards */
-  --color-card-hover: color-mix(in srgb, var(--color-primary) 5%, var(--color-surface));
-
-  /* Styles */
-  --color-rating: #e7ad00;
-  --color-female: #bd6db1;
-  --color-male: #4e90b6;
 }
 
 //  Ocean Blue — Dark
-.theme-ocean.dark-theme {
+.dark-theme {
   /* Brand */
   --color-primary: #438dca;
   --color-primary-light: color-mix(in srgb, var(--color-primary) 70%, #ffffff);
@@ -260,18 +165,6 @@
   --color-rating: #e7ad00;
   --color-female: #bd6db1;
   --color-male: #4e90b6;
-
-  /* Angular Material */
-  --mat-paginator-container-background-color: var(--color-surface);
-  --mat-paginator-container-text-color: var(--color-text);
-  --mdc-filled-text-field-container-color: var(--color-surface);
-  --mat-select-panel-background-color: var(--color-surface);
-  --mat-option-label-text-color: var(--color-text);
-  --mat-autocomplete-background-color: var(--color-surface);
-  --mat-datepicker-calendar-container-background-color: var(--color-surface);
-  --mat-datepicker-calendar-date-text-color: var(--color-text);
-  --mat-datepicker-calendar-body-label-text-color: var(--color-text-secondary);
-  --mat-datepicker-calendar-header-text-color: var(--color-text-secondary);
 }
 
 //  Pink Blossom — Light
@@ -280,7 +173,7 @@
   --color-primary: #d95785;
   --color-primary-light: color-mix(in srgb, var(--color-primary) 60%, #ffffff);
   --color-primary-dark: color-mix(in srgb, var(--color-primary) 75%, #000000);
-  --color-secondary: #e98268;
+  --color-secondary: #b477a0;
   --color-accent: #e5b85c;
 
   /* Backgrounds & Surfaces */
@@ -307,11 +200,6 @@
 
   /* Cards */
   --color-card-hover: color-mix(in srgb, var(--color-primary) 5%, var(--color-surface));
-
-  /* Styles */
-  --color-rating: #e7ad00;
-  --color-female: #bd6db1;
-  --color-male: #4e90b6;
 }
 
 //  Pink Blossom — Dark
@@ -320,7 +208,7 @@
   --color-primary: #c95d83;
   --color-primary-light: color-mix(in srgb, var(--color-primary) 70%, #ffffff);
   --color-primary-dark: color-mix(in srgb, var(--color-primary) 70%, #000000);
-  --color-secondary: #d97861;
+  --color-secondary: #c18bb0;
   --color-accent: #d8ae57;
 
   /* Backgrounds & Surfaces */
@@ -345,15 +233,8 @@
   --color-warning: var(--color-accent);
   --color-info: var(--color-primary-light);
 
-  /* Styles */
-  --color-rating: #e7ad00;
-  --color-female: #bd6db1;
-  --color-male: #4e90b6;
-
   /* Cards */
   --color-card-hover: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface));
-
-  --mat-paginator-container-background-color: var(--color-surface);
 }
 
 //  Lavender Nomad — Light
@@ -389,11 +270,6 @@
 
   /* Cards */
   --color-card-hover: color-mix(in srgb, var(--color-primary) 5%, var(--color-surface));
-
-  /* Styles */
-  --color-rating: #e7ad00;
-  --color-female: #bd6db1;
-  --color-male: #4e90b6;
 }
 
 //  Lavender Nomad — Dark
@@ -429,17 +305,103 @@
 
   /* Cards */
   --color-card-hover: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface));
+}
 
-  /* Styles */
-  --color-rating: #e7ad00;
-  --color-female: #bd6db1;
-  --color-male: #4e90b6;
+//  Coastal Nomad — Light
+.theme-coastal {
+  /* Brand */
+  --color-primary: #277c7a;
+  --color-primary-light: color-mix(in srgb, var(--color-primary) 60%, #ffffff);
+  --color-primary-dark: color-mix(in srgb, var(--color-primary) 75%, #000000);
+  --color-secondary: #c97855;
+  --color-accent: #e5b85c;
+
+  /* Backgrounds & Surfaces */
+  --color-background: #f5f1e8;
+  --color-surface: #ffffff;
+
+  /* Text */
+  --color-text: #2b2d2f;
+  --color-text-secondary: color-mix(in srgb, var(--color-text) 70%, var(--color-surface));
+  --color-text-muted: color-mix(in srgb, var(--color-text) 50%, var(--color-surface));
+
+  /* Borders */
+  --color-border: color-mix(in srgb, var(--color-text) 15%, var(--color-surface));
+
+  /* Interaction */
+  --color-primary-hover: color-mix(in srgb, var(--color-primary) 85%, var(--color-primary-dark));
+  --color-primary-active: var(--color-primary-dark);
+
+  /* Feedback */
+  --color-success: #4f8f67;
+  --color-danger: #c95c52;
+  --color-warning: var(--color-accent);
+  --color-info: var(--color-primary);
+
+  /* Cards */
+  --color-card-hover: color-mix(in srgb, var(--color-primary) 5%, var(--color-surface));
+}
+
+//  Coastal Nomad — Dark
+.theme-coastal.dark-theme {
+  /* Brand */
+  --color-primary: #2f7773;
+  --color-primary-light: color-mix(in srgb, var(--color-primary) 70%, #ffffff);
+  --color-primary-dark: color-mix(in srgb, var(--color-primary) 70%, #000000);
+  --color-secondary: #cb623b;
+  --color-accent: #d8ae57;
+
+  /* Backgrounds & Surfaces */
+  --color-background: color-mix(in srgb, #101214 94%, var(--color-primary));
+  --color-surface: color-mix(in srgb, #191d1f 90%, var(--color-primary));
+
+  /* Text */
+  --color-text: #e8efec;
+  --color-text-secondary: color-mix(in srgb, var(--color-text) 72%, var(--color-background));
+  --color-text-muted: color-mix(in srgb, var(--color-text) 50%, var(--color-background));
+
+  /* Borders */
+  --color-border: color-mix(in srgb, var(--color-text) 15%, var(--color-surface));
+
+  /* Interaction */
+  --color-primary-hover: color-mix(in srgb, var(--color-primary) 75%, var(--color-primary-light));
+  --color-primary-active: var(--color-primary-dark);
+
+  /* Feedback */
+  --color-success: #69a87d;
+  --color-danger: #d8756b;
+  --color-warning: var(--color-accent);
+  --color-info: var(--color-primary-light);
+
+  /* Cards */
+  --color-card-hover: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface));
+}
+
+/* Angular Material — Theme Colors */
+:root,
+.dark-theme,
+.theme-coastal,
+.theme-coastal.dark-theme,
+.theme-pink,
+.theme-pink.dark-theme,
+.theme-lavender,
+.theme-lavender.dark-theme {
+  --mat-paginator-container-background-color: var(--color-surface);
+  --mat-paginator-container-text-color: var(--color-text);
+  --mdc-filled-text-field-container-color: var(--color-surface);
+  --mat-select-panel-background-color: var(--color-surface);
+  --mat-option-label-text-color: var(--color-text);
+  --mat-autocomplete-background-color: var(--color-surface);
+  --mat-datepicker-calendar-container-background-color: var(--color-surface) !important;
+  --mat-datepicker-calendar-date-text-color: var(--color-text);
+  --mat-datepicker-calendar-body-label-text-color: var(--color-text-secondary);
+  --mat-datepicker-calendar-header-text-color: var(--color-text-secondary);
 }
 
 /* MAP COLORS */
 //  — LIGHT THEMES
 :root,
-.theme-ocean:not(.dark-theme),
+.theme-coastal:not(.dark-theme),
 .theme-pink:not(.dark-theme),
 .theme-lavender:not(.dark-theme) {
   --map-country-empty: color-mix(in srgb, var(--color-text) 5%, var(--color-surface));
@@ -461,7 +423,7 @@
 }
 
 /* Ensure the selected palette's dark values win. */
-.theme-ocean.dark-theme,
+.theme-coastal.dark-theme,
 .theme-pink.dark-theme,
 .theme-lavender.dark-theme {
   --map-country-empty: color-mix(in srgb, var(--color-surface) 95%, var(--color-background));
@@ -479,8 +441,8 @@
 .loading-container {
   align-items: center;
   background-color: var(--color-background);
-  background-image: linear-gradient(45deg, var(--color-primary-dark), var(--color-primary));
-  color: var(--color-surface);
+  // background-image: linear-gradient(45deg, var(--color-primary-dark), var(--color-primary));
+  color: var(--color-primary);
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -609,11 +571,16 @@ button {
 .title-component {
   color: var(--color-primary-dark);
   font-family: 'Poiret One', sans-serif;
-  font-size: 3rem;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  line-height: 1.25;
   margin-top: 8rem;
   margin-bottom: 2rem;
   text-align: center;
-  text-shadow: 0 0 2px var(--color-text);
+  text-wrap: balance;
+  text-shadow: 0 2px 6px color-mix(in srgb, var(--color-primary) 18%, transparent);
 }
 
 /* =========================================================
@@ -631,7 +598,7 @@ button {
 
 .stats-nav-btns,
 .stats-nav-btns-small {
-  color: var(--color-primary);
+  color: color-mix(in srgb, var(--color-text) 60%, var(--color-primary));
   cursor: pointer;
   font-size: 16px;
   font-weight: 400;

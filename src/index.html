@@ -34,6 +34,27 @@
       type="font/woff2"
       crossorigin
     />
+    <script>
+      (function () {
+        const root = document.documentElement;
+        const theme = localStorage.getItem('theme');
+        const palette = localStorage.getItem('themePalette');
+
+        // Apply the saved theme before Angular starts.
+        if (theme === 'dark') {
+          root.classList.add('dark-theme');
+        }
+
+        // Apply the saved palette before displaying the preloader.
+        const validPalettes = ['coastal', 'ocean', 'pink', 'lavender'];
+
+        if (validPalettes.includes(palette)) {
+          root.classList.add(`theme-${palette}`);
+        } else {
+          root.classList.add('theme-ocean');
+        }
+      })();
+    </script>
   </head>
 
   <body class="mat-typography">
