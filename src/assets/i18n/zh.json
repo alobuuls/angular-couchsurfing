@@ -267,6 +267,7 @@
     }
   },
   "GUESTS_FORM": {
+    "FORM_TITLE": "创建旅行者",
     "GROUP_TYPE_TITLE": "他们是如何旅行的？",
     "GROUP_TYPES": {
       "SOLO": "独自旅行",
@@ -321,7 +322,9 @@
       "GIFTS": "礼物",
       "THEIR_REFERENCE": "他们的评价",
       "MY_REFERENCE": "我的评价",
-      "COMMENTS": "留下评论"
+      "COMMENTS": "留下评论",
+      "LOADING_STATES": "正在加载州和地区...",
+      "LOADING_CITIES": "正在加载城市..."
     },
     "CHECKBOXES": {
       "FIRST_TIME": "首次访问",

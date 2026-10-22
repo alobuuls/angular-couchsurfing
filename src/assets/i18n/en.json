@@ -267,6 +267,7 @@
     }
   },
   "GUESTS_FORM": {
+    "FORM_TITLE": "CREATE A GUEST",
     "GROUP_TYPE_TITLE": "How did they travel?",
     "GROUP_TYPES": {
       "SOLO": "Solo",
@@ -321,7 +322,9 @@
       "GIFTS": "Gifts",
       "THEIR_REFERENCE": "Their Reference",
       "MY_REFERENCE": "My Reference",
-      "COMMENTS": "Leave a comment"
+      "COMMENTS": "Leave a comment",
+      "LOADING_STATES": "Loading states...",
+      "LOADING_CITIES": "Loading cities..."
     },
     "CHECKBOXES": {
       "FIRST_TIME": "First Time",

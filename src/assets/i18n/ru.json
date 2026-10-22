@@ -267,6 +267,7 @@
     }
   },
   "GUESTS_FORM": {
+    "FORM_TITLE": "СОЗДАТЬ ПУТЕШЕСТВЕННИКА",
     "GROUP_TYPE_TITLE": "Как они путешествовали?",
     "GROUP_TYPES": {
       "SOLO": "Один",
@@ -321,7 +322,9 @@
       "GIFTS": "Подарки",
       "THEIR_REFERENCE": "Их рекомендация",
       "MY_REFERENCE": "Моя рекомендация",
-      "COMMENTS": "Оставить комментарий"
+      "COMMENTS": "Оставить комментарий",
+      "LOADING_STATES": "Загрузка штатов и регионов...",
+      "LOADING_CITIES": "Загрузка городов..."
     },
     "CHECKBOXES": {
       "FIRST_TIME": "Впервые",

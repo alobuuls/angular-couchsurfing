@@ -267,6 +267,7 @@
     }
   },
   "GUESTS_FORM": {
+    "FORM_TITLE": "यात्री बनाएँ",
     "GROUP_TYPE_TITLE": "उन्होंने यात्रा कैसे की?",
     "GROUP_TYPES": {
       "SOLO": "अकेले",
@@ -321,7 +322,9 @@
       "GIFTS": "उपहार",
       "THEIR_REFERENCE": "उनका संदर्भ",
       "MY_REFERENCE": "मेरा संदर्भ",
-      "COMMENTS": "टिप्पणी लिखें"
+      "COMMENTS": "टिप्पणी लिखें",
+      "LOADING_STATES": "राज्य लोड हो रहे हैं...",
+      "LOADING_CITIES": "शहर लोड हो रहे हैं..."
     },
     "CHECKBOXES": {
       "FIRST_TIME": "पहली बार",

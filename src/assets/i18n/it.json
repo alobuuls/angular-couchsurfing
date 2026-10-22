@@ -267,6 +267,7 @@
     }
   },
   "GUESTS_FORM": {
+    "FORM_TITLE": "CREA UN VIAGGIATORE",
     "GROUP_TYPE_TITLE": "Come hanno viaggiato?",
     "GROUP_TYPES": {
       "SOLO": "Da solo",
@@ -321,7 +322,9 @@
       "GIFTS": "Regali",
       "THEIR_REFERENCE": "La loro referenza",
       "MY_REFERENCE": "La mia referenza",
-      "COMMENTS": "Lascia un commento"
+      "COMMENTS": "Lascia un commento",
+      "LOADING_STATES": "Caricamento degli stati...",
+      "LOADING_CITIES": "Caricamento delle città..."
     },
     "CHECKBOXES": {
       "FIRST_TIME": "Prima volta",
