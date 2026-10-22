@@ -267,6 +267,7 @@
     }
   },
   "GUESTS_FORM": {
+    "FORM_TITLE": "GAST ERSTELLEN",
     "GROUP_TYPE_TITLE": "Wie sind sie gereist?",
     "GROUP_TYPES": {
       "SOLO": "Allein",
@@ -321,7 +322,9 @@
       "GIFTS": "Geschenke",
       "THEIR_REFERENCE": "Ihre Referenz",
       "MY_REFERENCE": "Meine Referenz",
-      "COMMENTS": "Kommentar hinterlassen"
+      "COMMENTS": "Kommentar hinterlassen",
+      "LOADING_STATES": "Bundesstaaten werden geladen...",
+      "LOADING_CITIES": "Städte werden geladen..."
     },
     "CHECKBOXES": {
       "FIRST_TIME": "Erster Besuch",

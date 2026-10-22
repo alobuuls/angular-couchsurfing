@@ -6,7 +6,7 @@ import { ICity, IState } from '@services/city.service';
 export interface IGuestDetail extends ITripDetail {
   _id: string;
   groupType: 'solo';
-  birthDate: string;
+  birthDate?: string;
   age: number;
   continent: Continents;
   hometownCode: CountriesCodes;
@@ -22,7 +22,7 @@ export interface IGuestDetail extends ITripDetail {
   locationWeMet?: string;
   nights: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15;
   prefixCode: string;
-  rating: 1 | 2 | 3 | 4 | 5;
+  rating?: 1 | 2 | 3 | 4 | 5;
   visitedDate: string;
   whatsapp: string;
   comments: string;

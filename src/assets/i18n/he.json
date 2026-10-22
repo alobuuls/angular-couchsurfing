@@ -267,6 +267,7 @@
     }
   },
   "GUESTS_FORM": {
+    "FORM_TITLE": "יצירת אורח",
     "GROUP_TYPE_TITLE": "איך הם נסעו?",
     "GROUP_TYPES": {
       "SOLO": "לבד",
@@ -321,7 +322,9 @@
       "GIFTS": "מתנות",
       "THEIR_REFERENCE": "ההמלצה שלהם",
       "MY_REFERENCE": "ההמלצה שלי",
-      "COMMENTS": "השאירו הערה"
+      "COMMENTS": "השאירו הערה",
+      "LOADING_STATES": "טוען מדינות ואזורים...",
+      "LOADING_CITIES": "טוען ערים..."
     },
     "CHECKBOXES": {
       "FIRST_TIME": "ביקור ראשון",

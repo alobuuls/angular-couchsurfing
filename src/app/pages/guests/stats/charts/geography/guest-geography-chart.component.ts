@@ -122,14 +122,14 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
     livingIn: {
       label: 'STATS.GEOGRAPHY.TITLES.GUESTS_LIVING_IN',
       type: 'bar',
-      getAllData: geography => geography.livingIn.top,
+      getAllData: geography => geography.livingInState.top,
       getTopData: () => [],
       getBottomData: () => [],
     },
     hometown: {
       label: 'STATS.GEOGRAPHY.TITLES.GUESTS_HOMETOWN',
       type: 'bar',
-      getAllData: geography => geography.hometown.top,
+      getAllData: geography => geography.hometownState.top,
       getTopData: () => [],
       getBottomData: () => [],
     },
@@ -870,7 +870,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
     this._router.navigate(['/guests'], {
       queryParams: {
         view: 'cards',
-        livingIn: location.toLowerCase().replace(/\s+/g, '-'),
+        livingInState: location.toLowerCase().replace(/\s+/g, '-'),
       },
     });
   }
@@ -881,7 +881,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
     this._router.navigate(['/guests'], {
       queryParams: {
         view: 'cards',
-        hometown: location.toLowerCase().replace(/\s+/g, '-'),
+        hometownState: location.toLowerCase().replace(/\s+/g, '-'),
       },
     });
   }

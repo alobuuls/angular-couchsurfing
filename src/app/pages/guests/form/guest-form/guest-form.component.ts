@@ -114,6 +114,16 @@ export class GuestFormComponent implements OnInit {
   livingInCities: ICity[] = [];
   weMetCities: ICity[] = [];
 
+  // Location loading states
+  loadingHometownStates = false;
+  loadingHometownCities = false;
+
+  loadingLivingStates = false;
+  loadingLivingCities = false;
+
+  loadingWeMetStates = false;
+  loadingWeMetCities = false;
+
   private readonly destroyRef = inject(DestroyRef);
   private fb = inject(FormBuilder);
   private _alerts = inject(AlertsService);
@@ -190,7 +200,7 @@ export class GuestFormComponent implements OnInit {
     this.formCreateGuest = this.fb.group({
       fullName: ['', [Validators.required, Validators.maxLength(100)]],
       instagram: ['', [Validators.maxLength(30)]],
-      urlProfileCs: ['', [Validators.required, Validators.maxLength(50)]],
+      urlProfileCs: ['', [Validators.maxLength(50)]],
       birthDate: [''],
       gender: ['', [Validators.required]],
       continent: [''],
@@ -205,13 +215,13 @@ export class GuestFormComponent implements OnInit {
       stateWeMet: [''],
       cityWeMet: [''],
       locationWeMet: ['', Validators.maxLength(100)],
-      prefixCode: ['', Validators.required],
-      whatsapp: ['', [Validators.required, Validators.maxLength(16), Validators.pattern(/^\+?[1-9]\d{7,14}$/)]],
-      occupationArea: [[], Validators.required],
+      prefixCode: [''],
+      whatsapp: ['', [Validators.maxLength(16), Validators.pattern(/^\+?[1-9]\d{7,14}$/)]],
+      occupationArea: [[]],
       occupation: [[]],
       otherOccupation: [''],
       rating: [''],
-      comments: ['', [Validators.maxLength(500)]],
+      comments: ['', [Validators.maxLength(2000)]],
       gift: [[]],
       // Type Form
       groupType: [this.selectedGroupType, Validators.required],
@@ -220,8 +230,8 @@ export class GuestFormComponent implements OnInit {
       isGay: [false],
       hangOut: [false],
       ambassador: [false],
-      theirReference: ['', [Validators.maxLength(500)]],
-      myReference: ['', [Validators.maxLength(500)]],
+      theirReference: ['', [Validators.maxLength(1500)]],
+      myReference: ['', [Validators.maxLength(1500)]],
     });
 
     if (!this.guest) {
@@ -306,15 +316,24 @@ export class GuestFormComponent implements OnInit {
       }
     }
 
-    const payload = {
+    // Normalize API selections and manually entered location values
+    const hometownStateName = this.getLocationName(hometownState);
+    const hometownCityName = this.getLocationName(hometownCity);
+    const livingStateName = this.getLocationName(livingInState);
+    const livingCityName = this.getLocationName(livingInCity);
+    const meetingStateName = this.getLocationName(stateWeMet);
+    const meetingCityName = this.getLocationName(cityWeMet);
+
+    const payload: IBodyGuest = {
       ...guest,
       occupation,
       birthDate: this.formatDate(guest.birthDate),
-      hometown: [hometownCity?.name, hometownState?.name].filter(Boolean).join(', '),
-      livingIn: [livingInCity?.name, livingInState?.name].filter(Boolean).join(', '),
-      cityWeMet: [stateWeMet?.name, cityWeMet?.name].filter(Boolean).join(', '),
+      hometown: [hometownCityName, hometownStateName].filter(Boolean).join(', '),
+      livingIn: [livingCityName, livingStateName].filter(Boolean).join(', '),
+      cityWeMet: [meetingStateName, meetingCityName].filter(Boolean).join(', '),
     };
 
+    // Omit optional fields when no value is provided.
     if (!guest.rating) {
       delete payload.rating;
     }
@@ -443,116 +462,105 @@ export class GuestFormComponent implements OnInit {
   }
 
   private listenHometownState(): void {
-    this.hometownStateCtrl?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state: IState) => {
-      if (!state?.iso2) {
-        this.hometownCities = [];
+    this.hometownStateCtrl?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state: IState | string | null) => {
+      // Reset the previous city and loading state
+      this.hometownCities = [];
+      this.loadingHometownCities = false;
+      this.formCreateGuest.patchValue({
+        hometownCity: '',
+      });
+
+      // Manual state entry
+      if (!state || typeof state === 'string' || !state.iso2) {
         return;
       }
 
       const apiCountryCode = this.getCountryApiCode();
+
       if (!apiCountryCode) return;
+
+      // Load cities for the selected API state
       this.loadHometownCities(apiCountryCode, state.iso2);
     });
   }
 
   private listenLivingCountry(): void {
     this.livingInCodeCtrl?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(countryCode => {
-      if (!countryCode) {
-        this.livingInStates = [];
-        this.livingInCities = [];
-        return;
-      }
+      this.loadingLivingStates = false;
+      this.loadingLivingCities = false;
+      this.livingInStates = [];
+      this.livingInCities = [];
 
-      const apiCountryCode = WORLD[countryCode as keyof typeof WORLD]?.flag;
-      if (!apiCountryCode) return;
+      this.formCreateGuest.patchValue({
+        livingInState: '',
+        livingInCity: '',
+      });
 
-      this._city
-        .getStates(apiCountryCode)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe((states: IState[]) => {
-          this.livingInStates = states;
-          this.livingInCities = [];
-          this.formCreateGuest.patchValue({ livingInState: '', livingInCity: '' });
-        });
+      if (!countryCode) return;
+
+      this.loadLivingStates(countryCode);
     });
   }
 
   private listenLivingState(): void {
-    this.livingInStateCtrl?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state: IState) => {
-      if (!state?.iso2) {
-        this.livingInCities = [];
+    this.livingInStateCtrl?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state: IState | string | null) => {
+      this.livingInCities = [];
+      this.loadingLivingCities = false;
+
+      this.formCreateGuest.patchValue({
+        livingInCity: '',
+      });
+
+      if (!state || typeof state === 'string' || !state.iso2) {
         return;
       }
 
       const countryCode = this.livingInCodeCtrl?.value;
-      if (!countryCode) return;
-      const apiCountryCode = WORLD[countryCode as keyof typeof WORLD]?.flag;
+      const apiCountryCode = countryCode ? WORLD[countryCode as keyof typeof WORLD]?.flag : null;
+
       if (!apiCountryCode) return;
 
-      this._city
-        .getCities(apiCountryCode, state.iso2)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe((cities: ICity[]) => {
-          this.livingInCities = cities;
-          this.formCreateGuest.patchValue({ livingInCity: '' });
-        });
+      this.loadLivingCities(apiCountryCode, state.iso2);
     });
   }
 
   private listenWeMetCountry(): void {
     this.weMetCountryCtrl?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(countryCode => {
-      if (!countryCode) {
-        this.weMetStates = [];
-        this.weMetCities = [];
-        this.formCreateGuest.patchValue({
-          stateWeMet: '',
-          cityWeMet: '',
-        });
-        return;
-      }
+      this.loadingWeMetStates = false;
+      this.loadingWeMetCities = false;
+      this.weMetStates = [];
+      this.weMetCities = [];
 
-      const apiCountryCode = WORLD[countryCode as keyof typeof WORLD]?.flag;
+      this.formCreateGuest.patchValue({
+        stateWeMet: '',
+        cityWeMet: '',
+      });
 
-      if (!apiCountryCode) return;
+      if (!countryCode) return;
 
-      this._city
-        .getStates(apiCountryCode)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe((states: IState[]) => {
-          this.weMetStates = states;
-          this.weMetCities = [];
-          this.formCreateGuest.patchValue({
-            stateWeMet: '',
-            cityWeMet: '',
-          });
-        });
+      this.loadWeMetStates(countryCode);
     });
   }
 
   private listenWeMetState(): void {
-    this.weMetStateCtrl?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state: IState) => {
-      if (!state?.iso2) {
-        this.weMetCities = [];
+    this.weMetStateCtrl?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state: IState | string | null) => {
+      this.weMetCities = [];
+      this.loadingWeMetCities = false;
+
+      this.formCreateGuest.patchValue({
+        cityWeMet: '',
+      });
+
+      if (!state || typeof state === 'string' || !state.iso2) {
         return;
       }
 
       const countryCode = this.weMetCountryCtrl?.value;
-
-      if (!countryCode) return;
-
-      const apiCountryCode = WORLD[countryCode as keyof typeof WORLD]?.flag;
+      const apiCountryCode = countryCode ? WORLD[countryCode as keyof typeof WORLD]?.flag : null;
 
       if (!apiCountryCode) return;
 
-      this._city
-        .getCities(apiCountryCode, state.iso2)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe((cities: ICity[]) => {
-          this.weMetCities = cities;
-          this.formCreateGuest.patchValue({
-            cityWeMet: '',
-          });
-        });
+      this.loadWeMetCities(apiCountryCode, state.iso2);
     });
   }
 
@@ -616,26 +624,65 @@ export class GuestFormComponent implements OnInit {
   private loadHometownStates(countryCode: string): void {
     const apiCountryCode = WORLD[countryCode as keyof typeof WORLD]?.flag;
 
-    if (!apiCountryCode) return;
+    // Reset the previous location.
+    this.loadingHometownStates = false;
+    this.loadingHometownCities = false;
+    this.hometownStates = [];
+    this.hometownCities = [];
+
+    this.formCreateGuest.patchValue({
+      hometownState: '',
+      hometownCity: '',
+    });
+
+    if (!apiCountryCode) {
+      return;
+    }
+
+    this.loadingHometownStates = true;
 
     this._city
       .getStates(apiCountryCode)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((states: IState[]) => {
-        this.hometownStates = states;
-        this.hometownCities = [];
-
-        this.formCreateGuest.patchValue({ hometownState: '', hometownCity: '' });
+      .subscribe({
+        next: (states: IState[]) => {
+          this.hometownStates = states ?? [];
+          this.loadingHometownStates = false;
+        },
+        error: () => {
+          this.hometownStates = [];
+          this.loadingHometownStates = false;
+        },
       });
   }
 
   private loadHometownCities(countryCode: string, stateCode: string): void {
+    // Prevent unnecessary requests without a valid state code
+    if (!stateCode) {
+      this.hometownCities = [];
+      this.loadingHometownCities = false;
+      return;
+    }
+
+    this.loadingHometownCities = true;
+    this.hometownCities = [];
+
+    this.formCreateGuest.patchValue({ hometownCity: '' });
+
     this._city
       .getCities(countryCode, stateCode)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(cities => {
-        this.hometownCities = cities;
-        this.formCreateGuest.patchValue({ hometownCity: '' });
+      .subscribe({
+        next: (cities: ICity[]) => {
+          this.hometownCities = cities ?? [];
+
+          // An empty list switches the city field to manual entry
+          this.loadingHometownCities = false;
+        },
+        error: () => {
+          this.hometownCities = [];
+          this.loadingHometownCities = false;
+        },
       });
   }
 
@@ -811,5 +858,119 @@ export class GuestFormComponent implements OnInit {
   isInvalid(controlName: string): boolean {
     const control = this.f[controlName];
     return !!(control.invalid && (control.dirty || control.touched));
+  }
+
+  // Normalizes location values API selectors return objects with a name property, while manual inputs return strings
+  private getLocationName(value: { name: string } | string | null | undefined): string {
+    // Handle manually entered values
+    if (typeof value === 'string') {
+      return value.trim();
+    }
+
+    // Handle values selected from the API
+    if (value && typeof value === 'object') {
+      return value.name?.trim() ?? '';
+    }
+
+    // Return an empty string when no value is provided
+    return '';
+  }
+
+  private loadWeMetStates(countryCode: string): void {
+    const apiCountryCode = WORLD[countryCode as keyof typeof WORLD]?.flag;
+
+    this.weMetStates = [];
+    this.weMetCities = [];
+    this.loadingWeMetStates = false;
+
+    if (!apiCountryCode) return;
+
+    this.loadingWeMetStates = true;
+
+    this._city
+      .getStates(apiCountryCode)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: states => {
+          this.weMetStates = states ?? [];
+          this.loadingWeMetStates = false;
+        },
+        error: () => {
+          this.weMetStates = [];
+          this.loadingWeMetStates = false;
+        },
+      });
+  }
+
+  private loadWeMetCities(countryCode: string, stateCode: string): void {
+    this.weMetCities = [];
+    this.loadingWeMetCities = false;
+
+    if (!stateCode) return;
+
+    this.loadingWeMetCities = true;
+
+    this._city
+      .getCities(countryCode, stateCode)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: cities => {
+          this.weMetCities = cities ?? [];
+          this.loadingWeMetCities = false;
+        },
+        error: () => {
+          this.weMetCities = [];
+          this.loadingWeMetCities = false;
+        },
+      });
+  }
+
+  private loadLivingStates(countryCode: string): void {
+    const apiCountryCode = WORLD[countryCode as keyof typeof WORLD]?.flag;
+
+    this.livingInStates = [];
+    this.livingInCities = [];
+    this.loadingLivingStates = false;
+
+    if (!apiCountryCode) return;
+
+    this.loadingLivingStates = true;
+
+    this._city
+      .getStates(apiCountryCode)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: states => {
+          this.livingInStates = states ?? [];
+          this.loadingLivingStates = false;
+        },
+        error: () => {
+          this.livingInStates = [];
+          this.loadingLivingStates = false;
+        },
+      });
+  }
+
+  private loadLivingCities(countryCode: string, stateCode: string): void {
+    this.livingInCities = [];
+    this.loadingLivingCities = false;
+
+    if (!stateCode) return;
+
+    this.loadingLivingCities = true;
+
+    this._city
+      .getCities(countryCode, stateCode)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: cities => {
+          this.livingInCities = cities ?? [];
+          this.loadingLivingCities = false;
+        },
+        error: () => {
+          this.livingInCities = [];
+          this.loadingLivingCities = false;
+        },
+      });
   }
 }

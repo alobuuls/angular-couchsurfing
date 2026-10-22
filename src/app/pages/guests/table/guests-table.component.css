@@ -249,7 +249,7 @@ td.td-number:has(> .no-badge:hover) {
 
   & ~ td {
     background-color: color-mix(in srgb, var(--color-primary-light) 70%, #ffffff);
-    color: var(--color-surface);
+    color: var(--color-primary-dark);
   }
 
   & ~ .td-stars .ctn-stars .material-symbols-outlined {

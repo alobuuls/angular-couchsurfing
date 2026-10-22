@@ -229,10 +229,10 @@ export interface IGeographyDistribution {
   continents: IGeographyRanking<IGeographyContinent>;
   regions: IGeographyRanking<IGeographyRegion>;
   countries: IGeographyCountryRanking;
-  livingIn: {
+  livingInState: {
     top: IGeographyLocation[];
   };
-  hometown: {
+  hometownState: {
     top: IGeographyLocation[];
   };
 }
