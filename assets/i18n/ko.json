@@ -267,6 +267,7 @@
     }
   },
   "GUESTS_FORM": {
+    "FORM_TITLE": "여행자 추가",
     "GROUP_TYPE_TITLE": "어떤 형태로 여행했나요?",
     "GROUP_TYPES": {
       "SOLO": "개인",
@@ -321,7 +322,9 @@
       "GIFTS": "선물",
       "THEIR_REFERENCE": "상대방의 추천글",
       "MY_REFERENCE": "내 추천글",
-      "COMMENTS": "댓글 남기기"
+      "COMMENTS": "댓글 남기기",
+      "LOADING_STATES": "주 및 지역을 불러오는 중...",
+      "LOADING_CITIES": "도시를 불러오는 중..."
     },
     "CHECKBOXES": {
       "FIRST_TIME": "첫 방문",
