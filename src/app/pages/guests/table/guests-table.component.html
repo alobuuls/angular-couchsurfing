@@ -6,8 +6,10 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         <mat-icon class="material-symbols-outlined">tag</mat-icon>{{ 'GUESTS_TABLE.NO' | translate }}
       </th>
-      <td mat-cell *matCellDef="let guest; let i = index">
-        <span class="no-badge"> {{ offset + i + 1 }} </span>
+      <td class="td-number" mat-cell *matCellDef="let guest; let i = index">
+        <span class="no-badge">
+          <span>{{ offset + i + 1 }}</span>
+        </span>
       </td>
     </ng-container>
 
@@ -104,7 +106,7 @@
             [href]="csUrl + person.couchsurfing"
             target="_blank"
             rel="noopener noreferrer"
-            [attr.aria-label]="'GUESTS_TABLE.VIEW_CS_PROFILE' | translate"
+            [attr.aria-label]="person.fullName + ' — ' + ('GUESTS_TABLE.VIEW_CS_PROFILE' | translate)"
             [matTooltip]="'GUESTS_TABLE.VIEW_CS_PROFILE' | translate"
             class="btn-cs"
             mat-icon-button
@@ -128,7 +130,7 @@
             [href]="'https://wa.me/' + person.whatsapp"
             target="_blank"
             rel="noopener noreferrer"
-            [attr.aria-label]="'GUESTS_TABLE.SEND_WHATSAPP' | translate"
+            [attr.aria-label]="person.fullName + ' — ' + ('GUESTS_TABLE.SEND_WHATSAPP' | translate)"
             [matTooltip]="'GUESTS_TABLE.SEND_WHATSAPP' | translate"
             class="btn-whatsapp"
             mat-icon-button
@@ -250,7 +252,7 @@
         <mat-icon class="material-symbols-outlined">star</mat-icon> {{ 'GUESTS_TABLE.RATING' | translate }}
       </th>
 
-      <td mat-cell *matCellDef="let guest">
+      <td class="td-stars" mat-cell *matCellDef="let guest">
         <div class="ctn-stars" *ngFor="let person of guest.people">
           <mat-icon
             class="material-symbols-outlined"
@@ -272,7 +274,7 @@
         <div class="actions">
           <a
             [matTooltip]="'GUESTS_TABLE.VIEW_GUEST' | translate"
-            [attr.aria-label]="'GUESTS_TABLE.VIEW_GUEST' | translate"
+            [attr.aria-label]="guest.people[0].fullName + ' — ' + ('GUESTS_TABLE.VIEW_GUEST' | translate)"
             mat-icon-button
             class="btn-detail"
             [routerLink]="getDetailRoute(guest)"
@@ -282,7 +284,7 @@
 
           <a
             [matTooltip]="'GUESTS_TABLE.EDIT_GUEST' | translate"
-            [attr.aria-label]="'GUESTS_TABLE.EDIT_GUEST' | translate"
+            [attr.aria-label]="guest.people[0].fullName + ' — ' + ('GUESTS_TABLE.EDIT_GUEST' | translate)"
             mat-icon-button
             class="btn-edit"
             [routerLink]="getEditRoute(guest)"

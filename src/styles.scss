@@ -765,22 +765,6 @@ button {
    ========================================================= */
 
 // TABLES
-:has(.mat-mdc-row:active) .mat-mdc-row:not(:active) {
-  filter: blur(3px);
-}
-
-.mat-mdc-row:active {
-  background-color: color-mix(in srgb, var(--color-primary) 20%, #000000);
-  filter: blur(0);
-}
-
-.dark-theme {
-  & .mat-mdc-row {
-    &:hover > td {
-      color: #000000;
-    }
-  }
-}
 
 // THEME ICON
 .icon-theme {
