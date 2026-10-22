@@ -1,6 +1,12 @@
 /* GUESTS TABLE */
-::ng-deep .mat-mdc-tooltip {
+/* TOOLTIP */
+:host ::ng-deep .mat-mdc-tooltip {
   white-space: pre-line;
+
+  .mdc-tooltip__surface {
+    background-color: var(--color-text);
+    color: var(--color-surface);
+  }
 }
 
 /* TABLE CONTAINER */
@@ -153,32 +159,39 @@ table {
 
 /* ROW NUMBER BADGE */
 .no-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 1.5rem;
-  height: 1.5rem;
+  align-content: center;
+  cursor: pointer;
+  text-align: center;
+  display: inline-block;
+  aspect-ratio: 1/1;
+  width: 2rem;
   padding: 0 0.35rem;
-  border-radius: 999px;
-
+  border-radius: 50%;
   background-color: color-mix(in srgb, var(--color-primary) 12%, var(--color-surface));
   color: var(--color-text);
   border: 1px solid color-mix(in srgb, var(--color-primary) 35%, var(--color-border));
-
-  font-size: 0.75rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
+  transition: scale 0.5s 0.1s ease-in-out;
+
+  & > span {
+    display: inline-block;
+    font-size: 1rem;
+    text-shadow: 0 0 1px var(--color-surface);
+    transition: rotate 0.5s 0.1s ease-in-out;
+    user-select: none;
+  }
 }
 
 /* NIGHTS BADGE */
 .nights-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-block;
+  align-content: center;
+  text-align: center;
   min-width: 1.5rem;
   height: 1.5rem;
   padding: 0 0.35rem;
-  border-radius: 999px;
+  border-radius: 50%;
 
   background-color: color-mix(in srgb, var(--color-accent) 22%, var(--color-surface));
   color: var(--color-text);
@@ -220,11 +233,32 @@ td {
 
 .mat-mdc-row {
   background-color: var(--color-surface);
-  transition: ease-in-out 0.1s ease-in-out;
+  transition: background-color 0.1s ease-in-out;
+}
+
+td.td-number:has(> .no-badge:hover) {
+  background-color: color-mix(in srgb, var(--color-primary-light) 70%, #ffffff);
+
+  & > .no-badge {
+    scale: 1.2;
+
+    & > span {
+      rotate: y 1turn;
+    }
+  }
+
+  & ~ td {
+    background-color: color-mix(in srgb, var(--color-primary-light) 70%, #ffffff);
+    color: var(--color-surface);
+  }
+
+  & ~ .td-stars .ctn-stars .material-symbols-outlined {
+    -webkit-text-fill-color: var(--color-primary-dark);
+  }
 }
 
 tr:nth-of-type(even) {
-  background-color: color-mix(in srgb, var(--color-primary) 5%, var(--color-surface));
+  background-color: color-mix(in srgb, var(--color-primary) 15%, var(--color-surface));
 }
 
 .ctn-stars {
@@ -235,10 +269,13 @@ tr:nth-of-type(even) {
   }
 }
 
-.mat-mdc-row:hover {
-  background-color: color-mix(in srgb, var(--color-primary-light) 70%, #ffffff);
+:host ::ng-deep {
+  .mat-mdc-table:has(.no-badge:active) .mat-mdc-row:not(:has(.no-badge:active)) {
+    filter: blur(3px);
+  }
 
-  .ctn-stars .material-symbols-outlined {
-    -webkit-text-fill-color: var(--color-primary-dark);
+  .mat-mdc-row:has(.no-badge:active) {
+    background-color: color-mix(in srgb, var(--color-primary) 20%, #000000);
+    filter: blur(0);
   }
 }
