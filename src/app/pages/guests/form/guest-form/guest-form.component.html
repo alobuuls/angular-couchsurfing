@@ -169,7 +169,7 @@
 
       <div class="fields-grid location-grid">
         <!-- HOMETOWN COUNTRY -->
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="country-field">
           <mat-label>
             {{ 'GUEST_FORM.FIELDS.HOMETOWN_COUNTRY' | translate }}
           </mat-label>
@@ -188,11 +188,17 @@
             matInput
             formControlName="hometownCode"
             [matAutocomplete]="autoHometown"
+            (focus)="showAllHometownCountries()"
+            (click)="showAllHometownCountries()"
             (input)="filterHometowns($event)"
           />
 
           <mat-autocomplete #autoHometown="matAutocomplete" [displayWith]="displayCountryCode">
             <mat-option *ngFor="let country of filteredCountries" [value]="country.countryCode">
+              <mat-icon *ngIf="isHometownCountrySelected(country.countryCode)" class="material-symbols-outlined">
+                check
+              </mat-icon>
+
               <span [class]="country.countryCode | flag"></span>
               {{ getCountryName(country.countryCode) }}
             </mat-option>
@@ -310,10 +316,15 @@
             formControlName="livingInCode"
             [matAutocomplete]="autoLiving"
             (input)="filterLiving($event)"
+            (focus)="showAllLivingCountries()"
           />
 
           <mat-autocomplete #autoLiving="matAutocomplete" [displayWith]="displayCountryCode">
             <mat-option *ngFor="let country of filteredLiving" [value]="country.countryCode">
+              <mat-icon *ngIf="isLivingCountrySelected(country.countryCode)" class="material-symbols-outlined">
+                check
+              </mat-icon>
+
               <span [class]="country.countryCode | flag"></span>
               {{ getCountryName(country.countryCode) }}
             </mat-option>
@@ -330,7 +341,7 @@
           *ngIf="f['livingInCode'].value && !loadingLivingStates"
           class="select-field"
         >
-          <mat-label>{{ 'GUEST_FORM.FIELDS.HOMETOWN_STATE' | translate }}</mat-label>
+          <mat-label>{{ 'GUEST_FORM.FIELDS.LIVING_STATE' | translate }}</mat-label>
           <mat-icon class="material-symbols-outlined" matPrefix>map</mat-icon>
 
           <mat-select *ngIf="livingInStates.length > 0; else livingStateManual" formControlName="livingInState">
@@ -416,6 +427,7 @@
             matInput
             formControlName="countryCodeWeMet"
             [matAutocomplete]="autoCountryWeMet"
+            (focus)="showAllCountryWeMet()"
             (input)="filterCountryWeMet($event)"
           />
 
@@ -489,6 +501,34 @@
             <input matInput formControlName="cityWeMet" autocomplete="address-level2" placeholder="Write city" />
           </ng-template>
         </mat-form-field>
+
+        <!-- LOCATION WE MET -->
+        <mat-form-field appearance="outline" *ngIf="f['cityWeMet'].value">
+          <mat-label>
+            {{ 'GUEST_FORM.FIELDS.LOCATION_WE_MET' | translate }}
+          </mat-label>
+
+          <mat-icon class="material-symbols-outlined" matPrefix>place</mat-icon>
+
+          <mat-icon class="material-symbols-outlined icon-success" matSuffix *ngIf="isValid('locationWeMet')">
+            check_circle
+          </mat-icon>
+
+          <mat-icon class="material-symbols-outlined icon-warning" matSuffix *ngIf="isInvalid('locationWeMet')">
+            error
+          </mat-icon>
+
+          <input matInput formControlName="locationWeMet" maxlength="100" />
+
+          <mat-hint align="end"> {{ f['locationWeMet'].value?.length || 0 }}/100 </mat-hint>
+          <ng-template #weMetCityManual>
+            <input matInput formControlName="cityWeMet" autocomplete="address-level2" placeholder="Write city" />
+          </ng-template>
+        </mat-form-field>
+
+        <mat-error *ngIf="f['locationWeMet'].hasError('maxlength')">
+          {{ 'GUEST_FORM.ERRORS.LOCATION_MAX' | translate }}
+        </mat-error>
 
         <!-- LOADING CITY WE MET -->
         <mat-form-field

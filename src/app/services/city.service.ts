@@ -3,20 +3,18 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '@env/environment';
 
-export interface IState {
-  name: string;
-  iso2: string;
-}
-export interface ICity {
-  name: string;
-}
+// Interfaces
+import { IState, ICity } from '@interfaces/guest-form.interface';
+
+// Config
+import { WORLD } from '@config/world';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CityService {
   private enpoint: string = environment.endpointApiCities;
-  private API_KEY: string = '0a6d63ebdae60ae9862a370ccd90cbce8ba7098aa5d5246568f0c2d3c402518f';
+  private API_KEY: string = environment.apiKeyCities;
 
   constructor(private http: HttpClient) {}
 
@@ -32,5 +30,28 @@ export class CityService {
 
   getCities(countryCode: string, stateCode: string): Observable<ICity[]> {
     return this.http.get<ICity[]>(`${this.enpoint}/countries/${countryCode}/states/${stateCode}/cities`, { headers: this.headers });
+  }
+
+  /**
+   * Convierte el código del país al código que espera la API
+   * de estados y ciudades.
+   */
+  getApiCountryCode(countryCode: string | null | undefined): string | null {
+    if (!countryCode) return null;
+    const normalizedCode = countryCode.trim().toLowerCase();
+    const country = WORLD[normalizedCode as keyof typeof WORLD];
+    return country?.flag ?? null;
+  }
+
+  /**
+   * Normaliza nombres de ubicaciones para compararlos
+   * sin distinguir mayúsculas, minúsculas ni acentos.
+   */
+  normalizeLocation(value: string | null | undefined): string {
+    return (value ?? '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim()
+      .toLowerCase();
   }
 }

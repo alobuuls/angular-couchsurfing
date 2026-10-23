@@ -39,11 +39,13 @@ export interface IGuestTableMember {
   hometown: {
     code?: string | null;
     city?: string | null;
+    state?: string | null;
   };
 
   livingIn: {
     code?: string | null;
     city?: string | null;
+    state?: string | null;
   };
 
   hangOut: boolean;

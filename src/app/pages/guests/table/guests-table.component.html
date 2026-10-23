@@ -188,7 +188,7 @@
               [class]="guest.people[0].hometown.code | flag"
               [matTooltip]="_format.formatCountry(guest.people[0].hometown.code)"
             ></span>
-            {{ guest.people[0].hometown.city }}
+            {{ guest.people[0].hometown.city }}, {{ guest.people[0].hometown.state }}
           </span>
         </div>
 
@@ -199,7 +199,7 @@
               [class]="person.hometown.code | flag"
               [matTooltip]="_format.formatCountry(person.hometown.code)"
             ></span>
-            {{ person.hometown.city }}
+            {{ person.hometown.city }}, {{ person.hometown.state }}
           </div>
         </ng-template>
       </td>
@@ -219,7 +219,7 @@
               [class]="guest.people[0].livingIn.code | flag"
               [matTooltip]="_format.formatCountry(guest.people[0].livingIn.code)"
             ></span>
-            {{ guest.people[0].livingIn.city }}
+            {{ guest.people[0].livingIn.city }}, {{ guest.people[0].livingIn.state }}
           </span>
         </div>
 
@@ -230,7 +230,7 @@
               [class]="person.livingIn.code | flag"
               [matTooltip]="_format.formatCountry(person.livingIn.code)"
             ></span>
-            {{ person.livingIn.city }}
+            {{ person.livingIn.city }}, {{ person.livingIn.state }}
           </div>
         </ng-template>
       </td>

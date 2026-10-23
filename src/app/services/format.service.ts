@@ -60,7 +60,7 @@ export class FormatService {
   }
 
   formatCountry(code: string): string {
-    const countryCode = code.toLowerCase() as CountriesCodes;
+    const countryCode = code?.toLowerCase() as CountriesCodes;
     const country = WORLD[countryCode];
     if (!country) return code;
     return country.name[this._language.currentLanguage] || country.name.en;
