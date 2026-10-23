@@ -14,11 +14,12 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 // Services
 import { AlertsService } from '@services/alerts.service';
-import { CityService, ICity, IState } from '@services/city.service';
+import { CityService } from '@services/city.service';
 import { FormatService } from '@services/format.service';
 
 // Interfaces
 import { IBodyGuest, IGuestDetail } from '@interfaces/guests.interface';
+import { LocationConfig, ICity, IState } from '@interfaces/guest-form.interface';
 
 // Types
 import { ICountry, CountriesCodes, LANG, Language } from '@type/word.types';
@@ -65,7 +66,11 @@ export class GuestFormComponent implements OnInit {
 
   // BirthDate Limit
   maxBirthDate: Date = new Date();
-  minBirthDate: Date = new Date(new Date().getFullYear() - 130, new Date().getMonth(), new Date().getDay());
+  minBirthDate: Date = (() => {
+    const date = new Date();
+    date.setFullYear(date.getFullYear() - 130);
+    return date;
+  })();
 
   // Nights
   howManyNights: number = 20;
@@ -78,20 +83,8 @@ export class GuestFormComponent implements OnInit {
   occupationAreas = Object.keys(OCCUPATIONS_BY_AREA);
   occupations: string[] = [];
 
-  getOccupationAreaLabel(area: string): string {
-    const lang = this._translate.currentLang || 'en';
-
-    return OCCUPATION_AREA_TRANSLATIONS[area]?.[lang as 'en' | 'es'] ?? OCCUPATION_AREA_TRANSLATIONS[area]?.en ?? area;
-  }
-
-  getOccupationLabel(occupation: string): string {
-    const lang = this._translate.currentLang || 'en';
-
-    return OCCUPATION_TRANSLATIONS[occupation]?.[lang as 'en' | 'es'] ?? OCCUPATION_TRANSLATIONS[occupation]?.en ?? occupation;
-  }
-
   // Gifts
-  addOnBlur = true;
+  addOnBlur: boolean = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   gifts: { name: string }[] = [];
 
@@ -124,14 +117,29 @@ export class GuestFormComponent implements OnInit {
   loadingWeMetStates = false;
   loadingWeMetCities = false;
 
+  private isInitializingWeMetEdit = false;
+
+  readonly maxLengths = {
+    fullName: 100,
+    instagram: 30,
+    urlProfileCs: 50,
+    locationWeMet: 100,
+    whatsapp: 16,
+    comments: 2000,
+    theirReference: 1500,
+    myReference: 1500,
+  } as const;
+
+  // Injects
   private readonly destroyRef = inject(DestroyRef);
   private fb = inject(FormBuilder);
   private _alerts = inject(AlertsService);
   private announcer = inject(LiveAnnouncer);
-  private _city = inject(CityService);
+  private readonly _city = inject(CityService);
   private _translate = inject(TranslateService);
   private readonly _format = inject(FormatService);
 
+  // Getters
   get f() {
     return this.formCreateGuest.controls;
   }
@@ -166,114 +174,384 @@ export class GuestFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
+
     this.loadDataCountries();
 
-    // Refresh country autocomplete labels when the language changes.
+    this.listenLocationCountry('hometown');
+    this.listenLocationState('hometown');
+
+    this.listenLocationCountry('livingIn');
+    this.listenLocationState('livingIn');
+
+    this.listenLocationCountry('weMet');
+    this.listenLocationState('weMet');
+
+    if (this.guest) {
+      this.patchGuestForm();
+    }
+
+    this.initializeLocationEdit();
+    this.initializeWeMetEdit();
+
+    this.onOccupation();
+
     this._translate.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.sortCountriesByLanguage();
       this.refreshCountryAutocompleteDisplays();
     });
+  }
 
-    this.filteredCountries = this.countries;
-    this.filteredLiving = this.countries;
-    this.filteredCountryWeMet = this.countries;
-    this.filteredPrefixCountries = this.countries;
+  private listenLocationCountry(type: 'hometown' | 'livingIn' | 'weMet'): void {
+    const config = this.getLocationConfig(type);
+    const countryControl = this.formCreateGuest.get(config.countryControl);
 
-    this.selectedPrefixCountry = this.countries.find(country => country.prefix === this.prefixCodeCtrl?.value);
+    const resetFields: Record<'hometown' | 'livingIn' | 'weMet', Record<string, string>> = {
+      hometown: {
+        hometownState: '',
+        hometownCity: '',
+        continent: '',
+        region: '',
+      },
+      livingIn: {
+        livingInState: '',
+        livingInCity: '',
+      },
+      weMet: {
+        stateWeMet: '',
+        cityWeMet: '',
+        locationWeMet: '',
+      },
+    };
 
-    this.formCreateGuest.patchValue({ groupType: this.selectedGroupType });
+    countryControl?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((countryCode: string | null) => {
+      config.setStates([]);
+      config.setCities([]);
+      config.setLoadingStates(false);
+      config.setLoadingCities(false);
 
-    this.onOccupation();
+      // Durante la edición, conservar los valores guardados de weMet
+      // mientras se inicializan sus estados y ciudades.
+      if (type === 'weMet' && this.isInitializingWeMetEdit) {
+        if (countryCode) this.loadLocationStates(config);
+        return;
+      }
 
-    this.listenHometownCountry();
-    this.listenHometownState();
+      // Limpiar los campos asociados al país seleccionado.
+      this.formCreateGuest.patchValue(resetFields[type], { emitEvent: false });
 
-    this.listenLivingCountry();
-    this.listenLivingState();
+      if (!countryCode) return;
 
-    this.listenWeMetCountry();
-    this.listenWeMetState();
-    this.initializeWeMetEdit();
+      // Actualizar continente, región y prefijo únicamente para hometown.
+      if (type === 'hometown') {
+        const country = this.findCountry(countryCode);
+        if (!country) return;
+
+        this.updateCountryInfo(country);
+        this.setDefaultPrefix(country.prefix);
+      }
+
+      this.loadLocationStates(config);
+    });
+  }
+
+  private listenLocationState(type: 'hometown' | 'livingIn' | 'weMet'): void {
+    const config = this.getLocationConfig(type);
+    const stateControl = this.formCreateGuest.get(config.stateControl);
+
+    stateControl?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state: IState | string | null) => {
+      config.setCities([]);
+      config.setLoadingCities(false);
+
+      this.formCreateGuest.patchValue({ [config.cityControl]: '' }, { emitEvent: false });
+      if (!state || typeof state === 'string' || !state.iso2) return;
+
+      this.loadLocationCities(config, state);
+    });
+  }
+
+  private findLocationByName<T extends { name: string }>(locations: T[], savedName: string): T | undefined {
+    const normalizedName = this._city.normalizeLocation(savedName);
+    return locations.find(item => this._city.normalizeLocation(item.name) === normalizedName);
+  }
+
+  private filterCountries(value: string): typeof this.countries {
+    const normalizedValue = value.toLowerCase().trim();
+
+    return this.countries.filter(
+      country =>
+        this.getCountryName(country.countryCode).toLowerCase().includes(normalizedValue) ||
+        country.name.en.toLowerCase().includes(normalizedValue) ||
+        country.countryCode.toLowerCase().includes(normalizedValue)
+    );
+  }
+
+  private initializeLocationEdit(): void {
+    if (!this.guest) return;
+    this.initializeHometownEdit();
+    this.initializeLivingEdit();
+  }
+
+  private initializeLocationFields(config: {
+    countryCode: string | null | undefined;
+    savedState: string;
+    savedCity: string;
+    states: IState[];
+    setStates: (states: IState[]) => void;
+    setCities: (cities: ICity[]) => void;
+    setLoadingStates: (loading: boolean) => void;
+    setLoadingCities: (loading: boolean) => void;
+    stateControl: string;
+    cityControl: string;
+    preserveCountryListener?: boolean;
+  }): void {
+    const { countryCode, savedState, savedCity, setStates, setCities, setLoadingStates, setLoadingCities, stateControl, cityControl, preserveCountryListener = false } = config;
+
+    if (!countryCode) return;
+
+    const apiCountryCode = this._city.getApiCountryCode(countryCode);
+
+    if (!apiCountryCode) {
+      this.formCreateGuest.patchValue(
+        {
+          [stateControl]: savedState,
+          [cityControl]: savedCity,
+        },
+        { emitEvent: false }
+      );
+      return;
+    }
+
+    if (preserveCountryListener) {
+      this.isInitializingWeMetEdit = true;
+    }
+
+    setLoadingStates(true);
+
+    this._city
+      .getStates(apiCountryCode)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: states => {
+          const availableStates = states ?? [];
+          setStates(availableStates);
+          setLoadingStates(false);
+
+          const state = this.findLocationByName(availableStates, savedState);
+
+          if (!state) {
+            setCities([]);
+            setLoadingCities(false);
+
+            this.formCreateGuest.patchValue(
+              {
+                [stateControl]: savedState,
+                [cityControl]: savedCity,
+              },
+              { emitEvent: false }
+            );
+
+            if (preserveCountryListener) {
+              this.isInitializingWeMetEdit = false;
+            }
+
+            return;
+          }
+
+          this.formCreateGuest.patchValue({ [stateControl]: state }, { emitEvent: false });
+
+          setLoadingCities(true);
+
+          this._city
+            .getCities(apiCountryCode, state.iso2)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+              next: cities => {
+                const availableCities = cities ?? [];
+                setCities(availableCities);
+                setLoadingCities(false);
+
+                const city = this.findLocationByName(availableCities, savedCity);
+
+                this.formCreateGuest.patchValue({ [cityControl]: city ?? savedCity }, { emitEvent: false });
+
+                if (preserveCountryListener) {
+                  this.isInitializingWeMetEdit = false;
+                }
+              },
+              error: () => {
+                setCities([]);
+                setLoadingCities(false);
+
+                this.formCreateGuest.patchValue({ [cityControl]: savedCity }, { emitEvent: false });
+
+                if (preserveCountryListener) {
+                  this.isInitializingWeMetEdit = false;
+                }
+              },
+            });
+        },
+        error: () => {
+          setStates([]);
+          setCities([]);
+          setLoadingStates(false);
+          setLoadingCities(false);
+
+          this.formCreateGuest.patchValue(
+            {
+              [stateControl]: savedState,
+              [cityControl]: savedCity,
+            },
+            { emitEvent: false }
+          );
+
+          if (preserveCountryListener) {
+            this.isInitializingWeMetEdit = false;
+          }
+        },
+      });
+  }
+
+  private initializeWeMetEdit(): void {
+    this.initializeLocationFields({
+      countryCode: this.guest?.countryCodeWeMet,
+      savedState: this.getLocationName(this.guest?.stateWeMet),
+      savedCity: this.getLocationName(this.guest?.cityWeMet),
+      states: this.weMetStates,
+      setStates: states => (this.weMetStates = states),
+      setCities: cities => (this.weMetCities = cities),
+      setLoadingStates: loading => (this.loadingWeMetStates = loading),
+      setLoadingCities: loading => (this.loadingWeMetCities = loading),
+      stateControl: 'stateWeMet',
+      cityControl: 'cityWeMet',
+      preserveCountryListener: true,
+    });
+  }
+
+  private initializeHometownEdit(): void {
+    this.initializeLocationFields({
+      countryCode: this.guest?.hometownCode,
+      savedState: this.getLocationName(this.guest?.hometownState),
+      savedCity: this.getLocationName(this.guest?.hometownCity),
+      states: this.hometownStates,
+      setStates: states => (this.hometownStates = states),
+      setCities: cities => (this.hometownCities = cities),
+      setLoadingStates: loading => (this.loadingHometownStates = loading),
+      setLoadingCities: loading => (this.loadingHometownCities = loading),
+      stateControl: 'hometownState',
+      cityControl: 'hometownCity',
+    });
+  }
+
+  private initializeLivingEdit(): void {
+    this.initializeLocationFields({
+      countryCode: this.guest?.livingInCode,
+      savedState: this.getLocationName(this.guest?.livingInState),
+      savedCity: this.getLocationName(this.guest?.livingInCity),
+      states: this.livingInStates,
+      setStates: states => (this.livingInStates = states),
+      setCities: cities => (this.livingInCities = cities),
+      setLoadingStates: loading => (this.loadingLivingStates = loading),
+      setLoadingCities: loading => (this.loadingLivingCities = loading),
+      stateControl: 'livingInState',
+      cityControl: 'livingInCity',
+    });
+  }
+
+  private patchGuestForm(): void {
+    if (!this.guest) return;
+
+    this.formCreateGuest.patchValue(
+      {
+        fullName: this.guest.fullName,
+        instagram: this.guest.instagram,
+        urlProfileCs: this.guest.urlProfileCs,
+        birthDate: this.guest.birthDate,
+        gender: this.guest.gender,
+        continent: this.guest.continent,
+        region: this.guest.region,
+
+        hometownCode: this.guest.hometownCode,
+        hometownState: this.guest.hometownState,
+        hometownCity: this.guest.hometownCity,
+
+        livingInCode: this.guest.livingInCode,
+        livingInState: this.guest.livingInState,
+        livingInCity: this.guest.livingInCity,
+
+        countryCodeWeMet: this.guest.countryCodeWeMet,
+        locationWeMet: this.guest.locationWeMet,
+        stateWeMet: this.guest.stateWeMet,
+        cityWeMet: this.guest.cityWeMet,
+
+        prefixCode: this.guest.prefixCode,
+        whatsapp: this.guest.whatsapp,
+        occupationArea: this.guest.occupationArea,
+        occupation: this.guest.occupation,
+        rating: this.guest.rating,
+        comments: this.guest.comments,
+        groupType: this.guest.groupType,
+        gift: this.guest.gift,
+
+        isFirstTime: this.guest.isFirstTime,
+        didTheyReq: this.guest.didTheyReq,
+        hangOut: this.guest.hangOut,
+        isGay: this.guest.isGay,
+        ambassador: this.guest.ambassador ?? false,
+
+        theirReference: this.guest.theirReference,
+        myReference: this.guest.myReference,
+      },
+      { emitEvent: false }
+    );
+
+    this.gifts = (this.guest.gift ?? []).map(name => ({ name }));
   }
 
   initForm(): void {
     this.formCreateGuest = this.fb.group({
-      fullName: ['', [Validators.required, Validators.maxLength(100)]],
-      instagram: ['', [Validators.maxLength(30)]],
-      urlProfileCs: ['', [Validators.maxLength(50)]],
+      fullName: ['', [Validators.required, Validators.maxLength(this.maxLengths.fullName)]],
+      instagram: ['', [Validators.maxLength(this.maxLengths.instagram)]],
+      urlProfileCs: ['', [Validators.maxLength(this.maxLengths.urlProfileCs)]],
+
       birthDate: [''],
       gender: ['', [Validators.required]],
       continent: [''],
       region: [''],
-      hometownCode: ['', Validators.required],
+
+      hometownCode: ['', [Validators.required]],
       hometownState: [''],
       hometownCity: [''],
-      livingInCode: ['', Validators.required],
+
+      livingInCode: [''],
       livingInState: [''],
       livingInCity: [''],
-      countryCodeWeMet: ['', Validators.required],
+
+      countryCodeWeMet: ['', [Validators.required]],
       stateWeMet: [''],
       cityWeMet: [''],
-      locationWeMet: ['', Validators.maxLength(100)],
+      locationWeMet: ['', [Validators.maxLength(this.maxLengths.locationWeMet)]],
+
       prefixCode: [''],
-      whatsapp: ['', [Validators.maxLength(16), Validators.pattern(/^\+?[1-9]\d{7,14}$/)]],
+      whatsapp: ['', [Validators.maxLength(this.maxLengths.whatsapp), Validators.pattern(/^\+?[1-9]\d{7,14}$/)]],
+
       occupationArea: [[]],
       occupation: [[]],
       otherOccupation: [''],
+
       rating: [''],
-      comments: ['', [Validators.maxLength(2000)]],
+      comments: ['', [Validators.maxLength(this.maxLengths.comments)]],
       gift: [[]],
-      // Type Form
-      groupType: [this.selectedGroupType, Validators.required],
+      groupType: [this.selectedGroupType, [Validators.required]],
+
       isFirstTime: [false],
       didTheyReq: [false],
       isGay: [false],
       hangOut: [false],
       ambassador: [false],
-      theirReference: ['', [Validators.maxLength(1500)]],
-      myReference: ['', [Validators.maxLength(1500)]],
+
+      theirReference: ['', [Validators.maxLength(this.maxLengths.theirReference)]],
+      myReference: ['', [Validators.maxLength(this.maxLengths.myReference)]],
     });
-
-    if (!this.guest) {
-      return;
-    }
-
-    this.formCreateGuest.patchValue({
-      fullName: this.guest.fullName,
-      instagram: this.guest.instagram,
-      urlProfileCs: this.guest.urlProfileCs,
-      birthDate: this.guest.birthDate,
-      gender: this.guest.gender,
-      continent: this.guest.continent,
-      region: this.guest.region,
-      hometownCode: this.guest.hometownCode,
-      // hometownState: this.guest.hometownState,
-      // hometownCity: this.guest.hometownCity,
-      livingInCode: this.guest.livingInCode,
-      // livingInState: this.guest.livingInState,
-      // livingInCity: this.guest.livingInCity,
-      countryCodeWeMet: this.guest.countryCodeWeMet,
-      locationWeMet: this.guest.locationWeMet,
-      prefixCode: this.guest.prefixCode,
-      whatsapp: this.guest.whatsapp,
-      // occupationArea: this.guest.occupationArea,
-      occupation: this.guest.occupation,
-      rating: this.guest.rating,
-      comments: this.guest.comments,
-      groupType: this.guest.groupType,
-      gift: this.guest.gift,
-      isFirstTime: this.guest.isFirstTime,
-      didTheyReq: this.guest.didTheyReq,
-      hangOut: this.guest.hangOut,
-      isGay: this.guest.isGay,
-      ambassador: this.guest.ambassador ?? false,
-      theirReference: this.guest.theirReference,
-      myReference: this.guest.myReference,
-    });
-
-    if (this.guest.gift) {
-      this.gifts = this.guest.gift.map(name => ({ name }));
-    }
   }
 
   scrollToFirstInvalidControl(): void {
@@ -285,90 +563,90 @@ export class GuestFormComponent implements OnInit {
         'input.ng-invalid, textarea.ng-invalid, mat-select.ng-invalid, mat-radio-group.ng-invalid'
       ) as HTMLElement;
 
-      if (!firstInvalidControl) {
-        return;
-      }
+      if (!firstInvalidControl) return;
 
-      firstInvalidControl.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
+      firstInvalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
   }
 
   private formatDate(dateValue: string | Date | null): string {
     if (!dateValue) return '';
-    const date = new Date(dateValue);
-    return [date.getFullYear(), String(date.getMonth() + 1).padStart(2, '0'), String(date.getDate()).padStart(2, '0')].join('-');
+
+    if (typeof dateValue === 'string') {
+      const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateValue);
+      if (match) return dateValue;
+    }
+
+    const date = dateValue instanceof Date ? dateValue : new Date(dateValue);
+
+    if (Number.isNaN(date.getTime())) return '';
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 
   private buildGuestPayload(): IBodyGuest {
-    const { occupationArea, otherOccupation, hometownState, hometownCity, livingInState, livingInCity, stateWeMet, cityWeMet, ...guest } = this.formCreateGuest.getRawValue();
+    const { otherOccupation, hometownState, hometownCity, livingInState, livingInCity, stateWeMet, cityWeMet, ...guest } = this.formCreateGuest.getRawValue();
 
-    const occupation = [...guest.occupation];
-    const otherOccupationIndex = occupation.indexOf('Write another occupation');
+    // Normalizar ocupaciones y eliminar duplicados.
+    const occupation = this.normalizeOccupations(guest.occupation, otherOccupation);
 
-    if (otherOccupationIndex !== -1) {
-      occupation.splice(otherOccupationIndex, 1);
+    const occupationArea = this.normalizeOccupations(guest.occupationArea, otherOccupation);
 
-      if (otherOccupation?.trim()) {
-        occupation.push(otherOccupation.trim());
-      }
-    }
-
-    // Normalize API selections and manually entered location values
+    // Normalizar ubicaciones: pueden ser objetos de la API
+    // o valores introducidos manualmente.
     const hometownStateName = this.getLocationName(hometownState);
     const hometownCityName = this.getLocationName(hometownCity);
-    const livingStateName = this.getLocationName(livingInState);
-    const livingCityName = this.getLocationName(livingInCity);
-    const meetingStateName = this.getLocationName(stateWeMet);
-    const meetingCityName = this.getLocationName(cityWeMet);
+    const livingInStateName = this.getLocationName(livingInState);
+    const livingInCityName = this.getLocationName(livingInCity);
+    const cityWeMetName = this.getLocationName(cityWeMet);
+    const stateWeMetName = this.getLocationName(stateWeMet);
 
     const payload: IBodyGuest = {
       ...guest,
       occupation,
+      occupationArea,
       birthDate: this.formatDate(guest.birthDate),
-      hometown: [hometownCityName, hometownStateName].filter(Boolean).join(', '),
-      livingIn: [livingCityName, livingStateName].filter(Boolean).join(', '),
-      cityWeMet: [meetingStateName, meetingCityName].filter(Boolean).join(', '),
+      hometownCity: hometownCityName,
+      hometownState: hometownStateName,
+      livingInCity: livingInCityName,
+      livingInState: livingInStateName,
+      cityWeMet: cityWeMetName,
+      stateWeMet: stateWeMetName,
     };
 
-    // Omit optional fields when no value is provided.
-    if (!guest.rating) {
-      delete payload.rating;
-    }
-
-    if (!guest.birthDate) {
-      delete payload.birthDate;
-    }
+    // Omitir campos opcionales cuando no tienen valor.
+    if (!guest.rating) delete payload.rating;
+    if (!guest.birthDate) delete payload.birthDate;
 
     return payload;
   }
 
   getMaxLength(controlName: string): number {
     const control = this.formCreateGuest?.get(controlName);
+    if (!control) return 0;
 
-    if (!control || !control.validator) return 0;
-    const mockControl = new FormControl('x'.repeat(100000));
-    const errors = control.validator(mockControl);
+    const validator = control.validator;
+    if (!validator) return 0;
 
-    return errors?.['maxlength']?.['requiredLength'] || 0;
+    const errors = validator(new FormControl('x'.repeat(100000)));
+    return errors?.['maxlength']?.['requiredLength'] ?? 0;
   }
 
   // Display the selected country in the current language
   displayCountryCode = (countryCode: string | null): string => {
     if (!countryCode) return '';
-    const country = this.countries.find(country => country.countryCode === countryCode);
+    const normalizedCode = countryCode.toLowerCase();
+    const country = this.countries.find(country => country.countryCode.toLowerCase() === normalizedCode);
     return country ? this.getCountryName(country.countryCode) : '';
   };
 
   displayPrefix = (value: string | (ICountry & { countryCode: CountriesCodes }) | null): string => {
-    if (!value) {
-      return '';
-    }
-    if (typeof value === 'string') {
-      return value;
-    }
+    if (!value) return '';
+    if (typeof value === 'string') return value;
     return value.prefix;
   };
 
@@ -381,9 +659,7 @@ export class GuestFormComponent implements OnInit {
       const countryCode = control?.value;
 
       // Only refresh values that match a valid country code
-      if (typeof countryCode !== 'string' || !this.countries.some(country => country.countryCode === countryCode)) {
-        return;
-      }
+      if (typeof countryCode !== 'string' || !this.countries.some(country => country.countryCode.toLowerCase() === countryCode.toLowerCase())) return;
 
       // Keep the selected code and refresh its displayed label
       control?.setValue(countryCode, { emitEvent: false });
@@ -395,43 +671,53 @@ export class GuestFormComponent implements OnInit {
     this.selectedPrefixCountry = this.countries.find(country => country.prefix === prefix);
   }
 
-  private onOccupation(): void {
-    this.formCreateGuest
-      .get('occupationArea')
-      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((areas: string[]) => {
-        if (!areas?.length) {
-          this.occupations = [];
-          this.formCreateGuest.patchValue({ occupation: [] });
-          return;
-        }
-
-        const occupations = areas.flatMap(area => OCCUPATIONS_BY_AREA[area] || []);
-        this.occupations = [...new Set(occupations)];
-        this.formCreateGuest.patchValue({ occupation: [] });
-      });
-  }
-
   starsRating(rating: number): void {
     this.formCreateGuest.patchValue({ rating });
   }
 
   getRatingMsg(): string {
     const rating = this.hoverRating || this.formCreateGuest.get('rating')?.value;
-
     if (!rating) return '';
-
     return this._translate.instant(this.ratingMsgs[rating]);
   }
 
+  showAllLivingCountries(): void {
+    this.filteredLiving = [...this.countries];
+  }
+
+  showAllHometownCountries(): void {
+    this.filteredCountries = [...this.countries];
+  }
+
+  showAllCountryWeMet(): void {
+    this.filteredCountryWeMet = [...this.countries];
+  }
+
+  isLivingCountrySelected(countryCode: string): boolean {
+    const selectedCode = this.formCreateGuest.get('livingInCode')?.value;
+    return !!selectedCode && String(selectedCode).trim().toUpperCase() === countryCode.trim().toUpperCase();
+  }
+
+  isHometownCountrySelected(countryCode: string): boolean {
+    const selectedCode = this.formCreateGuest.get('hometownCode')?.value;
+    return !!selectedCode && String(selectedCode).trim().toUpperCase() === countryCode.trim().toUpperCase();
+  }
+
   loadDataCountries(): void {
-    this.countries = (Object.entries(WORLD) as [CountriesCodes, ICountry][]).map(([countryCode, country]) => ({ countryCode, ...country }));
+    this.countries = (Object.entries(WORLD) as [CountriesCodes, ICountry][]).map(([countryCode, country]) => ({
+      countryCode,
+      ...country,
+    }));
+
+    this.filteredLiving = [...this.countries];
+    this.filteredCountries = [...this.countries];
+    this.filteredCountryWeMet = [...this.countries];
+
     this.sortCountriesByLanguage();
   }
 
   private sortCountriesByLanguage(): void {
     const currentLang = this._translate.currentLang || 'en';
-
     const lang: Language = LANG.includes(currentLang as Language) ? (currentLang as Language) : 'en';
 
     const sortByCountryName = (countries: Array<ICountry & { countryCode: CountriesCodes }>) => {
@@ -445,167 +731,8 @@ export class GuestFormComponent implements OnInit {
     this.filteredPrefixCountries = sortByCountryName(this.filteredPrefixCountries);
   }
 
-  private listenHometownCountry(): void {
-    this.hometownCodeCtrl?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(countryCode => {
-      if (!countryCode) {
-        this.resetHometownLocation();
-        return;
-      }
-
-      const country = this.findCountry(countryCode);
-      if (!country) return;
-
-      this.updateCountryInfo(country);
-      this.loadHometownStates(countryCode);
-      this.setDefaultPrefix(country.prefix);
-    });
-  }
-
-  private listenHometownState(): void {
-    this.hometownStateCtrl?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state: IState | string | null) => {
-      // Reset the previous city and loading state
-      this.hometownCities = [];
-      this.loadingHometownCities = false;
-      this.formCreateGuest.patchValue({
-        hometownCity: '',
-      });
-
-      // Manual state entry
-      if (!state || typeof state === 'string' || !state.iso2) {
-        return;
-      }
-
-      const apiCountryCode = this.getCountryApiCode();
-
-      if (!apiCountryCode) return;
-
-      // Load cities for the selected API state
-      this.loadHometownCities(apiCountryCode, state.iso2);
-    });
-  }
-
-  private listenLivingCountry(): void {
-    this.livingInCodeCtrl?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(countryCode => {
-      this.loadingLivingStates = false;
-      this.loadingLivingCities = false;
-      this.livingInStates = [];
-      this.livingInCities = [];
-
-      this.formCreateGuest.patchValue({
-        livingInState: '',
-        livingInCity: '',
-      });
-
-      if (!countryCode) return;
-
-      this.loadLivingStates(countryCode);
-    });
-  }
-
-  private listenLivingState(): void {
-    this.livingInStateCtrl?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state: IState | string | null) => {
-      this.livingInCities = [];
-      this.loadingLivingCities = false;
-
-      this.formCreateGuest.patchValue({
-        livingInCity: '',
-      });
-
-      if (!state || typeof state === 'string' || !state.iso2) {
-        return;
-      }
-
-      const countryCode = this.livingInCodeCtrl?.value;
-      const apiCountryCode = countryCode ? WORLD[countryCode as keyof typeof WORLD]?.flag : null;
-
-      if (!apiCountryCode) return;
-
-      this.loadLivingCities(apiCountryCode, state.iso2);
-    });
-  }
-
-  private listenWeMetCountry(): void {
-    this.weMetCountryCtrl?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(countryCode => {
-      this.loadingWeMetStates = false;
-      this.loadingWeMetCities = false;
-      this.weMetStates = [];
-      this.weMetCities = [];
-
-      this.formCreateGuest.patchValue({
-        stateWeMet: '',
-        cityWeMet: '',
-      });
-
-      if (!countryCode) return;
-
-      this.loadWeMetStates(countryCode);
-    });
-  }
-
-  private listenWeMetState(): void {
-    this.weMetStateCtrl?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state: IState | string | null) => {
-      this.weMetCities = [];
-      this.loadingWeMetCities = false;
-
-      this.formCreateGuest.patchValue({
-        cityWeMet: '',
-      });
-
-      if (!state || typeof state === 'string' || !state.iso2) {
-        return;
-      }
-
-      const countryCode = this.weMetCountryCtrl?.value;
-      const apiCountryCode = countryCode ? WORLD[countryCode as keyof typeof WORLD]?.flag : null;
-
-      if (!apiCountryCode) return;
-
-      this.loadWeMetCities(apiCountryCode, state.iso2);
-    });
-  }
-
-  private initializeWeMetEdit(): void {
-    if (!this.guest?.countryCodeWeMet) {
-      return;
-    }
-    const combinedCity = this.guest.cityWeMet?.trim();
-
-    if (!combinedCity) return;
-
-    const [stateName, ...cityParts] = combinedCity.split(',');
-    const cityName = cityParts.join(',').trim();
-    const apiCountryCode = WORLD[this.guest.countryCodeWeMet as keyof typeof WORLD]?.flag;
-
-    if (!apiCountryCode) return;
-
-    this._city
-      .getStates(apiCountryCode)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((states: IState[]) => {
-        this.weMetStates = states;
-
-        const state = states.find(item => item.name.toLowerCase() === stateName.trim().toLowerCase());
-
-        if (!state) return;
-
-        this.formCreateGuest.patchValue({ stateWeMet: state }, { emitEvent: false });
-        this._city
-          .getCities(apiCountryCode, state.iso2)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe((cities: ICity[]) => {
-            this.weMetCities = cities;
-
-            const city = cities.find(item => item.name.toLowerCase() === cityName.toLowerCase());
-
-            if (!city) return;
-
-            this.formCreateGuest.patchValue({ cityWeMet: city }, { emitEvent: false });
-          });
-      });
-  }
-
   private findCountry(countryCode: string): (ICountry & { countryCode: CountriesCodes }) | undefined {
-    return this.countries.find(country => country.countryCode === countryCode);
+    return this.countries.find(country => country.countryCode.toLowerCase() === countryCode.toLowerCase());
   }
 
   private updateCountryInfo(country: ICountry): void {
@@ -613,77 +740,6 @@ export class GuestFormComponent implements OnInit {
       continent: country.continent,
       region: country.region,
     });
-  }
-
-  private getCountryApiCode(): string | null {
-    const hometownCode = this.hometownCodeCtrl?.value;
-    if (!hometownCode) return null;
-    return WORLD[hometownCode as keyof typeof WORLD]?.flag ?? null;
-  }
-
-  private loadHometownStates(countryCode: string): void {
-    const apiCountryCode = WORLD[countryCode as keyof typeof WORLD]?.flag;
-
-    // Reset the previous location.
-    this.loadingHometownStates = false;
-    this.loadingHometownCities = false;
-    this.hometownStates = [];
-    this.hometownCities = [];
-
-    this.formCreateGuest.patchValue({
-      hometownState: '',
-      hometownCity: '',
-    });
-
-    if (!apiCountryCode) {
-      return;
-    }
-
-    this.loadingHometownStates = true;
-
-    this._city
-      .getStates(apiCountryCode)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (states: IState[]) => {
-          this.hometownStates = states ?? [];
-          this.loadingHometownStates = false;
-        },
-        error: () => {
-          this.hometownStates = [];
-          this.loadingHometownStates = false;
-        },
-      });
-  }
-
-  private loadHometownCities(countryCode: string, stateCode: string): void {
-    // Prevent unnecessary requests without a valid state code
-    if (!stateCode) {
-      this.hometownCities = [];
-      this.loadingHometownCities = false;
-      return;
-    }
-
-    this.loadingHometownCities = true;
-    this.hometownCities = [];
-
-    this.formCreateGuest.patchValue({ hometownCity: '' });
-
-    this._city
-      .getCities(countryCode, stateCode)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (cities: ICity[]) => {
-          this.hometownCities = cities ?? [];
-
-          // An empty list switches the city field to manual entry
-          this.loadingHometownCities = false;
-        },
-        error: () => {
-          this.hometownCities = [];
-          this.loadingHometownCities = false;
-        },
-      });
   }
 
   // PREFIX
@@ -727,36 +783,18 @@ export class GuestFormComponent implements OnInit {
   }
 
   filterHometowns(event: Event): void {
-    const value = (event.target as HTMLInputElement).value.toLowerCase().trim();
-
-    this.filteredCountries = this.countries.filter(
-      country =>
-        this.getCountryName(country.countryCode).toLowerCase().includes(value) ||
-        country.name.en.toLowerCase().includes(value) ||
-        country.countryCode.toLowerCase().includes(value)
-    );
+    const value = (event.target as HTMLInputElement).value;
+    this.filteredCountries = this.filterCountries(value);
   }
 
   filterLiving(event: Event): void {
-    const value = (event.target as HTMLInputElement).value.toLowerCase().trim();
-
-    this.filteredLiving = this.countries.filter(
-      country =>
-        this.getCountryName(country.countryCode).toLowerCase().includes(value) ||
-        country.name.en.toLowerCase().includes(value) ||
-        country.countryCode.toLowerCase().includes(value)
-    );
+    const value = (event.target as HTMLInputElement).value;
+    this.filteredLiving = this.filterCountries(value);
   }
 
   filterCountryWeMet(event: Event): void {
-    const value = (event.target as HTMLInputElement).value.toLowerCase().trim();
-
-    this.filteredCountryWeMet = this.countries.filter(
-      country =>
-        this.getCountryName(country.countryCode).toLowerCase().includes(value) ||
-        country.name.en.toLowerCase().includes(value) ||
-        country.countryCode.toLowerCase().includes(value)
-    );
+    const value = (event.target as HTMLInputElement).value;
+    this.filteredCountryWeMet = this.filterCountries(value);
   }
 
   // GIFTS
@@ -846,9 +884,10 @@ export class GuestFormComponent implements OnInit {
   }
 
   isValid(controlName: string): boolean {
-    const control = this.f[controlName];
+    const control = this.formCreateGuest.get(controlName);
 
-    if (!(control.dirty || control.touched) || !control.valid) return false;
+    if (!control || control.invalid) return false;
+    if (!(control.dirty || control.touched)) return false;
     const value = control.value;
 
     if (Array.isArray(value)) return value.length > 0;
@@ -856,121 +895,179 @@ export class GuestFormComponent implements OnInit {
   }
 
   isInvalid(controlName: string): boolean {
-    const control = this.f[controlName];
-    return !!(control.invalid && (control.dirty || control.touched));
+    const control = this.formCreateGuest.get(controlName);
+    return !!(control?.invalid && (control.dirty || control.touched));
   }
 
   // Normalizes location values API selectors return objects with a name property, while manual inputs return strings
   private getLocationName(value: { name: string } | string | null | undefined): string {
     // Handle manually entered values
-    if (typeof value === 'string') {
-      return value.trim();
-    }
-
+    if (typeof value === 'string') return value.trim();
     // Handle values selected from the API
-    if (value && typeof value === 'object') {
-      return value.name?.trim() ?? '';
-    }
-
+    if (value && typeof value === 'object') return value.name?.trim() ?? '';
     // Return an empty string when no value is provided
     return '';
   }
 
-  private loadWeMetStates(countryCode: string): void {
-    const apiCountryCode = WORLD[countryCode as keyof typeof WORLD]?.flag;
+  private loadLocationStates(config: LocationConfig): void {
+    const countryCode = this.formCreateGuest.get(config.countryControl)?.value;
+    const apiCountryCode = this._city.getApiCountryCode(countryCode);
 
-    this.weMetStates = [];
-    this.weMetCities = [];
-    this.loadingWeMetStates = false;
+    config.setStates([]);
+    config.setCities([]);
+    config.setLoadingStates(false);
+    config.setLoadingCities(false);
 
     if (!apiCountryCode) return;
 
-    this.loadingWeMetStates = true;
+    config.setLoadingStates(true);
 
     this._city
       .getStates(apiCountryCode)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: states => {
-          this.weMetStates = states ?? [];
-          this.loadingWeMetStates = false;
+          config.setStates(states ?? []);
+          config.setLoadingStates(false);
         },
         error: () => {
-          this.weMetStates = [];
-          this.loadingWeMetStates = false;
+          config.setStates([]);
+          config.setCities([]);
+          config.setLoadingStates(false);
+          config.setLoadingCities(false);
         },
       });
   }
 
-  private loadWeMetCities(countryCode: string, stateCode: string): void {
-    this.weMetCities = [];
-    this.loadingWeMetCities = false;
+  private loadLocationCities(config: LocationConfig, state: IState | string | null): void {
+    config.setCities([]);
+    config.setLoadingCities(false);
 
-    if (!stateCode) return;
+    if (!state || typeof state === 'string' || !state.iso2) {
+      return;
+    }
 
-    this.loadingWeMetCities = true;
-
-    this._city
-      .getCities(countryCode, stateCode)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: cities => {
-          this.weMetCities = cities ?? [];
-          this.loadingWeMetCities = false;
-        },
-        error: () => {
-          this.weMetCities = [];
-          this.loadingWeMetCities = false;
-        },
-      });
-  }
-
-  private loadLivingStates(countryCode: string): void {
-    const apiCountryCode = WORLD[countryCode as keyof typeof WORLD]?.flag;
-
-    this.livingInStates = [];
-    this.livingInCities = [];
-    this.loadingLivingStates = false;
+    const countryCode = this.formCreateGuest.get(config.countryControl)?.value;
+    const apiCountryCode = this._city.getApiCountryCode(countryCode);
 
     if (!apiCountryCode) return;
 
-    this.loadingLivingStates = true;
+    config.setLoadingCities(true);
 
     this._city
-      .getStates(apiCountryCode)
+      .getCities(apiCountryCode, state.iso2)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: states => {
-          this.livingInStates = states ?? [];
-          this.loadingLivingStates = false;
+        next: cities => {
+          config.setCities(cities ?? []);
+          config.setLoadingCities(false);
         },
         error: () => {
-          this.livingInStates = [];
-          this.loadingLivingStates = false;
+          config.setCities([]);
+          config.setLoadingCities(false);
         },
       });
   }
 
-  private loadLivingCities(countryCode: string, stateCode: string): void {
-    this.livingInCities = [];
-    this.loadingLivingCities = false;
+  private getLocationConfig(type: 'hometown' | 'livingIn' | 'weMet'): LocationConfig {
+    const configs: Record<'hometown' | 'livingIn' | 'weMet', LocationConfig> = {
+      hometown: {
+        countryControl: 'hometownCode',
+        stateControl: 'hometownState',
+        cityControl: 'hometownCity',
+        getStates: () => this.hometownStates,
+        setStates: states => (this.hometownStates = states),
+        setCities: cities => (this.hometownCities = cities),
+        setLoadingStates: loading => (this.loadingHometownStates = loading),
+        setLoadingCities: loading => (this.loadingHometownCities = loading),
+      },
 
-    if (!stateCode) return;
+      livingIn: {
+        countryControl: 'livingInCode',
+        stateControl: 'livingInState',
+        cityControl: 'livingInCity',
+        getStates: () => this.livingInStates,
+        setStates: states => (this.livingInStates = states),
+        setCities: cities => (this.livingInCities = cities),
+        setLoadingStates: loading => (this.loadingLivingStates = loading),
+        setLoadingCities: loading => (this.loadingLivingCities = loading),
+      },
 
-    this.loadingLivingCities = true;
+      weMet: {
+        countryControl: 'countryCodeWeMet',
+        stateControl: 'stateWeMet',
+        cityControl: 'cityWeMet',
+        getStates: () => this.weMetStates,
+        setStates: states => (this.weMetStates = states),
+        setCities: cities => (this.weMetCities = cities),
+        setLoadingStates: loading => (this.loadingWeMetStates = loading),
+        setLoadingCities: loading => (this.loadingWeMetCities = loading),
+      },
+    };
 
-    this._city
-      .getCities(countryCode, stateCode)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: cities => {
-          this.livingInCities = cities ?? [];
-          this.loadingLivingCities = false;
-        },
-        error: () => {
-          this.livingInCities = [];
-          this.loadingLivingCities = false;
-        },
+    return configs[type];
+  }
+
+  private onOccupation(): void {
+    const areaControl = this.formCreateGuest.get('occupationArea');
+    const occupationControl = this.formCreateGuest.get('occupation');
+
+    if (!areaControl || !occupationControl) return;
+
+    const getAvailableOccupations = (areas: string[] = []): string[] => [...new Set(areas.flatMap(area => OCCUPATIONS_BY_AREA[area] ?? []))];
+
+    const updateOccupations = (areas: string[] = []): void => {
+      const savedOccupations: string[] = occupationControl.value ?? [];
+      const availableOccupations = getAvailableOccupations(areas);
+
+      // Mantener las opciones del catálogo y las ocupaciones
+      // personalizadas que ya estaban guardadas.
+      this.occupations = [...new Set([...availableOccupations, ...savedOccupations])];
+    };
+
+    // Inicializar las opciones sin perder las selecciones existentes.
+    updateOccupations(areaControl.value ?? []);
+
+    // Actualizar las ocupaciones cuando cambien las áreas.
+    areaControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((areas: string[] | null) => {
+      const selectedAreas = areas ?? [];
+      const previousOccupations: string[] = occupationControl.value ?? [];
+      const availableOccupations = getAvailableOccupations(selectedAreas);
+
+      // Conservar las ocupaciones que pertenecen a las áreas elegidas
+      // y las personalizadas que no existen en el catálogo.
+      const retainedOccupations = previousOccupations.filter(
+        occupation => availableOccupations.includes(occupation) || !Object.values(OCCUPATIONS_BY_AREA).some(list => list.includes(occupation))
+      );
+
+      this.occupations = [...new Set([...availableOccupations, ...retainedOccupations])];
+
+      occupationControl.setValue(retainedOccupations, {
+        emitEvent: false,
       });
+    });
+  }
+
+  private normalizeOccupations(occupations: string[] | null, otherOccupation: string | null): string[] {
+    const result = [...new Set(occupations ?? [])];
+    const otherIndex = result.indexOf('Write another occupation');
+
+    if (otherIndex !== -1) {
+      result.splice(otherIndex, 1);
+      const customOccupation = otherOccupation?.trim();
+      if (customOccupation && !result.some(occupation => occupation.toLowerCase() === customOccupation.toLowerCase())) result.push(customOccupation);
+    }
+
+    return result;
+  }
+
+  getOccupationAreaLabel(area: string): string {
+    const lang = this._translate.currentLang || 'en';
+    return OCCUPATION_AREA_TRANSLATIONS[area]?.[lang as 'en' | 'es'] ?? OCCUPATION_AREA_TRANSLATIONS[area]?.en ?? area;
+  }
+
+  getOccupationLabel(occupation: string): string {
+    const lang = this._translate.currentLang || 'en';
+    return OCCUPATION_TRANSLATIONS[occupation]?.[lang as 'en' | 'es'] ?? OCCUPATION_TRANSLATIONS[occupation]?.en ?? occupation;
   }
 }

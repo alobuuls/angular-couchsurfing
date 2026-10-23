@@ -600,8 +600,8 @@ export class GuestsComponent implements OnInit {
       const continent = params['continent'];
       const region = params['region'];
       const country = params['country'];
-      const hometown = params['hometown'];
-      const livingIn = params['livingIn'];
+      const hometownState = params['hometownState'];
+      const livingInState = params['livingInState'];
       const from = params['from'];
       const to = params['to'];
       const day = params['day'];
@@ -611,7 +611,22 @@ export class GuestsComponent implements OnInit {
         this.currentView = view;
       }
 
-      if (groupType || rating || gift !== undefined || gender || gay !== undefined || continent || region || country || hometown || livingIn || from || to || day || birthDate) {
+      if (
+        groupType ||
+        rating ||
+        gift !== undefined ||
+        gender ||
+        gay !== undefined ||
+        continent ||
+        region ||
+        country ||
+        hometownState ||
+        livingInState ||
+        from ||
+        to ||
+        day ||
+        birthDate
+      ) {
         this.filters$.next({
           ...this.filters$.value,
           groupType: groupType || undefined,
@@ -622,8 +637,8 @@ export class GuestsComponent implements OnInit {
           continent: continent || undefined,
           region: region || undefined,
           country: country || undefined,
-          hometown: hometown || undefined,
-          livingIn: livingIn || undefined,
+          hometownState: hometownState || undefined,
+          livingInState: livingInState || undefined,
           from: from || undefined,
           to: to || undefined,
           day: day || undefined,

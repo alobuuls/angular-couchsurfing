@@ -6,8 +6,8 @@ export const mapGuestTable = (guests: IGuestListItem[]): IGuestTableRow[] => {
   return guests.map(guest => {
     if (isGroup(guest)) {
       const members = guest.members;
-      const hometownObjects = members.map(m => ({ code: m.hometownCode, city: m.hometown }));
-      const livingObjects = members.map(m => ({ code: m.livingInCode, city: m.livingIn }));
+      const hometownObjects = members.map(m => ({ code: m.hometownCode, city: m.hometownState }));
+      const livingObjects = members.map(m => ({ code: m.livingInCode, city: m.livingInState }));
 
       return {
         ...guest,
@@ -23,18 +23,19 @@ export const mapGuestTable = (guests: IGuestListItem[]): IGuestTableRow[] => {
           gender: m.gender,
           age: getAges(guest.visitedDate, m.birthDate),
           continent: m.continent,
-          whatsapp: m.prefixCode == null || m.whatsapp == null ? null : m.prefixCode + m.whatsapp,
-
-          couchsurfing: m.urlProfileCs ?? null,
+          whatsapp: m.prefixCode && m.whatsapp ? `${m.prefixCode}${m.whatsapp}` : null,
+          couchsurfing: m.urlProfileCs || null,
 
           hometown: {
             code: m.hometownCode,
-            city: m.hometown ?? 'Unknown City',
+            city: m.hometownCity || 'Unknown City',
+            state: m.hometownState || 'Unknown State',
           },
 
           livingIn: {
             code: m.livingInCode,
-            city: m.livingIn ?? 'Unknown City',
+            city: m.livingInCity || 'Unknown City',
+            state: m.livingInState || 'Unknown State',
           },
 
           hangOut: m.hangOut,
@@ -44,8 +45,8 @@ export const mapGuestTable = (guests: IGuestListItem[]): IGuestTableRow[] => {
         })),
 
         isHangOutUnique: new Set(members.map(m => m.hangOut)).size === 1,
-        isHometownUnique: new Set(members.map(m => `${m.hometownCode}-${m.hometown}`)).size === 1,
-        isLivingInUnique: new Set(members.map(m => `${m.livingInCode}-${m.livingIn}`)).size === 1,
+        isHometownUnique: new Set(members.map(m => `${m.hometownCode}-${m.hometownCity}`)).size === 1,
+        isLivingInUnique: new Set(members.map(m => `${m.livingInCode}-${m.livingInCity}`)).size === 1,
         isContinentUnique: new Set(members.map(m => m.continent)).size === 1,
       } as IGuestTableRow;
     }
@@ -61,16 +62,18 @@ export const mapGuestTable = (guests: IGuestListItem[]): IGuestTableRow[] => {
           gender: guest.gender,
           age: getAges(guest.visitedDate, guest.birthDate),
           continent: guest.continent,
-          whatsapp: guest.prefixCode == null || guest.whatsapp == null ? null : guest.prefixCode + guest.whatsapp,
-          couchsurfing: guest.urlProfileCs ?? null,
+          whatsapp: guest.prefixCode && guest.whatsapp ? `${guest.prefixCode}${guest.whatsapp}` : null,
+          couchsurfing: guest.urlProfileCs || null,
           hometown: {
             code: guest.hometownCode,
-            city: guest.hometown ?? 'Unknown City',
+            city: guest.hometownCity || 'Unknown City',
+            state: guest.hometownState || 'Unknown State',
           },
 
           livingIn: {
             code: guest.livingInCode,
-            city: guest.livingIn ?? 'Unknown City',
+            city: guest.livingInCity || 'Unknown City',
+            state: guest.livingInState || 'Unknown State',
           },
 
           hangOut: guest.hangOut,

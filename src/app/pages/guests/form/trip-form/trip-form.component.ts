@@ -93,8 +93,6 @@ export class TripFormComponent implements OnInit {
     if (!trip.stayed) {
       delete payload.nights;
     }
-    console.log('TRIP FORM VALUE:', trip);
-    console.log('TRIP PAYLOAD:', payload);
     return payload;
   }
 

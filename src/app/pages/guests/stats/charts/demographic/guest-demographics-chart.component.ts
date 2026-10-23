@@ -925,32 +925,6 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         },
       },
     });
-
-    console.log('Color de labels:', chart.options.plugins?.legend?.labels?.color);
-
-    console.log('Color CSS actual:', getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim());
-
-    console.log('Color global Chart.js:', Chart.defaults.color);
-
-    console.log('Color efectivo de la leyenda:', chart.options.plugins?.legend?.labels?.color);
-
-    console.log('Leyenda activada:', chart.options.plugins?.legend?.display);
-
-    console.log('Canvas:', chart.canvas);
-
-    console.log('Instancia de la leyenda:', chart.legend);
-
-    console.log('Color de las etiquetas:', chart.options.plugins?.legend?.labels?.color);
-
-    console.log(
-      'Elementos de la leyenda:',
-      chart.legend?.legendItems?.map(item => ({
-        text: item.text,
-        fontColor: item.fontColor,
-        fillStyle: item.fillStyle,
-      }))
-    );
-
     return chart;
   }
 

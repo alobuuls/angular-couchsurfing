@@ -81,12 +81,12 @@
               ></mat-icon>
             </h2>
 
-            <p class="identity-subtitle" *ngIf="guest.occupation?.length">
+            <p class="identity-subtitle" *ngIf="guest.occupation.length">
               {{ _format.formatOccupations(guest.occupation) }}
             </p>
 
             <!-- Living in flag and location -->
-            <div class="identity-location" *ngIf="guest.livingIn || guest.livingInCode">
+            <div class="identity-location" *ngIf="guest.livingInState || guest.livingInCode">
               <mat-icon class="material-symbols-outlined" fontIcon="location_on"></mat-icon>
 
               <span
@@ -95,7 +95,7 @@
                 [matTooltip]="_format.formatCountry(guest.livingInCode)"
               ></span>
 
-              <span>{{ guest.livingIn }}</span>
+              <span>{{ guest.livingInCity }}, {{ guest.livingInState }}</span>
             </div>
 
             <div class="social-links">
@@ -237,9 +237,9 @@
             guest.continent ||
             guest.region ||
             guest.hometownCode ||
-            guest.hometown ||
+            guest.hometownState ||
             guest.livingInCode ||
-            guest.livingIn
+            guest.livingInState
           "
         >
           <header class="section-head">
@@ -261,7 +261,7 @@
               <span class="field-value">{{ getRegionName(guest.region) | translate }}</span>
             </div>
 
-            <div class="passport-field" *ngIf="guest.hometownCode || guest.hometown">
+            <div class="passport-field" *ngIf="guest.hometownCode || guest.hometownState">
               <span class="field-label">{{ 'GUEST_DETAIL.LOCATION.HOMETOWN' | translate }}</span>
               <span class="field-value">
                 <span
@@ -269,11 +269,11 @@
                   [class]="guest.hometownCode | flag"
                   [matTooltip]="_format.formatCountry(guest.hometownCode)"
                 ></span>
-                {{ guest.hometown }}
+                {{ guest.hometownCity }}, {{ guest.hometownState }}
               </span>
             </div>
 
-            <div class="passport-field" *ngIf="guest.livingInCode || guest.livingIn">
+            <div class="passport-field" *ngIf="guest.livingInCode || guest.livingInState">
               <span class="field-label">{{ 'GUEST_DETAIL.LOCATION.CURRENTLY_LIVING_IN' | translate }}</span>
               <span class="field-value">
                 <span
@@ -281,19 +281,19 @@
                   [class]="guest.livingInCode | flag"
                   [matTooltip]="_format.formatCountry(guest.livingInCode)"
                 ></span>
-                {{ guest.livingIn }}
+                {{ guest.livingInCity }}, {{ guest.livingInState }}
               </span>
             </div>
 
-            <div class="passport-field" *ngIf="guest.countryCodeWeMet">
+            <div class="passport-field" *ngIf="guest.countryCodeWeMet || guest.stateWeMet">
               <span class="field-label">{{ 'GUEST_DETAIL.LOCATION.WE_MET_IN' | translate }}</span>
               <span class="field-value">
                 <span
-                  *ngIf="guest.cityWeMet"
+                  *ngIf="guest.countryCodeWeMet"
                   [class]="guest.countryCodeWeMet | flag"
                   [matTooltip]="_format.formatCountry(guest.countryCodeWeMet)"
                 ></span>
-                {{ guest.cityWeMet }}, {{ guest.locationWeMet }}
+                {{ guest.cityWeMet }}, {{ guest.stateWeMet }} ({{ guest.locationWeMet }})
               </span>
             </div>
           </div>
@@ -398,7 +398,7 @@
         </section>
 
         <!-- OCCUPATION -->
-        <section class="passport-section" *ngIf="guest.occupation?.length">
+        <section class="passport-section" *ngIf="guest.occupation.length">
           <header class="section-head">
             <span class="section-number">04</span>
             <div>
@@ -440,7 +440,7 @@
         </section>
 
         <!-- GIFTS -->
-        <section class="passport-section" *ngIf="guest.gift?.length">
+        <section class="passport-section" *ngIf="guest.gift.length">
           <header class="section-head">
             <span class="section-number">06</span>
             <div>
@@ -632,13 +632,13 @@
                     ></mat-icon>
                   </h4>
 
-                  <span class="member-location" *ngIf="member.hometown || member.hometownCode">
+                  <span class="member-location" *ngIf="member.hometownState || member.hometownCode">
                     <span
                       *ngIf="member.hometownCode"
                       [class]="member.hometownCode | flag"
                       [matTooltip]="_format.formatCountry(member.hometownCode)"
                     ></span>
-                    {{ member.hometown }}
+                    {{ member.hometownState }}
                   </span>
                 </div>
 
@@ -722,9 +722,9 @@
                   member.continent ||
                   member.region ||
                   member.hometownCode ||
-                  member.hometown ||
+                  member.hometownState ||
                   member.livingInCode ||
-                  member.livingIn
+                  member.livingInState
                 "
               >
                 <h5>{{ 'GUEST_DETAIL.LOCATION.TITLE' | translate }}</h5>
@@ -740,7 +740,7 @@
                     <span class="field-value">{{ formatRegion(member.region) | titlecase }}</span>
                   </div>
 
-                  <div class="passport-field" *ngIf="member.hometownCode || member.hometown">
+                  <div class="passport-field" *ngIf="member.hometownCode || member.hometownState">
                     <span class="field-label">{{ 'GUEST_DETAIL.LOCATION.HOMETOWN' | translate }}</span>
                     <span class="field-value">
                       <span
@@ -748,11 +748,11 @@
                         [class]="member.hometownCode | flag"
                         [matTooltip]="_format.formatCountry(member.hometownCode)"
                       ></span>
-                      {{ member.hometown }}
+                      {{ member.hometownState }}
                     </span>
                   </div>
 
-                  <div class="passport-field" *ngIf="member.livingInCode || member.livingIn">
+                  <div class="passport-field" *ngIf="member.livingInCode || member.livingInState">
                     <span class="field-label">{{ 'GUEST_DETAIL.GROUP.MEMBERS.LIVING_IN' | translate }}</span>
                     <span class="field-value">
                       <span
@@ -760,7 +760,7 @@
                         [class]="member.livingInCode | flag"
                         [matTooltip]="_format.formatCountry(member.livingInCode)"
                       ></span>
-                      {{ member.livingIn }}
+                      {{ member.livingInState }}
                     </span>
                   </div>
 
@@ -779,7 +779,7 @@
               </section>
 
               <!-- MEMBER OCCUPATION -->
-              <section class="member-section" *ngIf="member.occupation?.length">
+              <section class="member-section" *ngIf="member.occupation.length">
                 <h5>{{ 'GUEST_DETAIL.OCCUPATION.TITLE' | translate }}</h5>
 
                 <div class="list">
@@ -805,7 +805,7 @@
               </section>
 
               <!-- MEMBER GIFTS -->
-              <section class="member-section" *ngIf="member.gift?.length">
+              <section class="member-section" *ngIf="member.gift.length">
                 <h5>{{ 'GUEST_DETAIL.GIFTS.TITLE' | translate }}</h5>
 
                 <div class="list">

@@ -31,8 +31,8 @@ export class GuestsService {
     gift,
     gender,
     gay,
-    hometown,
-    livingIn,
+    hometownState,
+    livingInState,
     year,
     day,
     birthDate,
@@ -54,8 +54,8 @@ export class GuestsService {
     if (gift !== undefined) params = params.set('gift', String(gift));
     if (gender !== undefined) params = params.set('gender', String(gender));
     if (gay !== undefined) params = params.set('gay', String(gay));
-    if (hometown !== undefined) params = params.set('hometown', hometown);
-    if (livingIn !== undefined) params = params.set('livingIn', livingIn);
+    if (hometownState !== undefined) params = params.set('hometownState', hometownState);
+    if (livingInState !== undefined) params = params.set('livingInState', livingInState);
     if (year !== undefined) params = params.set('year', String(year));
     if (day !== undefined) params = params.set('day', String(day));
     if (birthDate !== undefined) params = params.set('birthDate', String(birthDate));

@@ -44,9 +44,7 @@ export class GuestsFormComponent implements OnChanges {
   private _translate = inject(TranslateService);
 
   ngOnChanges(): void {
-    if (this.mode === 'edit') {
-      this.loadData();
-    }
+    if (this.mode === 'edit') this.loadData();
   }
 
   private loadData(): void {
@@ -78,9 +76,7 @@ export class GuestsFormComponent implements OnChanges {
   }
 
   submit(): void {
-    if (!this.selectedGroupType) {
-      return;
-    }
+    if (!this.selectedGroupType) return;
 
     // 1 Marcar Trip Form como touched
     this.tripFormComponent.formTrip.markAllAsTouched();
@@ -110,33 +106,17 @@ export class GuestsFormComponent implements OnChanges {
 
     // 5 Todo es válido
     const trip = this.tripFormComponent.getFormValue();
-
     const guests = guestForms.map(form => form.getFormValue());
 
-    this.submitForm.emit({
-      groupType: this.selectedGroupType,
-      trip,
-      guests,
-    });
+    this.submitForm.emit({ groupType: this.selectedGroupType, trip, guests });
   }
 
   addGuestForm(): void {
     if (this.formsToShow >= this.limitGroupMembers) {
-      this._alerts.showToast({
-        icon: 'warning',
-        title: this._translate.instant('GUESTS_FORM.MAX_MEMBERS'),
-      });
-
+      this._alerts.showToast({ icon: 'warning', title: this._translate.instant('GUESTS_FORM.MAX_MEMBERS') });
       return;
     }
 
     this.formsToShow++;
   }
-
-  // get isFormInvalid(): boolean {
-  //   const tripInvalid = this.tripFormComponent?.formTrip.invalid ?? true;
-  //   const guestInvalid = this.guestForms?.some(form => form.formCreateGuest.invalid) ?? true;
-
-  //   return tripInvalid || guestInvalid;
-  // }
 }

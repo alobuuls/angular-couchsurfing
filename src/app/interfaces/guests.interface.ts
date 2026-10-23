@@ -1,6 +1,5 @@
 import { CountriesCodes } from '@type/word.types';
 import { Continents, Regions } from '@type/word.types';
-import { ICity, IState } from '@services/city.service';
 
 // Guest with all information
 export interface IGuestDetail extends ITripDetail {
@@ -10,15 +9,18 @@ export interface IGuestDetail extends ITripDetail {
   age: number;
   continent: Continents;
   hometownCode: CountriesCodes;
-  hometown: string;
+  hometownState?: string;
+  hometownCity?: string;
   livingInCode: CountriesCodes;
   hangOut: boolean;
   fullName: string;
   gender: 'female' | 'male' | 'trans';
   guestId: string;
-  livingIn: string;
+  livingInState?: string;
+  livingInCity?: string;
   countryCodeWeMet?: CountriesCodes;
   cityWeMet?: string;
+  stateWeMet?: string;
   locationWeMet?: string;
   nights: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15;
   prefixCode: string;
@@ -28,6 +30,7 @@ export interface IGuestDetail extends ITripDetail {
   comments: string;
   instagram: string;
   occupation: string[];
+  occupationArea: string[];
   region: Regions;
   stayed: boolean;
   isFirstTime: boolean;
@@ -42,16 +45,6 @@ export interface IGuestDetail extends ITripDetail {
 }
 
 export type ICardGuest = IGuestDetail | IBodyGuest;
-
-export interface IGuestFormData extends IGuestDetail {
-  hometownState?: IState;
-  hometownCity?: ICity;
-
-  livingInState?: IState;
-  livingInCity?: ICity;
-
-  occupationArea?: string[];
-}
 
 export interface ITripDetail {
   visitedDate: string;
@@ -74,11 +67,13 @@ export interface IGuestTableMemberCard {
   hometown: {
     code?: string | null;
     city?: string | null;
+    state?: string | null;
   };
 
   livingIn: {
     code?: string | null;
     city?: string | null;
+    state?: string | null;
   };
 
   rating: number;
@@ -139,8 +134,8 @@ export interface IQueryParamsGuests {
   gift?: boolean;
   gender?: 'female' | 'male' | 'trans';
   gay?: boolean;
-  hometown?: string;
-  livingIn?: string;
+  hometownState?: string;
+  livingInState?: string;
   year?: number;
   day?: number;
   birthDate?: number;

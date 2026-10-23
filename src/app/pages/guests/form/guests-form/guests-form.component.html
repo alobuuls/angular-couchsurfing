@@ -59,7 +59,7 @@
   </button>
 
   <!-- Submit -->
-  <button id="btn-create-guest" type="button" mat-raised-button [disabled]="wasFormSubmitted" (click)="submit()">
+  <button id="btn-create-guest" type="submit" mat-raised-button [disabled]="wasFormSubmitted" (click)="submit()">
     <mat-icon
       *ngIf="wasFormSubmitted"
       class="material-symbols-outlined loading-animation"

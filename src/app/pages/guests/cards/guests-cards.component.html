@@ -241,11 +241,14 @@
                       member.continent ||
                       member.region ||
                       member.hometownCode ||
-                      member.hometown ||
+                      member.hometownCity ||
+                      member.hometownState ||
                       member.livingInCode ||
-                      member.livingIn ||
+                      member.livingInState ||
+                      member.livingInCity ||
                       member.countryCodeWeMet ||
                       member.cityWeMet ||
+                      member.stateWeMet ||
                       member.locationWeMet
                     "
                   >
@@ -262,21 +265,21 @@
                         {{ getRegionName(member.region) | translate }}
                       </li>
 
-                      <li *ngIf="member.hometownCode || member.hometown">
+                      <li *ngIf="member.hometownCode || member.hometownState">
                         <strong>{{ 'GUESTS_CARDS.HOMETOWN' | translate }}: </strong>
 
                         <span class="gap-icons">
                           <span *ngIf="member.hometownCode" [class]="member.hometownCode | flag"></span>
-                          {{ member.hometown }}
+                          {{ member.hometownCity }}, {{ member.hometownState }}
                         </span>
                       </li>
 
-                      <li *ngIf="member.livingInCode || member.livingIn">
+                      <li *ngIf="member.livingInCode || member.livingInState">
                         <strong>{{ 'GUESTS_CARDS.LIVING_IN' | translate }}: </strong>
 
                         <span class="gap-icons">
                           <span *ngIf="member.livingInCode" [class]="member.livingInCode | flag"></span>
-                          {{ member.livingIn }}
+                          {{ member.livingInCity }}, {{ member.livingInState }}
                         </span>
                       </li>
 
@@ -294,7 +297,8 @@
                             {{ _format.formatCountry(member.countryCodeWeMet) }}
                           </span>
 
-                          <span *ngIf="member.cityWeMet">, {{ member.cityWeMet }} </span>
+                          <span *ngIf="member.cityWeMet">, {{ member.cityWeMet }}, </span>
+                          <span *ngIf="member.stateWeMet">, {{ member.stateWeMet }} </span>
 
                           <span *ngIf="member.locationWeMet"> ({{ member.locationWeMet }}) </span>
                         </span>
@@ -303,7 +307,7 @@
                   </ng-container>
 
                   <!-- OCCUPATION -->
-                  <ng-container *ngIf="member.occupation?.length">
+                  <ng-container *ngIf="member.occupation.length">
                     <h4>{{ 'GUESTS_CARDS.OCCUPATION' | translate }}</h4>
 
                     <ul>
@@ -314,7 +318,7 @@
                   </ng-container>
 
                   <!-- GIFT -->
-                  <ng-container *ngIf="member.gift?.length">
+                  <ng-container *ngIf="member.gift.length">
                     <h4>{{ 'GUESTS_CARDS.GIFT' | translate }}</h4>
 
                     <ul>
