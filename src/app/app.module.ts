@@ -20,6 +20,7 @@ import { CoreModule } from '@core/core.module';
 import { SharedModule } from '@shared/shared.module';
 import { AppRoutingModule } from './app.routing.module';
 import { MatNativeDateModule } from '@angular/material/core';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 // Components
 import { AppComponent } from './app.component';
@@ -56,6 +57,7 @@ registerLocaleData(localeHe, 'he-IL');
     BrowserAnimationsModule,
     HttpClientModule,
     MatNativeDateModule,
+    NgxSkeletonLoaderModule,
     TranslateModule.forRoot({
       defaultLanguage: 'en',
       loader: {

@@ -41,7 +41,10 @@ export class GuestsCardsComponent implements OnDestroy {
     this._langChangeSubscription.unsubscribe();
   }
 
+  @Input() loading = false;
   @Input() cardsHasMore: boolean = false;
+  readonly skeletonCards = Array.from({ length: 10 });
+  readonly skeletonStars = [1, 2, 3, 4, 5];
 
   @Input()
   set data(value: IGuestTableRow[]) {

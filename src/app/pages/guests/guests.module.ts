@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 // Modules
 import { SharedModule } from '@shared/shared.module';
 import { GuestsRoutingModule } from '@pages/guests/guests.routing.module';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 // Components
 import { GuestsComponent } from '@pages/guests/guests.component';
@@ -49,6 +50,6 @@ import { GuestBirthdaysChartComponent } from '@pages/guests/stats/charts/birthda
     GuestStaysChartComponent,
     GuestBirthdaysChartComponent,
   ],
-  imports: [SharedModule, GuestsRoutingModule],
+  imports: [SharedModule, GuestsRoutingModule, NgxSkeletonLoaderModule],
 })
 export class GuestsModule {}

@@ -250,6 +250,7 @@
     *ngIf="currentView === 'cards'"
     [data]="cardsData"
     [cardsHasMore]="cardsHasMore"
+    [loading]="cardsLoading"
     (loadMore)="loadMoreCards()"
   >
   </guests-cards>
