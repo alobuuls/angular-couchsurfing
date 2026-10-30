@@ -1,4 +1,60 @@
 <div class="ctn-cards">
+  <!-- INITIAL LOADING -->
+  <div *ngIf="loading && !data.length" class="initial-loading">
+    <div class="cards">
+      <div *ngFor="let card of skeletonCards" class="card">
+        <span class="layover"></span>
+
+        <div class="content">
+          <!-- PERSON 1 -->
+          <div class="person">
+            <div class="person-info">
+              <h2 class="skeleton-person">
+                <ngx-skeleton-loader [theme]="{ width: '25px', height: '18px', 'margin-bottom': '0' }" />
+                <ngx-skeleton-loader [theme]="{ width: '145px', height: '24px', 'margin-bottom': '0' }" />
+                <ngx-skeleton-loader
+                  [theme]="{ width: '20px', height: '20px', 'border-radius': '50%', 'margin-bottom': '0' }"
+                />
+              </h2>
+
+              <div class="ctn-stars">
+                <ngx-skeleton-loader
+                  *ngFor="let star of skeletonStars"
+                  [theme]="{ width: '18px', height: '18px', 'margin-bottom': '0' }"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- PERSON 2 -->
+          <div class="person">
+            <div class="person-info">
+              <h2 class="skeleton-person">
+                <ngx-skeleton-loader [theme]="{ width: '25px', height: '18px', 'margin-bottom': '0' }" />
+                <ngx-skeleton-loader [theme]="{ width: '145px', height: '24px', 'margin-bottom': '0' }" />
+                <ngx-skeleton-loader
+                  [theme]="{ width: '20px', height: '20px', 'border-radius': '50%', 'margin-bottom': '0' }"
+                />
+              </h2>
+
+              <div class="ctn-stars">
+                <ngx-skeleton-loader
+                  *ngFor="let star of skeletonStars"
+                  [theme]="{ width: '18px', height: '18px', 'margin-bottom': '0' }"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- READ MORE -->
+          <div class="skeleton-button">
+            <ngx-skeleton-loader [theme]="{ width: '110px', height: '36px', 'margin-bottom': '0' }" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- YEARS -->
   <div *ngFor="let year of cardsGuest" class="year-group">
     <h2 class="year-title">{{ year.year }}</h2>
@@ -32,31 +88,77 @@
             <!-- PEOPLE -->
             <div *ngFor="let p of guest.people" class="person">
               <div class="person-info">
+                <!-- NAME + FLAG + GENDER -->
                 <h2>
-                  <span
-                    *ngIf="p.hometown.code"
-                    [class]="p.hometown.code | flag"
-                    [matTooltip]="_format.formatCountry(p.hometown.code)"
-                  ></span>
+                  <ng-container *ngIf="!loading; else personSkeleton">
+                    <span
+                      *ngIf="p.hometown.code"
+                      [class]="p.hometown.code | flag"
+                      [matTooltip]="_format.formatCountry(p.hometown.code)"
+                    ></span>
 
-                  {{ p.fullName }}
+                    {{ p.fullName }}
 
-                  <mat-icon
-                    class="material-symbols-outlined"
-                    [class.male]="p.gender === 'male'"
-                    [class.female]="p.gender === 'female'"
-                    [fontIcon]="p.gender === 'female' ? 'woman' : 'man'"
-                  ></mat-icon>
+                    <mat-icon
+                      class="material-symbols-outlined"
+                      [class.male]="p.gender === 'male'"
+                      [class.female]="p.gender === 'female'"
+                      [fontIcon]="p.gender === 'female' ? 'woman' : 'man'"
+                    ></mat-icon>
+                  </ng-container>
+
+                  <ng-template #personSkeleton>
+                    <span class="skeleton-person">
+                      <ngx-skeleton-loader
+                        [theme]="{
+                          width: '25px',
+                          height: '18px',
+                          'margin-bottom': '0',
+                        }"
+                      />
+
+                      <ngx-skeleton-loader
+                        [theme]="{
+                          width: '145px',
+                          height: '24px',
+                          'margin-bottom': '0',
+                        }"
+                      />
+
+                      <ngx-skeleton-loader
+                        [theme]="{
+                          width: '20px',
+                          height: '20px',
+                          'border-radius': '50%',
+                          'margin-bottom': '0',
+                        }"
+                      />
+                    </span>
+                  </ng-template>
                 </h2>
 
                 <!-- RATING -->
                 <div class="ctn-stars">
-                  <mat-icon
-                    class="material-symbols-outlined"
-                    *ngFor="let s of [1, 2, 3, 4, 5]"
-                    [class.filled]="s <= p.rating"
-                    fontIcon="star"
-                  ></mat-icon>
+                  <ng-container *ngIf="!loading; else ratingSkeleton">
+                    <mat-icon
+                      class="material-symbols-outlined"
+                      *ngFor="let s of [1, 2, 3, 4, 5]"
+                      [class.filled]="s <= p.rating"
+                      fontIcon="star"
+                    ></mat-icon>
+                  </ng-container>
+
+                  <ng-template #ratingSkeleton>
+                    <ngx-skeleton-loader
+                      *ngFor="let s of [1, 2, 3, 4, 5]"
+                      [theme]="{
+                        width: '18px',
+                        height: '18px',
+                        'margin-bottom': '0',
+                        'border-radius': '3px',
+                      }"
+                    />
+                  </ng-template>
                 </div>
               </div>
             </div>

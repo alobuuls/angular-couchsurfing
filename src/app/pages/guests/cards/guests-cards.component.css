@@ -269,3 +269,42 @@
   gap: 0 0.25rem;
   justify-content: center;
 }
+
+/* SKELETON PERSON */
+.skeleton-person {
+  align-items: center;
+  display: inline-flex;
+  gap: 7px;
+  vertical-align: middle;
+}
+
+.skeleton-person ngx-skeleton-loader {
+  display: inline-block;
+  line-height: 1;
+}
+
+/* SKELETON RATING */
+.ctn-stars ngx-skeleton-loader {
+  display: inline-block;
+  line-height: 1;
+}
+
+/* SKELETON ANIMATION */
+:host ::ng-deep .skeleton-loader {
+  background-color: color-mix(in srgb, var(--color-primary) 15%, var(--color-surface)) !important;
+
+  background-image: linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-primary) 20%, white), transparent) !important;
+
+  background-size: 200% 100% !important;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite !important;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
