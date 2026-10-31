@@ -930,6 +930,20 @@
   font-size: 2.5rem;
 }
 
+.phone-link {
+  align-items: center;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 0.4rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.phone-link:hover {
+  color: var(--color-primary);
+}
+
 /* RESPONSIVE */
 @media (max-width: 600px) {
   .header {

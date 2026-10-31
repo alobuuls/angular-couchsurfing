@@ -5,7 +5,7 @@
   box-shadow: 0 2px 10px color-mix(in srgb, var(--color-text) 20%, transparent);
   font-family: 'Poiret One', sans-serif;
   left: 0;
-  position: fixed;
+  /* position: fixed; */
   backdrop-filter: blur(12px);
   top: 0;
   user-select: none;

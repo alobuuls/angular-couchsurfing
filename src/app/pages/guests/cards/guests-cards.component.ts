@@ -10,8 +10,10 @@ import { LanguageService } from '@services/language.service';
 
 // Interfaces
 import { IGuestTableRow, IGuestYearGroup } from '@interfaces/data-structure-api';
-import { ICardGuest } from '@interfaces/guests.interface';
+import { ICardGuest, IGuestListItem } from '@interfaces/guests.interface';
 import { Continents, Regions } from '@type/word.types';
+import { ITimelineItem } from '@interfaces/stats-interface';
+import { SocialLinksService } from '@services/social-links.service';
 
 @Component({
   selector: 'guests-cards',
@@ -25,6 +27,7 @@ export class GuestsCardsComponent implements OnDestroy {
   private readonly _translate = inject(TranslateService);
   private readonly _language = inject(LanguageService);
   private readonly _geoname = inject(GeonameService);
+  private _socialLinks = inject(SocialLinksService);
 
   private _data: IGuestTableRow[] = [];
   private readonly _langChangeSubscription = this._translate.onLangChange.subscribe(() => this.groupGuestsByDate());
@@ -39,6 +42,20 @@ export class GuestsCardsComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this._langChangeSubscription.unsubscribe();
+  }
+  private _yearlyVisits: ITimelineItem[] = [];
+
+  @Output() remove = new EventEmitter<IGuestListItem>();
+
+  showBackToTop = false;
+
+  @Input()
+  set yearlyVisits(value: ITimelineItem[]) {
+    this._yearlyVisits = value ?? [];
+  }
+
+  getYearVisits(year: number): number {
+    return Number(this._yearlyVisits.find(item => Number(item.period) === year)?.total ?? 0);
   }
 
   @Input() loading = false;
@@ -62,19 +79,28 @@ export class GuestsCardsComponent implements OnDestroy {
   // Listen for scroll events on the browser window.
   @HostListener('window:scroll')
   onScroll(): void {
-    // Get the current position of the bottom of the visible viewport.
+    // Current scroll position.
     const scrollPosition = window.innerHeight + window.scrollY;
 
-    // Get the total height of the document.
+    // Total document height.
     const pageHeight = document.documentElement.scrollHeight;
 
-    // Start loading more cards when 300px remain before reaching the bottom.
+    // Show back-to-top button after scrolling 600px.
+    this.showBackToTop = window.scrollY > 600;
+
+    // Start loading more cards when 800px remain.
     const threshold = 800;
 
-    // Emit the event when the user is close to the bottom of the page.
     if (scrollPosition >= pageHeight - threshold) {
       this.loadMore.emit();
     }
+  }
+
+  scrollToTop(): void {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   }
 
   // Cards
@@ -191,5 +217,28 @@ export class GuestsCardsComponent implements OnDestroy {
   //  Get the names of the people in the guest/trip
   getGuestNames(guest: IGuestTableRow): string {
     return guest.people.map(person => person.fullName).join(' & ');
+  }
+
+  openCouchsurfing(profileId: string): void {
+    this._socialLinks.openCouchsurfing(profileId);
+  }
+
+  openWhatsapp(whatsapp: string): void {
+    this._socialLinks.openWhatsapp(whatsapp);
+  }
+
+  hasFiveStars(guest: IGuestTableRow): boolean {
+    return guest.people.length > 0 && guest.people.every(person => person.rating === 5);
+  }
+
+  hasAmbassador(guest: IGuestTableRow): boolean {
+    return guest.people.some(person => person.ambassador);
+  }
+
+  formatGuestName(fullName: string): string {
+    if (!fullName) return '';
+    const parts = fullName.trim().split(/\s+/);
+    if (parts.length === 1) return parts[0];
+    return `${parts[0]} ${parts[1].charAt(0).toUpperCase()}.`;
   }
 }
