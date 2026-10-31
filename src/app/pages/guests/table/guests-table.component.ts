@@ -10,6 +10,7 @@ import { Continents } from '@type/word.types';
 // Services
 import { FormatService } from '@services/format.service';
 import { GeonameService } from '@services/geoname.service';
+import { SocialLinksService } from '@services/social-links.service';
 
 // Helpers
 import { isGroup } from '@utils';
@@ -29,6 +30,7 @@ export class GuestsTableComponent {
 
   private _data: IGuestTableRow[] = [];
   private readonly _geoname = inject(GeonameService);
+  private _socialLinks = inject(SocialLinksService);
 
   @Input() set data(value: IGuestTableRow[]) {
     this._data = value ?? [];
@@ -64,11 +66,11 @@ export class GuestsTableComponent {
   }
 
   openCouchsurfing(profileId: string): void {
-    window.open(`${profileId}`, '_blank');
+    this._socialLinks.openCouchsurfing(profileId);
   }
 
   openWhatsapp(whatsapp: string): void {
-    window.open(`https://wa.me/${whatsapp}`, '_blank');
+    this._socialLinks.openWhatsapp(whatsapp);
   }
 
   getDetailRoute(guest: IGuestListItem): string[] {

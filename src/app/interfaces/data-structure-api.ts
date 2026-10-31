@@ -29,12 +29,16 @@ interface IAge {
 
 export interface IGuestTableMember {
   fullName: string;
-  gender: string;
-  age: IAge;
-  continent: string;
+  ambassador?: boolean;
+  gender: 'female' | 'male' | 'trans';
 
-  whatsapp: string | null;
-  couchsurfing: string | null;
+  age: {
+    ageWhenVisited: number | '?';
+    currentAge: number | '?';
+    birthDate: string;
+  };
+
+  continent: string;
 
   hometown: {
     code?: string | null;
@@ -48,21 +52,22 @@ export interface IGuestTableMember {
     state?: string | null;
   };
 
-  hangOut: boolean;
-
   rating: number;
 
-  // FIX LATER
   guestId?: string;
   groupId?: string;
-  isOpen?: boolean;
-  comments?: string | null;
-  gift?: string[];
+
+  whatsapp: string | null;
+  prefixCode?: string;
   instagram?: string | null;
+  couchsurfing?: string | null;
+
+  hangOut?: boolean;
 }
 
 export type IGuestTableRow = IGuestListItem & {
   people: IGuestTableMember[];
+  isFirstTime?: boolean;
 
   isHometownUnique: boolean;
   isHangOutUnique: boolean;

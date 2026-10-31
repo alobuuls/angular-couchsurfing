@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 // Services
 import { GuestsService } from '@services/guests.service';
 import { GeonameService } from '@services/geoname.service';
+import { SocialLinksService } from '@services/social-links.service';
 
 // Interfaces
 import { IGroupMember, IGuestDetail } from '@interfaces/guests.interface';
@@ -27,6 +28,7 @@ export class GuestsDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private _guests = inject(GuestsService);
   private readonly _geoname = inject(GeonameService);
+  private _socialLinks = inject(SocialLinksService);
 
   ngOnInit(): void {
     this.getById();
@@ -76,15 +78,15 @@ export class GuestsDetailComponent implements OnInit {
   }
 
   openCouchsurfing(profileId: string): void {
-    window.open(`https://www.couchsurfing.com/c/users/${profileId}`, '_blank');
+    this._socialLinks.openCouchsurfing(profileId);
   }
 
   openInstagram(username: string): void {
-    window.open(`https://www.instagram.com/${username}`, '_blank');
+    this._socialLinks.openInstagram(username);
   }
 
   openWhatsapp(whatsapp: string): void {
-    window.open(`https://wa.me/${whatsapp}`, '_blank');
+    this._socialLinks.openWhatsapp(whatsapp);
   }
 
   formatRegion(region: string): string {

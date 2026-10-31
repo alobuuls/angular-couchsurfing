@@ -78,8 +78,11 @@ export interface IGuestTableMemberCard {
 
   rating: number;
 
-  whatsapp: string;
+  whatsapp: string | null;
   prefixCode: string;
+  urlProfileCs: string | null;
+  ambassador: boolean;
+  isFirstTime: boolean;
 }
 
 export type IGroupMember = IGuestDetail & {

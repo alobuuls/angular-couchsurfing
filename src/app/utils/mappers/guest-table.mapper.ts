@@ -18,6 +18,7 @@ export const mapGuestTable = (guests: IGuestListItem[]): IGuestTableRow[] => {
         continent: members.map(m => m.continent),
 
         people: members.map(m => ({
+          ambassador: m.ambassador,
           fullName: m.fullName,
           guestId: m.guestId,
           gender: m.gender,
@@ -56,6 +57,7 @@ export const mapGuestTable = (guests: IGuestListItem[]): IGuestTableRow[] => {
 
       people: [
         {
+          ambassador: guest.ambassador,
           guestId: guest.guestId,
           groupId: guest.groupId,
           fullName: guest.fullName,
@@ -64,6 +66,7 @@ export const mapGuestTable = (guests: IGuestListItem[]): IGuestTableRow[] => {
           continent: guest.continent,
           whatsapp: guest.prefixCode && guest.whatsapp ? `${guest.prefixCode}${guest.whatsapp}` : null,
           couchsurfing: guest.urlProfileCs || null,
+
           hometown: {
             code: guest.hometownCode,
             city: guest.hometownCity || 'Unknown City',

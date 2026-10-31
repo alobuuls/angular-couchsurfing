@@ -177,7 +177,9 @@
                   [class]="
                     guest.gender === 'male'
                       ? 'fa-solid fa-person gender-male'
-                      : 'fa-solid fa-person-dress gender-female'
+                      : guest.gender === 'female'
+                        ? 'fa-solid fa-person-dress gender-female'
+                        : 'fa-solid fa-transgender gender-trans'
                   "
                 ></i>
                 {{ 'GENDER.' + guest.gender.toUpperCase() | translate }}
@@ -194,10 +196,10 @@
 
             <div class="passport-field" *ngIf="guest.whatsapp">
               <span class="field-label">{{ 'GUEST_DETAIL.PERSONAL.PHONE_NUMBER' | translate }}</span>
-              <span class="field-value">
+              <a class="field-value phone-link" [href]="'tel:' + guest.prefixCode + guest.whatsapp">
                 <mat-icon class="material-symbols-outlined" fontIcon="call"></mat-icon>
                 {{ guest.prefixCode }} {{ guest.whatsapp }}
-              </span>
+              </a>
             </div>
 
             <div class="passport-field" *ngIf="guest.isGay !== null && guest.isGay !== undefined">
@@ -669,7 +671,9 @@
                         [class]="
                           member.gender === 'male'
                             ? 'fa-solid fa-person gender-male'
-                            : 'fa-solid fa-person-dress gender-female'
+                            : member.gender === 'female'
+                              ? 'fa-solid fa-person-dress gender-female'
+                              : 'fa-solid fa-transgender gender-trans'
                         "
                       ></i>
                       {{ 'GENDER.' + member.gender.toUpperCase() | translate }}
@@ -685,7 +689,10 @@
 
                   <div class="passport-field" *ngIf="member.whatsapp">
                     <span class="field-label">{{ 'GUEST_DETAIL.GROUP.MEMBERS.WHATSAPP' | translate }}</span>
-                    <span class="field-value">{{ member.prefixCode }} {{ member.whatsapp }}</span>
+                    <a class="field-value phone-link" [href]="'tel:' + member.prefixCode + member.whatsapp">
+                      <mat-icon class="material-symbols-outlined" fontIcon="call"></mat-icon>
+                      {{ member.prefixCode }} {{ member.whatsapp }}
+                    </a>
                   </div>
 
                   <div class="passport-field" *ngIf="member.isGay !== null && member.isGay !== undefined">

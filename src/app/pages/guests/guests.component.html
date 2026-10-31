@@ -251,7 +251,9 @@
     [data]="cardsData"
     [cardsHasMore]="cardsHasMore"
     [loading]="cardsLoading"
+    [yearlyVisits]="yearlyVisits"
     (loadMore)="loadMoreCards()"
+    (remove)="removeGuestConfirmation($event)"
   >
   </guests-cards>
 

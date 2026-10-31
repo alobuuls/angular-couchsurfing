@@ -17,6 +17,7 @@ import { ErrorHandlerService } from '@services/err-handler.service';
 import { GuestSortService } from '@services/guest-sort.service';
 import { GeonameService } from '@services/geoname.service';
 import { FormatService } from '@services/format.service';
+import { StatsService } from '@services/stats.service';
 
 // Helpers
 import { withReqState, isGroup, mapGuestTable } from '@utils';
@@ -24,6 +25,7 @@ import { withReqState, isGroup, mapGuestTable } from '@utils';
 // Interfaces
 import { IGuestListItem, IQueryParamsGuests } from '@interfaces/guests.interface';
 import { ICurrentView, IGuestsTableVM, IGuestTableRow, IGuestTableRowWithIndex, VIEW_CONFIG } from '@interfaces/data-structure-api';
+import { ITimelineItem } from '@interfaces/stats-interface';
 
 // Types
 import { CONTINENTS, Continents, CountriesCodes, ICountry, LANG, Language, Regions } from '@type/word.types';
@@ -95,6 +97,9 @@ export class GuestsComponent implements OnInit {
     direction: '',
   });
 
+  // Year statistics
+  yearlyVisits: ITimelineItem[] = [];
+
   private fb = inject(FormBuilder);
   private _route = inject(ActivatedRoute);
   private _guests = inject(GuestsService);
@@ -104,6 +109,7 @@ export class GuestsComponent implements OnInit {
   private readonly _geoname = inject(GeonameService);
   private readonly _format = inject(FormatService);
   private _translate = inject(TranslateService);
+  private _stats = inject(StatsService);
 
   ngOnInit(): void {
     this.initFiltersForm();
@@ -114,6 +120,7 @@ export class GuestsComponent implements OnInit {
     this.listenContinentFilter();
     this.listenRegionFilter();
     this.listenLanguageChange();
+    this.loadYearlyVisits();
   }
 
   // FILTERS
@@ -726,5 +733,16 @@ export class GuestsComponent implements OnInit {
   onMapLimitChange(limit: number): void {
     this.mapLimit = limit;
     this.loadMapData();
+  }
+
+  private loadYearlyVisits(): void {
+    this._stats.getGuestsStats().subscribe({
+      next: response => {
+        this.yearlyVisits = response.data?.timeline?.years ?? [];
+      },
+      error: () => {
+        this.yearlyVisits = [];
+      },
+    });
   }
 }
