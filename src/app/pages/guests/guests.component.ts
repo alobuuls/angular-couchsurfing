@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { combineLatestWith, map, switchMap } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
@@ -102,6 +102,7 @@ export class GuestsComponent implements OnInit {
 
   private fb = inject(FormBuilder);
   private _route = inject(ActivatedRoute);
+  private _router = inject(Router);
   private _guests = inject(GuestsService);
   private _sortService = inject(GuestSortService);
   private _deleteService = inject(GuestDeleteService);
@@ -560,12 +561,33 @@ export class GuestsComponent implements OnInit {
     });
   }
 
+  // UPDATE VIEW IN URL
+  // Keep the current view synchronized with the URL query parameters
+  private updateViewInUrl(view: ICurrentView): void {
+    const currentUrlView = this._route.snapshot.queryParamMap.get('view');
+    if ((view === 'table' && !currentUrlView) || currentUrlView === view) {
+      return;
+    }
+
+    this._router.navigate([], {
+      // Navigate relative to the current route
+      relativeTo: this._route,
+      // Remove the view parameter for the default table view. Otherwise, set it to the selected view (cards or map)
+      queryParams: {
+        view: view === 'table' ? null : view,
+      },
+      // Preserve the other query parameters, such as statistics filters
+      queryParamsHandling: 'merge',
+    });
+  }
+
   // CARDS
   // Set view
   setView(view: ICurrentView): void {
     this.currentView = view;
 
-    // if we change cards view, it starts the load
+    this.updateViewInUrl(view);
+
     if (view === 'cards' && !this.cardsData.length) {
       this.loadMoreCards();
     }
@@ -575,30 +597,30 @@ export class GuestsComponent implements OnInit {
     }
   }
 
-  get nextViewIcon(): string {
-    return VIEW_CONFIG[this.currentView].icon;
+  changeView(): void {
+    const nextView = VIEW_CONFIG[this.currentView].next;
+    this.setView(nextView);
   }
 
   get nextViewTooltip(): string {
-    return this._translate.instant(VIEW_CONFIG[this.currentView].tooltip);
+    const nextView = VIEW_CONFIG[this.currentView].next;
+    return `GUESTS_VIEW.CHANGE_TO_${nextView.toUpperCase()}`;
   }
 
-  changeView(): void {
-    this.currentView = VIEW_CONFIG[this.currentView].next;
-    // if we change cards view, it starts the load
-    if (this.currentView === 'cards' && !this.cardsData.length) {
-      this.loadMoreCards();
-    }
-
-    if (this.currentView === 'map' && !this.mapData.length) {
-      this.loadMapData();
-    }
+  get nextViewIcon(): string {
+    const nextView = VIEW_CONFIG[this.currentView].next;
+    const icons: Record<ICurrentView, string> = {
+      table: 'table_chart',
+      cards: 'grid_view',
+      map: 'map',
+    };
+    return icons[nextView];
   }
 
   // To see cards from stats
   private listenQueryParams(): void {
     this._route.queryParams.subscribe(params => {
-      const view = params['view'];
+      const view: ICurrentView = params['view'] === 'cards' || params['view'] === 'map' ? params['view'] : 'table';
       const rating = params['rating'];
       const groupType = params['groupType'];
       const gift = params['gift'];
@@ -614,9 +636,7 @@ export class GuestsComponent implements OnInit {
       const day = params['day'];
       const birthDate = params['birthDate'];
 
-      if (view) {
-        this.currentView = view;
-      }
+      this.currentView = view;
 
       if (
         groupType ||
@@ -710,6 +730,7 @@ export class GuestsComponent implements OnInit {
 
   // MAP
   loadMapData(): void {
+    if (this.mapLoading) return;
     this.mapLoading = true;
 
     this._guests
