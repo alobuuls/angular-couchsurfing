@@ -215,9 +215,9 @@
     <button
       class="btn-toggle"
       mat-icon-button
-      [attr.aria-label]="nextViewTooltip"
+      [attr.aria-label]="nextViewTooltip | translate"
       (click)="changeView()"
-      [matTooltip]="nextViewTooltip"
+      [matTooltip]="nextViewTooltip | translate"
     >
       <mat-icon class="material-symbols-outlined" [fontIcon]="nextViewIcon"></mat-icon>
     </button>
