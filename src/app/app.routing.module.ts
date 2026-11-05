@@ -1,8 +1,22 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+import { NotFoundComponent } from '@pages/404/not-found.component';
 
 // Routes
-import { globalRoutes } from './app.routes';
+export const globalRoutes: Routes = [
+  {
+    path: '404',
+    component: NotFoundComponent,
+  },
+  {
+    path: '',
+    loadChildren: () => import('@main/main.module').then(m => m.MainModule),
+  },
+  {
+    path: '**',
+    redirectTo: '404',
+  },
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(globalRoutes)],

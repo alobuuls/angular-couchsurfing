@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 // Services
 import { GuestsService } from '@services/guests.service';
-import { AlertsService } from '@services/alerts.service';
+import { AlertsService } from '@core/services/alerts.service';
 
 @Component({
   selector: 'guests-create',

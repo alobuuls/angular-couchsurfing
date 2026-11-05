@@ -8,7 +8,7 @@ import { TripFormComponent } from '@pages/guests/form/trip-form/trip-form.compon
 import { GuestFormComponent } from '@pages/guests/form/guest-form/guest-form.component';
 
 // Services
-import { AlertsService } from '@services/alerts.service';
+import { AlertsService } from '@core/services/alerts.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({

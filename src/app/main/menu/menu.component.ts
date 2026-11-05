@@ -1,8 +1,9 @@
-import { Component, ElementRef, HostListener, inject, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { ElementRef, HostListener, inject, OnInit } from '@angular/core';
 
 /* Services */
-import { ThemePalette, ThemeService } from '@services/theme.service';
-import { LanguageService } from '@services/language.service';
+import { ThemePalette, ThemeService } from '@core/services/theme.service';
+import { LanguageService } from '@core/services/language.service';
 
 // Interfaces
 import { Language } from '@type/word.types';
@@ -16,6 +17,16 @@ export class MenuComponent implements OnInit {
   private readonly _theme = inject(ThemeService);
   private readonly _language = inject(LanguageService);
   private readonly ctnPaletteTheme = inject(ElementRef);
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const clickedInside = this.ctnPaletteTheme.nativeElement.contains(event.target);
+
+    if (!clickedInside) {
+      this.showThemeSelection = false;
+      this.showLanguageSelection = false;
+    }
+  }
 
   showThemeSelection: boolean = false;
   showLanguageSelection: boolean = false;
@@ -35,15 +46,6 @@ export class MenuComponent implements OnInit {
     { selectedLang: 'he', flag: 'il', txt: 'עברית' },
   ];
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    const clickedInside = this.ctnPaletteTheme.nativeElement.contains(event.target);
-
-    if (!clickedInside) {
-      this.showThemeSelection = false;
-      this.showLanguageSelection = false;
-    }
-  }
   get currentPalette(): ThemePalette {
     return this._theme.palette;
   }

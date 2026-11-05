@@ -1,5 +1,6 @@
 {
   "MENU": {
+    "HOME": "होम",
     "GUESTS": "मेहमान",
     "HOSTED": "जिनकी मेज़बानी की",
     "PERSONAL": "व्यक्तिगत"
@@ -397,408 +398,407 @@
       "TITLE": "कोई डेटा उपलब्ध नहीं है",
       "MESSAGE": "इस चार्ट के लिए कोई जानकारी उपलब्ध नहीं है।"
     },
-
     "SUMMARY": {
       "VIEWS": {
-        "TOTAL": "合計",
-        "NIGHTS": "宿泊数",
-        "RATING": "評価",
-        "GIFTS": "プレゼント"
+        "TOTAL": "कुल",
+        "NIGHTS": "रातें",
+        "RATING": "रेटिंग",
+        "GIFTS": "उपहार"
       },
       "CARDS": {
-        "VIEW": "表示",
-        "TOTAL_GUESTS": "ゲスト総数",
-        "SOLO_GUESTS": "個人ゲスト数",
-        "GROUP_GUESTS": "グループゲスト数",
-        "TOTAL_VISITS": "訪問総数",
-        "TOTAL_NIGHTS": "宿泊総数"
+        "VIEW": "देखें",
+        "TOTAL_GUESTS": "कुल मेहमान",
+        "SOLO_GUESTS": "अकेले आए मेहमान",
+        "GROUP_GUESTS": "समूह में आए मेहमान",
+        "TOTAL_VISITS": "कुल यात्राएँ",
+        "TOTAL_NIGHTS": "कुल रातें"
       },
       "CHARTS": {
         "GUEST_TYPES": {
-          "GENERAL": "全体",
-          "SOLO": "個人",
-          "GROUPS": "グループ"
+          "GENERAL": "सामान्य",
+          "SOLO": "अकेले",
+          "GROUPS": "समूह"
         },
-        "AVERAGE_NIGHTS": "平均宿泊数",
-        "AVERAGE_RATING": "平均評価",
+        "AVERAGE_NIGHTS": "औसत रातें",
+        "AVERAGE_RATING": "औसत रेटिंग",
         "GIFTS": {
-          "RECEIVED": "受け取った",
-          "WITHOUT_GIFT": "プレゼントなし"
+          "RECEIVED": "प्राप्त",
+          "WITHOUT_GIFT": "बिना उपहार"
         }
       }
     },
     "DEMOGRAPHICS": {
       "VIEWS": {
-        "TOTALS": "合計",
-        "OLDEST": "最年長",
-        "YOUNGEST": "最年少",
-        "FIRST_LAST": "最初 / 最後"
+        "TOTALS": "कुल योग",
+        "OLDEST": "सबसे अधिक उम्र",
+        "YOUNGEST": "सबसे कम उम्र",
+        "FIRST_LAST": "पहला / अंतिम"
       },
       "TOTALS": {
-        "GUESTS": "ゲスト",
-        "VISITS": "訪問",
-        "NIGHTS": "宿泊数"
+        "GUESTS": "मेहमान",
+        "VISITS": "यात्राएँ",
+        "NIGHTS": "रातें"
       },
       "AGE": {
-        "AGE": "年齢",
-        "GUESTS": "ゲスト",
-        "VISITS": "訪問",
-        "NIGHTS": "宿泊数"
+        "AGE": "आयु",
+        "GUESTS": "मेहमान",
+        "VISITS": "यात्राएँ",
+        "NIGHTS": "रातें"
       },
       "FIRST_LAST": {
-        "FIRST": "最初",
-        "LAST": "最後"
+        "FIRST": "पहला",
+        "LAST": "अंतिम"
       },
       "SUBVIEWS": {
-        "OVERALL": "全体",
-        "SOLO": "個人",
-        "GROUPS": "グループ"
+        "OVERALL": "समग्र",
+        "SOLO": "अकेले",
+        "GROUPS": "समूह"
       },
       "GROUPS": {
-        "SOLO": "個人",
-        "COUPLE": "カップル",
-        "FRIENDS": "友人",
-        "FAMILY": "家族"
+        "SOLO": "अकेले",
+        "COUPLE": "जोड़ा",
+        "FRIENDS": "दोस्त",
+        "FAMILY": "परिवार"
       },
       "LABELS": {
-        "AGE": "年齢",
-        "COUNTRY": "国",
-        "VISIT": "訪問",
-        "VISITED_DATE": "訪問日",
-        "VISIT_DATE": "訪問日",
-        "GROUP": "グループ",
-        "GROUPS": "グループ",
-        "SOLO_GUESTS": "個人ゲスト",
-        "OVERALL_DEMOGRAPHICS": "全体の人口統計",
-        "CATEGORY": "カテゴリー"
+        "AGE": "आयु",
+        "COUNTRY": "देश",
+        "VISIT": "यात्रा",
+        "VISITED_DATE": "यात्रा की तारीख",
+        "VISIT_DATE": "यात्रा की तारीख",
+        "GROUP": "समूह",
+        "GROUPS": "समूह",
+        "SOLO_GUESTS": "अकेले आए मेहमान",
+        "OVERALL_DEMOGRAPHICS": "समग्र जनसांख्यिकी",
+        "CATEGORY": "श्रेणी"
       },
       "RANKING": {
-        "OLDEST": "最年長",
-        "SECOND_OLDEST": "2番目に年上",
-        "THIRD_OLDEST": "3番目に年上",
-        "OTHER": "その他",
-        "YOUNGEST": "最年少",
-        "SECOND_YOUNGEST": "2番目に年下",
-        "THIRD_YOUNGEST": "3番目に年下",
-        "FIRST": "最初",
-        "LAST": "最後"
+        "OLDEST": "सबसे अधिक उम्र",
+        "SECOND_OLDEST": "दूसरी सबसे अधिक उम्र",
+        "THIRD_OLDEST": "तीसरी सबसे अधिक उम्र",
+        "OTHER": "अन्य",
+        "YOUNGEST": "सबसे कम उम्र",
+        "SECOND_YOUNGEST": "दूसरी सबसे कम उम्र",
+        "THIRD_YOUNGEST": "तीसरी सबसे कम उम्र",
+        "FIRST": "पहला",
+        "LAST": "अंतिम"
       }
     },
     "GEOGRAPHY": {
       "VIEWS": {
-        "CONTINENTS": "大陸",
-        "REGIONS": "地域",
-        "COUNTRIES": "国",
-        "LIVING_IN": "居住地",
-        "HOMETOWN": "出身地"
+        "CONTINENTS": "महाद्वीप",
+        "REGIONS": "क्षेत्र",
+        "COUNTRIES": "देश",
+        "LIVING_IN": "निवास स्थान",
+        "HOMETOWN": "गृहनगर"
       },
       "RANKINGS": {
-        "ALL": "すべて",
-        "TOP": "上位",
-        "BOTTOM": "下位",
-        "TOP_FEMALE": "女性の上位",
-        "TOP_MALE": "男性の上位",
-        "MOST_CONSECUTIVE": "連続回数最多"
+        "ALL": "सभी",
+        "TOP": "शीर्ष",
+        "BOTTOM": "निचले",
+        "TOP_FEMALE": "शीर्ष महिलाएँ",
+        "TOP_MALE": "शीर्ष पुरुष",
+        "MOST_CONSECUTIVE": "सबसे अधिक लगातार"
       },
       "TITLES": {
-        "GUESTS_BY_CONTINENT": "大陸別ゲスト数",
-        "GUESTS_BY_REGION": "地域別ゲスト数",
-        "GUESTS_BY_COUNTRY": "国別ゲスト数",
-        "GUESTS_LIVING_IN": "居住地別ゲスト数",
-        "GUESTS_HOMETOWN": "出身地別ゲスト数",
-        "MOST_CONSECUTIVE_VISITS": "{{country}} — {{streak}}回連続訪問"
+        "GUESTS_BY_CONTINENT": "महाद्वीप के अनुसार मेहमान",
+        "GUESTS_BY_REGION": "क्षेत्र के अनुसार मेहमान",
+        "GUESTS_BY_COUNTRY": "देश के अनुसार मेहमान",
+        "GUESTS_LIVING_IN": "इन स्थानों पर रहने वाले मेहमान",
+        "GUESTS_HOMETOWN": "मेहमानों के गृहनगर",
+        "MOST_CONSECUTIVE_VISITS": "{{country}} — लगातार {{streak}} यात्राएँ"
       },
       "LABELS": {
-        "NUMBER_OF_GUESTS": "ゲスト数",
-        "FEMALE_GUESTS": "女性ゲスト",
-        "MALE_GUESTS": "男性ゲスト",
-        "GROUP": "グループ",
-        "VISIT": "訪問",
-        "VISIT_DATE": "訪問日",
-        "GUESTS": "ゲスト",
-        "CONSECUTIVE_VISITS": "{{streak}}回連続訪問"
+        "NUMBER_OF_GUESTS": "मेहमानों की संख्या",
+        "FEMALE_GUESTS": "महिला मेहमान",
+        "MALE_GUESTS": "पुरुष मेहमान",
+        "GROUP": "समूह",
+        "VISIT": "यात्रा",
+        "VISIT_DATE": "यात्रा की तारीख",
+        "GUESTS": "मेहमान",
+        "CONSECUTIVE_VISITS": "लगातार {{streak}} यात्राएँ"
       },
       "RANKING_LABELS": {
-        "FIRST": "1位",
-        "SECOND": "2位",
-        "THIRD": "3位",
-        "OTHERS": "その他"
+        "FIRST": "1st",
+        "SECOND": "2nd",
+        "THIRD": "3rd",
+        "OTHERS": "अन्य"
       }
     },
     "GIFTS": {
       "VIEWS": {
-        "GROUPS": "グループ",
-        "SOLO": "個人"
+        "GROUPS": "समूह",
+        "SOLO": "अकेले"
       },
       "TITLES": {
-        "GROUPS": "グループが受け取ったプレゼント",
-        "SOLO": "個人ゲストが受け取ったプレゼント"
+        "GROUPS": "समूहों द्वारा प्राप्त उपहार",
+        "SOLO": "अकेले आए मेहमानों द्वारा प्राप्त उपहार"
       },
       "LABELS": {
-        "GIFTS_COUNT": "プレゼント{{count}}個",
-        "GROUP": "グループ",
-        "COUNTRY": "国",
-        "VISIT": "訪問",
-        "GIFTS_RECEIVED": "受け取ったプレゼント：",
-        "UNKNOWN": "不明",
+        "GIFTS_COUNT": "{{count}} उपहार",
+        "GROUP": "समूह",
+        "COUNTRY": "देश",
+        "VISIT": "यात्रा",
+        "GIFTS_RECEIVED": "प्राप्त उपहार:",
+        "UNKNOWN": "अज्ञात",
         "GROUP_TYPES": {
-          "COUPLE": "カップル",
-          "FRIENDS": "友人",
-          "FAMILY": "家族",
-          "SOLO": "個人"
+          "COUPLE": "जोड़ा",
+          "FRIENDS": "दोस्त",
+          "FAMILY": "परिवार",
+          "SOLO": "अकेले"
         }
       }
     },
     "RANKINGS": {
       "VIEWS": {
-        "PEOPLE": "人物",
-        "WOMEN": "女性",
-        "MEN": "男性",
-        "GROUPS": "グループ"
+        "PEOPLE": "लोग",
+        "WOMEN": "महिलाएँ",
+        "MEN": "पुरुष",
+        "GROUPS": "समूह"
       },
       "SUBVIEWS": {
-        "OVERALL": "全体",
-        "SOLO": "個人"
+        "OVERALL": "समग्र",
+        "SOLO": "अकेले"
       },
       "GROUP_TYPES": {
-        "OVERALL": "全体",
-        "COUPLE": "カップル",
-        "FAMILY": "家族",
-        "FRIENDS": "友人"
+        "OVERALL": "समग्र",
+        "COUPLE": "जोड़ा",
+        "FAMILY": "परिवार",
+        "FRIENDS": "दोस्त"
       },
       "TITLES": {
-        "PEOPLE": "人物ランキング",
-        "WOMEN": "女性ランキング",
-        "MEN": "男性ランキング",
-        "GROUPS": "グループランキング"
+        "PEOPLE": "लोगों की रैंकिंग",
+        "WOMEN": "महिलाओं की रैंकिंग",
+        "MEN": "पुरुषों की रैंकिंग",
+        "GROUPS": "समूहों की रैंकिंग"
       },
       "LABELS": {
         "DATASET": "{{title}} - {{subview}}",
-        "OVERALL_RANKING": "総合ランキング：{{position}}",
-        "VISIT": "訪問：{{date}}",
-        "RANKING_POSITION": "ランキング順位"
+        "OVERALL_RANKING": "समग्र रैंकिंग: {{position}}",
+        "VISIT": "यात्रा: {{date}}",
+        "RANKING_POSITION": "रैंकिंग स्थान"
       }
     },
     "RATINGS": {
       "VIEWS": {
-        "DISTRIBUTION": "分布",
-        "LOWEST": "最低",
-        "HIGHEST": "最高"
+        "DISTRIBUTION": "वितरण",
+        "LOWEST": "सबसे कम",
+        "HIGHEST": "सबसे अधिक"
       },
       "GROUP_TYPES": {
-        "OVERALL": "全体",
-        "SOLO": "個人",
-        "COUPLE": "カップル",
-        "FRIENDS": "友人",
-        "FAMILY": "家族"
+        "OVERALL": "समग्र",
+        "SOLO": "अकेले",
+        "COUPLE": "जोड़ा",
+        "FRIENDS": "दोस्त",
+        "FAMILY": "परिवार"
       },
       "LABELS": {
-        "GUESTS": "ゲスト",
-        "UNRATED": "評価なし",
-        "RATING": "評価",
-        "RATING_VALUE": "評価：{{rating}} ⭐",
-        "COUNTRY": "国：{{country}}",
-        "VISIT": "訪問：{{date}}"
+        "GUESTS": "मेहमान",
+        "UNRATED": "रेटिंग नहीं दी गई",
+        "RATING": "रेटिंग",
+        "RATING_VALUE": "रेटिंग: {{rating}} ⭐",
+        "COUNTRY": "देश: {{country}}",
+        "VISIT": "यात्रा: {{date}}"
       }
     },
     "TIMELINE": {
       "VIEWS": {
-        "YEARS": "年",
-        "MONTHS": "月",
-        "DAYS": "日",
-        "SAMEARRIVALDAY": "同じ到着日",
-        "SAMESTAY": "同じ滞在"
+        "YEARS": "वर्ष",
+        "MONTHS": "महीने",
+        "DAYS": "दिन",
+        "SAMEARRIVALDAY": "एक ही आगमन दिवस",
+        "SAMESTAY": "एक ही प्रवास"
       },
       "TITLES": {
-        "YEARS": "年別ゲスト数",
-        "MONTHS": "月別ゲスト数",
-        "DAYS": "日付別ゲスト数",
-        "SAMEARRIVALDAY": "同じ日に到着したゲスト",
-        "SAMESTAY": "同じ期間に滞在したゲスト"
+        "YEARS": "वर्ष के अनुसार मेहमान",
+        "MONTHS": "महीने के अनुसार मेहमान",
+        "DAYS": "महीने के दिन के अनुसार मेहमान",
+        "SAMEARRIVALDAY": "एक ही दिन आने वाले मेहमान",
+        "SAMESTAY": "एक ही प्रवास साझा करने वाले मेहमान"
       },
       "LABELS": {
-        "FIRST": "1番目",
-        "SECOND": "2番目",
-        "THIRD": "3番目",
-        "OTHER": "その他",
-        "NUMBER_OF_GUESTS": "ゲスト数",
-        "COUNTRY": "国：{{country}}",
-        "VISIT": "訪問：{{date}}",
-        "GROUP_NAME": "{{name}}と{{group}}"
+        "FIRST": "1st",
+        "SECOND": "2nd",
+        "THIRD": "3rd",
+        "OTHER": "अन्य",
+        "NUMBER_OF_GUESTS": "मेहमानों की संख्या",
+        "COUNTRY": "देश: {{country}}",
+        "VISIT": "यात्रा: {{date}}",
+        "GROUP_NAME": "{{name}} और {{group}}"
       },
       "GROUP_LABELS": {
-        "COUPLE": "カップル",
-        "FRIENDS": "友人",
-        "FAMILY": "家族"
+        "COUPLE": "जोड़ा",
+        "FRIENDS": "दोस्त",
+        "FAMILY": "परिवार"
       }
     },
     "STAYS": {
       "VIEWS": {
-        "LONGEST": "最長の滞在",
-        "SHORTEST": "最短の滞在",
-        "MAXPEOPLETOGETHER": "同時滞在人数",
-        "SAMEARRIVAL": "同じ到着日",
-        "SAMEDATES": "同じ日付"
+        "LONGEST": "सबसे लंबे प्रवास",
+        "SHORTEST": "सबसे छोटे प्रवास",
+        "MAXPEOPLETOGETHER": "एक साथ सबसे अधिक लोग",
+        "SAMEARRIVAL": "एक ही आगमन",
+        "SAMEDATES": "एक ही तारीखें"
       },
       "SUBVIEWS": {
-        "OVERALL": "全体",
-        "SOLO": "個人",
-        "COUPLE": "カップル",
-        "FRIENDS": "友人",
-        "FAMILY": "家族"
+        "OVERALL": "समग्र",
+        "SOLO": "अकेले",
+        "COUPLE": "जोड़ा",
+        "FRIENDS": "दोस्त",
+        "FAMILY": "परिवार"
       },
-      "GROUP": "グループ",
+      "GROUP": "समूह",
       "TITLES": {
-        "LONGEST": "最長の滞在",
-        "SHORTEST": "最短の滞在",
-        "MAXIMUM_GUESTS_TOGETHER": "同時滞在ゲスト数の最大値",
-        "GUESTS_WITH_SAME_ARRIVAL_DATE": "同じ到着日のゲスト",
-        "SAME_DATES_GROUP": "同じ日付 - グループ{{group}}"
+        "LONGEST": "सबसे लंबे प्रवास",
+        "SHORTEST": "सबसे छोटे प्रवास",
+        "MAXIMUM_GUESTS_TOGETHER": "एक साथ अधिकतम मेहमान",
+        "GUESTS_WITH_SAME_ARRIVAL_DATE": "एक ही आगमन तिथि वाले मेहमान",
+        "SAME_DATES_GROUP": "एक ही तारीखें - समूह {{group}}"
       },
       "LABELS": {
-        "OVERALL": "全体",
-        "SOLO": "個人",
-        "GUESTS": "ゲスト",
-        "GUESTS_COUNT": "ゲスト数：{{count}}",
-        "MAXIMUM_GUESTS_TOGETHER": "同時滞在ゲスト数の最大値",
-        "SAME_ARRIVAL": "同じ到着日",
-        "FIRST": "1番目",
-        "SECOND": "2番目",
-        "THIRD": "3番目",
-        "OTHERS": "その他",
-        "STAY_TYPE": "滞在タイプ",
-        "OVERLAPPING_GUESTS": "滞在期間が重なるゲスト",
-        "ARRIVAL_DATE": "到着日",
-        "TOTAL_NIGHTS": "宿泊合計：{{count}}泊",
-        "COUNTRY": "国：{{country}}",
-        "VISIT": "訪問：{{date}}",
-        "GROUP": "グループ：{{group}}",
-        "CONNECTIONS": "つながり：{{count}}",
-        "GROUP_NAME": "{{name}}と{{group}}"
+        "OVERALL": "समग्र",
+        "SOLO": "अकेले",
+        "GUESTS": "मेहमान",
+        "GUESTS_COUNT": "मेहमान: {{count}}",
+        "MAXIMUM_GUESTS_TOGETHER": "एक साथ अधिकतम मेहमान",
+        "SAME_ARRIVAL": "एक ही आगमन",
+        "FIRST": "1st",
+        "SECOND": "2nd",
+        "THIRD": "3rd",
+        "OTHERS": "अन्य",
+        "STAY_TYPE": "प्रवास का प्रकार",
+        "OVERLAPPING_GUESTS": "एक ही समय में ठहरने वाले मेहमान",
+        "ARRIVAL_DATE": "आगमन की तारीख",
+        "TOTAL_NIGHTS": "कुल रातें: {{count}}",
+        "COUNTRY": "देश: {{country}}",
+        "VISIT": "यात्रा: {{date}}",
+        "GROUP": "समूह: {{group}}",
+        "CONNECTIONS": "संबंध: {{count}}",
+        "GROUP_NAME": "{{name}} और {{group}}"
       },
       "GROUP_LABELS": {
-        "SOLO": "個人",
-        "COUPLE": "カップル",
-        "FRIENDS": "友人",
-        "FAMILY": "家族"
+        "SOLO": "अकेले",
+        "COUPLE": "जोड़ा",
+        "FRIENDS": "दोस्त",
+        "FAMILY": "परिवार"
       }
     },
     "BIRTHDAYS": {
       "VIEWS": {
-        "CALENDAR": "カレンダー",
-        "REPEATED": "重複",
-        "UNUSUAL": "珍しい誕生日"
+        "CALENDAR": "कैलेंडर",
+        "REPEATED": "दोहराए गए",
+        "UNUSUAL": "असामान्य"
       },
       "MONTHS": {
-        "JANUARY": "1月",
-        "FEBRUARY": "2月",
-        "MARCH": "3月",
-        "APRIL": "4月",
-        "MAY": "5月",
-        "JUNE": "6月",
-        "JULY": "7月",
-        "AUGUST": "8月",
-        "SEPTEMBER": "9月",
-        "OCTOBER": "10月",
-        "NOVEMBER": "11月",
-        "DECEMBER": "12月"
+        "JANUARY": "जनवरी",
+        "FEBRUARY": "फ़रवरी",
+        "MARCH": "मार्च",
+        "APRIL": "अप्रैल",
+        "MAY": "मई",
+        "JUNE": "जून",
+        "JULY": "जुलाई",
+        "AUGUST": "अगस्त",
+        "SEPTEMBER": "सितंबर",
+        "OCTOBER": "अक्टूबर",
+        "NOVEMBER": "नवंबर",
+        "DECEMBER": "दिसंबर"
       },
       "TITLES": {
-        "CALENDAR": "誕生日カレンダー",
-        "REPEATED": "重複する誕生日",
-        "UNUSUAL": "珍しい誕生日"
+        "CALENDAR": "जन्मदिन कैलेंडर",
+        "REPEATED": "दोहराए गए जन्मदिन",
+        "UNUSUAL": "असामान्य जन्मदिन"
       },
       "LABELS": {
-        "CALENDAR": "誕生日カレンダー",
-        "REPEATED_BIRTHDAYS": "重複する誕生日",
-        "UNUSUAL_BIRTHDAYS": "珍しい誕生日",
-        "GUESTS": "ゲスト"
+        "CALENDAR": "जन्मदिन कैलेंडर",
+        "REPEATED_BIRTHDAYS": "दोहराए गए जन्मदिन",
+        "UNUSUAL_BIRTHDAYS": "असामान्य जन्मदिन",
+        "GUESTS": "मेहमान"
       },
       "AXES": {
-        "MONTH": "月",
-        "DAY": "日"
+        "MONTH": "महीना",
+        "DAY": "दिन"
       },
       "TOOLTIPS": {
-        "GUESTS": "ゲスト：{{count}}",
-        "REASON": "理由：{{reason}}"
+        "GUESTS": "मेहमान: {{count}}",
+        "REASON": "कारण: {{reason}}"
       }
     }
   },
   "ALERTS": {
     "BUTTONS": {
-      "SAVE": "保存",
-      "CLOSE": "閉じる",
-      "DELETE": "削除"
+      "SAVE": "सहेजें",
+      "CLOSE": "बंद करें",
+      "DELETE": "हटाएँ"
     },
     "VALIDATION": {
-      "TYPE_NAME_EXACTLY": "\"{{name}}\"と完全に一致するように入力してください。"
+      "TYPE_NAME_EXACTLY": "आपको \"{{name}}\" बिल्कुल इसी तरह टाइप करना होगा।"
     },
     "DELETE_GUEST": {
       "CONFIRMATION": {
-        "MESSAGE": "本当に削除しますか？",
-        "CONFIRM_BUTTON": "このゲストを削除する"
+        "MESSAGE": "क्या आप वाकई हटाना चाहते हैं?",
+        "CONFIRM_BUTTON": "मैं इस मेहमान को हटाना चाहता/चाहती हूँ"
       },
       "WARNING": {
-        "TITLE": "続行する前によくお読みください",
-        "MESSAGE": "ゲスト<strong class=\"danger\">{{name}}</strong>は完全に削除されます。",
-        "CONFIRM_BUTTON": "結果を理解しました"
+        "TITLE": "जारी रखने से पहले कृपया ध्यान से पढ़ें",
+        "MESSAGE": "इससे मेहमान <strong class=\"danger\">{{name}}</strong> स्थायी रूप से हटा दिया जाएगा।",
+        "CONFIRM_BUTTON": "मैं इसके परिणामों को समझता/समझती हूँ"
       },
       "TYPE_TO_CONFIRM": {
-        "TITLE": "確認のため、\"<strong class=\"danger\">{{name}}</strong>\"と入力してください",
-        "CONFIRM_BUTTON": "ゲストを削除"
+        "TITLE": "पुष्टि करने के लिए, \"<strong class=\"danger\">{{name}}</strong>\" टाइप करें",
+        "CONFIRM_BUTTON": "मेहमान हटाएँ"
       },
       "SUCCESS": {
-        "MESSAGE": "<strong class=\"danger\">{{name}}</strong>を正常に削除しました"
+        "MESSAGE": "<strong class=\"danger\">{{name}}</strong> को सफलतापूर्वक हटा दिया गया है"
       }
     },
     "CREATE": {
-      "GUEST_SUCCESS": "ゲストを正常に作成しました",
-      "GUEST_ERROR": "ゲストの作成中にエラーが発生しました",
-      "GROUP_SUCCESS": "グループを正常に作成しました",
-      "GROUP_ERROR": "グループの作成中にエラーが発生しました"
+      "GUEST_SUCCESS": "मेहमान सफलतापूर्वक बनाया गया",
+      "GUEST_ERROR": "मेहमान बनाने में त्रुटि",
+      "GROUP_SUCCESS": "समूह सफलतापूर्वक बनाया गया",
+      "GROUP_ERROR": "समूह बनाने में त्रुटि"
     },
     "EDIT": {
-      "GUEST_SUCCESS": "ゲストを正常に更新しました",
-      "GUEST_ERROR": "ゲストの更新中にエラーが発生しました",
-      "GROUP_SUCCESS": "グループを正常に更新しました",
-      "GROUP_ERROR": "グループの更新中にエラーが発生しました"
+      "GUEST_SUCCESS": "मेहमान सफलतापूर्वक अपडेट किया गया",
+      "GUEST_ERROR": "मेहमान अपडेट करने में त्रुटि",
+      "GROUP_SUCCESS": "समूह सफलतापूर्वक अपडेट किया गया",
+      "GROUP_ERROR": "समूह अपडेट करने में त्रुटि"
     }
   },
   "ERRORS": {
     "HTTP": {
-      "400": "⚠️ リクエストが無効です。一部のデータが不足しているか、正しくありません。確認してもう一度お試しください。",
-      "401": "🔐 セッションが無効または期限切れです。続行するにはサインインしてください。",
-      "403": "🚫 アクセスが拒否されました。このリソースを表示する権限がありません。",
-      "404": "🔍 お探しのものが見つかりませんでした。URLを確認するか、もう一度お試しください。",
-      "500": "💥 サーバーエラーが発生しました。修正に取り組んでいます。しばらくしてからもう一度お試しください。",
-      "502": "📡 接続エラーです。インターネット接続を確認してください。",
-      "DEFAULT": "❌ 予期しないエラーが発生しました。もう一度お試しください。"
+      "400": "⚠️ अमान्य अनुरोध। कुछ जानकारी गायब है या गलत है। कृपया जाँचें और पुनः प्रयास करें।",
+      "401": "🔐 सत्र अमान्य है या समाप्त हो गया है। जारी रखने के लिए कृपया साइन इन करें।",
+      "403": "🚫 पहुँच अस्वीकृत। आपको इस संसाधन को देखने की अनुमति नहीं है।",
+      "404": "🔍 हमें वह नहीं मिला जिसे आप खोज रहे हैं। URL जाँचें या पुनः प्रयास करें।",
+      "500": "💥 सर्वर में त्रुटि हुई है। हम इसे ठीक करने पर काम कर रहे हैं। कृपया बाद में पुनः प्रयास करें।",
+      "502": "📡 कनेक्शन त्रुटि। कृपया अपना इंटरनेट कनेक्शन जाँचें।",
+      "DEFAULT": "❌ एक अप्रत्याशित त्रुटि हुई। कृपया पुनः प्रयास करें।"
     }
   },
   "LOADING": {
     "MESSAGES": {
-      "INITIAL": "読み込み中",
-      "ALMOST_THERE": "もうすぐです",
-      "WORKING": "処理中です",
-      "ALMOST_READY": "まもなく準備完了",
-      "JUST_A_MOMENT": "少々お待ちください"
+      "INITIAL": "लोड हो रहा है",
+      "ALMOST_THERE": "लगभग हो गया",
+      "WORKING": "हम इस पर काम कर रहे हैं",
+      "ALMOST_READY": "लगभग तैयार है",
+      "JUST_A_MOMENT": "बस एक क्षण"
     }
   },
   "GENDER": {
-    "TXT": "性別",
-    "LABEL": "性別：{{gender}}",
-    "MALE": "男性",
-    "FEMALE": "女性",
-    "TRANS": "トランスジェンダー",
-    "GAY": "ゲイ"
+    "TXT": "लिंग",
+    "LABEL": "लिंग: {{gender}}",
+    "MALE": "पुरुष",
+    "FEMALE": "महिला",
+    "TRANS": "ट्रांसजेंडर",
+    "GAY": "समलैंगिक"
   },
   "404": {
-    "ERR": "エラー",
-    "MSG": "お探しのページは削除されたか、名前が変更されたか、一時的に利用できない可能性があります。",
-    "TRY": "次のことをお試しください：",
-    "OR": "または",
-    "BTN_BACK": "前のページに戻る",
-    "BTN_HOME": "ホームページに戻る",
-    "GOOD_LUCK": "幸運を祈ります 😁"
+    "ERR": "त्रुटि",
+    "MSG": "आप जिस पृष्ठ को खोज रहे हैं, उसे हटाया जा सकता है, उसका नाम बदला जा सकता है या वह अस्थायी रूप से अनुपलब्ध हो सकता है।",
+    "TRY": "कृपया यह प्रयास करें:",
+    "OR": "या",
+    "BTN_BACK": "पिछले पृष्ठ पर वापस जाएँ",
+    "BTN_HOME": "मुखपृष्ठ पर वापस जाएँ",
+    "GOOD_LUCK": "शुभकामनाएँ 😁"
   }
 }

@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 
 // Services
 import { MapService } from '@services/map.service';
-import { LanguageService } from '@services/language.service';
+import { LanguageService } from '@core/services/language.service';
 import { GeonameService } from '@services/geoname.service';
 
 // Interfaces
@@ -26,6 +26,7 @@ import { featureCollection } from '@turf/helpers';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
+  providers: [MapService],
   selector: 'guests-map',
   templateUrl: './guests-map.component.html',
   styleUrls: ['./guests-map.component.css'],

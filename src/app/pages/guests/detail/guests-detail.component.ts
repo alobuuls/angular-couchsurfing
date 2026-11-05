@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 // Services
 import { GuestsService } from '@services/guests.service';
 import { GeonameService } from '@services/geoname.service';
-import { SocialLinksService } from '@services/social-links.service';
+import { SocialLinksService } from '@core/services/social-links.service';
 
 // Interfaces
 import { IGroupMember, IGuestDetail } from '@interfaces/guests.interface';

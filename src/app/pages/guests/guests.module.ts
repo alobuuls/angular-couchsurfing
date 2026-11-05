@@ -1,9 +1,31 @@
 import { NgModule } from '@angular/core';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 // Modules
-import { SharedModule } from '@shared/shared.module';
 import { GuestsRoutingModule } from '@pages/guests/guests.routing.module';
-import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { SharedModule } from '@shared/shared.module';
+import { MaterialModule } from '@material/material.module';
+
+// Material
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
+// Services
+import { GuestsService } from '@services/guests.service';
+import { GeonameService } from '@services/geoname.service';
+import { FormatService } from '@services/format.service';
 
 // Components
 import { GuestsComponent } from '@pages/guests/guests.component';
@@ -26,6 +48,23 @@ import { GuestTimelineChartComponent } from '@pages/guests/stats/charts/timeline
 import { GuestGiftsChartComponent } from '@pages/guests/stats/charts/gifts/guest-gifts-chart.component';
 import { GuestStaysChartComponent } from '@pages/guests/stats/charts/stays/guest-stays-chart.component';
 import { GuestBirthdaysChartComponent } from '@pages/guests/stats/charts/birthdays/guest-birthdays-chart.component';
+
+const MATERIAL_MODULES = [
+  MatBadgeModule,
+  MatDialogModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatPaginatorModule,
+  MatProgressBarModule,
+  MatSortModule,
+  MatTableModule,
+  MatRadioModule,
+  MatDatepickerModule,
+  MatCheckboxModule,
+  MatSelectModule,
+  MatChipsModule,
+  MatAutocompleteModule,
+];
 
 @NgModule({
   declarations: [
@@ -50,6 +89,7 @@ import { GuestBirthdaysChartComponent } from '@pages/guests/stats/charts/birthda
     GuestStaysChartComponent,
     GuestBirthdaysChartComponent,
   ],
-  imports: [SharedModule, GuestsRoutingModule, NgxSkeletonLoaderModule],
+  imports: [GuestsRoutingModule, SharedModule, MaterialModule, NgxSkeletonLoaderModule, ...MATERIAL_MODULES],
+  providers: [GuestsService, GeonameService, FormatService],
 })
 export class GuestsModule {}

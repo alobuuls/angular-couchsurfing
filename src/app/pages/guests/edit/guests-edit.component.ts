@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 // Services
 import { GuestsService } from '@services/guests.service';
-import { AlertsService } from '@services/alerts.service';
+import { AlertsService } from '@core/services/alerts.service';
 import { Router } from '@angular/router';
 
 // Interfaces

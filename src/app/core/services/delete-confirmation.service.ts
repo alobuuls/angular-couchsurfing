@@ -3,7 +3,7 @@ import { firstValueFrom, Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 // Services
-import { AlertsService } from '@services/alerts.service';
+import { AlertsService } from '@core/services/alerts.service';
 
 // Interfaces
 import { IGuestListItem } from '@interfaces/guests.interface';
@@ -14,7 +14,7 @@ import { isGroup } from '@utils';
 @Injectable({
   providedIn: 'root',
 })
-export class GuestDeleteService {
+export class DeleteConfirmationService {
   private _alerts = inject(AlertsService);
   private _translate = inject(TranslateService);
 

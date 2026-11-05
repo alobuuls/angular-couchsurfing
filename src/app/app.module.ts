@@ -2,6 +2,10 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { registerLocaleData } from '@angular/common';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import localeEn from '@angular/common/locales/en';
 import localeEs from '@angular/common/locales/es';
@@ -15,25 +19,26 @@ import localeJa from '@angular/common/locales/ja';
 import localeHi from '@angular/common/locales/hi';
 import localeKo from '@angular/common/locales/ko';
 import localeHe from '@angular/common/locales/he';
+
+// Material
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+
+// Services
+import { PaginatorIntlService } from '@shared/services/paginator-intl.service';
+
 // Modules
 import { CoreModule } from '@core/core.module';
-import { SharedModule } from '@shared/shared.module';
 import { AppRoutingModule } from './app.routing.module';
-import { MatNativeDateModule } from '@angular/material/core';
-import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 // Components
-import { AppComponent } from './app.component';
 import { NotFoundComponent } from '@pages/404/not-found.component';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { PaginatorIntlService } from '@shared/services/paginator-intl.service';
-import { MatPaginatorIntl } from '@angular/material/paginator';
+import { AppComponent } from './app.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
+
 registerLocaleData(localeEn, 'en-US');
 registerLocaleData(localeEs, 'es-ES');
 registerLocaleData(localeDe, 'de-DE');
@@ -51,13 +56,14 @@ registerLocaleData(localeHe, 'he-IL');
   declarations: [AppComponent, NotFoundComponent],
   imports: [
     BrowserModule,
-    CoreModule,
-    SharedModule,
-    AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+
+    CoreModule,
+    AppRoutingModule,
     MatNativeDateModule,
     NgxSkeletonLoaderModule,
+
     TranslateModule.forRoot({
       defaultLanguage: 'en',
       loader: {
