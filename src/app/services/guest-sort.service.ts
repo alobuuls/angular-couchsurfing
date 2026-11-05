@@ -7,9 +7,7 @@ import { IGuestTableMember, IGuestTableRow, IGuestTableRowWithIndex } from '@int
 // Utils
 import { compare } from '@utils';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class GuestSortService {
   sort(data: IGuestTableRowWithIndex[], sort: Sort): IGuestTableRowWithIndex[] {
     if (!sort.active || !sort.direction) return data;

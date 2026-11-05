@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 
 // Services
 import { StatsService } from '@services/stats.service';
-import { ErrorHandlerService } from '@services/err-handler.service';
+import { ErrorHandlerService } from '@core/services/err-handler.service';
 
 // Helpers
 import { withReqState } from '@utils';
@@ -12,6 +12,7 @@ import { withReqState } from '@utils';
 import { ICurrentChart } from '@interfaces/stats-interface';
 
 @Component({
+  providers: [StatsService],
   selector: 'guests-stats',
   templateUrl: './guests-stats.component.html',
   styleUrls: ['./guests-stats.component.css'],

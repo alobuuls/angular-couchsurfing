@@ -460,21 +460,9 @@
   align-items: center;
   display: flex;
   justify-content: center;
-}
-
-.logo-container > i {
   font-size: 7rem;
   font-weight: 600;
   text-shadow: 0 0 5px color-mix(in srgb, #000000 60%, transparent);
-}
-
-.loading-title {
-  font:
-    400 clamp(2rem, calc(7vw + 1rem), 10rem) 'Dancing Script',
-    sans-serif !important;
-  letter-spacing: 2px;
-  padding-top: 2rem;
-  text-shadow: 0 0 10px color-mix(in srgb, #000000 60%, transparent);
 }
 
 /* =========================================================
@@ -560,27 +548,12 @@ button {
 }
 
 .loading-animation {
-  animation: spinner 1s infinite linear;
+  animation: spinner 0.7s infinite linear;
   display: inline-block;
 }
 
 .flag-gap {
   margin-right: 0.3rem;
-}
-
-.title-component {
-  color: var(--color-primary-dark);
-  font-family: 'Poiret One', sans-serif;
-  font-size: clamp(2rem, 4vw, 3.2rem);
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  line-height: 1.25;
-  margin-top: 8rem;
-  margin-bottom: 2rem;
-  text-align: center;
-  text-wrap: balance;
-  text-shadow: 0 2px 6px color-mix(in srgb, var(--color-primary) 18%, transparent);
 }
 
 /* =========================================================

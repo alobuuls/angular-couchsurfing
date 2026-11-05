@@ -5,9 +5,7 @@ import { environment } from '@env/environment';
 
 // Interfaces
 import { IBodyGuest, IGroupDetail, IGroupDetailResp, IGuestCreateResp, IGuestDeleteResp, IGuestDetailResp, IGuestsResp, IQueryParamsGuests } from '@interfaces/guests.interface';
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class GuestsService {
   private urlGuests: string = `${environment.endpointUrlApiCs}/guests`;
   private urlGuestsGroups: string = `${environment.endpointUrlApiCs}/groups`;

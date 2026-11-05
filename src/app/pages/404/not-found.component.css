@@ -1,4 +1,4 @@
-section {
+main {
   background-color: #000000;
   background-image: radial-gradient(color-mix(in srgb, var(--color-primary) 35%, #041607), #041607), url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif');
   background-repeat: no-repeat;

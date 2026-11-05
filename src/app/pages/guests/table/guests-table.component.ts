@@ -10,7 +10,7 @@ import { Continents } from '@type/word.types';
 // Services
 import { FormatService } from '@services/format.service';
 import { GeonameService } from '@services/geoname.service';
-import { SocialLinksService } from '@services/social-links.service';
+import { SocialLinksService } from '@core/services/social-links.service';
 
 // Helpers
 import { isGroup } from '@utils';
@@ -79,8 +79,8 @@ export class GuestsTableComponent {
   }
 
   getEditRoute(guest: IGuestListItem): string[] {
-    if (isGroup(guest)) return ['/guests/groups/edit', guest.groupId];
-    return ['/guests/edit', guest.guestId];
+    if (isGroup(guest)) return ['/guests/groups', guest.groupId, 'edit'];
+    return ['/guests', guest.guestId, 'edit'];
   }
 
   trackByIndexPhone(index: number): number {

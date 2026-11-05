@@ -2,12 +2,10 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, shareReplay } from 'rxjs';
 
-import { IAdminRegionsGeoJson, IWorldGeoJson } from '../interfaces/map-interface';
-import { environment } from '../../environments/environment';
+import { IAdminRegionsGeoJson, IWorldGeoJson } from '@interfaces/map-interface';
+import { environment } from '@env/environment';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class MapService {
   private readonly http = inject(HttpClient);
 

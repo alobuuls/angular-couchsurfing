@@ -1,13 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 
-import { Continents, ICountry, Regions } from '@type/word.types';
+import { Continents, Regions } from '@type/word.types';
 import { REGION_NAMES } from '@config/world/regions';
 import { CONTINENT_NAMES } from '@config/world/continents';
-import { LanguageService } from '@services/language.service';
+import { LanguageService } from '@core/services/language.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class GeonameService {
   private readonly _language = inject(LanguageService);
 

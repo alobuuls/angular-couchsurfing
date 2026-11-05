@@ -12,8 +12,8 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 // Services
 import { GuestsService } from '@services/guests.service';
-import { GuestDeleteService } from '@services/delete-confirmation.service';
-import { ErrorHandlerService } from '@services/err-handler.service';
+import { DeleteConfirmationService } from '@core/services/delete-confirmation.service';
+import { ErrorHandlerService } from '@core/services/err-handler.service';
 import { GuestSortService } from '@services/guest-sort.service';
 import { GeonameService } from '@services/geoname.service';
 import { FormatService } from '@services/format.service';
@@ -35,6 +35,7 @@ import { WORLD } from '@config/world';
 import { REGION_NAMES } from '@config/world/regions';
 
 @Component({
+  providers: [GuestSortService, StatsService],
   selector: 'guests',
   templateUrl: './guests.component.html',
   styleUrls: ['./guests.component.css'],
@@ -105,7 +106,7 @@ export class GuestsComponent implements OnInit {
   private _router = inject(Router);
   private _guests = inject(GuestsService);
   private _sortService = inject(GuestSortService);
-  private _deleteService = inject(GuestDeleteService);
+  private _deleteService = inject(DeleteConfirmationService);
   private _errH = inject(ErrorHandlerService);
   private readonly _geoname = inject(GeonameService);
   private readonly _format = inject(FormatService);

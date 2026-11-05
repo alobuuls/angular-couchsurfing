@@ -3,56 +3,16 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
-// Material
-import { MatBadgeModule } from '@angular/material/badge';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatSortModule } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatSelectModule } from '@angular/material/select';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-
 // Pipes
 import { FlagPipe } from '@shared/pipes/three-code-letters-flag.pipe';
 
 // Components
+import { ShTitleComponent } from '@shared/components/sh-title/sh-title.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 
-const MATERIAL_MODULES = [
-  MatBadgeModule,
-  MatButtonModule,
-  MatDialogModule,
-  MatFormFieldModule,
-  MatIconModule,
-  MatInputModule,
-  MatPaginatorModule,
-  MatProgressBarModule,
-  MatSortModule,
-  MatTableModule,
-  MatTooltipModule,
-  MatRadioModule,
-  MatDatepickerModule,
-  MatCheckboxModule,
-  MatSelectModule,
-  MatChipsModule,
-  MatAutocompleteModule,
-];
-
-const PIPES = [FlagPipe];
-
 @NgModule({
-  declarations: [...PIPES, LoadingComponent],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, ...MATERIAL_MODULES, TranslateModule],
-  exports: [CommonModule, FormsModule, ReactiveFormsModule, ...MATERIAL_MODULES, ...PIPES, LoadingComponent, TranslateModule],
+  declarations: [FlagPipe, LoadingComponent, ShTitleComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule],
+  exports: [CommonModule, FormsModule, ReactiveFormsModule, FlagPipe, LoadingComponent, ShTitleComponent, TranslateModule],
 })
 export class SharedModule {}

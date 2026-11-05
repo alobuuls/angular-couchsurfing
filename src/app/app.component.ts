@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
 
-import { ThemeService } from '@services/theme.service';
-import { LanguageService } from '@services/language.service';
+import { ThemeService } from '@core/services/theme.service';
+import { LanguageService } from '@core/services/language.service';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
+  template: '<router-outlet></router-outlet>',
 })
 export class AppComponent {
   private readonly _theme = inject(ThemeService);

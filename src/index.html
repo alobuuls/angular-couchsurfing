@@ -41,18 +41,12 @@
         const palette = localStorage.getItem('themePalette');
 
         // Apply the saved theme before Angular starts.
-        if (theme === 'dark') {
-          root.classList.add('dark-theme');
-        }
+        if (theme === 'dark') root.classList.add('dark-theme');
 
         // Apply the saved palette before displaying the preloader.
         const validPalettes = ['coastal', 'ocean', 'pink', 'lavender'];
 
-        if (validPalettes.includes(palette)) {
-          root.classList.add(`theme-${palette}`);
-        } else {
-          root.classList.add('theme-ocean');
-        }
+        validPalettes.includes(palette) ? root.classList.add(`theme-${palette}`) : root.classList.add('theme-ocean');
       })();
     </script>
   </head>
@@ -61,40 +55,8 @@
     <app-root class="app-stl">
       <!-- Initial loading shown while Angular starts -->
       <div class="loading-container">
-        <div class="logo-container">
-          <i class="fa fa-spin fa-sync"></i>
-        </div>
-
-        <h4 id="loading-title" class="loading-title">Loading...</h4>
+        <div class="logo-container loading-animation">↻</div>
       </div>
     </app-root>
-
-    <!-- Rotate loading messages while the app is starting -->
-    <script>
-      const messages = [
-        'Starting Couchsurfing...',
-        'Preparing your experience...',
-        'Loading your adventure...',
-        'Loading the app...',
-        'Almost ready...',
-      ];
-
-      let index = 0;
-
-      const loadingTitle = document.getElementById('loading-title');
-
-      if (loadingTitle) {
-        const messageInterval = setInterval(() => {
-          // Stop the interval once Angular replaces the initial loading
-          if (!document.getElementById('loading-title')) {
-            clearInterval(messageInterval);
-            return;
-          }
-
-          index = (index + 1) % messages.length;
-          loadingTitle.textContent = messages[index];
-        }, 2000);
-      }
-    </script>
   </body>
 </html>

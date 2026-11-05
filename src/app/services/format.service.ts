@@ -2,14 +2,12 @@ import { DatePipe } from '@angular/common';
 import { Injectable, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
-import { LanguageService } from './language.service';
+import { LanguageService } from '@core/services/language.service';
 import { Language, CountriesCodes } from '@type/word.types';
 import { WORLD } from '@config/world';
-import { OCCUPATION_TRANSLATIONS } from '../config/occupations/occupations';
+import { OCCUPATION_TRANSLATIONS } from '@config/occupations/occupations';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class FormatService {
   private readonly _language = inject(LanguageService);
   private readonly _translate = inject(TranslateService);

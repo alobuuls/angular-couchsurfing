@@ -9,9 +9,7 @@ import { IState, ICity } from '@interfaces/guest-form.interface';
 // Config
 import { WORLD } from '@config/world';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class CityService {
   private enpoint: string = environment.endpointApiCities;
   private API_KEY: string = environment.apiKeyCities;

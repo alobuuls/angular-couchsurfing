@@ -6,14 +6,14 @@ import { TranslateService } from '@ngx-translate/core';
 import { GuestsService } from '@services/guests.service';
 import { FormatService } from '@services/format.service';
 import { GeonameService } from '@services/geoname.service';
-import { LanguageService } from '@services/language.service';
+import { LanguageService } from '@core/services/language.service';
 
 // Interfaces
 import { IGuestTableRow, IGuestYearGroup } from '@interfaces/data-structure-api';
 import { ICardGuest, IGuestListItem } from '@interfaces/guests.interface';
 import { Continents, Regions } from '@type/word.types';
 import { ITimelineItem } from '@interfaces/stats-interface';
-import { SocialLinksService } from '@services/social-links.service';
+import { SocialLinksService } from '@core/services/social-links.service';
 
 @Component({
   selector: 'guests-cards',

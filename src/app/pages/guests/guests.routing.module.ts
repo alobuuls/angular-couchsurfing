@@ -6,7 +6,7 @@ import { GuestsComponent } from '@pages/guests/guests.component';
 import { GuestsCreateComponent } from '@pages/guests/create/guests-create.component';
 import { GuestsDetailComponent } from '@pages/guests/detail/guests-detail.component';
 import { GuestsEditComponent } from '@pages/guests/edit/guests-edit.component';
-import { GuestsStatsComponent } from './stats/guests-stats.component';
+import { GuestsStatsComponent } from '@pages/guests/stats/guests-stats.component';
 
 const guestsRoutes: Routes = [
   {
@@ -22,11 +22,7 @@ const guestsRoutes: Routes = [
     component: GuestsStatsComponent,
   },
   {
-    path: 'groups/edit/:groupId',
-    component: GuestsEditComponent,
-  },
-  {
-    path: 'edit/:guestId',
+    path: 'groups/:groupId/edit',
     component: GuestsEditComponent,
   },
   {
@@ -34,8 +30,16 @@ const guestsRoutes: Routes = [
     component: GuestsDetailComponent,
   },
   {
+    path: ':guestId/edit',
+    component: GuestsEditComponent,
+  },
+  {
     path: ':guestId',
     component: GuestsDetailComponent,
+  },
+  {
+    path: '**',
+    redirectTo: '',
   },
 ];
 

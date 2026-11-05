@@ -1,7 +1,7 @@
 <header id="menu-flex" class="menu-flex">
   <nav class="menu">
     <div class="logo-menu">
-      <a [routerLink]="['guests']" title="CouchSurfing">
+      <a [routerLink]="['/']" title="CouchSurfing">
         <span class="title-logo-menu">CouchSurfing</span>
       </a>
 
@@ -16,6 +16,17 @@
     </div>
 
     <div id="links" class="links">
+      <!-- HOME -->
+      <a [routerLink]="['/home']" routerLinkActive="links-menu-active" class="links-menu">
+        <mat-icon
+          aria-hidden="false"
+          aria-label="home icon"
+          class="material-symbols-outlined"
+          fontIcon="home"
+        ></mat-icon>
+        {{ 'MENU.HOME' | translate }}
+      </a>
+
       <!-- GUESTS -->
       <a [routerLink]="['guests']" routerLinkActive="links-menu-active" class="links-menu">
         <mat-icon
@@ -28,18 +39,18 @@
       </a>
 
       <!-- HOSTED -->
-      <a [routerLink]="['hosted']" routerLinkActive="links-menu-active" class="links-menu">
+      <!-- <a [routerLink]="['hosted']" routerLinkActive="links-menu-active" class="links-menu">
         <mat-icon
           aria-hidden="false"
           aria-label="hosted icon"
           class="material-symbols-outlined"
-          fontIcon="home"
+          fontIcon="gite"
         ></mat-icon>
         {{ 'MENU.HOSTED' | translate }}
-      </a>
+      </a> -->
 
       <!-- PERSONAL -->
-      <a [routerLink]="['personal']" routerLinkActive="links-menu-active" class="links-menu">
+      <!-- <a [routerLink]="['personal']" routerLinkActive="links-menu-active" class="links-menu">
         <mat-icon
           aria-hidden="false"
           aria-label="personal icon"
@@ -47,7 +58,7 @@
           fontIcon="person"
         ></mat-icon>
         {{ 'MENU.PERSONAL' | translate }}
-      </a>
+      </a> -->
 
       <!-- THEME -->
       <button class="links-menu btn-theme" (click)="toggleTheme()" [attr.aria-label]="themeLabel">

@@ -13,7 +13,7 @@ import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 // Services
-import { AlertsService } from '@services/alerts.service';
+import { AlertsService } from '@core/services/alerts.service';
 import { CityService } from '@services/city.service';
 import { FormatService } from '@services/format.service';
 
@@ -29,6 +29,7 @@ import { WORLD } from '@config/world';
 import { OCCUPATIONS_BY_AREA, OCCUPATION_AREA_TRANSLATIONS, OCCUPATION_TRANSLATIONS } from '@config/occupations/occupations';
 
 @Component({
+  providers: [CityService],
   selector: 'app-guest-form',
   templateUrl: './guest-form.component.html',
   styleUrls: ['./guest-form.component.css'],

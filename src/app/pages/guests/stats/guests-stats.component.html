@@ -1,5 +1,5 @@
-<main *ngIf="vm$ | async as vm">
-  <h1 class="title-component">{{ 'STATS.TITLE' | translate }}</h1>
+<div *ngIf="vm$ | async as vm">
+  <sh-title [titleTxt]="'STATS.TITLE' | translate"></sh-title>
 
   <h1 *ngIf="vm.status === 'error'">{{ vm.error.message }}</h1>
 
@@ -145,4 +145,4 @@
       </ng-template>
     </div>
   </ng-container>
-</main>
+</div>

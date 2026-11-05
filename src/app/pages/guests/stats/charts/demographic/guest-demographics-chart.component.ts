@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 
 // Services
 import { FormatService } from '@services/format.service';
-import { LanguageService } from '@services/language.service';
+import { LanguageService } from '@core/services/language.service';
 
 // Interfaces
 import { IDemographicsDistribution, IDemographicsView, IDemographicsTotalsView, IDemographicGender, IDemographicsOldestView } from '@interfaces/stats-interface';

@@ -1,4 +1,4 @@
-<main *ngIf="vm$ | async as vm">
+<div *ngIf="vm$ | async as vm">
   <!-- FILTERS -->
   <form [formGroup]="filtersForm" class="filters-form" (ngSubmit)="onFiltersSubmit()">
     <!-- CONTINENT -->
@@ -331,4 +331,4 @@
     (page)="onPageChange($event)"
   >
   </guests-table>
-</main>
+</div>
