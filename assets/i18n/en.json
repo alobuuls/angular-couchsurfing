@@ -1,4 +1,8 @@
 {
+  "GENERAL": {
+    "LOADING": "Loading...",
+    "BACK": "Back"
+  },
   "MENU": {
     "HOME": "Home",
     "GUESTS": "Guests",
@@ -134,26 +138,18 @@
     "DID_THEY_REQUEST": "Did they request a stay?",
     "I_SENT_THE_REQUEST": "I sent the request",
     "LOCATION": "LOCATION",
-    "CONTINENT": "Continent",
-    "REGION": "Region",
     "HOMETOWN": "Hometown",
     "LIVING_IN": "Living In",
     "WE_MET": "We Met",
-    "OCCUPATION": "OCCUPATION",
-    "GIFT": "GIFT",
-    "COMMENTS": "COMMENTS",
-    "REFERENCES": "REFERENCES",
-    "THEIR_REFERENCE": "Their Reference",
-    "MY_REFERENCE": "My Reference",
     "GROUP_TYPES": {
       "solo": "Solo",
       "couple": "Couple",
       "friends": "Friends",
       "family": "Family"
     },
-    "LOADING_1": "Loading details",
-    "LOADING_2": "Getting more information",
-    "LOADING_3": "Almost there"
+    "DELETE_GUEST": "Delete guest",
+    "DELETE_GUESTS": "Delete guests",
+    "VIEW_GROUP": "View group"
   },
   "GUEST_DETAIL": {
     "TITLE": "Guest Details",
@@ -179,7 +175,8 @@
     "SOCIAL": {
       "COUCHSURFING": "View Couchsurfing profile",
       "INSTAGRAM": "View Instagram profile",
-      "WHATSAPP": "View WhatsApp profile"
+      "WHATSAPP": "View WhatsApp profile",
+      "PHONE": "Make a call"
     },
     "DIVIDER": {
       "IDENTITY": "IDENTITY"
@@ -189,7 +186,6 @@
       "TITLE": "Personal Information",
       "FULL_NAME": "Full Name",
       "BIRTH_DATE": "Birth Date",
-      "PHONE_NUMBER": "Phone Number",
       "GAY": "Gay",
       "STAY_REQUEST": "Stay Request",
       "REQUESTED_STAY": "They requested a stay",
@@ -221,6 +217,7 @@
         "FAMILY": "Family"
       },
       "STAYED": "Stayed?",
+      "STAYED_GROUP": "Stayed?",
       "HUNG_OUT": "Hung Out",
       "FIRST_VISIT": "First Visit"
     },
@@ -262,7 +259,6 @@
         "SUBTITLE": "TRAVEL COMPANIONS",
         "TITLE": "Group Members",
         "GUEST_FALLBACK": "Guest",
-        "WHATSAPP": "WhatsApp",
         "LIVING_IN": "Living In"
       }
     }

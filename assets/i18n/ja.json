@@ -1,4 +1,8 @@
 {
+  "GENERAL": {
+    "LOADING": "読み込み中...",
+    "BACK": "戻る"
+  },
   "MENU": {
     "HOME": "ホーム",
     "GUESTS": "ゲスト",
@@ -134,26 +138,18 @@
     "DID_THEY_REQUEST": "宿泊をリクエストしましたか？",
     "I_SENT_THE_REQUEST": "自分がリクエストを送信した",
     "LOCATION": "場所",
-    "CONTINENT": "大陸",
-    "REGION": "地域",
     "HOMETOWN": "出身地",
     "LIVING_IN": "居住地",
     "WE_MET": "出会った場所",
-    "OCCUPATION": "職業",
-    "GIFT": "贈り物",
-    "COMMENTS": "コメント",
-    "REFERENCES": "リファレンス",
-    "THEIR_REFERENCE": "相手からのリファレンス",
-    "MY_REFERENCE": "自分からのリファレンス",
     "GROUP_TYPES": {
       "solo": "一人",
       "couple": "カップル",
       "friends": "友人",
       "family": "家族"
     },
-    "LOADING_1": "詳細を読み込んでいます",
-    "LOADING_2": "追加情報を取得しています",
-    "LOADING_3": "もう少しです"
+    "DELETE_GUEST": "ゲストを削除",
+    "DELETE_GUESTS": "ゲストを削除",
+    "VIEW_GROUP": "グループを表示"
   },
   "GUEST_DETAIL": {
     "TITLE": "ゲストの詳細",
@@ -179,7 +175,8 @@
     "SOCIAL": {
       "COUCHSURFING": "Couchsurfingのプロフィールを表示",
       "INSTAGRAM": "Instagramのプロフィールを表示",
-      "WHATSAPP": "WhatsAppのプロフィールを表示"
+      "WHATSAPP": "WhatsAppのプロフィールを表示",
+      "PHONE": "電話をかける"
     },
     "DIVIDER": {
       "IDENTITY": "身元情報"
@@ -189,7 +186,6 @@
       "TITLE": "個人情報",
       "FULL_NAME": "氏名",
       "BIRTH_DATE": "生年月日",
-      "PHONE_NUMBER": "電話番号",
       "GAY": "ゲイ",
       "STAY_REQUEST": "宿泊リクエスト",
       "REQUESTED_STAY": "相手が宿泊をリクエストした",
@@ -221,6 +217,7 @@
         "FAMILY": "家族"
       },
       "STAYED": "宿泊しましたか？",
+      "STAYED_GROUP": "宿泊しましたか？",
       "HUNG_OUT": "一緒に過ごした",
       "FIRST_VISIT": "初めての訪問"
     },
@@ -262,7 +259,6 @@
         "SUBTITLE": "旅の仲間",
         "TITLE": "グループメンバー",
         "GUEST_FALLBACK": "ゲスト",
-        "WHATSAPP": "WhatsApp",
         "LIVING_IN": "居住地"
       }
     }
