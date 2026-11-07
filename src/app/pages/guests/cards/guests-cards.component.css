@@ -294,6 +294,7 @@
     transform 180ms ease,
     filter 180ms ease;
   width: 2rem;
+  color: #ffffff;
 }
 
 /* SOCIAL COLORS */
@@ -316,7 +317,6 @@
 .social-links .btn-detail,
 .btn-view-group {
   background-color: var(--color-secondary);
-  color: white;
 }
 
 /* VIEW GROUP POSITION */

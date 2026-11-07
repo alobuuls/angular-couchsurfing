@@ -155,12 +155,12 @@ export interface IQueryParamsGuests {
   country?: string;
   from?: string;
   to?: string;
-  groupType?: 'solo' | 'family' | 'friends' | 'couple' | 'all-groups';
-  continent?: Continents;
+  groupType?: string;
+  continent?: string;
   isFirstTime?: boolean;
   hangOut?: boolean;
   rating?: number;
-  region?: Regions;
+  region?: string;
   ambassador?: boolean;
   didTheyReq?: boolean;
   gift?: boolean;

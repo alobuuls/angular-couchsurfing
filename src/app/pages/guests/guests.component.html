@@ -7,12 +7,7 @@
 
       <mat-icon class="material-symbols-outlined" matPrefix>public</mat-icon>
 
-      <mat-select formControlName="continent">
-        <mat-option value="">
-          <i class="fa-solid fa-globe"></i>
-          {{ 'GUESTS_FILTERS.ALL_CONTINENTS' | translate }}
-        </mat-option>
-
+      <mat-select formControlName="continent" multiple>
         <mat-option *ngFor="let continent of continents" [value]="continent">
           <span class="continent-option">
             <i [class]="continentIcons[continent]"></i>
@@ -27,12 +22,7 @@
       <mat-label>{{ 'GUESTS_FILTERS.REGION' | translate }}</mat-label>
       <mat-icon class="material-symbols-outlined" matPrefix>map</mat-icon>
 
-      <mat-select formControlName="region">
-        <mat-option value="">
-          <mat-icon class="material-symbols-outlined">public</mat-icon>
-          {{ 'GUESTS_FILTERS.ALL_REGIONS' | translate }}
-        </mat-option>
-
+      <mat-select formControlName="region" multiple>
         <mat-option *ngFor="let region of filteredRegions" [value]="region">
           {{ getRegionName(region) }}
         </mat-option>
@@ -40,23 +30,45 @@
     </mat-form-field>
 
     <!-- COUNTRY -->
-    <mat-form-field appearance="outline">
+    <mat-form-field class="country-filter" appearance="outline">
       <mat-label>{{ 'GUESTS_FILTERS.COUNTRY' | translate }}</mat-label>
       <mat-icon class="material-symbols-outlined" matPrefix>public</mat-icon>
-      <input matInput formControlName="country" [matAutocomplete]="autoCountry" />
 
-      <mat-autocomplete
-        #autoCountry="matAutocomplete"
-        [displayWith]="displayCountryCode"
-        (optionSelected)="onCountrySelected($event)"
-      >
-        <mat-option value="">
-          <mat-icon class="material-symbols-outlined">public</mat-icon>
-          {{ 'GUESTS_FILTERS.ALL_COUNTRIES' | translate }}
-        </mat-option>
+      <mat-chip-grid #countryChipGrid aria-label="Selected countries">
+        <mat-chip-row
+          *ngFor="let code of filtersForm.get('country')?.value"
+          class="country-chip"
+          (removed)="removeCountry(code)"
+        >
+          <span class="country-flag">
+            <i [class]="code | flag"></i>
+          </span>
+
+          <span class="country-chip-name">
+            {{ getCountryName(code) }}
+          </span>
+
+          <button matChipRemove class="country-chip-remove" [attr.aria-label]="'Remove ' + getCountryName(code)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-chip-row>
+
+        <input
+          matInput
+          class="country-search"
+          [placeholder]="'GUESTS_FILTERS.ALL_COUNTRIES' | translate"
+          [matChipInputFor]="countryChipGrid"
+          [matAutocomplete]="autoCountry"
+          [formControl]="countrySearchCtrl"
+        />
+      </mat-chip-grid>
+
+      <mat-autocomplete #autoCountry="matAutocomplete" (optionSelected)="onCountrySelected($event)">
         <mat-option *ngFor="let country of filteredCountries" [value]="country.countryCode">
-          <span [class]="country.countryCode | flag"></span>
-          {{ getCountryName(country.countryCode) }}
+          <span class="country-option">
+            <i [class]="country.countryCode | flag"></i>
+            <span>{{ getCountryName(country.countryCode) }}</span>
+          </span>
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
@@ -66,27 +78,26 @@
       <mat-label>{{ 'GUESTS_FILTERS.GROUP_TYPE' | translate }}</mat-label>
       <mat-icon class="material-symbols-outlined" matPrefix>groups</mat-icon>
 
-      <mat-select formControlName="groupType">
-        <mat-option value="">
-          <mat-icon class="material-symbols-outlined">groups</mat-icon
-          >{{ 'GUESTS_FILTERS.ALL_GROUPS' | translate }}</mat-option
-        >
+      <mat-select formControlName="groupType" multiple>
         <mat-option value="solo">
-          <mat-icon class="material-symbols-outlined">person</mat-icon
-          >{{ 'GUESTS_FILTERS.SOLO' | translate }}</mat-option
-        >
+          <mat-icon class="material-symbols-outlined">person</mat-icon>
+          {{ 'GUESTS_FILTERS.SOLO' | translate }}
+        </mat-option>
+
         <mat-option value="couple">
-          <mat-icon class="material-symbols-outlined">favorite</mat-icon
-          >{{ 'GUESTS_FILTERS.COUPLE' | translate }}</mat-option
-        >
+          <mat-icon class="material-symbols-outlined">favorite</mat-icon>
+          {{ 'GUESTS_FILTERS.COUPLE' | translate }}
+        </mat-option>
+
         <mat-option value="friends">
-          <mat-icon class="material-symbols-outlined">group</mat-icon
-          >{{ 'GUESTS_FILTERS.FRIENDS' | translate }}</mat-option
-        >
+          <mat-icon class="material-symbols-outlined">group</mat-icon>
+          {{ 'GUESTS_FILTERS.FRIENDS' | translate }}
+        </mat-option>
+
         <mat-option value="family">
-          <mat-icon class="material-symbols-outlined">family_restroom</mat-icon
-          >{{ 'GUESTS_FILTERS.FAMILY' | translate }}</mat-option
-        >
+          <mat-icon class="material-symbols-outlined">family_restroom</mat-icon>
+          {{ 'GUESTS_FILTERS.FAMILY' | translate }}
+        </mat-option>
       </mat-select>
     </mat-form-field>
 

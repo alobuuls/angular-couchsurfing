@@ -195,7 +195,7 @@
                     class="btn-phone"
                     [matTooltip]="'GUEST_DETAIL.SOCIAL.PHONE' | translate"
                     [attr.aria-label]="'GUEST_DETAIL.SOCIAL.PHONE' | translate"
-                    [href]="'tel:' + p.prefixCode + p.whatsapp"
+                    [attr.href]="p.whatsapp ? 'tel:' + p.whatsapp : null"
                     [attr.aria-disabled]="!p.whatsapp"
                     [class.disabled]="!p.whatsapp"
                     [attr.tabindex]="p.whatsapp ? 0 : -1"
@@ -471,11 +471,13 @@
 
   <!-- BACK TO TOP -->
   <button
-    *ngIf="showBackToTop"
     type="button"
     class="btn-back-to-top"
+    [class.visible]="showBackToTop"
     matTooltip="Back to top"
     aria-label="Back to top"
+    [attr.aria-hidden]="!showBackToTop"
+    [attr.tabindex]="showBackToTop ? 0 : -1"
     (click)="scrollToTop()"
   >
     <mat-icon class="material-symbols-outlined">arrow_upward</mat-icon>
