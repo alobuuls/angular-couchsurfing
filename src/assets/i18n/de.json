@@ -1,4 +1,8 @@
 {
+  "GENERAL": {
+    "LOADING": "Wird geladen...",
+    "BACK": "Zurück"
+  },
   "MENU": {
     "HOME": "Startseite",
     "GUESTS": "Gäste",
@@ -134,26 +138,18 @@
     "DID_THEY_REQUEST": "Haben sie um eine Übernachtung gebeten?",
     "I_SENT_THE_REQUEST": "Ich habe die Anfrage gesendet",
     "LOCATION": "ORT",
-    "CONTINENT": "Kontinent",
-    "REGION": "Region",
     "HOMETOWN": "Heimatstadt",
     "LIVING_IN": "Wohnort",
     "WE_MET": "Wir haben uns getroffen",
-    "OCCUPATION": "BERUF",
-    "GIFT": "GESCHENK",
-    "COMMENTS": "KOMMENTARE",
-    "REFERENCES": "REFERENZEN",
-    "THEIR_REFERENCE": "Ihre Referenz",
-    "MY_REFERENCE": "Meine Referenz",
     "GROUP_TYPES": {
       "solo": "Allein",
       "couple": "Paar",
       "friends": "Freunde",
       "family": "Familie"
     },
-    "LOADING_1": "Details werden geladen",
-    "LOADING_2": "Weitere Informationen werden geladen",
-    "LOADING_3": "Fast geschafft"
+    "DELETE_GUEST": "Gast löschen",
+    "DELETE_GUESTS": "Gäste löschen",
+    "VIEW_GROUP": "Gruppe anzeigen"
   },
   "GUEST_DETAIL": {
     "TITLE": "Gastdetails",
@@ -179,7 +175,8 @@
     "SOCIAL": {
       "COUCHSURFING": "Couchsurfing-Profil ansehen",
       "INSTAGRAM": "Instagram-Profil ansehen",
-      "WHATSAPP": "WhatsApp-Profil ansehen"
+      "WHATSAPP": "WhatsApp-Profil ansehen",
+      "PHONE": "Anrufen"
     },
     "DIVIDER": {
       "IDENTITY": "IDENTITÄT"
@@ -189,7 +186,6 @@
       "TITLE": "Persönliche Informationen",
       "FULL_NAME": "Vollständiger Name",
       "BIRTH_DATE": "Geburtsdatum",
-      "PHONE_NUMBER": "Telefonnummer",
       "GAY": "Schwul",
       "STAY_REQUEST": "Übernachtungsanfrage",
       "REQUESTED_STAY": "Sie haben um eine Übernachtung gebeten",
@@ -221,6 +217,7 @@
         "FAMILY": "Familie"
       },
       "STAYED": "Übernachtet?",
+      "STAYED_GROUP": "Habt ihr übernachtet?",
       "HUNG_OUT": "Zeit miteinander verbracht",
       "FIRST_VISIT": "Erster Besuch"
     },
@@ -262,7 +259,6 @@
         "SUBTITLE": "REISEBEGLEITER",
         "TITLE": "Gruppenmitglieder",
         "GUEST_FALLBACK": "Gast",
-        "WHATSAPP": "WhatsApp",
         "LIVING_IN": "Wohnort"
       }
     }

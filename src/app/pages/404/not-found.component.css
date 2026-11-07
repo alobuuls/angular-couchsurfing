@@ -30,7 +30,7 @@ main {
   pointer-events: none;
   position: absolute;
   width: 100%;
-  z-index: 1;
+  z-index: 7;
 
   &:before {
     animation: scan 7.5s linear 0s infinite;

@@ -118,10 +118,6 @@
   cursor: pointer;
   transition: text-shadow 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
-  &:hover {
-    text-shadow: 0 0 3px var(--color-primary-light);
-  }
-
   &:active > mat-icon {
     rotate: 45deg;
   }
@@ -196,7 +192,7 @@
   border: 1px solid var(--color-border);
   border-radius: 0.5rem;
   box-shadow: 0 0 5px var(--color-text);
-  z-index: 1000;
+  z-index: 7;
 
   .btn-language-option {
     display: flex;
@@ -230,11 +226,6 @@
       grid-template-columns: 1fr;
     }
   }
-}
-
-:host-context(.dark-theme) .btn-theme:hover,
-:host-context(.dark-theme) .btn-language:hover {
-  text-shadow: 0 0 3px gold;
 }
 
 @media screen and (max-width: 900px) {

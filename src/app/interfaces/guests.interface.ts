@@ -1,5 +1,6 @@
 import { CountriesCodes } from '@type/word.types';
 import { Continents, Regions } from '@type/word.types';
+import { IGuestTableRow } from './data-structure-api';
 
 // Guest with all information
 export interface IGuestDetail extends ITripDetail {
@@ -36,7 +37,7 @@ export interface IGuestDetail extends ITripDetail {
   isFirstTime: boolean;
   gift: string[];
   urlProfileCs: string;
-  isGay: false;
+  isGay?: boolean | null;
   theirReference: string | null;
   myReference: string | null;
   groupId?: string;
@@ -82,6 +83,7 @@ export interface IGuestTableMemberCard {
   prefixCode: string;
   urlProfileCs: string | null;
   ambassador: boolean;
+  gift: string[];
   isFirstTime: boolean;
 }
 
@@ -103,21 +105,48 @@ interface IApiCsOkResp<T> {
   message: string;
 }
 
+export interface IApiCsPag {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
+export interface IMonthlyStat {
+  month: number;
+  totalVisits: number;
+  totalPeople: number;
+}
+
+export interface IYearlyStat {
+  year: number;
+  totalVisits: number;
+  totalPeople: number;
+  months: IMonthlyStat[];
+}
+
+export interface IGuestMonthGroup {
+  month: number;
+  monthName: string;
+  totalPeople: number;
+  totalVisits: number;
+  guests: IGuestTableRow[];
+}
+
+export interface IGuestYearGroup {
+  year: number;
+  totalVisits: number;
+  totalPeople: number;
+  months: IGuestMonthGroup[];
+}
+
 // Error Data Resp
 interface IApiCsErrResp {
   errors: string[];
   message: string;
   success: boolean;
-}
-
-// Pagination Data
-export interface IApiCsPag {
-  hasNextPage: boolean;
-  hasPrevPage: boolean;
-  limit: number;
-  page: number;
-  total: number;
-  totalPages: number;
 }
 
 export interface IQueryParamsGuests {
@@ -151,7 +180,11 @@ export interface IGuestsFormSubmit {
 }
 
 // Get All
-export type IGuestsResp = IApiCsOkResp<IGuestListItem[]> & IApiCsPag;
+export type IGuestsResp = IApiCsOkResp<IGuestListItem[]> & {
+  pagination: IApiCsPag;
+  monthlyStats: IYearlyStat[];
+};
+
 // Get Guest By Id
 export type IGuestDetailResp = IApiCsOkResp<IGuestDetail>;
 // Get Group By Id

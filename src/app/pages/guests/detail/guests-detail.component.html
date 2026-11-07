@@ -1,4 +1,10 @@
 <div class="main">
+  <!-- BACK BUTTON -->
+  <button mat-button type="button" class="btn-back" (click)="goBack()">
+    <mat-icon class="material-symbols-outlined" fontIcon="arrow_back"></mat-icon>
+
+    {{ 'GENERAL.BACK' | translate }}
+  </button>
   <h1 class="title-component">{{ 'GUEST_DETAIL.TITLE' | translate }}</h1>
 
   <!-- PAGE HEADER -->
@@ -99,38 +105,58 @@
             </div>
 
             <div class="social-links">
-              <button
+              <a
                 *ngIf="guest.urlProfileCs"
                 mat-icon-button
                 class="btn-cs"
                 [matTooltip]="'GUEST_DETAIL.SOCIAL.COUCHSURFING' | translate"
                 [attr.aria-label]="'GUEST_DETAIL.SOCIAL.COUCHSURFING' | translate"
-                (click)="openCouchsurfing(guest.urlProfileCs)"
+                [href]="linkBaseCouchsurfing + '/' + guest.urlProfileCs"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <mat-icon class="material-symbols-outlined" fontIcon="chair"></mat-icon>
-              </button>
+              </a>
 
-              <button
+              <a
                 *ngIf="guest.instagram"
                 mat-icon-button
                 class="btn-instagram"
                 [matTooltip]="'GUEST_DETAIL.SOCIAL.INSTAGRAM' | translate"
                 [attr.aria-label]="'GUEST_DETAIL.SOCIAL.INSTAGRAM' | translate"
-                (click)="openInstagram(guest.instagram)"
+                [href]="linkBaseInstagram + '/' + guest.instagram"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <i class="fa-brands fa-instagram"></i>
-              </button>
+              </a>
 
-              <button
+              <a
                 *ngIf="guest.whatsapp"
                 mat-icon-button
                 class="btn-whatsapp"
                 [matTooltip]="'GUEST_DETAIL.SOCIAL.WHATSAPP' | translate"
                 [attr.aria-label]="'GUEST_DETAIL.SOCIAL.WHATSAPP' | translate"
-                (click)="openWhatsapp(guest.whatsapp)"
+                [href]="linkBaseWhatsapp + '/' + guest.whatsapp"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <i class="fa-brands fa-whatsapp"></i>
-              </button>
+              </a>
+
+              <a
+                *ngIf="guest.whatsapp"
+                mat-icon-button
+                class="btn-phone"
+                [matTooltip]="'GUEST_DETAIL.SOCIAL.PHONE' | translate"
+                [attr.aria-label]="'GUEST_DETAIL.SOCIAL.PHONE' | translate"
+                [href]="'tel:' + guest.prefixCode + guest.whatsapp"
+                [attr.aria-disabled]="!guest.whatsapp"
+                [class.disabled]="!guest.whatsapp"
+                [attr.tabindex]="guest.whatsapp ? 0 : -1"
+              >
+                <mat-icon class="material-symbols-outlined">call</mat-icon>
+              </a>
             </div>
           </div>
         </section>
@@ -192,14 +218,6 @@
                 <mat-icon class="material-symbols-outlined" fontIcon="calendar_month"></mat-icon>
                 {{ formatDate(guest.birthDate) }}
               </span>
-            </div>
-
-            <div class="passport-field" *ngIf="guest.whatsapp">
-              <span class="field-label">{{ 'GUEST_DETAIL.PERSONAL.PHONE_NUMBER' | translate }}</span>
-              <a class="field-value phone-link" [href]="'tel:' + guest.prefixCode + guest.whatsapp">
-                <mat-icon class="material-symbols-outlined" fontIcon="call"></mat-icon>
-                {{ guest.prefixCode }} {{ guest.whatsapp }}
-              </a>
             </div>
 
             <div class="passport-field" *ngIf="guest.isGay !== null && guest.isGay !== undefined">
@@ -687,14 +705,6 @@
                     </span>
                   </div>
 
-                  <div class="passport-field" *ngIf="member.whatsapp">
-                    <span class="field-label">{{ 'GUEST_DETAIL.GROUP.MEMBERS.WHATSAPP' | translate }}</span>
-                    <a class="field-value phone-link" [href]="'tel:' + member.prefixCode + member.whatsapp">
-                      <mat-icon class="material-symbols-outlined" fontIcon="call"></mat-icon>
-                      {{ member.prefixCode }} {{ member.whatsapp }}
-                    </a>
-                  </div>
-
                   <div class="passport-field" *ngIf="member.isGay !== null && member.isGay !== undefined">
                     <span class="field-label">{{ 'GUEST_DETAIL.PERSONAL.GAY' | translate }}</span>
                     <span class="field-value">
@@ -850,38 +860,59 @@
 
               <!-- MEMBER SOCIAL LINKS -->
               <footer class="member-social-links">
-                <button
+                <a
                   *ngIf="member.urlProfileCs"
                   mat-icon-button
                   class="btn-cs"
                   [matTooltip]="'GUEST_DETAIL.SOCIAL.COUCHSURFING' | translate"
                   [attr.aria-label]="'GUEST_DETAIL.SOCIAL.COUCHSURFING' | translate"
-                  (click)="openCouchsurfing(member.urlProfileCs)"
+                  [href]="linkBaseCouchsurfing + '/' + member.urlProfileCs"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   <mat-icon class="material-symbols-outlined" fontIcon="chair"></mat-icon>
-                </button>
+                </a>
 
-                <button
+                <a
                   *ngIf="member.instagram"
                   mat-icon-button
                   class="btn-instagram"
                   [matTooltip]="'GUEST_DETAIL.SOCIAL.INSTAGRAM' | translate"
                   [attr.aria-label]="'GUEST_DETAIL.SOCIAL.INSTAGRAM' | translate"
-                  (click)="openInstagram(member.instagram)"
+                  [href]="linkBaseInstagram + '/' + member.instagram"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   <i class="fa-brands fa-instagram"></i>
-                </button>
+                </a>
 
-                <button
+                <a
                   *ngIf="member.whatsapp"
                   mat-icon-button
                   class="btn-whatsapp"
                   [matTooltip]="'GUEST_DETAIL.SOCIAL.WHATSAPP' | translate"
                   [attr.aria-label]="'GUEST_DETAIL.SOCIAL.WHATSAPP' | translate"
-                  (click)="openWhatsapp(member.whatsapp)"
+                  [href]="linkBaseWhatsapp + '/' + member.whatsapp"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   <i class="fa-brands fa-whatsapp"></i>
-                </button>
+                </a>
+
+                <!-- PHONE -->
+                <a
+                  mat-icon-button
+                  *ngIf="member.whatsapp"
+                  class="btn-phone"
+                  [matTooltip]="'GUEST_DETAIL.SOCIAL.PHONE' | translate"
+                  [attr.aria-label]="'GUEST_DETAIL.SOCIAL.PHONE' | translate"
+                  [href]="'tel:' + member.prefixCode + member.whatsapp"
+                  [attr.aria-disabled]="!member.whatsapp"
+                  [class.disabled]="!member.whatsapp"
+                  [attr.tabindex]="member.whatsapp ? 0 : -1"
+                >
+                  <mat-icon class="material-symbols-outlined">call</mat-icon>
+                </a>
               </footer>
             </article>
           </div>

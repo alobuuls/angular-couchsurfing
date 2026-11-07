@@ -1,4 +1,8 @@
 {
+  "GENERAL": {
+    "LOADING": "加载中...",
+    "BACK": "返回"
+  },
   "MENU": {
     "HOME": "首页",
     "GUESTS": "客人",
@@ -134,26 +138,18 @@
     "DID_THEY_REQUEST": "他们是否请求留宿？",
     "I_SENT_THE_REQUEST": "我提出了请求",
     "LOCATION": "地点",
-    "CONTINENT": "洲",
-    "REGION": "地区",
     "HOMETOWN": "家乡",
     "LIVING_IN": "居住地",
     "WE_MET": "相识地点",
-    "OCCUPATION": "职业",
-    "GIFT": "礼物",
-    "COMMENTS": "评论",
-    "REFERENCES": "评价",
-    "THEIR_REFERENCE": "他们的评价",
-    "MY_REFERENCE": "我的评价",
     "GROUP_TYPES": {
       "solo": "独自旅行",
       "couple": "情侣",
       "friends": "朋友",
       "family": "家庭"
     },
-    "LOADING_1": "正在加载详细信息",
-    "LOADING_2": "正在获取更多信息",
-    "LOADING_3": "即将完成"
+    "DELETE_GUEST": "删除客人",
+    "DELETE_GUESTS": "删除客人",
+    "VIEW_GROUP": "查看群组"
   },
   "GUEST_DETAIL": {
     "TITLE": "客人详情",
@@ -179,7 +175,8 @@
     "SOCIAL": {
       "COUCHSURFING": "查看 Couchsurfing 个人资料",
       "INSTAGRAM": "查看 Instagram 个人资料",
-      "WHATSAPP": "查看 WhatsApp 个人资料"
+      "WHATSAPP": "查看 WhatsApp 个人资料",
+      "PHONE": "拨打电话"
     },
     "DIVIDER": {
       "IDENTITY": "身份"
@@ -189,7 +186,6 @@
       "TITLE": "个人信息",
       "FULL_NAME": "全名",
       "BIRTH_DATE": "出生日期",
-      "PHONE_NUMBER": "电话号码",
       "GAY": "同性恋",
       "STAY_REQUEST": "留宿请求",
       "REQUESTED_STAY": "他们请求了留宿",
@@ -221,6 +217,7 @@
         "FAMILY": "家庭"
       },
       "STAYED": "是否留宿？",
+      "STAYED_GROUP": "他们住过吗？",
       "HUNG_OUT": "一起活动",
       "FIRST_VISIT": "首次访问"
     },
@@ -262,7 +259,6 @@
         "SUBTITLE": "旅行同伴",
         "TITLE": "群组成员",
         "GUEST_FALLBACK": "客人",
-        "WHATSAPP": "WhatsApp",
         "LIVING_IN": "居住地"
       }
     }

@@ -251,15 +251,15 @@
     [data]="cardsData"
     [cardsHasMore]="cardsHasMore"
     [loading]="cardsLoading"
-    [yearlyVisits]="yearlyVisits"
+    [monthlyStats]="vm.monthlyStats ?? []"
     (loadMore)="loadMoreCards()"
     (remove)="removeGuestConfirmation($event)"
   >
   </guests-cards>
 
-  <!-- cards loading -->
+  <!-- INITIAL CARDS LOADING -->
   <app-loading
-    *ngIf="currentView === 'cards' && cardsLoading"
+    *ngIf="currentView === 'cards' && cardsLoading && !cardsData.length"
     class="cards-loading"
     [messages]="[
       'GUESTS_LOADING.CARDS_1' | translate,

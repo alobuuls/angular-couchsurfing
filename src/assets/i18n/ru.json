@@ -1,4 +1,8 @@
 {
+  "GENERAL": {
+    "LOADING": "Загрузка...",
+    "BACK": "Назад"
+  },
   "MENU": {
     "HOME": "Главная",
     "GUESTS": "Гости",
@@ -134,26 +138,18 @@
     "DID_THEY_REQUEST": "Они просили о проживании?",
     "I_SENT_THE_REQUEST": "Я отправил(а) запрос",
     "LOCATION": "МЕСТОПОЛОЖЕНИЕ",
-    "CONTINENT": "Континент",
-    "REGION": "Регион",
     "HOMETOWN": "Родной город",
     "LIVING_IN": "Место жительства",
     "WE_MET": "Мы познакомились",
-    "OCCUPATION": "ПРОФЕССИЯ",
-    "GIFT": "ПОДАРОК",
-    "COMMENTS": "КОММЕНТАРИИ",
-    "REFERENCES": "РЕКОМЕНДАЦИИ",
-    "THEIR_REFERENCE": "Их рекомендация",
-    "MY_REFERENCE": "Моя рекомендация",
     "GROUP_TYPES": {
       "solo": "Один",
       "couple": "Пара",
       "friends": "Друзья",
       "family": "Семья"
     },
-    "LOADING_1": "Загружаем сведения",
-    "LOADING_2": "Получаем дополнительную информацию",
-    "LOADING_3": "Почти готово"
+    "DELETE_GUEST": "Удалить гостя",
+    "DELETE_GUESTS": "Удалить гостей",
+    "VIEW_GROUP": "Посмотреть группу"
   },
   "GUEST_DETAIL": {
     "TITLE": "Информация о госте",
@@ -179,7 +175,8 @@
     "SOCIAL": {
       "COUCHSURFING": "Просмотреть профиль Couchsurfing",
       "INSTAGRAM": "Просмотреть профиль Instagram",
-      "WHATSAPP": "Просмотреть профиль WhatsApp"
+      "WHATSAPP": "Просмотреть профиль WhatsApp",
+      "PHONE": "Позвонить"
     },
     "DIVIDER": {
       "IDENTITY": "ЛИЧНОСТЬ"
@@ -189,7 +186,6 @@
       "TITLE": "Личная информация",
       "FULL_NAME": "Полное имя",
       "BIRTH_DATE": "Дата рождения",
-      "PHONE_NUMBER": "Номер телефона",
       "GAY": "Гей",
       "STAY_REQUEST": "Запрос на проживание",
       "REQUESTED_STAY": "Они попросили о проживании",
@@ -221,6 +217,7 @@
         "FAMILY": "Семья"
       },
       "STAYED": "Останавливался?",
+      "STAYED_GROUP": "Они останавливались?",
       "HUNG_OUT": "Проводили время вместе",
       "FIRST_VISIT": "Первое посещение"
     },
@@ -262,7 +259,6 @@
         "SUBTITLE": "ПОПУТЧИКИ",
         "TITLE": "Участники группы",
         "GUEST_FALLBACK": "Гость",
-        "WHATSAPP": "WhatsApp",
         "LIVING_IN": "Место жительства"
       }
     }

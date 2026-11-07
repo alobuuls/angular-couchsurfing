@@ -1,4 +1,8 @@
 {
+  "GENERAL": {
+    "LOADING": "로딩 중...",
+    "BACK": "뒤로"
+  },
   "MENU": {
     "HOME": "홈",
     "GUESTS": "게스트",
@@ -134,26 +138,18 @@
     "DID_THEY_REQUEST": "숙박을 요청했나요?",
     "I_SENT_THE_REQUEST": "내가 숙박을 요청했습니다",
     "LOCATION": "위치",
-    "CONTINENT": "대륙",
-    "REGION": "지역",
     "HOMETOWN": "고향",
     "LIVING_IN": "거주지",
     "WE_MET": "만난 장소",
-    "OCCUPATION": "직업",
-    "GIFT": "선물",
-    "COMMENTS": "댓글",
-    "REFERENCES": "추천글",
-    "THEIR_REFERENCE": "상대방의 추천글",
-    "MY_REFERENCE": "내 추천글",
     "GROUP_TYPES": {
       "solo": "개인",
       "couple": "커플",
       "friends": "친구",
       "family": "가족"
     },
-    "LOADING_1": "세부 정보를 불러오는 중",
-    "LOADING_2": "추가 정보를 가져오는 중",
-    "LOADING_3": "거의 완료되었습니다"
+    "DELETE_GUEST": "게스트 삭제",
+    "DELETE_GUESTS": "게스트 삭제",
+    "VIEW_GROUP": "그룹 보기"
   },
   "GUEST_DETAIL": {
     "TITLE": "게스트 상세 정보",
@@ -179,7 +175,8 @@
     "SOCIAL": {
       "COUCHSURFING": "Couchsurfing 프로필 보기",
       "INSTAGRAM": "Instagram 프로필 보기",
-      "WHATSAPP": "WhatsApp 프로필 보기"
+      "WHATSAPP": "WhatsApp 프로필 보기",
+      "PHONE": "전화 걸기"
     },
     "DIVIDER": {
       "IDENTITY": "신원"
@@ -189,7 +186,6 @@
       "TITLE": "개인 정보",
       "FULL_NAME": "전체 이름",
       "BIRTH_DATE": "생년월일",
-      "PHONE_NUMBER": "전화번호",
       "GAY": "게이",
       "STAY_REQUEST": "숙박 요청",
       "REQUESTED_STAY": "상대방이 숙박을 요청했습니다",
@@ -221,6 +217,7 @@
         "FAMILY": "가족"
       },
       "STAYED": "숙박했나요?",
+      "STAYED_GROUP": "숙박했나요?",
       "HUNG_OUT": "함께 시간을 보냈나요?",
       "FIRST_VISIT": "첫 방문"
     },
@@ -262,7 +259,6 @@
         "SUBTITLE": "여행 동반자",
         "TITLE": "그룹 구성원",
         "GUEST_FALLBACK": "게스트",
-        "WHATSAPP": "WhatsApp",
         "LIVING_IN": "거주지"
       }
     }

@@ -10,10 +10,10 @@ import { Continents } from '@type/word.types';
 // Services
 import { FormatService } from '@services/format.service';
 import { GeonameService } from '@services/geoname.service';
-import { SocialLinksService } from '@core/services/social-links.service';
 
 // Helpers
 import { isGroup } from '@utils';
+import { getGuestDetailRoute } from '../../../utils/helpers/guest-routing.utils';
 
 @Component({
   selector: 'guests-table',
@@ -21,6 +21,8 @@ import { isGroup } from '@utils';
   styleUrls: ['./guests-table.component.css'],
 })
 export class GuestsTableComponent {
+  getGuestDetailRoute = getGuestDetailRoute;
+
   _format = inject(FormatService);
   csUrl: string = 'https://www.couchsurfing.com/c/users/';
 
@@ -30,7 +32,6 @@ export class GuestsTableComponent {
 
   private _data: IGuestTableRow[] = [];
   private readonly _geoname = inject(GeonameService);
-  private _socialLinks = inject(SocialLinksService);
 
   @Input() set data(value: IGuestTableRow[]) {
     this._data = value ?? [];
@@ -63,19 +64,6 @@ export class GuestsTableComponent {
 
   getContinentName(continent: Continents): string {
     return this._geoname.getContinentName(continent);
-  }
-
-  openCouchsurfing(profileId: string): void {
-    this._socialLinks.openCouchsurfing(profileId);
-  }
-
-  openWhatsapp(whatsapp: string): void {
-    this._socialLinks.openWhatsapp(whatsapp);
-  }
-
-  getDetailRoute(guest: IGuestListItem): string[] {
-    if (isGroup(guest)) return ['/guests/groups', guest.groupId];
-    return ['/guests', guest.guestId];
   }
 
   getEditRoute(guest: IGuestListItem): string[] {

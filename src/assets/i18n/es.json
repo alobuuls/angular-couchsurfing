@@ -1,4 +1,8 @@
 {
+  "GENERAL": {
+    "LOADING": "Cargando...",
+    "BACK": "Volver"
+  },
   "MENU": {
     "HOME": "Inicio",
     "GUESTS": "Huéspedes",
@@ -135,26 +139,18 @@
     "DID_THEY_REQUEST": "¿Solicitó alojamiento?",
     "I_SENT_THE_REQUEST": "Yo envié la solicitud",
     "LOCATION": "UBICACIÓN",
-    "CONTINENT": "Continente",
-    "REGION": "Región",
     "HOMETOWN": "Ciudad de origen",
     "LIVING_IN": "Vive en",
     "WE_MET": "Nos conocimos en",
-    "OCCUPATION": "OCUPACIÓN",
-    "GIFT": "REGALO",
-    "COMMENTS": "COMENTARIOS",
-    "REFERENCES": "REFERENCIAS",
-    "THEIR_REFERENCE": "Su referencia",
-    "MY_REFERENCE": "Mi referencia",
     "GROUP_TYPES": {
       "solo": "Solo",
       "couple": "Pareja",
       "friends": "Amigos",
       "family": "Familia"
     },
-    "LOADING_1": "Cargando detalles",
-    "LOADING_2": "Obteniendo más información",
-    "LOADING_3": "Ya casi terminamos"
+    "DELETE_GUEST": "Eliminar invitado",
+    "DELETE_GUESTS": "Eliminar invitados",
+    "VIEW_GROUP": "Ver grupo"
   },
   "GUEST_DETAIL": {
     "TITLE": "Detalles del huésped",
@@ -180,7 +176,8 @@
     "SOCIAL": {
       "COUCHSURFING": "Ver perfil de Couchsurfing",
       "INSTAGRAM": "Ver perfil de Instagram",
-      "WHATSAPP": "Ver perfil de WhatsApp"
+      "WHATSAPP": "Ver perfil de WhatsApp",
+      "PHONE": "Llamar"
     },
     "DIVIDER": {
       "IDENTITY": "IDENTIDAD"
@@ -190,7 +187,6 @@
       "TITLE": "Información personal",
       "FULL_NAME": "Nombre completo",
       "BIRTH_DATE": "Fecha de nacimiento",
-      "PHONE_NUMBER": "Número de teléfono",
       "GAY": "Gay",
       "STAY_REQUEST": "Solicitud de alojamiento",
       "REQUESTED_STAY": "Solicitó alojamiento",
@@ -222,6 +218,7 @@
         "FAMILY": "Familia"
       },
       "STAYED": "¿Se alojó?",
+      "STAYED_GROUP": "¿Se alojaron?",
       "HUNG_OUT": "Pasamos tiempo juntos",
       "FIRST_VISIT": "Primera visita"
     },
@@ -263,7 +260,6 @@
         "SUBTITLE": "COMPAÑEROS DE VIAJE",
         "TITLE": "Integrantes del grupo",
         "GUEST_FALLBACK": "Huésped",
-        "WHATSAPP": "WhatsApp",
         "LIVING_IN": "Residencia actual"
       }
     }
