@@ -1,4 +1,8 @@
 {
+  "GENERAL": {
+    "LOADING": "טוען...",
+    "BACK": "חזרה"
+  },
   "MENU": {
     "GUESTS": "אורחים",
     "HOSTED": "אירוח",
@@ -133,26 +137,18 @@
     "DID_THEY_REQUEST": "האם הם ביקשו להתארח?",
     "I_SENT_THE_REQUEST": "אני שלחתי את הבקשה",
     "LOCATION": "מיקום",
-    "CONTINENT": "יבשת",
-    "REGION": "אזור",
     "HOMETOWN": "עיר מוצא",
     "LIVING_IN": "מקום מגורים",
     "WE_MET": "המקום שבו נפגשנו",
-    "OCCUPATION": "מקצוע",
-    "GIFT": "מתנה",
-    "COMMENTS": "הערות",
-    "REFERENCES": "המלצות",
-    "THEIR_REFERENCE": "ההמלצה שלהם",
-    "MY_REFERENCE": "ההמלצה שלי",
     "GROUP_TYPES": {
       "solo": "לבד",
       "couple": "זוג",
       "friends": "חברים",
       "family": "משפחה"
     },
-    "LOADING_1": "טוענים את הפרטים",
-    "LOADING_2": "מוצאים מידע נוסף",
-    "LOADING_3": "כמעט סיימנו"
+    "DELETE_GUEST": "מחיקת אורח",
+    "DELETE_GUESTS": "מחיקת אורחים",
+    "VIEW_GROUP": "הצגת קבוצה"
   },
   "GUEST_DETAIL": {
     "TITLE": "פרטי האורח",
@@ -178,7 +174,8 @@
     "SOCIAL": {
       "COUCHSURFING": "צפייה בפרופיל Couchsurfing",
       "INSTAGRAM": "צפייה בפרופיל Instagram",
-      "WHATSAPP": "צפייה בפרופיל WhatsApp"
+      "WHATSAPP": "צפייה בפרופיל WhatsApp",
+      "PHONE": "התקשר"
     },
     "DIVIDER": {
       "IDENTITY": "זהות"
@@ -188,7 +185,6 @@
       "TITLE": "מידע אישי",
       "FULL_NAME": "שם מלא",
       "BIRTH_DATE": "תאריך לידה",
-      "PHONE_NUMBER": "מספר טלפון",
       "GAY": "הומו",
       "STAY_REQUEST": "בקשת אירוח",
       "REQUESTED_STAY": "הם ביקשו להתארח",
@@ -220,6 +216,7 @@
         "FAMILY": "משפחה"
       },
       "STAYED": "האם התארחו?",
+      "STAYED_GROUP": "האם הם התארחו?",
       "HUNG_OUT": "בילוי משותף",
       "FIRST_VISIT": "ביקור ראשון"
     },
@@ -261,7 +258,6 @@
         "SUBTITLE": "שותפים למסע",
         "TITLE": "חברי הקבוצה",
         "GUEST_FALLBACK": "אורח",
-        "WHATSAPP": "WhatsApp",
         "LIVING_IN": "מקום מגורים"
       }
     }

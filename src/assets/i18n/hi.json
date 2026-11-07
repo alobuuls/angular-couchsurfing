@@ -1,4 +1,8 @@
 {
+  "GENERAL": {
+    "LOADING": "लोड हो रहा है...",
+    "BACK": "वापस"
+  },
   "MENU": {
     "HOME": "होम",
     "GUESTS": "मेहमान",
@@ -134,26 +138,18 @@
     "DID_THEY_REQUEST": "क्या उन्होंने ठहरने का अनुरोध किया?",
     "I_SENT_THE_REQUEST": "मैंने अनुरोध भेजा",
     "LOCATION": "स्थान",
-    "CONTINENT": "महाद्वीप",
-    "REGION": "क्षेत्र",
     "HOMETOWN": "गृहनगर",
     "LIVING_IN": "वर्तमान निवास",
     "WE_MET": "हम कहाँ मिले",
-    "OCCUPATION": "व्यवसाय",
-    "GIFT": "उपहार",
-    "COMMENTS": "टिप्पणियाँ",
-    "REFERENCES": "संदर्भ",
-    "THEIR_REFERENCE": "उनका संदर्भ",
-    "MY_REFERENCE": "मेरा संदर्भ",
     "GROUP_TYPES": {
       "solo": "अकेले",
       "couple": "जोड़ा",
       "friends": "दोस्त",
       "family": "परिवार"
     },
-    "LOADING_1": "विवरण लोड हो रहे हैं",
-    "LOADING_2": "और जानकारी प्राप्त की जा रही है",
-    "LOADING_3": "बस होने ही वाला है"
+    "DELETE_GUEST": "अतिथि हटाएँ",
+    "DELETE_GUESTS": "अतिथियों को हटाएँ",
+    "VIEW_GROUP": "समूह देखें"
   },
   "GUEST_DETAIL": {
     "TITLE": "मेहमान का विवरण",
@@ -179,7 +175,8 @@
     "SOCIAL": {
       "COUCHSURFING": "Couchsurfing प्रोफ़ाइल देखें",
       "INSTAGRAM": "Instagram प्रोफ़ाइल देखें",
-      "WHATSAPP": "WhatsApp प्रोफ़ाइल देखें"
+      "WHATSAPP": "WhatsApp प्रोफ़ाइल देखें",
+      "PHONE": "कॉल करें"
     },
     "DIVIDER": {
       "IDENTITY": "पहचान"
@@ -189,7 +186,6 @@
       "TITLE": "व्यक्तिगत जानकारी",
       "FULL_NAME": "पूरा नाम",
       "BIRTH_DATE": "जन्मतिथि",
-      "PHONE_NUMBER": "फ़ोन नंबर",
       "GAY": "गे",
       "STAY_REQUEST": "ठहरने का अनुरोध",
       "REQUESTED_STAY": "उन्होंने ठहरने का अनुरोध किया",
@@ -221,6 +217,7 @@
         "FAMILY": "परिवार"
       },
       "STAYED": "क्या ठहरे थे?",
+      "STAYED_GROUP": "क्या वे ठहरे थे?",
       "HUNG_OUT": "साथ समय बिताया",
       "FIRST_VISIT": "पहली मुलाक़ात"
     },
@@ -262,7 +259,6 @@
         "SUBTITLE": "यात्रा के साथी",
         "TITLE": "समूह के सदस्य",
         "GUEST_FALLBACK": "मेहमान",
-        "WHATSAPP": "WhatsApp",
         "LIVING_IN": "वर्तमान निवास"
       }
     }

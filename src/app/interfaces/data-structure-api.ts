@@ -1,4 +1,4 @@
-import { IApiCsPag, IGuest, IGuestListItem } from '@interfaces/guests.interface';
+import { IApiCsPag, IGuest, IGuestListItem, IYearlyStat } from '@interfaces/guests.interface';
 
 export interface IErrResp {
   message: string;
@@ -12,12 +12,14 @@ export interface DataState<T> {
   data: T;
   error?: IErrResp;
   pagination?: IApiCsPag;
+  monthlyStats?: IYearlyStat[];
 }
 
 export interface GuestsVM {
   status: ReqStatus;
   data: IGuest[];
   pagination?: IApiCsPag;
+  monthlyStats?: IYearlyStat[];
   offset: number;
   error?: IErrResp;
 }
@@ -60,6 +62,7 @@ export interface IGuestTableMember {
   whatsapp: string | null;
   prefixCode?: string;
   instagram?: string | null;
+  gift: string[];
   couchsurfing?: string | null;
 
   hangOut?: boolean;
@@ -85,22 +88,10 @@ export type IGuestsTableVM = Omit<GuestsVM, 'data'> & {
   data: IGuestTableRow[];
 };
 
-export type DataStatePag<T> = Pick<DataState<T>, 'data'> & IApiCsPag;
-
-export interface IGuestYearGroup {
-  year: number;
-  totalGuests: number;
-  totalVisits: number;
-  months: IGuestMonthGroup[];
-}
-
-export interface IGuestMonthGroup {
-  month: number;
-  monthName: string;
-  guests: IGuestTableRow[];
-  totalGuests: number;
-  totalVisits: number;
-}
+export type DataStatePag<T> = Pick<DataState<T>, 'data'> & {
+  pagination: IApiCsPag;
+  monthlyStats?: IYearlyStat[];
+};
 
 export type ICurrentView = 'table' | 'cards' | 'map';
 

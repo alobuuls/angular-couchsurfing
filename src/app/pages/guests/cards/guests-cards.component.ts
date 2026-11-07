@@ -1,6 +1,8 @@
-import { Component, EventEmitter, HostListener, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, Output, SimpleChanges, inject } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { map } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 // Services
 import { GuestsService } from '@services/guests.service';
@@ -9,11 +11,19 @@ import { GeonameService } from '@services/geoname.service';
 import { LanguageService } from '@core/services/language.service';
 
 // Interfaces
-import { IGuestTableRow, IGuestYearGroup } from '@interfaces/data-structure-api';
-import { ICardGuest, IGuestListItem } from '@interfaces/guests.interface';
+import { IGuestTableRow } from '@interfaces/data-structure-api';
+import { ICardGuest, IGuestListItem, IGuestYearGroup, IYearlyStat } from '@interfaces/guests.interface';
 import { Continents, Regions } from '@type/word.types';
-import { ITimelineItem } from '@interfaces/stats-interface';
-import { SocialLinksService } from '@core/services/social-links.service';
+import { DataState } from '@interfaces/data-structure-api';
+
+// Const
+import { LINK_BASE_COUCHSURFING, LINK_BASE_INSTAGRAM, LINK_BASE_WHATSAPP } from '@config/social/social-links';
+
+// Utils
+import { withReqStateSimple } from '@utils';
+
+// Helpers
+import { getGuestDetailRoute } from '../../../utils/helpers/guest-routing.utils';
 
 @Component({
   selector: 'guests-cards',
@@ -21,16 +31,30 @@ import { SocialLinksService } from '@core/services/social-links.service';
   styleUrls: ['./guests-cards.component.css'],
 })
 export class GuestsCardsComponent implements OnDestroy {
-  _format = inject(FormatService);
+  getGuestDetailRoute = getGuestDetailRoute;
+  private canLoadMore = true;
 
   private _guests = inject(GuestsService);
+  _format = inject(FormatService);
   private readonly _translate = inject(TranslateService);
   private readonly _language = inject(LanguageService);
   private readonly _geoname = inject(GeonameService);
-  private _socialLinks = inject(SocialLinksService);
+  private readonly _router = inject(Router);
 
   private _data: IGuestTableRow[] = [];
-  private readonly _langChangeSubscription = this._translate.onLangChange.subscribe(() => this.groupGuestsByDate());
+  private readonly _langChangeSubscription = this._translate.onLangChange.subscribe(() => this.buildCardsGroups());
+
+  linkBaseCouchsurfing: string = LINK_BASE_COUCHSURFING;
+  linkBaseInstagram: string = LINK_BASE_INSTAGRAM;
+  linkBaseWhatsapp: string = LINK_BASE_WHATSAPP;
+
+  @Input()
+  set monthlyStats(value: IYearlyStat[] | undefined) {
+    this._monthlyStats = value ?? [];
+    this.buildCardsGroups();
+  }
+
+  private _monthlyStats: IYearlyStat[] = [];
 
   getRegionName(region: Regions): string {
     return this._geoname.getRegionName(region);
@@ -43,20 +67,10 @@ export class GuestsCardsComponent implements OnDestroy {
   ngOnDestroy(): void {
     this._langChangeSubscription.unsubscribe();
   }
-  private _yearlyVisits: ITimelineItem[] = [];
 
   @Output() remove = new EventEmitter<IGuestListItem>();
 
   showBackToTop = false;
-
-  @Input()
-  set yearlyVisits(value: ITimelineItem[]) {
-    this._yearlyVisits = value ?? [];
-  }
-
-  getYearVisits(year: number): number {
-    return Number(this._yearlyVisits.find(item => Number(item.period) === year)?.total ?? 0);
-  }
 
   @Input() loading = false;
   @Input() cardsHasMore: boolean = false;
@@ -66,7 +80,7 @@ export class GuestsCardsComponent implements OnDestroy {
   @Input()
   set data(value: IGuestTableRow[]) {
     this._data = value ?? [];
-    this.groupGuestsByDate();
+    this.buildCardsGroups();
   }
 
   get data(): IGuestTableRow[] {
@@ -79,19 +93,18 @@ export class GuestsCardsComponent implements OnDestroy {
   // Listen for scroll events on the browser window.
   @HostListener('window:scroll')
   onScroll(): void {
+    if (!this.canLoadMore || this.loading || !this.cardsHasMore) {
+      return;
+    }
     // Current scroll position.
     const scrollPosition = window.innerHeight + window.scrollY;
-
     // Total document height.
     const pageHeight = document.documentElement.scrollHeight;
 
-    // Show back-to-top button after scrolling 600px.
-    this.showBackToTop = window.scrollY > 600;
-
-    // Start loading more cards when 800px remain.
     const threshold = 800;
 
     if (scrollPosition >= pageHeight - threshold) {
+      this.canLoadMore = false;
       this.loadMore.emit();
     }
   }
@@ -103,54 +116,55 @@ export class GuestsCardsComponent implements OnDestroy {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['loading'] && !this.loading) this.canLoadMore = true;
+    if (changes['cardsHasMore'] && !this.cardsHasMore) this.canLoadMore = false;
+  }
+
   // Cards
-  cardDetails = new Map<string, ICardGuest[]>();
+  cardStates = new Map<string, DataState<ICardGuest[]>>();
   cardsGuest: IGuestYearGroup[] = [];
 
   // Cards that are currently open
   openCards = new Set<string>();
 
-  private groupGuestsByDate(): void {
-    const years = new Map<number, Map<number, IGuestTableRow[]>>();
+  private buildCardsGroups(): void {
+    const guestsByMonth = new Map<string, IGuestTableRow[]>();
+    this._data.forEach(guest => {
+      if (!guest.visitedDate) return;
 
-    for (const guest of this.data) {
-      if (!guest.visitedDate) continue;
+      const dateParts = String(guest.visitedDate).match(/^(\d{4})-(\d{2})-\d{2}/);
 
-      const date = new Date(guest.visitedDate);
-      const year = date.getFullYear();
-      const month = date.getMonth();
+      if (!dateParts) return;
 
-      if (!years.has(year)) {
-        years.set(year, new Map());
-      }
-      const months = years.get(year)!;
+      const year = Number(dateParts[1]);
+      const month = Number(dateParts[2]);
+      if (month < 1 || month > 12) return;
 
-      if (!months.has(month)) {
-        months.set(month, []);
-      }
-      months.get(month)!.push(guest);
-    }
+      const key = `${year}-${month}`;
+      if (!guestsByMonth.has(key)) guestsByMonth.set(key, []);
+      guestsByMonth.get(key)!.push(guest);
+    });
 
-    this.cardsGuest = [...years.entries()]
-      .sort(([yearA], [yearB]) => yearB - yearA)
-      .map(([year, months]) => {
-        const monthGroups = [...months.entries()]
-          .sort(([monthA], [monthB]) => monthB - monthA)
-          .map(([month, guests]) => ({
-            month,
-            monthName: this.getMonthName(month),
-            guests,
-            totalGuests: guests.reduce((total, guest) => total + guest.people.length, 0),
-            totalVisits: guests.length,
-          }));
-
-        return {
-          year,
-          totalGuests: monthGroups.reduce((total, month) => total + month.totalGuests, 0),
-          totalVisits: monthGroups.reduce((total, month) => total + month.totalVisits, 0),
-          months: monthGroups,
-        };
-      });
+    this.cardsGuest = this._monthlyStats
+      .map(yearStat => ({
+        year: yearStat.year,
+        totalVisits: yearStat.totalVisits,
+        totalPeople: yearStat.totalPeople,
+        months: yearStat.months
+          .filter(month => month.totalVisits > 0)
+          .map(month => ({
+            month: month.month,
+            monthName: this.getMonthName(month.month - 1),
+            totalVisits: month.totalVisits,
+            totalPeople: month.totalPeople,
+            guests: guestsByMonth.get(`${yearStat.year}-${month.month}`) ?? [],
+          }))
+          .filter(month => month.guests.length > 0)
+          .sort((a, b) => b.month - a.month),
+      }))
+      .filter(year => year.months.length > 0)
+      .sort((a, b) => b.year - a.year);
   }
 
   private getMonthName(month: number): string {
@@ -178,25 +192,40 @@ export class GuestsCardsComponent implements OnDestroy {
 
     if (!cardId) return;
 
+    // Close card
     if (this.openCards.has(cardId)) {
       this.openCards.delete(cardId);
       return;
     }
 
+    // Open card
     this.openCards.add(cardId);
-    if (this.cardDetails.has(cardId)) return;
 
-    if (guest.groupType === 'solo') {
-      this._guests.getGuestById(guest.guestId).subscribe(response => {
-        this.cardDetails.set(cardId, [response.data]);
-      });
+    const currentState = this.cardStates.get(cardId);
 
+    // Already loading or successfully loaded
+    if (currentState?.status === 'loading' || currentState?.status === 'success') {
       return;
     }
 
+    // Load solo guest
+    if (guest.groupType === 'solo') {
+      const request$ = this._guests.getGuestById(guest.guestId).pipe(
+        map(response => ({
+          data: [response.data],
+        }))
+      );
+
+      withReqStateSimple<ICardGuest[]>(request$).subscribe(state => {
+        this.cardStates.set(cardId, state);
+      });
+      return;
+    }
+
+    // Load group
     if ('groupId' in guest) {
-      this._guests.getGroupById(guest.groupId).subscribe(response => {
-        this.cardDetails.set(cardId, response.data);
+      withReqStateSimple<ICardGuest[]>(this._guests.getGroupById(guest.groupId)).subscribe(state => {
+        this.cardStates.set(cardId, state);
       });
     }
   }
@@ -209,22 +238,20 @@ export class GuestsCardsComponent implements OnDestroy {
 
   getCardDetails(guest: IGuestTableRow): ICardGuest[] {
     const cardId = this.getCardId(guest);
-
     if (!cardId) return [];
-    return this.cardDetails.get(cardId) ?? [];
+
+    const state = this.cardStates.get(cardId);
+    return state?.status === 'success' ? state.data : [];
+  }
+
+  isCardLoading(guest: IGuestTableRow): boolean {
+    const cardId = this.getCardId(guest);
+    return cardId ? this.cardStates.get(cardId)?.status === 'loading' : false;
   }
 
   //  Get the names of the people in the guest/trip
   getGuestNames(guest: IGuestTableRow): string {
     return guest.people.map(person => person.fullName).join(' & ');
-  }
-
-  openCouchsurfing(profileId: string): void {
-    this._socialLinks.openCouchsurfing(profileId);
-  }
-
-  openWhatsapp(whatsapp: string): void {
-    this._socialLinks.openWhatsapp(whatsapp);
   }
 
   hasFiveStars(guest: IGuestTableRow): boolean {
@@ -235,10 +262,55 @@ export class GuestsCardsComponent implements OnDestroy {
     return guest.people.some(person => person.ambassador);
   }
 
+  // Show guest name and the first letter os the last name
   formatGuestName(fullName: string): string {
     if (!fullName) return '';
     const parts = fullName.trim().split(/\s+/);
     if (parts.length === 1) return parts[0];
     return `${parts[0]} ${parts[1].charAt(0).toUpperCase()}.`;
+  }
+
+  // NAVIGATE TO GUEST/GROUP DETAIL WITH VIEW TRANSITION
+  async navigateWithTransition(guest: IGuestListItem): Promise<void> {
+    // Get the route corresponding to the selected guest or group.
+    const route = getGuestDetailRoute(guest);
+
+    // Store the current URL to return to the same view and preserve its query parameters.
+    const returnUrl = this._router.url;
+
+    // Extend the Document type to include the native View Transitions API.
+    // The optional (?) indicates that the browser might not support this API.
+    const documentWithTransitions = document as Document & {
+      startViewTransition?: (callback: () => Promise<void>) => {
+        finished: Promise<void>;
+      };
+    };
+
+    // FALLBACK: Navigate normally if the browser does not support View Transitions.
+    if (!documentWithTransitions.startViewTransition) {
+      await this._router.navigate(route, {
+        state: { returnUrl },
+      });
+      return;
+    }
+
+    // Add the forward class to <html> to trigger the forward CSS animations.
+    const root = document.documentElement;
+    root.classList.add('forward');
+
+    try {
+      // Start the View Transition and navigate to the guest or group detail.
+      const transition = documentWithTransitions.startViewTransition(async () => {
+        await this._router.navigate(route, {
+          state: { returnUrl },
+        });
+      });
+
+      // Wait until the visual transition finishes.
+      await transition.finished;
+    } finally {
+      // Remove the forward class to prevent it from affecting future navigations.
+      root.classList.remove('forward');
+    }
   }
 }

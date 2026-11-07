@@ -23,9 +23,8 @@ import { StatsService } from '@services/stats.service';
 import { withReqState, isGroup, mapGuestTable } from '@utils';
 
 // Interfaces
-import { IGuestListItem, IQueryParamsGuests } from '@interfaces/guests.interface';
+import { IGuestListItem, IQueryParamsGuests, IYearlyStat } from '@interfaces/guests.interface';
 import { ICurrentView, IGuestsTableVM, IGuestTableRow, IGuestTableRowWithIndex, VIEW_CONFIG } from '@interfaces/data-structure-api';
-import { ITimelineItem } from '@interfaces/stats-interface';
 
 // Types
 import { CONTINENTS, Continents, CountriesCodes, ICountry, LANG, Language, Regions } from '@type/word.types';
@@ -98,8 +97,8 @@ export class GuestsComponent implements OnInit {
     direction: '',
   });
 
-  // Year statistics
-  yearlyVisits: ITimelineItem[] = [];
+  // Year stats
+  monthlyStats: IYearlyStat[] = [];
 
   private fb = inject(FormBuilder);
   private _route = inject(ActivatedRoute);
@@ -122,7 +121,6 @@ export class GuestsComponent implements OnInit {
     this.listenContinentFilter();
     this.listenRegionFilter();
     this.listenLanguageChange();
-    this.loadYearlyVisits();
   }
 
   // FILTERS
@@ -245,6 +243,8 @@ export class GuestsComponent implements OnInit {
             data: [] as IGuestTableRow[],
           };
         }
+
+        this.monthlyStats = vm.monthlyStats ?? [];
 
         const data = mapGuestTable(vm.data);
         const offset = this.getOffset();
@@ -586,7 +586,6 @@ export class GuestsComponent implements OnInit {
   // Set view
   setView(view: ICurrentView): void {
     this.currentView = view;
-
     this.updateViewInUrl(view);
 
     if (view === 'cards' && !this.cardsData.length) {
@@ -755,16 +754,5 @@ export class GuestsComponent implements OnInit {
   onMapLimitChange(limit: number): void {
     this.mapLimit = limit;
     this.loadMapData();
-  }
-
-  private loadYearlyVisits(): void {
-    this._stats.getGuestsStats().subscribe({
-      next: response => {
-        this.yearlyVisits = response.data?.timeline?.years ?? [];
-      },
-      error: () => {
-        this.yearlyVisits = [];
-      },
-    });
   }
 }

@@ -486,6 +486,7 @@
 html {
   background-color: var(--color-background);
   -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
 }
 
 html,
@@ -833,12 +834,64 @@ html.dark-theme .mat-mdc-autocomplete-panel .mat-mdc-option {
 }
 
 /* =========================================================
+  14. VIEW TRANSITION
+   ========================================================= */
+
+/* FORWARD: Guests → Guest Detail */
+html.forward::view-transition-old(root) {
+  animation: slide-out-left 400ms ease-in both;
+}
+
+html.forward::view-transition-new(root) {
+  animation: slide-in-right 400ms ease-out both;
+}
+
+/* BACKWARD: Guest Detail → Guests */
+html.backward::view-transition-old(root) {
+  animation: slide-out-right 400ms ease-in both;
+}
+
+html.backward::view-transition-new(root) {
+  animation: slide-in-left 400ms ease-out both;
+}
+
+/* =========================================================
   15. ANIMATIONS
    ========================================================= */
 
 @keyframes spinner {
   to {
     rotate: 1turn;
+  }
+}
+
+@keyframes slide-out-left {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-out-right {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
   }
 }
 

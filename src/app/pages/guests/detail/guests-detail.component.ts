@@ -1,10 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 // Services
 import { GuestsService } from '@services/guests.service';
 import { GeonameService } from '@services/geoname.service';
-import { SocialLinksService } from '@core/services/social-links.service';
+
+// Const
+import { LINK_BASE_COUCHSURFING, LINK_BASE_INSTAGRAM, LINK_BASE_WHATSAPP } from '@config/social/social-links';
 
 // Interfaces
 import { IGroupMember, IGuestDetail } from '@interfaces/guests.interface';
@@ -24,11 +26,16 @@ export class GuestsDetailComponent implements OnInit {
   guest?: IGuestDetail;
   group?: IGroupMember[];
 
+  // Urls Base social media
+  linkBaseCouchsurfing: string = LINK_BASE_COUCHSURFING;
+  linkBaseInstagram: string = LINK_BASE_INSTAGRAM;
+  linkBaseWhatsapp: string = LINK_BASE_WHATSAPP;
+
   _format = inject(FormatService);
   private route = inject(ActivatedRoute);
   private _guests = inject(GuestsService);
   private readonly _geoname = inject(GeonameService);
-  private _socialLinks = inject(SocialLinksService);
+  private readonly _router = inject(Router);
 
   ngOnInit(): void {
     this.getById();
@@ -77,23 +84,49 @@ export class GuestsDetailComponent implements OnInit {
     }
   }
 
-  openCouchsurfing(profileId: string): void {
-    this._socialLinks.openCouchsurfing(profileId);
-  }
-
-  openInstagram(username: string): void {
-    this._socialLinks.openInstagram(username);
-  }
-
-  openWhatsapp(whatsapp: string): void {
-    this._socialLinks.openWhatsapp(whatsapp);
-  }
-
   formatRegion(region: string): string {
     return region.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
   }
 
   formatDate(date: string): string {
     return this._format.formatDate(date);
+  }
+
+  // NAVIGATE BACK WITH VIEW TRANSITION
+  async goBack(): Promise<void> {
+    // Get the previous URL stored when navigating to the guest detail.
+    // If no previous URL exists, redirect to /guests.
+    const returnUrl = history.state?.returnUrl || '/guests';
+
+    // Extend the Document type to include the native View Transitions API.
+    // The optional (?) indicates that the browser might not support this API.
+    const documentWithTransitions = document as Document & {
+      startViewTransition?: (callback: () => Promise<void>) => {
+        finished: Promise<void>;
+      };
+    };
+
+    // FALLBACK: Navigate normally if the browser does not support View Transitions.
+    if (!documentWithTransitions.startViewTransition) {
+      await this._router.navigateByUrl(returnUrl);
+      return;
+    }
+
+    // Add the backward class to <html> to trigger the reverse CSS animations.
+    const root = document.documentElement;
+    root.classList.add('backward');
+
+    try {
+      // Start the View Transition and navigate to the previous URL.
+      const transition = documentWithTransitions.startViewTransition(async () => {
+        await this._router.navigateByUrl(returnUrl);
+      });
+
+      // Wait until the visual transition finishes.
+      await transition.finished;
+    } finally {
+      // Remove the backward class to prevent it from affecting future navigations.
+      root.classList.remove('backward');
+    }
   }
 }

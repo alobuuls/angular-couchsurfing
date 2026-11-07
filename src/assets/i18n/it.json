@@ -1,4 +1,8 @@
 {
+  "GENERAL": {
+    "LOADING": "Caricamento...",
+    "BACK": "Indietro"
+  },
   "MENU": {
     "HOME": "Home",
     "GUESTS": "Ospiti",
@@ -134,26 +138,18 @@
     "DID_THEY_REQUEST": "Hanno richiesto un soggiorno?",
     "I_SENT_THE_REQUEST": "Ho inviato la richiesta",
     "LOCATION": "POSIZIONE",
-    "CONTINENT": "Continente",
-    "REGION": "Regione",
     "HOMETOWN": "Città d'origine",
     "LIVING_IN": "Residenza attuale",
     "WE_MET": "Ci siamo conosciuti",
-    "OCCUPATION": "OCCUPAZIONE",
-    "GIFT": "REGALO",
-    "COMMENTS": "COMMENTI",
-    "REFERENCES": "REFERENZE",
-    "THEIR_REFERENCE": "La loro referenza",
-    "MY_REFERENCE": "La mia referenza",
     "GROUP_TYPES": {
       "solo": "Da solo",
       "couple": "Coppia",
       "friends": "Amici",
       "family": "Famiglia"
     },
-    "LOADING_1": "Caricamento dei dettagli",
-    "LOADING_2": "Recupero di ulteriori informazioni",
-    "LOADING_3": "Quasi fatto"
+    "DELETE_GUEST": "Elimina ospite",
+    "DELETE_GUESTS": "Elimina ospiti",
+    "VIEW_GROUP": "Visualizza gruppo"
   },
   "GUEST_DETAIL": {
     "TITLE": "Dettagli dell'ospite",
@@ -179,7 +175,8 @@
     "SOCIAL": {
       "COUCHSURFING": "Visualizza profilo Couchsurfing",
       "INSTAGRAM": "Visualizza profilo Instagram",
-      "WHATSAPP": "Visualizza profilo WhatsApp"
+      "WHATSAPP": "Visualizza profilo WhatsApp",
+      "PHONE": "Chiama"
     },
     "DIVIDER": {
       "IDENTITY": "IDENTITÀ"
@@ -189,7 +186,6 @@
       "TITLE": "Informazioni personali",
       "FULL_NAME": "Nome completo",
       "BIRTH_DATE": "Data di nascita",
-      "PHONE_NUMBER": "Numero di telefono",
       "GAY": "Gay",
       "STAY_REQUEST": "Richiesta di soggiorno",
       "REQUESTED_STAY": "Hanno richiesto un soggiorno",
@@ -221,6 +217,7 @@
         "FAMILY": "Famiglia"
       },
       "STAYED": "Ha soggiornato?",
+      "STAYED_GROUP": "Hanno soggiornato?",
       "HUNG_OUT": "Siamo usciti insieme",
       "FIRST_VISIT": "Prima visita"
     },
@@ -262,7 +259,6 @@
         "SUBTITLE": "COMPAGNI DI VIAGGIO",
         "TITLE": "Membri del gruppo",
         "GUEST_FALLBACK": "Ospite",
-        "WHATSAPP": "WhatsApp",
         "LIVING_IN": "Residenza attuale"
       }
     }

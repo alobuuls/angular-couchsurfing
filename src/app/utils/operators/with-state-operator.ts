@@ -14,10 +14,13 @@ export const withReqState = <T>(obs$: Observable<DataStatePag<T>>, errH?: { hand
 
 export const withReqStateSimple = <T>(obs$: Observable<{ data: T }>, errH?: { handle: (err: unknown) => IErrResp }): Observable<DataState<T>> => {
   return obs$.pipe(
-    map(res => ({
-      status: 'success',
-      data: res.data,
-    }as DataState<T>)),
+    map(
+      res =>
+        ({
+          status: 'success',
+          data: res.data,
+        }) as DataState<T>
+    ),
     startWith<DataState<T>>(loadingState<T>()),
     catchError(err => of<DataState<T>>(errorState(errH ? errH.handle(err) : normalizeError(err))))
   );
@@ -27,14 +30,8 @@ export const withReqStateSimple = <T>(obs$: Observable<{ data: T }>, errH?: { ha
 const successState = <T>(res: DataStatePag<T>): DataState<T> => ({
   status: 'success',
   data: res.data,
-  pagination: {
-    limit: res.limit,
-    page: res.page,
-    total: res.total,
-    hasNextPage: res.hasNextPage,
-    hasPrevPage: res.hasPrevPage,
-    totalPages: res.totalPages,
-  },
+  pagination: res.pagination,
+  monthlyStats: res.monthlyStats,
 });
 
 const loadingState = <T>(): DataState<T> => ({

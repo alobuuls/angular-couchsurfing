@@ -17,6 +17,28 @@
   text-align: left;
 }
 
+/* BACK BUTTON */
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--color-primary);
+  font-weight: 600;
+  border-radius: 2rem;
+  transition:
+    background-color 200ms ease,
+    transform 200ms ease;
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  }
+
+  mat-icon {
+    margin: 0;
+  }
+}
+
 /* PASSPORT TITLE */
 .main > h1 {
   position: relative;
@@ -211,7 +233,8 @@
 
 .btn-cs,
 .btn-instagram,
-.btn-whatsapp {
+.btn-whatsapp,
+.btn-phone {
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
@@ -255,6 +278,10 @@
 
 .btn-whatsapp {
   background-color: var(--color-whatsapp);
+}
+
+.btn-phone {
+  background-color: var(--color-primary);
 }
 
 /* STATUS ICONS */
