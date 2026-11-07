@@ -93,17 +93,22 @@ export class GuestsCardsComponent implements OnDestroy {
   // Listen for scroll events on the browser window.
   @HostListener('window:scroll')
   onScroll(): void {
+    // BACK TO TOP
+    const backToTopThreshold = 900;
+    this.showBackToTop = window.scrollY > backToTopThreshold;
+
+    // INFINITE SCROLL
     if (!this.canLoadMore || this.loading || !this.cardsHasMore) {
       return;
     }
+
+    const infiniteScrollThreshold = 900;
     // Current scroll position.
     const scrollPosition = window.innerHeight + window.scrollY;
     // Total document height.
     const pageHeight = document.documentElement.scrollHeight;
 
-    const threshold = 800;
-
-    if (scrollPosition >= pageHeight - threshold) {
+    if (scrollPosition >= pageHeight - infiniteScrollThreshold) {
       this.canLoadMore = false;
       this.loadMore.emit();
     }
