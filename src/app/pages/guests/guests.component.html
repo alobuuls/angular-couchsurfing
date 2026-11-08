@@ -268,18 +268,6 @@
   >
   </guests-cards>
 
-  <!-- INITIAL CARDS LOADING -->
-  <app-loading
-    *ngIf="currentView === 'cards' && cardsLoading && !cardsData.length"
-    class="cards-loading"
-    [messages]="[
-      'GUESTS_LOADING.CARDS_1' | translate,
-      'GUESTS_LOADING.CARDS_2' | translate,
-      'GUESTS_LOADING.CARDS_3' | translate,
-      'GUESTS_LOADING.CARDS_4' | translate,
-    ]"
-  ></app-loading>
-
   <!-- MAP -->
   <div *ngIf="currentView === 'map'" class="map-view">
     <!-- MAP LOADING -->

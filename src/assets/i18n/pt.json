@@ -81,10 +81,6 @@
     "CHANGE_TO_TABLE": "Mudar para visualização em tabela"
   },
   "GUESTS_LOADING": {
-    "CARDS_1": "Carregando seus hóspedes",
-    "CARDS_2": "Preparando seus hóspedes",
-    "CARDS_3": "Quase lá",
-    "CARDS_4": "Seus cartões estão chegando",
     "MAP_1": "Carregando o mapa",
     "MAP_2": "Encontrando seus hóspedes",
     "MAP_3": "Preparando seu mapa",
@@ -141,6 +137,7 @@
     "HOMETOWN": "Cidade natal",
     "LIVING_IN": "Residência",
     "WE_MET": "Onde nos conhecemos",
+    "BACK_TO_TOP": "Voltar ao topo",
     "GROUP_TYPES": {
       "solo": "Sozinho(a)",
       "couple": "Casal",

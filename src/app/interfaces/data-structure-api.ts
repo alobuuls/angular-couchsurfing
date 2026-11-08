@@ -64,6 +64,7 @@ export interface IGuestTableMember {
   instagram?: string | null;
   gift: string[];
   couchsurfing?: string | null;
+  isFirstTime: boolean;
 
   hangOut?: boolean;
 }

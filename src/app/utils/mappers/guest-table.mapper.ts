@@ -28,6 +28,7 @@ export const mapGuestTable = (guests: IGuestListItem[]): IGuestTableRow[] => {
           couchsurfing: m.urlProfileCs || null,
           instagram: m.instagram || null,
           gift: m.gift,
+          isFirstTime: m.isFirstTime,
           hometown: {
             code: m.hometownCode,
             city: m.hometownCity || 'Unknown City',
