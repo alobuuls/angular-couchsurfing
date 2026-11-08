@@ -81,10 +81,6 @@
     "CHANGE_TO_TABLE": "Passer à la vue en tableau"
   },
   "GUESTS_LOADING": {
-    "CARDS_1": "Chargement de vos invités",
-    "CARDS_2": "Préparation de vos invités",
-    "CARDS_3": "Presque terminé",
-    "CARDS_4": "Vos cartes arrivent",
     "MAP_1": "Chargement de la carte",
     "MAP_2": "Recherche de vos invités",
     "MAP_3": "Préparation de votre carte",
@@ -141,6 +137,7 @@
     "HOMETOWN": "Ville d'origine",
     "LIVING_IN": "Résidence",
     "WE_MET": "Notre rencontre",
+    "BACK_TO_TOP": "Retour en haut",
     "GROUP_TYPES": {
       "solo": "Seul",
       "couple": "Couple",

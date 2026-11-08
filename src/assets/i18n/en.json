@@ -81,10 +81,6 @@
     "CHANGE_TO_TABLE": "Change view to table"
   },
   "GUESTS_LOADING": {
-    "CARDS_1": "Loading your guests",
-    "CARDS_2": "Getting your guests ready",
-    "CARDS_3": "Almost there",
-    "CARDS_4": "Your cards are coming",
     "MAP_1": "Loading the map",
     "MAP_2": "Finding your guests",
     "MAP_3": "Preparing your map",
@@ -141,6 +137,7 @@
     "HOMETOWN": "Hometown",
     "LIVING_IN": "Living In",
     "WE_MET": "We Met",
+    "BACK_TO_TOP": "Back to top",
     "GROUP_TYPES": {
       "solo": "Solo",
       "couple": "Couple",

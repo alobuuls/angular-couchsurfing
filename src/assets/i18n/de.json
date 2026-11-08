@@ -81,10 +81,6 @@
     "CHANGE_TO_TABLE": "Zur Tabellenansicht wechseln"
   },
   "GUESTS_LOADING": {
-    "CARDS_1": "Deine Gäste werden geladen",
-    "CARDS_2": "Deine Gäste werden vorbereitet",
-    "CARDS_3": "Fast geschafft",
-    "CARDS_4": "Deine Karten werden vorbereitet",
     "MAP_1": "Die Karte wird geladen",
     "MAP_2": "Deine Gäste werden gesucht",
     "MAP_3": "Deine Karte wird vorbereitet",
@@ -141,6 +137,7 @@
     "HOMETOWN": "Heimatstadt",
     "LIVING_IN": "Wohnort",
     "WE_MET": "Wir haben uns getroffen",
+    "BACK_TO_TOP": "Nach oben",
     "GROUP_TYPES": {
       "solo": "Allein",
       "couple": "Paar",

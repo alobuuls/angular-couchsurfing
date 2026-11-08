@@ -11,7 +11,7 @@ import { GeonameService } from '@services/geoname.service';
 import { LanguageService } from '@core/services/language.service';
 
 // Interfaces
-import { IGuestTableRow } from '@interfaces/data-structure-api';
+import { IGuestTableMember, IGuestTableRow } from '@interfaces/data-structure-api';
 import { ICardGuest, IGuestListItem, IGuestYearGroup, IYearlyStat } from '@interfaces/guests.interface';
 import { Continents, Regions } from '@type/word.types';
 import { DataState } from '@interfaces/data-structure-api';
@@ -265,6 +265,17 @@ export class GuestsCardsComponent implements OnDestroy {
 
   hasAmbassador(guest: IGuestTableRow): boolean {
     return guest.people.some(person => person.ambassador);
+  }
+
+  // Show one badge on the card when the solo guest or all group members are first time
+  showFirstTimeCardBadge(guest: IGuestTableRow): boolean {
+    if (guest.groupType === 'solo') return guest.isFirstTime === true;
+    return guest.people.length > 0 && guest.people.every(person => person.isFirstTime === true);
+  }
+
+  // Show individual badges when only some group members are first time
+  showFirstTimePersonBadge(guest: IGuestTableRow, person: IGuestTableMember): boolean {
+    return guest.groupType !== 'solo' && !this.showFirstTimeCardBadge(guest) && person.isFirstTime === true;
   }
 
   // Show guest name and the first letter os the last name

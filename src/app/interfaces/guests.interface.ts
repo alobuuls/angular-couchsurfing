@@ -1,6 +1,6 @@
 import { CountriesCodes } from '@type/word.types';
 import { Continents, Regions } from '@type/word.types';
-import { IGuestTableRow } from './data-structure-api';
+import { IGuestTableRow } from '@interfaces/data-structure-api';
 
 // Guest with all information
 export interface IGuestDetail extends ITripDetail {

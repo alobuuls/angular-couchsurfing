@@ -101,8 +101,12 @@
         >
           <span class="layover"></span>
 
-          <!-- FIRST TIME BADGE -->
-          <div *ngIf="guest.isFirstTime" class="first-time-badge" [matTooltip]="'GUESTS_CARDS.FIRST_TIME' | translate">
+          <!-- FIRST TIME BADGE / ALL MEMBERS -->
+          <div
+            *ngIf="showFirstTimeCardBadge(guest)"
+            class="first-time-badge"
+            [matTooltip]="'GUESTS_CARDS.FIRST_TIME' | translate"
+          >
             <mat-icon class="material-symbols-outlined">looks_one</mat-icon>
           </div>
 
@@ -119,6 +123,14 @@
             <!-- PEOPLE -->
             <div class="people-preview" [class.group-preview]="guest.people.length > 1">
               <div *ngFor="let p of guest.people" class="person" [ngClass]="{ 'has-gift': p.gift.length > 0 }">
+                <!-- FIRST TIME BADGE: INDIVIDUAL -->
+                <div
+                  *ngIf="showFirstTimePersonBadge(guest, p)"
+                  class="first-time-badge person-badge"
+                  [matTooltip]="'GUESTS_CARDS.FIRST_TIME' | translate"
+                >
+                  <mat-icon class="material-symbols-outlined">looks_one</mat-icon>
+                </div>
                 <div class="person-info">
                   <!-- NAME + FLAG + GENDER -->
                   <h2>
@@ -474,7 +486,7 @@
     type="button"
     class="btn-back-to-top"
     [class.visible]="showBackToTop"
-    matTooltip="Back to top"
+    [matTooltip]="'GUESTS_CARDS.BACK_TO_TOP' | translate"
     aria-label="Back to top"
     [attr.aria-hidden]="!showBackToTop"
     [attr.tabindex]="showBackToTop ? 0 : -1"
