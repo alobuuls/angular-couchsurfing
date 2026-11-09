@@ -6,6 +6,32 @@
   min-width: 0;
 }
 
+/* POP UP GUEST MARKER */
+.guest-map-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.guest-map-popup p {
+  margin: 0;
+}
+
+.guest-map-popup-btn {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: var(--color-primary);
+  color: white;
+  cursor: pointer;
+}
+
+.guest-map-popup-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .map-wrapper {
   position: relative;
   width: 100%;
