@@ -856,6 +856,39 @@ html.backward::view-transition-new(root) {
 }
 
 /* =========================================================
+  15. GUEST MARKER POINT
+   ========================================================= */
+
+.guest-marker-wrapper {
+  background: transparent;
+  border: none;
+}
+
+.guest-marker {
+  display: block;
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-accent);
+  border: 2px solid color-mix(in srgb, var(--color-accent) 40%, #000000);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--color-primary) 25%, transparent),
+    0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.guest-marker-wrapper:hover .guest-marker {
+  transform: scale(1.4);
+}
+
+// HOVER
+.guest-marker-wrapper:hover .guest-marker {
+  background-color: var(--color-secondary);
+  box-shadow:
+    0 0 0 5px color-mix(in srgb, var(--color-primary-dark) 30%, transparent),
+    0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* =========================================================
   15. ANIMATIONS
    ========================================================= */
 

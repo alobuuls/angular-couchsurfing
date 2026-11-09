@@ -2,6 +2,7 @@ import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChang
 import { environment } from '@env/environment';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 // Services
 import { MapService } from '@services/map.service';
@@ -9,7 +10,7 @@ import { LanguageService } from '@core/services/language.service';
 import { GeonameService } from '@services/geoname.service';
 
 // Interfaces
-import { IGuestTableRow } from '@interfaces/data-structure-api';
+import { IGuestTableMember, IGuestTableRow } from '@interfaces/data-structure-api';
 import { IAdminRegionsGeoJson, IWorldGeoJson } from '@interfaces/map-interface';
 import { REGION_NAMES } from '@config/world/regions';
 
@@ -21,9 +22,8 @@ import { Continents, ICountry } from '@type/word.types';
 
 // Libraries
 import * as L from 'leaflet';
-import { union } from '@turf/union';
-import { featureCollection } from '@turf/helpers';
-import { TranslateService } from '@ngx-translate/core';
+import { featureCollection, union, area, bbox, booleanPointInPolygon, feature, point } from '@turf/turf';
+import type { Feature, MultiPolygon, Polygon } from 'geojson';
 
 @Component({
   providers: [MapService],
@@ -47,6 +47,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
   private map?: L.Map;
   private geoLayer?: L.GeoJSON;
+  private guestMarkersLayer?: L.LayerGroup;
 
   private activePopup?:
     | {
@@ -138,6 +139,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     }
     this.guestCounts = this.getGuestCounts();
     this.updateCountryStyles();
+    this.updateGuestMarkers();
   }
 
   ngOnDestroy(): void {
@@ -159,6 +161,9 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     this.adminRegionsGeoJsonData = undefined;
     this.adminRegionsLayer = undefined;
     this.mapContainer = undefined;
+
+    this.guestMarkersLayer?.clearLayers();
+    this.guestMarkersLayer = undefined;
   }
 
   getContinentName(continent: Continents): string {
@@ -466,6 +471,8 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
       attributionControl: true,
     });
 
+    this.guestMarkersLayer = L.layerGroup().addTo(this.map);
+
     this.updateMapTheme();
     this.watchThemeChanges();
 
@@ -487,6 +494,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     setTimeout(() => {
       this.map?.invalidateSize({ animate: false });
     }, 100);
+    this.updateGuestMarkers();
   }
 
   // RESIZE OBSERVER
@@ -928,6 +936,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
       next: geoJson => {
         this.adminRegionsGeoJsonData = geoJson;
         this.createAdminRegionsLayer();
+        this.updateGuestMarkers();
       },
       error: error => {
         console.error('Error loading Natural Earth ADM1:', error);
@@ -1142,5 +1151,202 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     const color = getComputedStyle(this.mapContainer).getPropertyValue(variable).trim();
 
     return color || fallback;
+  }
+
+  // MAP MARKERS
+  // Finds the GeoJSON polygon that matches a guest's hometown
+  // Supports alternative region names and combines multiple matching regions
+
+  private getHometownPolygon(countryCode: string, stateName: string): Feature<Polygon | MultiPolygon> | null {
+    if (!this.adminRegionsGeoJsonData || !countryCode || !stateName) {
+      return null;
+    }
+
+    // Normalize names to avoid mismatches caused by accents or casing
+    const normalize = (value: string): string =>
+      value
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .trim();
+
+    const country = normalize(countryCode);
+    const state = normalize(stateName);
+
+    // Handle regions that may have different names in the GeoJSON
+    const stateAliases: Record<string, string[]> = {
+      'canary islands': ['canary is.', 'las palmas', 'santa cruz de tenerife'],
+    };
+
+    const searchNames = [state, ...(stateAliases[state] ?? []).map(normalize)];
+
+    // Filter regions by country and any matching region name
+    const matches = this.adminRegionsGeoJsonData.features.filter(feature => {
+      const properties = feature.properties as Record<string, unknown>;
+      const featureCountry = normalize(String(properties['adm0_a3'] ?? ''));
+
+      if (featureCountry !== country) return false;
+
+      const names = [properties['name'], properties['name_es'], properties['name_alt'], properties['region'], properties['region_sub']]
+        .filter((value): value is string => typeof value === 'string')
+        .map(normalize);
+
+      return names.some(name => searchNames.includes(name));
+    });
+
+    if (!matches.length) return null;
+    if (matches.length === 1) return matches[0] as Feature<Polygon | MultiPolygon>;
+
+    // Merge multiple matching regions into a single polygon
+    const collection = featureCollection(matches as Feature<Polygon | MultiPolygon>[]);
+    return union(collection) as Feature<Polygon | MultiPolygon> | null;
+  }
+
+  // Generates a reproducible random number sequence from a string seed
+  // The same guest ID always produces the same random values
+  private createSeededRandom(seed: string): () => number {
+    let value = 0;
+
+    // Convert the seed string into a numeric value.
+    for (let i = 0; i < seed.length; i++) {
+      value = (value * 31 + seed.charCodeAt(i)) | 0;
+    }
+
+    // Generate deterministic values between 0 and 1.
+    return () => {
+      value = (value * 1664525 + 1013904223) | 0;
+      return (value >>> 0) / 4294967296;
+    };
+  }
+
+  //  Generates deterministic coordinates inside a guest's hometown polygon.
+  private getGuestCoordinates(polygon: Feature<Polygon | MultiPolygon>, guestId: string): [number, number] | null {
+    const random = this.createSeededRandom(guestId);
+
+    // Convert MultiPolygon geometry into individual Polygon features.
+    const polygons: Feature<Polygon>[] =
+      polygon.geometry.type === 'Polygon'
+        ? [polygon as Feature<Polygon>]
+        : polygon.geometry.coordinates.map(coordinates =>
+            feature({
+              type: 'Polygon',
+              coordinates,
+            })
+          );
+
+    // Select a polygon proportionally to its area.
+    const totalArea = polygons.reduce((total, item) => total + area(item), 0);
+
+    if (!totalArea) return null;
+
+    let selectedArea = random() * totalArea;
+    const selectedPolygon =
+      polygons.find(item => {
+        selectedArea -= area(item);
+        return selectedArea <= 0;
+      }) ?? polygons[0];
+
+    // Generate random points within the polygon's bounding box.
+    const [minLng, minLat, maxLng, maxLat] = bbox(selectedPolygon);
+
+    // Keep only points that fall inside the selected polygon.
+    for (let attempt = 0; attempt < 5000; attempt++) {
+      const lng = minLng + random() * (maxLng - minLng);
+      const lat = minLat + random() * (maxLat - minLat);
+      const candidate = point([lng, lat]);
+
+      if (booleanPointInPolygon(candidate, selectedPolygon)) return [lat, lng];
+    }
+    return null;
+  }
+
+  // Creates a custom HTML marker instead of using Leaflet's default image icons.
+  private createGuestMarkerIcon(): L.DivIcon {
+    return L.divIcon({
+      className: 'guest-marker-wrapper',
+      html: '<span class="guest-marker"></span>',
+      iconSize: [20, 20],
+      iconAnchor: [10, 10],
+    });
+  }
+
+  // Rebuilds guest markers using their hometown regions and generated coordinates.
+
+  private updateGuestMarkers(): void {
+    if (!this.map || !this.adminRegionsGeoJsonData || !this.guestMarkersLayer) {
+      return;
+    }
+
+    // Remove previous markers before rebuilding.
+    this.guestMarkersLayer.clearLayers();
+    const processedGuests = new Set<string>();
+
+    // Cache polygons to avoid searching the GeoJSON repeatedly.
+    const polygonCache = new Map<string, Feature<Polygon | MultiPolygon> | null>();
+
+    for (const row of this.data) {
+      for (const person of row.people) {
+        const countryCode = person.hometown?.code;
+        const stateName = person.hometown?.state;
+        const guestId = person.guestId;
+
+        // Skip guests without location data or already processed.
+        if (!countryCode || !stateName || !guestId || processedGuests.has(guestId)) continue;
+
+        processedGuests.add(guestId);
+        const cacheKey = `${countryCode}-${stateName}`;
+
+        // Reuse the polygon when multiple guests share the same hometown.
+        if (!polygonCache.has(cacheKey)) {
+          polygonCache.set(cacheKey, this.getHometownPolygon(countryCode, stateName));
+        }
+
+        const polygon = polygonCache.get(cacheKey);
+
+        if (!polygon) continue;
+
+        // Generate a stable position for each guest.
+        const coordinates = this.getGuestCoordinates(polygon, guestId);
+
+        if (!coordinates) continue;
+
+        // Create the marker and attach the guest popup.
+        const marker = L.marker(coordinates, {
+          title: person.fullName,
+          icon: this.createGuestMarkerIcon(),
+        });
+        marker.bindPopup(this.createGuestPopup(person));
+        marker.addTo(this.guestMarkersLayer);
+      }
+    }
+  }
+
+  // Builds the HTML content displayed when a guest marker is clicked.
+
+  private createGuestPopup(person: IGuestTableMember): HTMLElement {
+    const container = document.createElement('div');
+    container.className = 'guest-map-popup';
+
+    const name = document.createElement('strong');
+    name.textContent = person.fullName;
+
+    const hometown = document.createElement('p');
+    hometown.textContent = [person.hometown?.city, person.hometown?.state, person.hometown?.code].filter(Boolean).join(', ');
+
+    // Create a button to navigate to the guest detail page.
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'guest-map-popup-btn';
+    button.textContent = this._translate.instant('MAP.VIEW_GUEST');
+
+    button.addEventListener('click', () => {
+      if (!person.guestId) return;
+
+      void this._router.navigate(['/guests', person.guestId]);
+    });
+
+    button.disabled = !person.guestId;
+    container.append(name, hometown, button);
+    return container;
   }
 }
