@@ -23,6 +23,24 @@
   box-shadow:
     0 8px 24px color-mix(in srgb, var(--color-text) 5%, transparent),
     0 2px 6px color-mix(in srgb, var(--color-text) 3%, transparent);
+  position: relative;
+}
+
+/* REMOVE GUEST */
+.btn-remove-guest {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  border: 1px solid var(--color-danger);
+  color: var(--color-danger);
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.btn-remove-guest:hover {
+  background-color: color-mix(in srgb, var(--color-danger) 12%, transparent);
+  transform: scale(1.08);
 }
 
 /* FORM SECTIONS */

@@ -34,7 +34,7 @@ import { GuestsEditComponent } from '@pages/guests/edit/guests-edit.component';
 import { GuestsDetailComponent } from '@pages/guests/detail/guests-detail.component';
 import { GuestFormComponent } from '@pages/guests/form/guest-form/guest-form.component';
 import { TripFormComponent } from '@pages/guests/form/trip-form/trip-form.component';
-import { GuestsFormComponent } from '@pages/guests/form/guests-form/guests-form.component';
+import { GuestsFormComponent } from '@pages/guests/form/guest-visit/guest-visit-form.component';
 import { GuestsTableComponent } from '@pages/guests/table/guests-table.component';
 import { GuestsCardsComponent } from '@pages/guests/cards/guests-cards.component';
 import { GuestsMapComponent } from '@pages/guests/map/guests-map.component';

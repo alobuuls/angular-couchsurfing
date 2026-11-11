@@ -4,7 +4,19 @@ import { Observable } from 'rxjs';
 import { environment } from '@env/environment';
 
 // Interfaces
-import { IBodyGuest, IGroupDetail, IGroupDetailResp, IGuestCreateResp, IGuestDeleteResp, IGuestDetailResp, IGuestsResp, IQueryParamsGuests } from '@interfaces/guests.interface';
+import {
+  IBodyGuest,
+  IGroupCreatePayload,
+  IGroupDetail,
+  IGroupDetailResp,
+  IGroupUpdatePayload,
+  IGuestCreatePayload,
+  IGuestCreateResp,
+  IGuestDeleteResp,
+  IGuestDetailResp,
+  IGuestsResp,
+  IQueryParamsGuests,
+} from '@interfaces/guests.interface';
 @Injectable()
 export class GuestsService {
   private urlGuests: string = `${environment.endpointUrlApiCs}/guests`;
@@ -61,7 +73,7 @@ export class GuestsService {
     return this.http.get<IGuestsResp>(this.urlGuests, { params });
   }
 
-  createNewGuest(payload: IBodyGuest): Observable<IGuestCreateResp> {
+  createNewGuest(payload: IGuestCreatePayload): Observable<IGuestCreateResp> {
     return this.http.post<IGuestCreateResp>(this.urlGuests, payload);
   }
 
@@ -69,7 +81,7 @@ export class GuestsService {
     return this.http.get<IGuestDetailResp>(`${this.urlGuests}/${guestId}`);
   }
 
-  updateGuestById(guestId: string, guest: IBodyGuest): Observable<IGuestCreateResp> {
+  updateGuestById(guestId: string, guest: IGuestCreatePayload): Observable<IGuestCreateResp> {
     return this.http.put<IGuestCreateResp>(`${this.urlGuests}/${guestId}`, guest);
   }
 
@@ -82,11 +94,11 @@ export class GuestsService {
     return this.http.get<IGroupDetailResp>(`${this.urlGuestsGroups}/${groupId}`);
   }
 
-  createNewGroup(payload: IGroupDetail): Observable<IGuestCreateResp> {
+  createNewGroup(payload: IGroupCreatePayload): Observable<IGuestCreateResp> {
     return this.http.post<IGuestCreateResp>(this.urlGuestsGroups, payload);
   }
 
-  updateGroupById(groupId: string, group: IGroupDetail): Observable<IGuestCreateResp> {
+  updateGroupById(groupId: string, group: IGroupUpdatePayload): Observable<IGuestCreateResp> {
     return this.http.put<IGuestCreateResp>(`${this.urlGuestsGroups}/${groupId}`, group);
   }
 

@@ -1,6 +1,6 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { Observable, catchError, defer, throwError } from 'rxjs';
 import { environment } from '@env/environment';
 
 // Interfaces
@@ -11,29 +11,79 @@ import { WORLD } from '@config/world';
 
 @Injectable()
 export class CityService {
-  private enpoint: string = environment.endpointApiCities;
-  private API_KEY: string = environment.apiKeyCities;
+  private endpoint: string = environment.endpointApiCities;
+  private apiKeys: string[] = environment.apiKeysCities.filter((key): key is string => !!key);
 
-  constructor(private http: HttpClient) {}
+  private currentKeyIndex = 0;
 
-  private get headers() {
+  private http = inject(HttpClient);
+
+  //  Builds the request headers with the provided API key.
+
+  private getHeaders(apiKey: string): HttpHeaders {
     return new HttpHeaders({
-      'X-CSCAPI-KEY': this.API_KEY,
+      'X-CSCAPI-KEY': apiKey,
     });
   }
 
+  // Retrieves the states of a country.
+
   getStates(countryCode: string): Observable<IState[]> {
-    return this.http.get<IState[]>(`${this.enpoint}/countries/${countryCode}/states`, { headers: this.headers });
+    return this.request<IState[]>(`${this.endpoint}/countries/${countryCode}/states`);
   }
+
+  // Retrieves the cities of a state.
 
   getCities(countryCode: string, stateCode: string): Observable<ICity[]> {
-    return this.http.get<ICity[]>(`${this.enpoint}/countries/${countryCode}/states/${stateCode}/cities`, { headers: this.headers });
+    return this.request<ICity[]>(`${this.endpoint}/countries/${countryCode}/states/${stateCode}/cities`);
   }
 
-  /**
-   * Convierte el código del país al código que espera la API
-   * de estados y ciudades.
-   */
+  // Executes the request and rotates API keys when a 429 error occurs.
+  // Stops retrying once all available keys have been exhausted.
+
+  private request<T>(url: string): Observable<T> {
+    return defer(() => {
+      if (!this.apiKeys.length) {
+        return throwError(() => new Error('No API keys configured'));
+      }
+
+      const attemptedKeys = new Set<number>();
+      const makeRequest = (): Observable<T> => {
+        const keyIndex = this.currentKeyIndex;
+
+        if (attemptedKeys.has(keyIndex)) {
+          return throwError(
+            () =>
+              new HttpErrorResponse({
+                status: 429,
+                statusText: 'All API keys exhausted',
+              })
+          );
+        }
+
+        attemptedKeys.add(keyIndex);
+
+        return this.http
+          .get<T>(url, {
+            headers: this.getHeaders(this.apiKeys[keyIndex]),
+          })
+          .pipe(
+            catchError((error: HttpErrorResponse) => {
+              if (error.status !== 429) return throwError(() => error);
+
+              if (attemptedKeys.size >= this.apiKeys.length) return throwError(() => error);
+
+              this.currentKeyIndex = (keyIndex + 1) % this.apiKeys.length;
+
+              return makeRequest();
+            })
+          );
+      };
+      return makeRequest();
+    });
+  }
+
+  // Converts the country code to the format required by the API.
   getApiCountryCode(countryCode: string | null | undefined): string | null {
     if (!countryCode) return null;
     const normalizedCode = countryCode.trim().toLowerCase();
@@ -41,15 +91,17 @@ export class CityService {
     return country?.flag ?? null;
   }
 
-  /**
-   * Normaliza nombres de ubicaciones para compararlos
-   * sin distinguir mayúsculas, minúsculas ni acentos.
-   */
+  // Normalizes location names for comparison, ignoring case and accent differences.
   normalizeLocation(value: string | null | undefined): string {
     return (value ?? '')
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
       .trim()
       .toLowerCase();
+  }
+
+  // Checks whether the error is caused by the API rate limit.
+  isRateLimitError(error: unknown): boolean {
+    return error instanceof HttpErrorResponse && error.status === 429;
   }
 }

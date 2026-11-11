@@ -1,14 +1,16 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 // Services
 import { GuestsService } from '@services/guests.service';
-import { AlertsService } from '@core/services/alerts.service';
-import { Router } from '@angular/router';
+import { AlertsService } from '../../../core/services/alerts.service';
+import { TranslateService } from '@ngx-translate/core';
 
 // Interfaces
-import { IBodyGuest, IGroupDetail, IGroupEdit, IGuestDetail, IGuestsFormSubmit } from '@interfaces/guests.interface';
-import { TranslateService } from '@ngx-translate/core';
+import { IGroupCreatePayload, IGroupEdit, IGroupUpdatePayload, IGuestCreatePayload, IGuestDetail } from '@interfaces/guests.interface';
+import { IGuestsFormSubmit } from '../../../interfaces/guest-form.interface';
+
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'guests-edit',
@@ -49,60 +51,109 @@ export class GuestsEditComponent implements OnInit {
     }
   }
 
+  // TOAST NOTIFICATIONS
+  private showToast(icon: 'success' | 'error', title: string): void {
+    this._alerts.showToast({
+      icon,
+      title: this._translate.instant(title),
+    });
+  }
+
   update(data: IGuestsFormSubmit): void {
-    // Solo
-    if (data.groupType === 'solo') {
-      if (!this.guest) {
-        return;
-      }
+    // SOLO → SOLO
+    if (this.guest && data.groupType === 'solo') {
+      this.updateSolo(data);
+      return;
+    }
 
-      const payload: IBodyGuest = {
-        ...data.trip,
-        ...data.guests[0],
-      };
+    // SOLO → GROUP
+    if (this.guest && data.groupType !== 'solo') {
+      this.convertSoloToGroup(data);
+      return;
+    }
 
-      this._guests.updateGuestById(this.guest.guestId, payload).subscribe({
-        next: () => {
-          this._alerts.showToast({
-            icon: 'success',
-            title: this._translate.instant('ALERTS.EDIT.GUEST_SUCCESS'),
-          });
-          this.router.navigateByUrl('/guests');
-        },
-        error: () =>
-          this._alerts.showToast({
-            icon: 'error',
-            title: this._translate.instant('ALERTS.EDIT.GUEST_ERROR'),
-          }),
+    // GROUP → SOLO
+    if (this.group && data.groupType === 'solo') {
+      this.convertGroupToSolo(data);
+      return;
+    }
+
+    // GROUP → GROUP
+    if (this.group && data.groupType !== 'solo') {
+      this.updateGroup(data);
+    }
+  }
+
+  private updateSolo(data: IGuestsFormSubmit): void {
+    if (!this.guest) return;
+
+    const payload: IGuestCreatePayload = {
+      ...data.trip,
+      ...data.guests[0],
+      groupType: 'solo',
+    };
+
+    this._guests.updateGuestById(this.guest.guestId, payload).subscribe(() => {
+      this.showToast('success', 'ALERTS.EDIT.GUEST_SUCCESS');
+      this.router.navigate(['/guests']);
+    });
+  }
+
+  private convertSoloToGroup(data: IGuestsFormSubmit): void {
+    if (!this.guest || data.groupType === 'solo') return;
+
+    const payload: IGroupCreatePayload = {
+      ...data.trip,
+      groupType: data.groupType,
+      members: data.guests.map(guest => ({
+        ...guest,
+        groupType: data.groupType as 'couple' | 'friends' | 'family',
+      })),
+    };
+
+    this._guests
+      .createNewGroup(payload)
+      .pipe(switchMap(() => this._guests.removeGuestById(this.guest!.guestId)))
+      .subscribe(() => {
+        this.showToast('success', 'ALERTS.EDIT.GROUP_SUCCESS');
+        this.router.navigate(['/guests']);
       });
-      return;
-    }
+  }
 
-    // Group
-    if (!this.group || !this.groupId) {
-      return;
-    }
+  private convertGroupToSolo(data: IGuestsFormSubmit): void {
+    if (!this.groupId || data.groupType !== 'solo') return;
 
-    const payload: IGroupDetail = {
+    const payload: IGuestCreatePayload = {
+      ...data.trip,
+      ...data.guests[0],
+      groupType: 'solo',
+    };
+
+    this._guests
+      .createNewGuest(payload)
+      .pipe(switchMap(() => this._guests.removeGroupById(this.groupId!)))
+      .subscribe(() => {
+        this.showToast('success', 'ALERTS.EDIT.GUEST_SUCCESS');
+        this.router.navigate(['/guests']);
+      });
+  }
+
+  private updateGroup(data: IGuestsFormSubmit): void {
+    if (!this.groupId || data.groupType === 'solo') return;
+
+    const payload: IGroupUpdatePayload = {
       groupId: this.groupId,
       groupType: data.groupType,
       ...data.trip,
-      members: data.guests,
+      members: data.guests.map(guest => ({
+        ...guest,
+        groupType: data.groupType as 'couple' | 'friends' | 'family',
+      })),
     };
 
-    this._guests.updateGroupById(this.groupId, payload).subscribe({
-      next: () => {
-        this._alerts.showToast({
-          icon: 'success',
-          title: this._translate.instant('ALERTS.EDIT.GROUP_SUCCESS'),
-        });
-        this.router.navigateByUrl('/guests');
-      },
-      error: () =>
-        this._alerts.showToast({
-          icon: 'error',
-          title: this._translate.instant('ALERTS.EDIT.GROUP_ERROR'),
-        }),
+    this._guests.updateGroupById(this.groupId, payload).subscribe(() => {
+      this.showToast('success', 'ALERTS.EDIT.GROUP_SUCCESS');
+      this.router.navigate(['/guests']);
     });
   }
 }

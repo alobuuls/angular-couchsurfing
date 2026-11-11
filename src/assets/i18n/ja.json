@@ -269,10 +269,25 @@
       "FRIENDS": "友人",
       "FAMILY": "家族"
     },
+    "CHANGE_TYPE": {
+      "SELECT_TITLE": "ゲストを選択",
+      "SELECT_DESCRIPTION": "保持するゲストを正確に{{count}}人選択してください。",
+      "APPLY": "選択を適用",
+      "CANCEL": "キャンセル",
+      "CONFIRM_TITLE": "グループの変更を確定しますか？",
+      "CONFIRM_DESCRIPTION": "選択されなかったゲストは、変更を保存すると削除されます。この操作は取り消せません。",
+      "CONFIRM": "はい、変更を確定します"
+    },
     "ADD_GUEST": "別のゲストを追加",
     "CREATE": "作成",
     "UPDATE": "更新",
-    "MAX_MEMBERS": "追加できるメンバーは最大5人です"
+    "MAX_MEMBERS": "追加できるメンバーは最大5人です",
+    "REMOVE_GUEST": {
+      "TITLE": "ゲストを削除",
+      "DESCRIPTION": "このゲストをフォームから削除してもよろしいですか？",
+      "CONFIRM": "はい、削除"
+    },
+    "GUEST_NUMBER": "ゲスト {{number}}"
   },
   "TRIP_FORM": {
     "TITLE": "旅行情報",
@@ -362,7 +377,8 @@
       "DUPLICATE_GIFT": "この贈り物はすでに追加されています",
       "GIFT_EXISTS": "この贈り物はすでに存在します",
       "NO_GIFTS": "クリアする贈り物がありません",
-      "GIFTS_CLEARED": "贈り物リストをクリアしました"
+      "GIFTS_CLEARED": "ギフトリストをクリアしました",
+      "LOCATION_API_LIMIT": "現在、州や都市を自動的に読み込むことができません。対応するフィールドに手動で入力するか、しばらくしてからもう一度お試しください！"
     },
     "ANNOUNCEMENTS": {
       "GIFT_REMOVED": "贈り物を削除しました"

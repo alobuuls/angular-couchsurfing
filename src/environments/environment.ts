@@ -12,7 +12,14 @@ export const environment = {
   exampleEndpointDelay: 'https://httpbin.org/delay/5',
 
   endpointApiCities: 'https://api.countrystatecity.in/v1',
-  apiKeyCities: process.env['NG_APP_KEY_CITIES'],
+  apiKeysCities: [
+    process.env['NG_APP_KEY_CITIES_1'],
+    process.env['NG_APP_KEY_CITIES_2'],
+    process.env['NG_APP_KEY_CITIES_3'],
+    process.env['NG_APP_KEY_CITIES_4'],
+    process.env['NG_APP_KEY_CITIES_5'],
+    process.env['NG_APP_KEY_CITIES_6'],
+  ],
   apiKeyCarto: process.env['NG_APP_KEY_CARTO'],
 
   endpointBaseCountryMap: 'https://raw.githubusercontent.com',

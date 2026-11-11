@@ -1,5 +1,23 @@
 <div class="ctn-form">
   <form #guestForm [formGroup]="formCreateGuest">
+    <!-- REMOVE GUEST -->
+    <button
+      *ngIf="showRemoveButton"
+      type="button"
+      mat-icon-button
+      class="btn-remove-guest"
+      [matTooltip]="'GUESTS_FORM.REMOVE_GUEST.TITLE' | translate"
+      [attr.aria-label]="'GUESTS_FORM.REMOVE_GUEST.TITLE' | translate"
+      (click)="remove.emit()"
+    >
+      <mat-icon class="material-symbols-outlined">delete</mat-icon>
+    </button>
+
+    <!-- GUEST NUMBER -->
+    <h3 *ngIf="guestNumber" class="guest-number">
+      {{ 'GUESTS_FORM.GUEST_NUMBER' | translate: { number: guestNumber } }}
+    </h3>
+
     <!-- 1. PERSONAL INFORMATION -->
     <section class="form-section">
       <h3 class="title-form">
