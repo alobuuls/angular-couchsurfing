@@ -269,10 +269,25 @@
       "FRIENDS": "Друзья",
       "FAMILY": "Семья"
     },
+    "CHANGE_TYPE": {
+      "SELECT_TITLE": "Выбрать гостей",
+      "SELECT_DESCRIPTION": "Выберите ровно {{count}} гостя/гостей, которых хотите сохранить.",
+      "APPLY": "Применить выбор",
+      "CANCEL": "Отмена",
+      "CONFIRM_TITLE": "Подтвердить изменение группы?",
+      "CONFIRM_DESCRIPTION": "Невыбранные гости будут удалены при сохранении изменений. Это действие нельзя отменить.",
+      "CONFIRM": "Да, подтвердить изменения"
+    },
     "ADD_GUEST": "Добавить ещё одного гостя",
     "CREATE": "Создать",
     "UPDATE": "Обновить",
-    "MAX_MEMBERS": "Можно добавить не более 5 участников"
+    "MAX_MEMBERS": "Você pode adicionar no máximo 5 membros",
+    "REMOVE_GUEST": {
+      "TITLE": "Remover hóspede",
+      "DESCRIPTION": "Tem certeza de que deseja remover este hóspede do formulário?",
+      "CONFIRM": "Sim, remover"
+    },
+    "GUEST_NUMBER": "HÓSPEDE Nº {{number}}"
   },
   "TRIP_FORM": {
     "TITLE": "Информация о поездке",
@@ -362,7 +377,8 @@
       "DUPLICATE_GIFT": "Этот подарок уже добавлен",
       "GIFT_EXISTS": "Такой подарок уже существует",
       "NO_GIFTS": "Нет подарков для удаления",
-      "GIFTS_CLEARED": "Список подарков очищен"
+      "GIFTS_CLEARED": "Список подарков очищен",
+      "LOCATION_API_LIMIT": "В настоящее время не удаётся автоматически загрузить штаты и города. Вы можете ввести их вручную в соответствующие поля или попробовать ещё раз позже!"
     },
     "ANNOUNCEMENTS": {
       "GIFT_REMOVED": "Подарок удалён"

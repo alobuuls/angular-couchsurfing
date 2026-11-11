@@ -270,10 +270,25 @@
       "FRIENDS": "Amigos",
       "FAMILY": "Familia"
     },
+    "CHANGE_TYPE": {
+      "SELECT_TITLE": "Seleccionar huéspedes",
+      "SELECT_DESCRIPTION": "Selecciona exactamente {{count}} huésped(es) que deseas conservar.",
+      "APPLY": "Aplicar selección",
+      "CANCEL": "Cancelar",
+      "CONFIRM_TITLE": "¿Confirmar cambio de grupo?",
+      "CONFIRM_DESCRIPTION": "Los huéspedes no seleccionados serán eliminados al guardar los cambios. Esta acción no se puede deshacer.",
+      "CONFIRM": "Sí, confirmar cambios"
+    },
     "ADD_GUEST": "Añadir otro huésped",
     "CREATE": "Crear",
     "UPDATE": "Actualizar",
-    "MAX_MEMBERS": "Puedes añadir un máximo de 5 integrantes"
+    "MAX_MEMBERS": "Puedes añadir un máximo de 5 miembros",
+    "REMOVE_GUEST": {
+      "TITLE": "Eliminar huésped",
+      "DESCRIPTION": "¿Estás seguro de que deseas eliminar a este huésped del formulario?",
+      "CONFIRM": "Sí, eliminar"
+    },
+    "GUEST_NUMBER": "HUÉSPED N.º {{number}}"
   },
   "TRIP_FORM": {
     "TITLE": "Información del viaje",
@@ -363,7 +378,8 @@
       "DUPLICATE_GIFT": "Este regalo ya se ha añadido",
       "GIFT_EXISTS": "Este regalo ya existe",
       "NO_GIFTS": "No hay regalos para eliminar",
-      "GIFTS_CLEARED": "Se ha limpiado la lista de regalos"
+      "GIFTS_CLEARED": "Lista de regalos vaciada",
+      "LOCATION_API_LIMIT": "Actualmente no podemos cargar estados y ciudades automáticamente. Puedes introducirlos manualmente en los campos correspondientes. ¡O inténtalo de nuevo más tarde!"
     },
     "ANNOUNCEMENTS": {
       "GIFT_REMOVED": "Regalo eliminado"

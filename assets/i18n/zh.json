@@ -273,10 +273,25 @@
       "FRIENDS": "朋友",
       "FAMILY": "家庭"
     },
+    "CHANGE_TYPE": {
+      "SELECT_TITLE": "选择客人",
+      "SELECT_DESCRIPTION": "请选择恰好{{count}}位要保留的客人。",
+      "APPLY": "应用选择",
+      "CANCEL": "取消",
+      "CONFIRM_TITLE": "确认更改群组？",
+      "CONFIRM_DESCRIPTION": "保存更改时，未选中的客人将被删除。此操作无法撤销。",
+      "CONFIRM": "是，确认更改"
+    },
     "ADD_GUEST": "添加另一位客人",
     "CREATE": "创建",
     "UPDATE": "更新",
-    "MAX_MEMBERS": "最多可以添加 5 位成员"
+    "MAX_MEMBERS": "最多可添加 5 位成员",
+    "REMOVE_GUEST": {
+      "TITLE": "移除客人",
+      "DESCRIPTION": "确定要从表单中移除此客人吗？",
+      "CONFIRM": "是，移除"
+    },
+    "GUEST_NUMBER": "客人 #{{number}}"
   },
   "TRIP_FORM": {
     "TITLE": "行程信息",
@@ -366,7 +381,8 @@
       "DUPLICATE_GIFT": "这件礼物已添加",
       "GIFT_EXISTS": "这件礼物已存在",
       "NO_GIFTS": "没有可清除的礼物",
-      "GIFTS_CLEARED": "礼物列表已清空"
+      "GIFTS_CLEARED": "礼物列表已清空",
+      "LOCATION_API_LIMIT": "目前无法自动加载州和城市。您可以在相应的字段中手动输入，或稍后再试！"
     },
     "ANNOUNCEMENTS": {
       "GIFT_REMOVED": "礼物已移除"
