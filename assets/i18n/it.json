@@ -278,7 +278,10 @@
       "CONFIRM_DESCRIPTION": "Gli ospiti non selezionati verranno eliminati al salvataggio delle modifiche. Questa azione non può essere annullata.",
       "CONFIRM": "Sì, conferma le modifiche"
     },
-    "ADD_GUEST": "Aggiungi un altro ospite",
+    "ADD_GUEST": {
+      "ADD_ANOTHER_GUEST": "Aggiungi un altro ospite",
+      "SUCCESS": "È stato aggiunto un altro modulo per l'ospite"
+    },
     "CREATE": "Crea",
     "UPDATE": "Aggiorna",
     "MAX_MEMBERS": "Puoi aggiungere al massimo 5 membri",
@@ -287,7 +290,9 @@
       "DESCRIPTION": "Sei sicuro di voler rimuovere questo ospite dal modulo?",
       "CONFIRM": "Sì, rimuovi"
     },
-    "GUEST_NUMBER": "OSPITE N. {{number}}"
+    "GUEST_NUMBER": "Ospite n. {{number}}",
+    "FORM_COUNT_SINGULAR": "1 modulo per ospite",
+    "FORM_COUNT": "{{count}} moduli per ospiti"
   },
   "TRIP_FORM": {
     "TITLE": "Informazioni sul viaggio",

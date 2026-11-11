@@ -282,7 +282,10 @@
       "CONFIRM_DESCRIPTION": "保存更改时，未选中的客人将被删除。此操作无法撤销。",
       "CONFIRM": "是，确认更改"
     },
-    "ADD_GUEST": "添加另一位客人",
+    "ADD_GUEST": {
+      "ADD_ANOTHER_GUEST": "添加另一位客人",
+      "SUCCESS": "已添加另一份客人表单"
+    },
     "CREATE": "创建",
     "UPDATE": "更新",
     "MAX_MEMBERS": "最多可添加 5 位成员",
@@ -291,7 +294,9 @@
       "DESCRIPTION": "确定要从表单中移除此客人吗？",
       "CONFIRM": "是，移除"
     },
-    "GUEST_NUMBER": "客人 #{{number}}"
+    "GUEST_NUMBER": "客人 #{{number}}",
+    "FORM_COUNT_SINGULAR": "1份客人表单",
+    "FORM_COUNT": "{{count}}份客人表单"
   },
   "TRIP_FORM": {
     "TITLE": "行程信息",
