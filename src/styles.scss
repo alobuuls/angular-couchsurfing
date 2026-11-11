@@ -491,12 +491,38 @@ html {
 
 html,
 body {
-  height: 100%;
+  background-image:
+    /* 1. Luz principal superior izquierda */
+    radial-gradient(ellipse 65% 55% at 5% 0%, color-mix(in srgb, var(--color-primary) 22%, transparent), transparent 75%),
+    /* 2. Luz secundaria superior derecha */ radial-gradient(ellipse 55% 50% at 100% 10%, color-mix(in srgb, var(--color-secondary) 20%, transparent), transparent 75%),
+    /* 3. Reflejo central */ radial-gradient(ellipse 65% 55% at 50% 55%, color-mix(in srgb, var(--color-primary-light) 12%, transparent), transparent 80%),
+    /* 4. Luz ambiental inferior */ radial-gradient(ellipse 70% 50% at 90% 100%, color-mix(in srgb, var(--color-accent) 13%, transparent), transparent 75%),
+    /* 5. Textura diagonal */
+    repeating-linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--color-text) 1.2%, transparent) 0px,
+        transparent 1px,
+        transparent 4px,
+        color-mix(in srgb, var(--color-text) 1.2%, transparent) 5px
+      ),
+    /* 6. Degradado base */
+    linear-gradient(145deg, var(--color-background) 0%, color-mix(in srgb, var(--color-background) 85%, var(--color-primary)) 45%, var(--color-background) 100%);
+
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  // background-color: var(--color-background);
+
+  /* Dispositivos táctiles */
+  @media (hover: none) and (pointer: coarse) {
+    html,
+    body {
+      background-attachment: scroll;
+    }
+  }
 }
 
 body {
-  margin: 0;
-  background-color: var(--color-background);
   font-family:
     system-ui,
     -apple-system,
@@ -510,6 +536,10 @@ body {
     'Helvetica Neue',
     sans-serif;
   color: var(--color-text);
+}
+
+body:has(header.active) {
+  overflow: hidden;
 }
 
 a {
@@ -581,13 +611,17 @@ button {
   padding: 0 1.5rem;
   position: relative;
   text-transform: uppercase;
-  background: transparent;
+  background-color: transparent;
   border-style: none;
   box-shadow: inset 0 0 20px color-mix(in srgb, #ffffff 35%, transparent);
   outline: 1px solid var(--color-primary-dark);
   outline-offset: 0;
   text-shadow: none;
-  transition: all 1.3s cubic-bezier(0.19, 1, 0.22, 1);
+  transition:
+    box-shadow 1.3s cubic-bezier(0.19, 1, 0.22, 1),
+    outline-color 1.3s cubic-bezier(0.19, 1, 0.22, 1),
+    outline-offset 1.3s cubic-bezier(0.19, 1, 0.22, 1),
+    color 1.3s cubic-bezier(0.19, 1, 0.22, 1);
 
   &:hover,
   &:active,
@@ -765,7 +799,7 @@ button {
     }
 
     &::-webkit-scrollbar-track {
-      background: var(--color-surface);
+      background-color: var(--color-surface);
     }
 
     &::-webkit-scrollbar-thumb {
@@ -860,7 +894,7 @@ html.backward::view-transition-new(root) {
    ========================================================= */
 
 .guest-marker-wrapper {
-  background: transparent;
+  background-color: transparent;
   border: none;
 }
 

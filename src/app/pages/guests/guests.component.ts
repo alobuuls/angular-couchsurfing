@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
@@ -8,7 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
 // Material
 import { Sort } from '@angular/material/sort';
 import { PageEvent } from '@angular/material/paginator';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 
 // Services
 import { GuestsService } from '@services/guests.service';
@@ -72,6 +72,8 @@ export class GuestsComponent implements OnInit {
 
   currentView: ICurrentView = 'table';
 
+  @ViewChild('countryInput') countryInput!: ElementRef<HTMLInputElement>;
+
   // Current Filters
   private filters$ = new BehaviorSubject<IQueryParamsGuests>({});
 
@@ -113,7 +115,6 @@ export class GuestsComponent implements OnInit {
   private readonly _geoname = inject(GeonameService);
   private readonly _format = inject(FormatService);
   private _translate = inject(TranslateService);
-  private _stats = inject(StatsService);
 
   ngOnInit(): void {
     this.initFiltersForm();
@@ -141,6 +142,14 @@ export class GuestsComponent implements OnInit {
       ambassador: [''],
       didTheyReq: [''],
     });
+  }
+
+  private normalizeSearchText(value: string): string {
+    return value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim();
   }
 
   onFiltersSubmit(): void {
@@ -411,22 +420,33 @@ export class GuestsComponent implements OnInit {
     this.updateFilteredCountries();
   }
 
-  onCountrySelected(event: MatAutocompleteSelectedEvent): void {
-    const countryCode = event.option.value as CountriesCodes;
+  toggleCountry(countryCode: CountriesCodes): void {
     const countryCtrl = this.filtersForm.get('country');
-
     const selectedCountries = (countryCtrl?.value ?? []) as CountriesCodes[];
 
-    if (!selectedCountries.includes(countryCode)) {
-      countryCtrl?.setValue([...selectedCountries, countryCode]);
-    }
+    const updatedCountries = selectedCountries.includes(countryCode) ? selectedCountries.filter(code => code !== countryCode) : [...selectedCountries, countryCode];
 
-    this.countrySearchCtrl.setValue('');
+    countryCtrl?.setValue(updatedCountries);
+
+    this.countrySearchCtrl.setValue('', { emitEvent: false });
+    this.countryInput.nativeElement.value = '';
+
+    this.updateFilteredCountries();
+  }
+
+  openCountryList(): void {
+    this.countrySearchCtrl.setValue('', { emitEvent: true });
+    this.updateFilteredCountries();
+  }
+
+  onCountrySelected(event: MatAutocompleteSelectedEvent): void {
+    event.option.deselect();
+    this.countrySearchCtrl.setValue('', { emitEvent: true });
+    this.countryInput.nativeElement.focus();
   }
 
   removeCountry(countryCode: CountriesCodes): void {
     const countryCtrl = this.filtersForm.get('country');
-
     const selectedCountries = (countryCtrl?.value ?? []) as CountriesCodes[];
 
     countryCtrl?.setValue(selectedCountries.filter(code => code !== countryCode));
@@ -764,18 +784,24 @@ export class GuestsComponent implements OnInit {
   private updateFilteredCountries(): void {
     const selectedContinents = (this.filtersForm.get('continent')?.value ?? []) as Continents[];
     const selectedRegions = (this.filtersForm.get('region')?.value ?? []) as Regions[];
-    const search = (this.countrySearchCtrl.value ?? '').toLowerCase().trim();
+    const selectedCountries = (this.filtersForm.get('country')?.value ?? []) as CountriesCodes[];
 
-    this.filteredCountries = this.countries.filter(country => {
+    const search = this.normalizeSearchText(this.countrySearchCtrl.value ?? '');
+
+    const filtered = this.countries.filter(country => {
       const matchesContinent = !selectedContinents.length || selectedContinents.includes(country.continent);
       const matchesRegion = !selectedRegions.length || selectedRegions.includes(country.region);
-      const matchesSearch =
-        !search ||
-        this.getCountryName(country.countryCode).toLowerCase().includes(search) ||
-        country.name.en.toLowerCase().includes(search) ||
-        country.countryCode.toLowerCase().includes(search);
-
+      const countryName = this.normalizeSearchText(this.getCountryName(country.countryCode));
+      const englishName = this.normalizeSearchText(country.name.en);
+      const countryCode = this.normalizeSearchText(country.countryCode);
+      const matchesSearch = !search || countryName.includes(search) || englishName.includes(search) || countryCode.includes(search);
       return matchesContinent && matchesRegion && matchesSearch;
     });
+
+    // Mostrar primero los países seleccionados
+    this.filteredCountries = [
+      ...filtered.filter(country => selectedCountries.includes(country.countryCode)),
+      ...filtered.filter(country => !selectedCountries.includes(country.countryCode)),
+    ];
   }
 }
