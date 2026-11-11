@@ -269,10 +269,25 @@
       "FRIENDS": "Amis",
       "FAMILY": "Famille"
     },
+    "CHANGE_TYPE": {
+      "SELECT_TITLE": "Sélectionner les invités",
+      "SELECT_DESCRIPTION": "Sélectionnez exactement {{count}} invité(s) que vous souhaitez conserver.",
+      "APPLY": "Appliquer la sélection",
+      "CANCEL": "Annuler",
+      "CONFIRM_TITLE": "Confirmer le changement de groupe ?",
+      "CONFIRM_DESCRIPTION": "Les invités non sélectionnés seront supprimés lors de l'enregistrement des modifications. Cette action est irréversible.",
+      "CONFIRM": "Oui, confirmer les modifications"
+    },
     "ADD_GUEST": "Ajouter un autre invité",
     "CREATE": "Créer",
     "UPDATE": "Mettre à jour",
-    "MAX_MEMBERS": "Vous pouvez ajouter un maximum de 5 membres"
+    "MAX_MEMBERS": "Puedes añadir un máximo de 5 miembros",
+    "REMOVE_GUEST": {
+      "TITLE": "Eliminar huésped",
+      "DESCRIPTION": "¿Estás seguro de que deseas eliminar a este huésped del formulario?",
+      "CONFIRM": "Sí, eliminar"
+    },
+    "GUEST_NUMBER": "HUÉSPED N.º {{number}}"
   },
   "TRIP_FORM": {
     "TITLE": "Informations sur le voyage",
@@ -362,7 +377,8 @@
       "DUPLICATE_GIFT": "Ce cadeau a déjà été ajouté",
       "GIFT_EXISTS": "Ce cadeau existe déjà",
       "NO_GIFTS": "Il n'y a aucun cadeau à effacer",
-      "GIFTS_CLEARED": "Liste des cadeaux effacée"
+      "GIFTS_CLEARED": "Liste de cadeaux vidée",
+      "LOCATION_API_LIMIT": "Nous ne pouvons actuellement pas charger automatiquement les États et les villes. Vous pouvez les saisir manuellement dans les champs correspondants. Veuillez réessayer plus tard !"
     },
     "ANNOUNCEMENTS": {
       "GIFT_REMOVED": "Cadeau supprimé"

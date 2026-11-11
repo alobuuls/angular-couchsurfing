@@ -1,0 +1,113 @@
+<!-- Group Type -->
+<section class="group-type-section">
+  <h2 class="title-form">
+    {{ 'GUESTS_FORM.GROUP_TYPE_TITLE' | translate }}
+  </h2>
+
+  <mat-radio-group [value]="selectedGroupType" (change)="selectGroupType($event.value)">
+    <mat-radio-button value="solo">
+      {{ 'GUESTS_FORM.GROUP_TYPES.SOLO' | translate }}
+    </mat-radio-button>
+
+    <mat-radio-button value="couple">
+      {{ 'GUESTS_FORM.GROUP_TYPES.COUPLE' | translate }}
+    </mat-radio-button>
+
+    <mat-radio-button value="friends">
+      {{ 'GUESTS_FORM.GROUP_TYPES.FRIENDS' | translate }}
+    </mat-radio-button>
+
+    <mat-radio-button value="family">
+      {{ 'GUESTS_FORM.GROUP_TYPES.FAMILY' | translate }}
+    </mat-radio-button>
+  </mat-radio-group>
+</section>
+
+<!-- Add Guest -->
+<button
+  id="btn-add-guest"
+  *ngIf="selectedGroupType === 'friends' || selectedGroupType === 'family'"
+  type="button"
+  mat-stroked-button
+  (click)="addGuestForm()"
+>
+  {{ 'GUESTS_FORM.ADD_GUEST' | translate }}
+</button>
+
+<!-- Form -->
+<section *ngIf="selectedGroupType">
+  <!-- Trip -->
+  <app-trip-form [trip]="guest || group?.[0]"></app-trip-form>
+
+  <!-- Guests -->
+  <ng-container *ngIf="guestFormItems.length <= 2; else multipleGuestsLayout">
+    <!-- Solo / Couple -->
+    <div class="guest-forms-grid" [class.single-guest]="guestFormItems.length === 1">
+      <app-guest-form
+        *ngFor="let item of guestFormItems; let i = index; trackBy: trackByGuestForm"
+        [guest]="item.guest"
+        [guestNumber]="selectedGroupType !== 'solo' ? i + 1 : undefined"
+        [selectedGroupType]="selectedGroupType"
+        [showRemoveButton]="selectedGroupType !== 'solo'"
+        (remove)="removeGuestForm(item.id)"
+      ></app-guest-form>
+    </div>
+  </ng-container>
+
+  <!-- Friends / Family: More than 2 guests -->
+  <ng-template #multipleGuestsLayout>
+    <div class="guest-forms-slider-layout">
+      <!-- First Guest -->
+      <div class="guest-form-primary">
+        <app-guest-form
+          [guest]="guestFormItems[0].guest"
+          [guestNumber]="1"
+          [selectedGroupType]="selectedGroupType"
+          [showRemoveButton]="true"
+          (remove)="removeGuestForm(guestFormItems[0].id)"
+        ></app-guest-form>
+      </div>
+
+      <!-- Remaining Guests Slider -->
+      <div class="guest-slider-panel">
+        <!-- Slider Navigation -->
+        <div class="guest-slider-controls">
+          <button type="button" mat-icon-button aria-label="Previous guest" (click)="scrollGuestSlider('prev')">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+
+          <button type="button" mat-icon-button aria-label="Next guest" (click)="scrollGuestSlider('next')">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
+
+        <!-- Slider -->
+        <div #guestSlider class="guest-slider-track">
+          <div
+            class="guest-slider-item"
+            *ngFor="let item of guestFormItems.slice(1); let i = index; trackBy: trackByGuestForm"
+          >
+            <app-guest-form
+              [guest]="item.guest"
+              [guestNumber]="i + 2"
+              [selectedGroupType]="selectedGroupType"
+              [showRemoveButton]="true"
+              (remove)="removeGuestForm(item.id)"
+            ></app-guest-form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- Submit -->
+  <button id="btn-create-guest" type="submit" mat-raised-button [disabled]="wasFormSubmitted" (click)="submit()">
+    <mat-icon
+      *ngIf="wasFormSubmitted"
+      class="material-symbols-outlined loading-animation"
+      fontIcon="refresh"
+    ></mat-icon>
+
+    {{ (mode === 'create' ? 'GUESTS_FORM.CREATE' : 'GUESTS_FORM.UPDATE') | translate }}
+  </button>
+</section>

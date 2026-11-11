@@ -5,7 +5,7 @@ import { IGuestTableRow } from '@interfaces/data-structure-api';
 // Guest with all information
 export interface IGuestDetail extends ITripDetail {
   _id: string;
-  groupType: 'solo';
+  groupType: TGuestGroupType;
   birthDate?: string;
   age: number;
   continent: Continents;
@@ -45,6 +45,9 @@ export interface IGuestDetail extends ITripDetail {
   didTheyReq?: boolean;
 }
 
+// Guest data shared by solo guests and group members
+export type IGuestFormPayload = Omit<IGuestDetail, '_id' | 'guestId' | 'groupId' | 'groupType' | 'age' | 'visitedDate' | 'stayed' | 'nights'>;
+
 export type ICardGuest = IGuestDetail | IBodyGuest;
 
 export interface ITripDetail {
@@ -56,8 +59,12 @@ export interface ITripDetail {
 export interface IGroupDetail extends ITripDetail {
   groupId: string;
   groupType: 'couple' | 'friends' | 'family';
-  members: IBodyGuest[];
+  members: IGroupMember[];
 }
+
+export type IGroupMemberPayload = IGuestFormPayload & {
+  groupType: 'couple' | 'friends' | 'family';
+};
 
 export interface IGuestTableMemberCard {
   fullName: string;
@@ -173,12 +180,6 @@ export interface IQueryParamsGuests {
   birthDate?: number;
 }
 
-export interface IGuestsFormSubmit {
-  groupType: IGuestDetail['groupType'] | IGroupDetail['groupType'];
-  trip: Omit<IGroupDetail, 'groupId' | 'members' | 'groupType'>;
-  guests: IBodyGuest[];
-}
-
 // Get All
 export type IGuestsResp = IApiCsOkResp<IGuestListItem[]> & {
   pagination: IApiCsPag;
@@ -198,4 +199,23 @@ export type IBodyGuest = IGuestDetail;
 
 export type IDetailResp = IGuestDetail | IGroupDetail;
 
-export type IGroupCreatePayload = Omit<IGroupDetail, 'groupId'>;
+// Guest types
+export type TGuestGroupType = 'solo' | 'couple' | 'friends' | 'family';
+
+// Payload for creating a guest
+export type IGuestCreatePayload = IGuestFormPayload & {
+  groupType: 'solo';
+};
+
+// Payload for creating a group
+export type IGroupCreatePayload = Omit<IGroupDetail, 'groupId' | 'members'> & {
+  members: (IGuestFormPayload & {
+    groupType: 'couple' | 'friends' | 'family';
+  })[];
+};
+
+export interface IGroupUpdatePayload extends ITripDetail {
+  groupId: string;
+  groupType: 'couple' | 'friends' | 'family';
+  members: IGroupMemberPayload[];
+}

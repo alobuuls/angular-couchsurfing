@@ -269,10 +269,25 @@
       "FRIENDS": "Friends",
       "FAMILY": "Family"
     },
+    "CHANGE_TYPE": {
+      "SELECT_TITLE": "Select guests",
+      "SELECT_DESCRIPTION": "Select exactly {{count}} guest(s) you want to keep.",
+      "APPLY": "Apply selection",
+      "CANCEL": "Cancel",
+      "CONFIRM_TITLE": "Confirm group change?",
+      "CONFIRM_DESCRIPTION": "Unselected guests will be deleted when saving the changes. This action cannot be undone.",
+      "CONFIRM": "Yes, confirm changes"
+    },
     "ADD_GUEST": "Add another guest",
     "CREATE": "Create",
     "UPDATE": "Update",
-    "MAX_MEMBERS": "You can add a maximum of 5 members"
+    "MAX_MEMBERS": "You can add a maximum of 5 members",
+    "REMOVE_GUEST": {
+      "TITLE": "Remove guest",
+      "DESCRIPTION": "Are you sure you want to remove this guest form?",
+      "CONFIRM": "Yes, remove"
+    },
+    "GUEST_NUMBER": "GUEST #{{number}}"
   },
   "TRIP_FORM": {
     "TITLE": "Trip Information",
@@ -362,7 +377,8 @@
       "DUPLICATE_GIFT": "This gift has already been added",
       "GIFT_EXISTS": "This gift already exists",
       "NO_GIFTS": "There are no gifts to clear",
-      "GIFTS_CLEARED": "Gift list cleared"
+      "GIFTS_CLEARED": "Gift list cleared",
+      "LOCATION_API_LIMIT": "We are currently unable to load states and cities automatically. You can enter them manually in the corresponding fields. Or please try again later!"
     },
     "ANNOUNCEMENTS": {
       "GIFT_REMOVED": "Gift removed"

@@ -18,7 +18,7 @@ import { CityService } from '@services/city.service';
 import { FormatService } from '@services/format.service';
 
 // Interfaces
-import { IBodyGuest, IGuestDetail } from '@interfaces/guests.interface';
+import { IBodyGuest, IGuestDetail, IGuestFormPayload } from '@interfaces/guests.interface';
 import { LocationConfig, ICity, IState } from '@interfaces/guest-form.interface';
 
 // Types
@@ -45,6 +45,13 @@ export class GuestFormComponent implements OnInit {
 
   // Edit Form
   @Input() guest?: IGuestDetail;
+
+  // Remove Guest
+  @Input() showRemoveButton = false;
+  @Output() remove = new EventEmitter<void>();
+
+  // Guest Number
+  @Input() guestNumber?: number;
 
   // Create Form
   formCreateGuest!: FormGroup;
@@ -119,6 +126,8 @@ export class GuestFormComponent implements OnInit {
   loadingWeMetCities = false;
 
   private isInitializingWeMetEdit = false;
+
+  private locationRateLimitAlertShown = false;
 
   readonly maxLengths = {
     fullName: 100,
@@ -379,7 +388,9 @@ export class GuestFormComponent implements OnInit {
                   this.isInitializingWeMetEdit = false;
                 }
               },
-              error: () => {
+              error: error => {
+                this.handleLocationError(error);
+
                 setCities([]);
                 setLoadingCities(false);
 
@@ -391,7 +402,9 @@ export class GuestFormComponent implements OnInit {
               },
             });
         },
-        error: () => {
+        error: error => {
+          this.handleLocationError(error);
+
           setStates([]);
           setCities([]);
           setLoadingStates(false);
@@ -589,16 +602,14 @@ export class GuestFormComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
-  private buildGuestPayload(): IBodyGuest {
-    const { otherOccupation, hometownState, hometownCity, livingInState, livingInCity, stateWeMet, cityWeMet, ...guest } = this.formCreateGuest.getRawValue();
+  private buildGuestPayload(): IGuestFormPayload {
+    const { otherOccupation, groupType, hometownState, hometownCity, livingInState, livingInCity, stateWeMet, cityWeMet, ...guest } = this.formCreateGuest.getRawValue();
 
-    // Normalizar ocupaciones y eliminar duplicados.
+    // Normalize occupations and remove duplicates.
     const occupation = this.normalizeOccupations(guest.occupation, otherOccupation);
-
     const occupationArea = this.normalizeOccupations(guest.occupationArea, otherOccupation);
 
-    // Normalizar ubicaciones: pueden ser objetos de la API
-    // o valores introducidos manualmente.
+    // Normalize location values returned by the API selectors.
     const hometownStateName = this.getLocationName(hometownState);
     const hometownCityName = this.getLocationName(hometownCity);
     const livingInStateName = this.getLocationName(livingInState);
@@ -606,7 +617,7 @@ export class GuestFormComponent implements OnInit {
     const cityWeMetName = this.getLocationName(cityWeMet);
     const stateWeMetName = this.getLocationName(stateWeMet);
 
-    const payload: IBodyGuest = {
+    const payload: IGuestFormPayload = {
       ...guest,
       occupation,
       occupationArea,
@@ -619,7 +630,7 @@ export class GuestFormComponent implements OnInit {
       stateWeMet: stateWeMetName,
     };
 
-    // Omitir campos opcionales cuando no tienen valor.
+    // Omit optional fields when they have no value.
     if (!guest.rating) delete payload.rating;
     if (!guest.birthDate) delete payload.birthDate;
 
@@ -880,8 +891,28 @@ export class GuestFormComponent implements OnInit {
     this.formCreateGuest.patchValue({ visitedDate: new Date() });
   }
 
-  getFormValue(): IBodyGuest {
+  getFormValue(): IGuestFormPayload {
     return this.buildGuestPayload();
+  }
+
+  hasFormData(): boolean {
+    if (!this.formCreateGuest) return false;
+
+    const values = this.formCreateGuest.getRawValue();
+
+    return Object.entries(values).some(([key, value]) => {
+      // Ignore default group type value
+      if (key === 'groupType') return false;
+
+      // Ignore empty values and default false booleans
+      if (value === null || value === undefined || value === false) return false;
+      if (typeof value === 'string') return value.trim().length > 0;
+      if (Array.isArray(value)) return value.length > 0;
+      if (value instanceof Date) return !Number.isNaN(value.getTime());
+      if (typeof value === 'object') return Object.keys(value).length > 0;
+
+      return true;
+    });
   }
 
   isValid(controlName: string): boolean {
@@ -931,7 +962,9 @@ export class GuestFormComponent implements OnInit {
           config.setStates(states ?? []);
           config.setLoadingStates(false);
         },
-        error: () => {
+        error: error => {
+          this.handleLocationError(error);
+
           config.setStates([]);
           config.setCities([]);
           config.setLoadingStates(false);
@@ -963,7 +996,9 @@ export class GuestFormComponent implements OnInit {
           config.setCities(cities ?? []);
           config.setLoadingCities(false);
         },
-        error: () => {
+        error: error => {
+          this.handleLocationError(error);
+
           config.setCities([]);
           config.setLoadingCities(false);
         },
@@ -1070,5 +1105,17 @@ export class GuestFormComponent implements OnInit {
   getOccupationLabel(occupation: string): string {
     const lang = this._translate.currentLang || 'en';
     return OCCUPATION_TRANSLATIONS[occupation]?.[lang as 'en' | 'es'] ?? OCCUPATION_TRANSLATIONS[occupation]?.en ?? occupation;
+  }
+
+  private handleLocationError(error: unknown): void {
+    if (!this._city.isRateLimitError(error)) return;
+    if (this.locationRateLimitAlertShown) return;
+
+    this.locationRateLimitAlertShown = true;
+
+    this._alerts.showToast({
+      icon: 'warning',
+      title: this._translate.instant('GUEST_FORM.TOASTS.LOCATION_API_LIMIT'),
+    });
   }
 }

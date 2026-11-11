@@ -228,7 +228,8 @@ export class GuestsCardsComponent implements OnDestroy {
     }
 
     // Load group
-    if ('groupId' in guest) {
+    if (!guest.groupId) return;
+    {
       withReqStateSimple<ICardGuest[]>(this._guests.getGroupById(guest.groupId)).subscribe(state => {
         this.cardStates.set(cardId, state);
       });
