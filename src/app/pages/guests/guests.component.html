@@ -1,211 +1,236 @@
 <div *ngIf="vm$ | async as vm">
   <!-- FILTERS -->
   <form [formGroup]="filtersForm" class="filters-form" (ngSubmit)="onFiltersSubmit()">
-    <!-- CONTINENT -->
-    <mat-form-field appearance="outline">
-      <mat-label>{{ 'GUESTS_FILTERS.CONTINENT' | translate }}</mat-label>
+    <section class="ctn-filters">
+      <div>
+        <!-- CONTINENT -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'GUESTS_FILTERS.CONTINENT' | translate }}</mat-label>
 
-      <mat-icon class="material-symbols-outlined" matPrefix>public</mat-icon>
+          <mat-icon class="material-symbols-outlined" matPrefix>public</mat-icon>
 
-      <mat-select formControlName="continent" multiple>
-        <mat-option *ngFor="let continent of continents" [value]="continent">
-          <span class="continent-option">
-            <i [class]="continentIcons[continent]"></i>
-            {{ getContinentName(continent) }}
-          </span>
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+          <mat-select formControlName="continent" multiple>
+            <mat-option *ngFor="let continent of continents" [value]="continent">
+              <span class="continent-option">
+                <i [class]="continentIcons[continent]"></i>
+                {{ getContinentName(continent) }}
+              </span>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-    <!-- REGION -->
-    <mat-form-field appearance="outline">
-      <mat-label>{{ 'GUESTS_FILTERS.REGION' | translate }}</mat-label>
-      <mat-icon class="material-symbols-outlined" matPrefix>map</mat-icon>
+        <!-- REGION -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'GUESTS_FILTERS.REGION' | translate }}</mat-label>
+          <mat-icon class="material-symbols-outlined" matPrefix>map</mat-icon>
 
-      <mat-select formControlName="region" multiple>
-        <mat-option *ngFor="let region of filteredRegions" [value]="region">
-          {{ getRegionName(region) }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+          <mat-select formControlName="region" multiple>
+            <mat-option *ngFor="let region of filteredRegions" [value]="region">
+              {{ getRegionName(region) }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-    <!-- COUNTRY -->
-    <mat-form-field class="country-filter" appearance="outline">
-      <mat-label>{{ 'GUESTS_FILTERS.COUNTRY' | translate }}</mat-label>
-      <mat-icon class="material-symbols-outlined" matPrefix>public</mat-icon>
+        <!-- COUNTRY -->
+        <mat-form-field class="country-filter" appearance="outline">
+          <mat-label>{{ 'GUESTS_FILTERS.COUNTRY' | translate }}</mat-label>
+          <mat-icon class="material-symbols-outlined" matPrefix>public</mat-icon>
 
-      <mat-chip-grid #countryChipGrid aria-label="Selected countries">
-        <mat-chip-row
-          *ngFor="let code of filtersForm.get('country')?.value"
-          class="country-chip"
-          (removed)="removeCountry(code)"
-        >
-          <span class="country-flag">
-            <i [class]="code | flag"></i>
-          </span>
+          <mat-chip-grid #countryChipGrid aria-label="Selected countries">
+            <mat-chip-row
+              *ngFor="let code of filtersForm.get('country')?.value"
+              class="country-chip"
+              (removed)="removeCountry(code)"
+            >
+              <span class="country-flag">
+                <i [class]="code | flag"></i>
+              </span>
 
-          <span class="country-chip-name">
-            {{ getCountryName(code) }}
-          </span>
+              <span class="country-chip-name">
+                {{ getCountryName(code) }}
+              </span>
 
-          <button matChipRemove class="country-chip-remove" [attr.aria-label]="'Remove ' + getCountryName(code)">
-            <mat-icon>close</mat-icon>
-          </button>
-        </mat-chip-row>
+              <button matChipRemove class="country-chip-remove" [attr.aria-label]="'Remove ' + getCountryName(code)">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-chip-row>
 
-        <input
-          matInput
-          class="country-search"
-          [placeholder]="'GUESTS_FILTERS.ALL_COUNTRIES' | translate"
-          [matChipInputFor]="countryChipGrid"
-          [matAutocomplete]="autoCountry"
-          [formControl]="countrySearchCtrl"
-        />
-      </mat-chip-grid>
+            <input
+              #countryInput
+              matInput
+              class="country-search"
+              [placeholder]="'GUESTS_FILTERS.ALL_COUNTRIES' | translate"
+              [matChipInputFor]="countryChipGrid"
+              [matAutocomplete]="autoCountry"
+              [formControl]="countrySearchCtrl"
+              (focus)="openCountryList()"
+            />
+          </mat-chip-grid>
 
-      <mat-autocomplete #autoCountry="matAutocomplete" (optionSelected)="onCountrySelected($event)">
-        <mat-option *ngFor="let country of filteredCountries" [value]="country.countryCode">
-          <span class="country-option">
-            <i [class]="country.countryCode | flag"></i>
-            <span>{{ getCountryName(country.countryCode) }}</span>
-          </span>
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
+          <mat-autocomplete #autoCountry="matAutocomplete" (optionSelected)="onCountrySelected($event)">
+            <mat-option
+              *ngFor="let country of filteredCountries"
+              [value]="country.countryCode"
+              (onSelectionChange)="$event.isUserInput && toggleCountry(country.countryCode)"
+            >
+              <div class="country-option">
+                <mat-checkbox
+                  [checked]="filtersForm.get('country')?.value?.includes(country.countryCode)"
+                  (click)="$event.stopPropagation()"
+                  (change)="toggleCountry(country.countryCode)"
+                  color="primary"
+                >
+                  <span class="country-flag">
+                    <i [class]="country.countryCode | flag"></i>
+                  </span>
 
-    <!-- GROUP TYPE -->
-    <mat-form-field appearance="outline">
-      <mat-label>{{ 'GUESTS_FILTERS.GROUP_TYPE' | translate }}</mat-label>
-      <mat-icon class="material-symbols-outlined" matPrefix>groups</mat-icon>
+                  <span>{{ getCountryName(country.countryCode) }}</span>
+                </mat-checkbox>
+              </div>
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
 
-      <mat-select formControlName="groupType" multiple>
-        <mat-option value="solo">
-          <mat-icon class="material-symbols-outlined">person</mat-icon>
-          {{ 'GUESTS_FILTERS.SOLO' | translate }}
-        </mat-option>
+        <!-- GROUP TYPE -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'GUESTS_FILTERS.GROUP_TYPE' | translate }}</mat-label>
+          <mat-icon class="material-symbols-outlined" matPrefix>groups</mat-icon>
 
-        <mat-option value="couple">
-          <mat-icon class="material-symbols-outlined">favorite</mat-icon>
-          {{ 'GUESTS_FILTERS.COUPLE' | translate }}
-        </mat-option>
+          <mat-select formControlName="groupType" multiple>
+            <mat-option value="solo">
+              <mat-icon class="material-symbols-outlined">person</mat-icon>
+              {{ 'GUESTS_FILTERS.SOLO' | translate }}
+            </mat-option>
 
-        <mat-option value="friends">
-          <mat-icon class="material-symbols-outlined">group</mat-icon>
-          {{ 'GUESTS_FILTERS.FRIENDS' | translate }}
-        </mat-option>
+            <mat-option value="couple">
+              <mat-icon class="material-symbols-outlined">favorite</mat-icon>
+              {{ 'GUESTS_FILTERS.COUPLE' | translate }}
+            </mat-option>
 
-        <mat-option value="family">
-          <mat-icon class="material-symbols-outlined">family_restroom</mat-icon>
-          {{ 'GUESTS_FILTERS.FAMILY' | translate }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+            <mat-option value="friends">
+              <mat-icon class="material-symbols-outlined">group</mat-icon>
+              {{ 'GUESTS_FILTERS.FRIENDS' | translate }}
+            </mat-option>
 
-    <!-- FROM -->
-    <mat-form-field appearance="outline">
-      <mat-label>{{ 'GUESTS_FILTERS.VISITED_FROM' | translate }}</mat-label>
-      <mat-icon class="material-symbols-outlined" matPrefix>calendar_month</mat-icon>
+            <mat-option value="family">
+              <mat-icon class="material-symbols-outlined">family_restroom</mat-icon>
+              {{ 'GUESTS_FILTERS.FAMILY' | translate }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
 
-      <input
-        matInput
-        [matDatepicker]="fromPicker"
-        formControlName="from"
-        [attr.aria-label]="'GUESTS_FILTERS.VISITED_FROM' | translate"
-      />
-      <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
-      <mat-datepicker #fromPicker></mat-datepicker>
-    </mat-form-field>
+      <div>
+        <!-- FROM -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'GUESTS_FILTERS.VISITED_FROM' | translate }}</mat-label>
+          <mat-icon class="material-symbols-outlined" matPrefix>calendar_month</mat-icon>
 
-    <!-- TO -->
-    <mat-form-field appearance="outline">
-      <mat-label>{{ 'GUESTS_FILTERS.VISITED_TO' | translate }}</mat-label>
+          <input
+            matInput
+            [matDatepicker]="fromPicker"
+            formControlName="from"
+            [attr.aria-label]="'GUESTS_FILTERS.VISITED_FROM' | translate"
+          />
+          <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+          <mat-datepicker #fromPicker></mat-datepicker>
+        </mat-form-field>
+        <!-- TO -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'GUESTS_FILTERS.VISITED_TO' | translate }}</mat-label>
 
-      <mat-icon class="material-symbols-outlined" matPrefix>calendar_month</mat-icon>
-      <input
-        matInput
-        [matDatepicker]="toPicker"
-        formControlName="to"
-        [attr.aria-label]="'GUESTS_FILTERS.VISITED_TO' | translate"
-      />
-      <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
-      <mat-datepicker #toPicker></mat-datepicker>
-    </mat-form-field>
+          <mat-icon class="material-symbols-outlined" matPrefix>calendar_month</mat-icon>
+          <input
+            matInput
+            [matDatepicker]="toPicker"
+            formControlName="to"
+            [attr.aria-label]="'GUESTS_FILTERS.VISITED_TO' | translate"
+          />
+          <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+          <mat-datepicker #toPicker></mat-datepicker>
+        </mat-form-field>
 
-    <!-- FIRST TIME -->
-    <mat-form-field appearance="outline">
-      <mat-label>{{ 'GUESTS_FILTERS.FIRST_TIME' | translate }}</mat-label>
-      <mat-icon class="material-symbols-outlined" matPrefix>editor_choice</mat-icon>
-      <mat-select formControlName="isFirstTime">
-        <mat-option value="">
-          <mat-icon class="material-symbols-outlined">editor_choice</mat-icon>
-          {{ 'GUESTS_FILTERS.ALL' | translate }}</mat-option
-        >
-        <mat-option [value]="true">
-          <mat-icon class="material-symbols-outlined">check_circle</mat-icon>
-          {{ 'GUESTS_FILTERS.YES' | translate }}</mat-option
-        >
-        <mat-option [value]="false">
-          <mat-icon class="material-symbols-outlined">cancel</mat-icon>
-          {{ 'GUESTS_FILTERS.NO' | translate }}</mat-option
-        >
-      </mat-select>
-    </mat-form-field>
+        <!-- FIRST TIME -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'GUESTS_FILTERS.FIRST_TIME' | translate }}</mat-label>
+          <mat-icon class="material-symbols-outlined" matPrefix>editor_choice</mat-icon>
+          <mat-select formControlName="isFirstTime">
+            <mat-option value="">
+              <mat-icon class="material-symbols-outlined">editor_choice</mat-icon>
+              {{ 'GUESTS_FILTERS.ALL' | translate }}</mat-option
+            >
+            <mat-option [value]="true">
+              <mat-icon class="material-symbols-outlined">check_circle</mat-icon>
+              {{ 'GUESTS_FILTERS.YES' | translate }}</mat-option
+            >
+            <mat-option [value]="false">
+              <mat-icon class="material-symbols-outlined">cancel</mat-icon>
+              {{ 'GUESTS_FILTERS.NO' | translate }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
 
-    <!-- HANG OUT -->
-    <mat-form-field appearance="outline">
-      <mat-label>{{ 'GUESTS_FILTERS.HANG_OUT' | translate }}</mat-label>
-      <mat-icon class="material-symbols-outlined" matPrefix>door_open</mat-icon>
-      <mat-select formControlName="hangOut">
-        <mat-option value="">
-          <mat-icon class="material-symbols-outlined">door_open</mat-icon
-          >{{ 'GUESTS_FILTERS.ALL' | translate }}</mat-option
-        >
-        <mat-option [value]="true">
-          <mat-icon class="material-symbols-outlined">check_circle</mat-icon
-          >{{ 'GUESTS_FILTERS.YES' | translate }}</mat-option
-        >
-        <mat-option [value]="false">
-          <mat-icon class="material-symbols-outlined">cancel</mat-icon>{{ 'GUESTS_FILTERS.NO' | translate }}</mat-option
-        >
-      </mat-select>
-    </mat-form-field>
+        <!-- HANG OUT -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'GUESTS_FILTERS.HANG_OUT' | translate }}</mat-label>
+          <mat-icon class="material-symbols-outlined" matPrefix>door_open</mat-icon>
+          <mat-select formControlName="hangOut">
+            <mat-option value="">
+              <mat-icon class="material-symbols-outlined">door_open</mat-icon
+              >{{ 'GUESTS_FILTERS.ALL' | translate }}</mat-option
+            >
+            <mat-option [value]="true">
+              <mat-icon class="material-symbols-outlined">check_circle</mat-icon
+              >{{ 'GUESTS_FILTERS.YES' | translate }}</mat-option
+            >
+            <mat-option [value]="false">
+              <mat-icon class="material-symbols-outlined">cancel</mat-icon
+              >{{ 'GUESTS_FILTERS.NO' | translate }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
 
-    <!-- AMBASSADOR -->
-    <mat-form-field appearance="outline">
-      <mat-label>{{ 'GUESTS_FILTERS.AMBASSADOR' | translate }}</mat-label>
-      <mat-icon class="material-symbols-outlined" matPrefix>badge</mat-icon>
-      <mat-select formControlName="ambassador">
-        <mat-option value="">
-          <mat-icon class="material-symbols-outlined">badge</mat-icon>{{ 'GUESTS_FILTERS.ALL' | translate }}</mat-option
-        >
-        <mat-option [value]="true">
-          <mat-icon class="material-symbols-outlined">check_circle</mat-icon
-          >{{ 'GUESTS_FILTERS.YES' | translate }}</mat-option
-        >
-        <mat-option [value]="false">
-          <mat-icon class="material-symbols-outlined">cancel</mat-icon>{{ 'GUESTS_FILTERS.NO' | translate }}</mat-option
-        >
-      </mat-select>
-    </mat-form-field>
+        <!-- AMBASSADOR -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'GUESTS_FILTERS.AMBASSADOR' | translate }}</mat-label>
+          <mat-icon class="material-symbols-outlined" matPrefix>badge</mat-icon>
+          <mat-select formControlName="ambassador">
+            <mat-option value="">
+              <mat-icon class="material-symbols-outlined">badge</mat-icon
+              >{{ 'GUESTS_FILTERS.ALL' | translate }}</mat-option
+            >
+            <mat-option [value]="true">
+              <mat-icon class="material-symbols-outlined">check_circle</mat-icon
+              >{{ 'GUESTS_FILTERS.YES' | translate }}</mat-option
+            >
+            <mat-option [value]="false">
+              <mat-icon class="material-symbols-outlined">cancel</mat-icon
+              >{{ 'GUESTS_FILTERS.NO' | translate }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
 
-    <!-- DID THEY REQUEST -->
-    <mat-form-field appearance="outline">
-      <mat-label>{{ 'GUESTS_FILTERS.DID_THEY_REQUEST' | translate }}</mat-label>
-      <mat-icon class="material-symbols-outlined" matPrefix>mark_email_unread</mat-icon>
-      <mat-select formControlName="didTheyReq">
-        <mat-option value="">
-          <mat-icon class="material-symbols-outlined">mark_email_unread</mat-icon
-          >{{ 'GUESTS_FILTERS.ALL' | translate }}</mat-option
-        >
-        <mat-option [value]="true">
-          <mat-icon class="material-symbols-outlined">check_circle</mat-icon
-          >{{ 'GUESTS_FILTERS.YES' | translate }}</mat-option
-        >
-        <mat-option [value]="false">
-          <mat-icon class="material-symbols-outlined">cancel</mat-icon>{{ 'GUESTS_FILTERS.NO' | translate }}</mat-option
-        >
-      </mat-select>
-    </mat-form-field>
+        <!-- DID THEY REQUEST -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'GUESTS_FILTERS.DID_THEY_REQUEST' | translate }}</mat-label>
+          <mat-icon class="material-symbols-outlined" matPrefix>mark_email_unread</mat-icon>
+          <mat-select formControlName="didTheyReq">
+            <mat-option value="">
+              <mat-icon class="material-symbols-outlined">mark_email_unread</mat-icon
+              >{{ 'GUESTS_FILTERS.ALL' | translate }}</mat-option
+            >
+            <mat-option [value]="true">
+              <mat-icon class="material-symbols-outlined">check_circle</mat-icon
+              >{{ 'GUESTS_FILTERS.YES' | translate }}</mat-option
+            >
+            <mat-option [value]="false">
+              <mat-icon class="material-symbols-outlined">cancel</mat-icon
+              >{{ 'GUESTS_FILTERS.NO' | translate }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </section>
 
     <!-- ACTIONS -->
     <div class="filters-actions">

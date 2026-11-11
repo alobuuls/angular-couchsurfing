@@ -1,11 +1,10 @@
-import { Component } from '@angular/core';
-import { ElementRef, HostListener, inject, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, OnInit } from '@angular/core';
 
 /* Services */
 import { ThemePalette, ThemeService } from '@core/services/theme.service';
 import { LanguageService } from '@core/services/language.service';
 
-// Interfaces
+/* Interfaces */
 import { Language } from '@type/word.types';
 
 @Component({
@@ -14,24 +13,19 @@ import { Language } from '@type/word.types';
   styleUrls: ['./menu.component.css'],
 })
 export class MenuComponent implements OnInit {
-  private readonly _theme = inject(ThemeService);
-  private readonly _language = inject(LanguageService);
-  private readonly ctnPaletteTheme = inject(ElementRef);
+  // Navigation
+  showNabBar = false;
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    const clickedInside = this.ctnPaletteTheme.nativeElement.contains(event.target);
+  // Independent dropdown selectors
+  showThemeSelection = false;
+  showLanguageSelection = false;
 
-    if (!clickedInside) {
-      this.showThemeSelection = false;
-      this.showLanguageSelection = false;
-    }
-  }
-
-  showThemeSelection: boolean = false;
-  showLanguageSelection: boolean = false;
-
-  btnsLang: { selectedLang: Language; flag: string; txt: string }[] = [
+  // Available languages
+  readonly btnsLang: {
+    selectedLang: Language;
+    flag: string;
+    txt: string;
+  }[] = [
     { selectedLang: 'es', flag: 'es', txt: 'Español' },
     { selectedLang: 'en', flag: 'us', txt: 'English' },
     { selectedLang: 'fr', flag: 'fr', txt: 'Français' },
@@ -46,9 +40,68 @@ export class MenuComponent implements OnInit {
     { selectedLang: 'he', flag: 'il', txt: 'עברית' },
   ];
 
+  // Scroll navigation
+  isHeaderVisible = true;
+  private lastScrollPosition = 0;
+  private readonly scrollThreshold = 8;
+
+  // ==========================================
+  // SCROLL NAVIGATION
+  // ==========================================
+
+  @HostListener('window:scroll')
+  onWindowScroll(): void {
+    const currentScrollPosition = window.scrollY || document.documentElement.scrollTop;
+
+    // Siempre mostrar el header al llegar arriba
+    if (currentScrollPosition <= 0) {
+      this.isHeaderVisible = true;
+      this.lastScrollPosition = 0;
+      return;
+    }
+
+    // No ocultar el header mientras el menú lateral esté abierto
+    if (this.showNabBar) {
+      this.lastScrollPosition = currentScrollPosition;
+      return;
+    }
+
+    const difference = currentScrollPosition - this.lastScrollPosition;
+
+    // Ignorar movimientos pequeños
+    if (Math.abs(difference) < this.scrollThreshold) {
+      return;
+    }
+
+    if (difference > 0) {
+      // Scroll hacia abajo
+      this.isHeaderVisible = false;
+      this.closeSelectors();
+    } else {
+      // Scroll hacia arriba
+      this.isHeaderVisible = true;
+    }
+
+    this.lastScrollPosition = currentScrollPosition;
+  }
+
+  // Services
+  private readonly _theme = inject(ThemeService);
+  private readonly _language = inject(LanguageService);
+  private readonly elementRef = inject(ElementRef<HTMLElement>);
+
+  ngOnInit(): void {
+    this._language.initLanguage();
+  }
+
+  // ==========================================
+  // CURRENT SETTINGS
+  // ==========================================
+
   get currentPalette(): ThemePalette {
     return this._theme.palette;
   }
+
   get currentLanguage(): Language {
     return this._language.currentLanguage;
   }
@@ -61,12 +114,48 @@ export class MenuComponent implements OnInit {
     return this._theme.theme === 'light' ? 'Switch to dark theme' : 'Switch to light theme';
   }
 
-  ngOnInit(): void {
-    this._language.initLanguage();
+  // ==========================================
+  // NAVIGATION
+  // ==========================================
+
+  toogleNavBar(): void {
+    this.showNabBar = !this.showNabBar;
+
+    if (!this.showNabBar) {
+      this.closeSelectors();
+    }
+  }
+
+  // ==========================================
+  // DARK / LIGHT THEME
+  // ==========================================
+
+  toggleTheme(): void {
+    const newTheme = this._theme.theme === 'light' ? 'dark' : 'light';
+
+    this._theme.setTheme(newTheme);
+  }
+
+  // ==========================================
+  // COLOR PALETTE SELECTOR
+  // ==========================================
+
+  toggleThemeSelection(): void {
+    this.showThemeSelection = !this.showThemeSelection;
+    this.showLanguageSelection = false;
   }
 
   selectPalette(palette: ThemePalette): void {
     this._theme.setPalette(palette);
+    this.showThemeSelection = false;
+  }
+
+  // ==========================================
+  // LANGUAGE SELECTOR
+  // ==========================================
+
+  toggleLanguageSelection(): void {
+    this.showLanguageSelection = !this.showLanguageSelection;
     this.showThemeSelection = false;
   }
 
@@ -75,17 +164,29 @@ export class MenuComponent implements OnInit {
     this.showLanguageSelection = false;
   }
 
-  toggleLanguageSelection(): void {
-    this.showLanguageSelection = !this.showLanguageSelection;
+  // ==========================================
+  // CLOSE DROPDOWNS
+  // ==========================================
+
+  private closeSelectors(): void {
     this.showThemeSelection = false;
+    this.showLanguageSelection = false;
   }
 
-  toggleThemeSelection(): void {
-    this.showThemeSelection = !this.showThemeSelection;
+  // Click outside the component
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as Node;
+
+    if (!this.elementRef.nativeElement.contains(target)) {
+      this.closeSelectors();
+    }
   }
 
-  toggleTheme(): void {
-    const newTheme = this._theme.theme === 'light' ? 'dark' : 'light';
-    this._theme.setTheme(newTheme);
+  // Close everything with Escape
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    this.closeSelectors();
+    this.showNabBar = false;
   }
 }

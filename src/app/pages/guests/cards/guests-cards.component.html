@@ -379,11 +379,6 @@
                           <h4>{{ 'GUESTS_CARDS.PERSONAL_INFORMATION' | translate }}</h4>
 
                           <ul>
-                            <li *ngIf="member.fullName">
-                              <strong>{{ 'GUESTS_CARDS.FULL_NAME' | translate }}: </strong>
-                              {{ member.fullName }}
-                            </li>
-
                             <li *ngIf="member.birthDate">
                               <strong>{{ 'GUESTS_CARDS.BIRTH_DATE' | translate }}: </strong>
                               {{ formatDate(member.birthDate) }}

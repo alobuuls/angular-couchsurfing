@@ -8,19 +8,19 @@
 /* STICKY MONTH HEADER — GLASS EFFECT */
 .month-header {
   align-items: center;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  background: color-mix(in srgb, var(--color-surface) 75%, transparent);
-  border: 1px solid color-mix(in srgb, var(--color-primary) 15%, transparent);
+  backdrop-filter: blur(25px);
+  background-color: color-mix(in srgb, var(--color-surface) 75%, transparent);
   border-radius: 1rem;
   corner-shape: bevel;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  box-shadow:
+    0 0 0 1px inset color-mix(in srgb, var(--color-text) 15%, transparent),
+    0 4px 16px color-mix(in srgb, var(--color-text) 10%, transparent);
   padding: 1rem;
   position: sticky;
   top: 0;
   z-index: 5;
   transition:
-    background 0.3s ease,
+    background-color 0.3s ease,
     box-shadow 0.3s ease;
   margin: 2.5rem 0;
   display: flex;
@@ -44,7 +44,7 @@
   color: var(--color-secondary);
   font-size: 3.5rem;
   font-weight: 700;
-  margin: 0;
+  text-shadow: 1px 1px 1px color-mix(in srgb, var(--color-text) 70%, transparent);
 }
 
 .year-stats {
@@ -97,7 +97,7 @@
 /* CARDS GRID */
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
   gap: 3rem 1.5rem;
   max-width: 100%;
   margin: 2rem auto;
@@ -504,7 +504,9 @@
   &:not(.group-preview):has(.person.has-gift) {
     &:before,
     &:after {
-      content: '🎁';
+      content: '\e8b1';
+      color: var(--color-primary-light);
+      font-family: 'Material Symbols Outlined';
       position: absolute;
       font-size: 1rem;
       opacity: 0.35;
@@ -536,7 +538,9 @@
 
       &:before,
       &:after {
-        content: '🎁';
+        content: '\e8b1';
+        color: var(--color-primary-light);
+        font-family: 'Material Symbols Outlined';
         position: absolute;
         inset-block-start: 0;
         font-size: 1rem;
@@ -611,7 +615,7 @@
 
 /* OPEN BOOK */
 .book {
-  background: var(--color-surface);
+  background-color: var(--color-surface);
   border-radius: 0.75rem;
   box-shadow: 0 5px 18px color-mix(in srgb, var(--color-text) 12%, transparent);
   display: grid;
@@ -630,11 +634,11 @@
   inset-inline-start: 50%;
   width: 2px;
   margin-inline-start: -1px;
-  background: color-mix(in srgb, var(--color-primary) 25%, var(--color-surface));
+  background-color: color-mix(in srgb, var(--color-primary) 25%, var(--color-surface));
 }
 
 .book-page {
-  background: color-mix(in srgb, var(--color-primary) 3%, var(--color-surface));
+  background-color: color-mix(in srgb, var(--color-primary) 3%, var(--color-surface));
   box-sizing: border-box;
   min-width: 0;
   padding: 1.25rem;
@@ -681,12 +685,12 @@
 /* GROUP CARDS */
 .card.group-card {
   width: 100%;
-  max-width: 720px;
+  /* max-width: 720px; */
 }
 
 /* EXPANDED GROUP CARDS */
 .card.group-card.expanded {
-  max-width: 900px;
+  /* max-width: 900px; */
 }
 
 /* SKELETON PERSON */
@@ -732,13 +736,13 @@
 }
 
 .card.five-stars .layover::before {
-  background: linear-gradient(135deg, color-mix(in srgb, #d4af37 12%, transparent), transparent);
+  background-image: linear-gradient(135deg, color-mix(in srgb, #d4af37 12%, transparent), transparent);
 }
 
 /* AMBASSADOR BADGE */
 .ambassador-badge {
   align-items: center;
-  background: var(--color-surface);
+  background-color: var(--color-surface);
   border: 1px solid var(--color-accent);
   border-radius: 50%;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
@@ -762,7 +766,7 @@
 /* FIRST TIME BADGE */
 .first-time-badge {
   align-items: center;
-  background: var(--color-surface);
+  background-color: var(--color-surface);
   border: 1px solid var(--color-primary);
   border-radius: 50%;
   bottom: 1rem;
@@ -833,7 +837,7 @@
 
   &::before,
   &::after {
-    background: color-mix(in srgb, var(--color-primary) 30%, transparent);
+    background-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
     content: '';
     flex: 1;
     height: 1px;
