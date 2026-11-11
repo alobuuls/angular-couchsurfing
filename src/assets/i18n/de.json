@@ -278,7 +278,10 @@
       "CONFIRM_DESCRIPTION": "Nicht ausgewählte Gäste werden beim Speichern der Änderungen gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
       "CONFIRM": "Ja, Änderungen bestätigen"
     },
-    "ADD_GUEST": "Weiteren Gast hinzufügen",
+    "ADD_GUEST": {
+      "ADD_ANOTHER_GUEST": "Weiteren Gast hinzufügen",
+      "SUCCESS": "Ein weiteres Gästeformular wurde hinzugefügt"
+    },
     "CREATE": "Erstellen",
     "UPDATE": "Aktualisieren",
     "MAX_MEMBERS": "Du kannst maximal 5 Mitglieder hinzufügen",
@@ -287,7 +290,9 @@
       "DESCRIPTION": "Möchtest du diesen Gast wirklich aus dem Formular entfernen?",
       "CONFIRM": "Ja, entfernen"
     },
-    "GUEST_NUMBER": "GAST Nr. {{number}}"
+    "GUEST_NUMBER": "Gast Nr. {{number}}",
+    "FORM_COUNT_SINGULAR": "1 Gästeformular",
+    "FORM_COUNT": "{{count}} Gästeformulare"
   },
   "TRIP_FORM": {
     "TITLE": "Reiseinformationen",

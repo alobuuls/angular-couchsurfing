@@ -278,7 +278,10 @@
       "CONFIRM_DESCRIPTION": "Les invités non sélectionnés seront supprimés lors de l'enregistrement des modifications. Cette action est irréversible.",
       "CONFIRM": "Oui, confirmer les modifications"
     },
-    "ADD_GUEST": "Ajouter un autre invité",
+    "ADD_GUEST": {
+      "ADD_ANOTHER_GUEST": "Ajouter un autre invité",
+      "SUCCESS": "Un autre formulaire d'invité a été ajouté"
+    },
     "CREATE": "Créer",
     "UPDATE": "Mettre à jour",
     "MAX_MEMBERS": "Puedes añadir un máximo de 5 miembros",
@@ -287,7 +290,9 @@
       "DESCRIPTION": "¿Estás seguro de que deseas eliminar a este huésped del formulario?",
       "CONFIRM": "Sí, eliminar"
     },
-    "GUEST_NUMBER": "HUÉSPED N.º {{number}}"
+    "GUEST_NUMBER": "Invité n° {{number}}",
+    "FORM_COUNT_SINGULAR": "1 formulaire d'invité",
+    "FORM_COUNT": "{{count}} formulaires d'invité"
   },
   "TRIP_FORM": {
     "TITLE": "Informations sur le voyage",

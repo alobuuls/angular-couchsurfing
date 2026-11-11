@@ -53,6 +53,8 @@ export class GuestFormComponent implements OnInit {
   // Guest Number
   @Input() guestNumber?: number;
 
+  @Input() formItemId!: number;
+
   // Create Form
   formCreateGuest!: FormGroup;
 
