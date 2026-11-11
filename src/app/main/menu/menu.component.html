@@ -1,145 +1,165 @@
-<header id="menu-flex" class="menu-flex">
-  <nav class="menu">
-    <div class="logo-menu">
-      <a [routerLink]="['/']" title="CouchSurfing">
-        <span class="title-logo-menu">CouchSurfing</span>
-      </a>
+<header [class.active]="showNabBar" [class.header-hidden]="!isHeaderVisible && !showNabBar">
+  <div class="topbar">
+    <!-- LOGO -->
+    <a [routerLink]="['/']" class="logo-menu">
+      <span class="title-logo-menu">CouchSurfing</span>
+    </a>
 
-      <a href="javascript:void(0);" id="btn-menu" class="btn-menu">
-        <mat-icon
-          class="material-symbols-outlined"
-          aria-hidden="false"
-          aria-label="menu icon"
-          fontIcon="menu"
-        ></mat-icon>
-      </a>
-    </div>
-
-    <div id="links" class="links">
-      <!-- HOME -->
-      <a [routerLink]="['/home']" routerLinkActive="links-menu-active" class="links-menu">
-        <mat-icon
-          aria-hidden="false"
-          aria-label="home icon"
-          class="material-symbols-outlined"
-          fontIcon="home"
-        ></mat-icon>
-        {{ 'MENU.HOME' | translate }}
-      </a>
-
-      <!-- GUESTS -->
-      <a [routerLink]="['guests']" routerLinkActive="links-menu-active" class="links-menu">
-        <mat-icon
-          aria-hidden="false"
-          aria-label="guests icon"
-          class="material-symbols-outlined"
-          fontIcon="diversity_1"
-        ></mat-icon>
-        {{ 'MENU.GUESTS' | translate }}
-      </a>
-
-      <!-- HOSTED -->
-      <!-- <a [routerLink]="['hosted']" routerLinkActive="links-menu-active" class="links-menu">
-        <mat-icon
-          aria-hidden="false"
-          aria-label="hosted icon"
-          class="material-symbols-outlined"
-          fontIcon="gite"
-        ></mat-icon>
-        {{ 'MENU.HOSTED' | translate }}
-      </a> -->
-
-      <!-- PERSONAL -->
-      <!-- <a [routerLink]="['personal']" routerLinkActive="links-menu-active" class="links-menu">
-        <mat-icon
-          aria-hidden="false"
-          aria-label="personal icon"
-          class="material-symbols-outlined"
-          fontIcon="person"
-        ></mat-icon>
-        {{ 'MENU.PERSONAL' | translate }}
-      </a> -->
-
-      <!-- THEME -->
-      <button class="links-menu btn-theme" (click)="toggleTheme()" [attr.aria-label]="themeLabel">
-        <mat-icon class="material-symbols-outlined icon-theme" aria-hidden="true" [fontIcon]="themeIcon"></mat-icon>
+    <div class="topbar-controls">
+      <!-- DARK / LIGHT MODE -->
+      <button
+        type="button"
+        class="control-button btn-theme"
+        (click)="toggleTheme()"
+        [attr.aria-label]="themeLabel"
+        [title]="themeLabel"
+      >
+        <mat-icon class="material-symbols-outlined" [fontIcon]="themeIcon"></mat-icon>
       </button>
 
-      <!-- THEME SELECTION -->
+      <!-- COLOR PALETTE SELECTOR -->
       <div class="ctn-selection-theme">
-        <button class="links-menu btn-tint" aria-label="Select color palette" (click)="toggleThemeSelection()">
+        <button
+          type="button"
+          class="control-button btn-palette"
+          aria-label="Select color palette"
+          title="Select color palette"
+          [attr.aria-expanded]="showThemeSelection"
+          (click)="toggleThemeSelection()"
+        >
           <mat-icon
             class="material-symbols-outlined icon-palette"
             [class.active]="showThemeSelection"
-            aria-hidden="true"
             fontIcon="palette"
           ></mat-icon>
         </button>
 
-        <div class="tints" [class.active]="showThemeSelection">
-          <!-- Ocean Blue -->
+        <!-- PALETTE DROPDOWN -->
+        <div class="tints" [class.active]="showThemeSelection" [attr.aria-hidden]="!showThemeSelection">
           <button
+            type="button"
             class="btn-tint ocean"
             aria-label="Ocean Blue palette"
             title="Ocean Blue"
             [class.selected]="currentPalette === 'ocean'"
+            [attr.aria-pressed]="currentPalette === 'ocean'"
             (click)="selectPalette('ocean')"
           ></button>
 
-          <!-- Pink Blossom -->
           <button
+            type="button"
             class="btn-tint pink"
             aria-label="Pink Blossom palette"
             title="Pink Blossom"
             [class.selected]="currentPalette === 'pink'"
+            [attr.aria-pressed]="currentPalette === 'pink'"
             (click)="selectPalette('pink')"
           ></button>
 
-          <!-- Lavender Nomad -->
           <button
+            type="button"
             class="btn-tint lavender"
             aria-label="Lavender Nomad palette"
             title="Lavender Nomad"
             [class.selected]="currentPalette === 'lavender'"
+            [attr.aria-pressed]="currentPalette === 'lavender'"
             (click)="selectPalette('lavender')"
           ></button>
 
-          <!-- Coastal Nomad -->
           <button
+            type="button"
             class="btn-tint coastal"
             aria-label="Coastal Nomad palette"
             title="Coastal Nomad"
             [class.selected]="currentPalette === 'coastal'"
+            [attr.aria-pressed]="currentPalette === 'coastal'"
             (click)="selectPalette('coastal')"
           ></button>
         </div>
       </div>
 
-      <!-- LANGUAGE -->
+      <!-- LANGUAGE SELECTOR -->
       <div class="ctn-selection-language">
         <button
-          class="links-menu btn-language"
+          type="button"
+          class="control-button btn-language"
           aria-label="Select language"
           title="Select language"
+          [attr.aria-expanded]="showLanguageSelection"
           (click)="toggleLanguageSelection()"
         >
-          <mat-icon class="material-symbols-outlined" aria-hidden="true" fontIcon="language"></mat-icon>
+          <mat-icon class="material-symbols-outlined" fontIcon="language"></mat-icon>
 
           <span>{{ currentLanguage | uppercase }}</span>
+
+          <mat-icon class="material-symbols-outlined dropdown-arrow" fontIcon="expand_more"></mat-icon>
         </button>
 
-        <div class="languages" [class.active]="showLanguageSelection">
+        <!-- LANGUAGE DROPDOWN -->
+        <div class="languages" [class.active]="showLanguageSelection" [attr.aria-hidden]="!showLanguageSelection">
           <button
+            type="button"
             class="btn-language-option"
             [class.selected]="currentLanguage === btnLang.selectedLang"
+            [attr.aria-pressed]="currentLanguage === btnLang.selectedLang"
             (click)="selectLanguage(btnLang.selectedLang)"
             *ngFor="let btnLang of btnsLang"
           >
-            <span [ngClass]="'fi fi-' + btnLang.flag"></span>
-            {{ btnLang.txt }}
+            <span class="fi" [ngClass]="'fi-' + btnLang.flag"></span>
+
+            <span class="language-name">
+              {{ btnLang.txt }}
+            </span>
+
+            <mat-icon
+              *ngIf="currentLanguage === btnLang.selectedLang"
+              class="material-symbols-outlined selected-icon"
+              fontIcon="check"
+            ></mat-icon>
           </button>
         </div>
       </div>
+
+      <!-- HAMBURGER BUTTON -->
+      <button
+        type="button"
+        class="hamburger-button"
+        (click)="toogleNavBar()"
+        [attr.aria-label]="showNabBar ? 'Close navigation menu' : 'Open navigation menu'"
+        [attr.aria-expanded]="showNabBar"
+      >
+        <mat-icon class="material-symbols-outlined" [fontIcon]="showNabBar ? 'close' : 'menu'"></mat-icon>
+      </button>
     </div>
-  </nav>
+  </div>
 </header>
+
+<!-- OVERLAY -->
+<div class="overlay" [class.active]="showNabBar" (click)="toogleNavBar()"></div>
+
+<!-- SIDE NAVIGATION MENU -->
+<nav class="menu" [class.active]="showNabBar" [attr.aria-hidden]="!showNabBar">
+  <!-- CLOSE BUTTON -->
+  <div class="ctn-btn-menu-close">
+    <button type="button" class="btn-menu" aria-label="Close menu" (click)="toogleNavBar()">
+      <mat-icon class="material-symbols-outlined" fontIcon="close"></mat-icon>
+    </button>
+  </div>
+
+  <!-- NAVIGATION LINKS -->
+  <ul (click)="toogleNavBar()">
+    <li routerLinkActive="active">
+      <a [routerLink]="['/home']">
+        <mat-icon fontIcon="home"></mat-icon>
+        {{ 'MENU.HOME' | translate }}
+      </a>
+    </li>
+
+    <li routerLinkActive="active">
+      <a [routerLink]="['/guests']">
+        <mat-icon fontIcon="diversity_1"></mat-icon>
+        {{ 'MENU.GUESTS' | translate }}
+      </a>
+    </li>
+  </ul>
+</nav>
