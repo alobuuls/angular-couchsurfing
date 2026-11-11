@@ -277,7 +277,10 @@
       "CONFIRM_DESCRIPTION": "האורחים שלא נבחרו יימחקו בעת שמירת השינויים. לא ניתן לבטל פעולה זו.",
       "CONFIRM": "כן, אישור השינויים"
     },
-    "ADD_GUEST": "הוספת אורח נוסף",
+    "ADD_GUEST": {
+      "ADD_ANOTHER_GUEST": "הוספת אורח נוסף",
+      "SUCCESS": "נוסף טופס נוסף עבור אורח"
+    },
     "CREATE": "יצירה",
     "UPDATE": "עדכון",
     "MAX_MEMBERS": "ניתן להוסיף עד 5 חברים",
@@ -286,7 +289,9 @@
       "DESCRIPTION": "האם ברצונך להסיר את האורח הזה מהטופס?",
       "CONFIRM": "כן, הסר"
     },
-    "GUEST_NUMBER": "אורח מס׳ {{number}}"
+    "GUEST_NUMBER": "אורח מס׳ {{number}}",
+    "FORM_COUNT_SINGULAR": "טופס אורח אחד",
+    "FORM_COUNT": "{{count}} טפסי אורחים"
   },
   "TRIP_FORM": {
     "TITLE": "פרטי הנסיעה",

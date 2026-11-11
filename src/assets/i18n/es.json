@@ -279,7 +279,10 @@
       "CONFIRM_DESCRIPTION": "Los huéspedes no seleccionados serán eliminados al guardar los cambios. Esta acción no se puede deshacer.",
       "CONFIRM": "Sí, confirmar cambios"
     },
-    "ADD_GUEST": "Añadir otro huésped",
+    "ADD_GUEST": {
+      "ADD_ANOTHER_GUEST": "Añadir otro huésped",
+      "SUCCESS": "Se ha añadido otro formulario de huésped"
+    },
     "CREATE": "Crear",
     "UPDATE": "Actualizar",
     "MAX_MEMBERS": "Puedes añadir un máximo de 5 miembros",
@@ -288,7 +291,9 @@
       "DESCRIPTION": "¿Estás seguro de que deseas eliminar a este huésped del formulario?",
       "CONFIRM": "Sí, eliminar"
     },
-    "GUEST_NUMBER": "HUÉSPED N.º {{number}}"
+    "GUEST_NUMBER": "Huésped n.º {{number}}",
+    "FORM_COUNT_SINGULAR": "1 formulario de huésped",
+    "FORM_COUNT": "{{count}} formularios de huésped"
   },
   "TRIP_FORM": {
     "TITLE": "Información del viaje",

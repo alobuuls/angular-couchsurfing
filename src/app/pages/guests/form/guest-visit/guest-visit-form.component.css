@@ -24,54 +24,50 @@
   gap: 1.5rem;
 }
 
-/* GUEST FORM SOLO */
-.guest-forms-grid.single-guest {
-  grid-template-columns: 1fr;
-}
-
-/* GUEST FORMS COUPLE */
-.guest-forms-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
-  align-items: start;
-}
-
-.guest-forms-grid app-guest-form {
-  min-width: 0;
+/* GUEST FORMS LAYOUT */
+.guest-forms-layout {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-}
-
-/* GUEST FORMS - FRIENDS / FAMILY */
-.guest-forms-slider-layout {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
-  align-items: start;
-}
-
-.guest-form-primary,
-.guest-slider-panel {
   min-width: 0;
-  width: 100%;
+  gap: 12px;
 }
 
-.guest-slider-panel {
-  position: relative;
+/* SOLO */
+.guest-forms-layout.single-guest {
+  .guest-slider-item {
+    flex: 0 0 100%;
+  }
+}
+
+.guest-slider-item app-guest-form {
+  display: block;
+  width: 100%;
 }
 
 /* SLIDER CONTROLS */
 .guest-slider-controls {
   display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-bottom: 10px;
+  justify-content: space-around;
+}
+
+.guest-slider-controls button {
+  background-color: var(--color-primary-light);
+  color: var(--color-surface);
+  border: 2px solid var(--color-primary);
+}
+
+.guest-slider-controls button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed !important;
+  filter: grayscale(0.5);
 }
 
 /* SLIDER TRACK */
 .guest-slider-track {
   display: flex;
   width: 100%;
+  min-width: 0;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
@@ -83,15 +79,38 @@
   display: none;
 }
 
+/* TWO GUEST FORMS PER PAGE */
 .guest-slider-item {
-  flex: 0 0 100%;
+  flex: 0 0 50%;
   min-width: 0;
+  padding: 0 10px;
   scroll-snap-align: start;
 }
 
 .guest-slider-item app-guest-form {
   display: block;
   width: 100%;
+}
+
+.guest-forms-counter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  corner-shape: scoop;
+  padding: 0.65rem 1.2rem;
+  margin: 0 auto;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  color: var(--color-primary);
+  font-weight: 600;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-text) 8%, transparent);
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
 }
 
 #btn-create-guest {
@@ -155,8 +174,14 @@
 
 /* RESPONSIVE */
 @media (max-width: 900px) {
-  .guest-forms-grid,
-  .guest-forms-slider-layout {
-    grid-template-columns: 1fr;
+  .guest-slider-item {
+    padding: 0 6px;
+  }
+}
+
+@media (max-width: 600px) {
+  .guest-slider-item {
+    flex-basis: 100%;
+    padding: 0;
   }
 }

@@ -278,7 +278,10 @@
       "CONFIRM_DESCRIPTION": "Невыбранные гости будут удалены при сохранении изменений. Это действие нельзя отменить.",
       "CONFIRM": "Да, подтвердить изменения"
     },
-    "ADD_GUEST": "Добавить ещё одного гостя",
+    "ADD_GUEST": {
+      "ADD_ANOTHER_GUEST": "Добавить ещё одного гостя",
+      "SUCCESS": "Добавлена ещё одна форма гостя"
+    },
     "CREATE": "Создать",
     "UPDATE": "Обновить",
     "MAX_MEMBERS": "Você pode adicionar no máximo 5 membros",
@@ -287,7 +290,9 @@
       "DESCRIPTION": "Tem certeza de que deseja remover este hóspede do formulário?",
       "CONFIRM": "Sim, remover"
     },
-    "GUEST_NUMBER": "HÓSPEDE Nº {{number}}"
+    "GUEST_NUMBER": "Гость № {{number}}",
+    "FORM_COUNT_SINGULAR": "1 анкета гостя",
+    "FORM_COUNT": "{{count}} анкеты гостей"
   },
   "TRIP_FORM": {
     "TITLE": "Информация о поездке",

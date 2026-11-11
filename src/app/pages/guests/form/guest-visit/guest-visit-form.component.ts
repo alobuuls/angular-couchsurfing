@@ -28,6 +28,10 @@ export class GuestsFormComponent implements OnChanges {
   @ViewChildren(GuestFormComponent)
   guestForms!: QueryList<GuestFormComponent>;
 
+  // Guest slider controls
+  canScrollPrev = false;
+  canScrollNext = false;
+
   @Output() submitForm = new EventEmitter<IGuestsFormSubmit>();
 
   @Input() guest?: IGuestDetail;
@@ -107,22 +111,18 @@ export class GuestsFormComponent implements OnChanges {
     // Check if the new type requires removing members
     if (this.guestFormItems.length > requiredForms) {
       // Check only the forms that will be removed
-      const formsToRemove = this.guestForms?.toArray().slice(requiredForms);
-      const hasData = formsToRemove?.some(form => form.hasFormData()) ?? false;
 
-      // Remove extra empty forms without showing confirmation
-      if (!hasData) {
-        this.guestFormItems = this.guestFormItems.slice(0, requiredForms);
-        this.selectedGroupType = type;
-        this.formsToShow = this.guestFormItems.length;
+      const formsToRemove = this.guestForms?.toArray().slice(requiredForms);
+
+      const hasDataToRemove = formsToRemove?.some(form => form.hasFormData()) ?? false;
+
+      if (hasDataToRemove) {
+        this.reduceGroup(type, requiredForms);
         return;
       }
 
-      this.reduceGroup(type, requiredForms);
-      return;
+      this.guestFormItems = this.guestFormItems.slice(0, requiredForms);
     }
-
-    this.selectedGroupType = type;
 
     // Add missing forms without recreating existing ones
     while (this.guestFormItems.length < requiredForms) {
@@ -131,17 +131,18 @@ export class GuestsFormComponent implements OnChanges {
       });
     }
 
+    this.selectedGroupType = type;
     this.formsToShow = this.guestFormItems.length;
+
+    setTimeout(() => this.updateSliderControls());
   }
 
   submit(): void {
     if (!this.selectedGroupType) return;
 
-    // 1: Marcar Trip Form como touched
     this.tripFormComponent.formTrip.markAllAsTouched();
     this.tripFormComponent.formTrip.updateValueAndValidity();
 
-    // 2 Marcar todos los Guest Forms como touched
     const guestForms = this.guestForms.toArray();
 
     guestForms.forEach(form => {
@@ -149,13 +150,11 @@ export class GuestsFormComponent implements OnChanges {
       form.formCreateGuest.updateValueAndValidity();
     });
 
-    // 3 Verificar si Trip es inválido
     if (this.tripFormComponent.formTrip.invalid) {
       this.tripFormComponent.scrollToFirstInvalidControl();
       return;
     }
 
-    // 4 Verificar si algún Guest Form es inválido
     const firstInvalidForm = guestForms.find(form => form.formCreateGuest.invalid);
 
     if (firstInvalidForm) {
@@ -163,11 +162,14 @@ export class GuestsFormComponent implements OnChanges {
       return;
     }
 
-    // 5 Todo es válido
     const trip = this.tripFormComponent.getFormValue();
     const guests = guestForms.map(form => form.getFormValue());
 
-    this.submitForm.emit({ groupType: this.selectedGroupType, trip, guests });
+    this.submitForm.emit({
+      groupType: this.selectedGroupType,
+      trip,
+      guests,
+    });
   }
 
   addGuestForm(): void {
@@ -184,6 +186,25 @@ export class GuestsFormComponent implements OnChanges {
     });
 
     this.formsToShow = this.guestFormItems.length;
+
+    this._alerts.showToast({
+      icon: 'success',
+      title: this._translate.instant('GUESTS_FORM.ADD_GUEST.SUCCESS'),
+    });
+
+    // Wait until Angular renders the new guest form.
+    setTimeout(() => {
+      const slider = this.guestSlider?.nativeElement;
+
+      if (!slider) return;
+
+      slider.scrollTo({
+        left: slider.scrollWidth - slider.clientWidth,
+        behavior: 'smooth',
+      });
+
+      this.updateSliderControls();
+    });
   }
 
   async removeGuestForm(id: number): Promise<void> {
@@ -210,12 +231,17 @@ export class GuestsFormComponent implements OnChanges {
       this.selectedGroupType = 'solo';
     }
     this.formsToShow = this.guestFormItems.length;
+    setTimeout(() => this.updateSliderControls());
   }
 
   private async reduceGroup(type: 'solo' | 'couple' | 'friends' | 'family', requiredForms: number): Promise<void> {
     const isSolo = type === 'solo';
     const inputType = isSolo ? 'radio' : 'checkbox';
     const inputName = isSolo ? 'guest-selection-solo' : 'guest-selection';
+
+    const minSelections = 1;
+    const maxSelections = isSolo ? 1 : requiredForms;
+
     // Build the member selection list
     const html = this.guestFormItems
       .map(
@@ -226,7 +252,9 @@ export class GuestsFormComponent implements OnChanges {
           name="${inputName}"
           value="${item.id}"
         />
-        Guest #${index + 1}
+        ${this._translate.instant('GUESTS_FORM.GUEST_NUMBER', {
+          number: index + 1,
+        })}
       </label>
     `
       )
@@ -236,9 +264,7 @@ export class GuestsFormComponent implements OnChanges {
     const selection = await this._alerts.showAlert({
       title: this._translate.instant('GUESTS_FORM.CHANGE_TYPE.SELECT_TITLE'),
       html: `
-      <p>${this._translate.instant('GUESTS_FORM.CHANGE_TYPE.SELECT_DESCRIPTION', {
-        count: requiredForms,
-      })}</p>
+      <p>${this._translate.instant('GUESTS_FORM.CHANGE_TYPE.SELECT_DESCRIPTION', { count: isSolo ? 1 : '1 o 2' })}</p>
       <div class="guest-selection-list">${html}</div>
     `,
       icon: 'question',
@@ -247,16 +273,19 @@ export class GuestsFormComponent implements OnChanges {
       opts: {
         didOpen: () => {
           const confirmButton = Swal.getConfirmButton();
+
           const inputs = Swal.getHtmlContainer()?.querySelectorAll<HTMLInputElement>(`input[name="${inputName}"]`);
 
           if (confirmButton) confirmButton.disabled = true;
 
           inputs?.forEach(input => {
             input.addEventListener('change', () => {
-              const selected = Swal.getHtmlContainer()?.querySelectorAll(`input[name="${inputName}"]:checked`);
+              const selected = Swal.getHtmlContainer()?.querySelectorAll<HTMLInputElement>(`input[name="${inputName}"]:checked`);
+
+              const selectedCount = selected?.length ?? 0;
 
               if (confirmButton) {
-                confirmButton.disabled = selected?.length !== requiredForms;
+                confirmButton.disabled = selectedCount < minSelections || selectedCount > maxSelections;
               }
             });
           });
@@ -269,13 +298,18 @@ export class GuestsFormComponent implements OnChanges {
       },
     });
 
-    // Keep the current state if selection is cancelled
-    if (!selection.isConfirmed || !selection.value) {
+    // Keep current state if selection is cancelled
+    if (!selection.isConfirmed || !Array.isArray(selection.value)) {
       this.restoreGroupTypeSelection();
       return;
     }
 
     const selectedIds = selection.value as number[];
+
+    if (selectedIds.length < minSelections || selectedIds.length > maxSelections) {
+      this.restoreGroupTypeSelection();
+      return;
+    }
 
     // Second confirmation: Confirm member removal
     const confirmation = await this._alerts.showAlert({
@@ -286,16 +320,38 @@ export class GuestsFormComponent implements OnChanges {
       cancelText: this._translate.instant('GUESTS_FORM.CHANGE_TYPE.CANCEL'),
     });
 
-    // Keep the current state if confirmation is cancelled
+    // Keep current state if confirmation is cancelled
     if (!confirmation.isConfirmed) {
       this.restoreGroupTypeSelection();
       return;
     }
 
-    // Keep only the selected members
+    // Keep only selected members
     this.guestFormItems = this.guestFormItems.filter(item => selectedIds.includes(item.id));
+
+    // If only one member was selected for Couple,
+    // create a second empty guest form
+    if (type === 'couple' && this.guestFormItems.length === 1) {
+      this.guestFormItems.push({
+        id: this.nextGuestFormId++,
+      });
+    }
+
     this.selectedGroupType = type;
     this.formsToShow = this.guestFormItems.length;
+
+    setTimeout(() => {
+      const slider = this.guestSlider?.nativeElement;
+
+      if (slider) {
+        slider.scrollTo({
+          left: 0,
+          behavior: 'smooth',
+        });
+      }
+
+      this.updateSliderControls();
+    });
   }
 
   // Restore the previous radio selection when the type change is cancelled
@@ -314,5 +370,19 @@ export class GuestsFormComponent implements OnChanges {
       left: direction === 'next' ? slider.clientWidth : -slider.clientWidth,
       behavior: 'smooth',
     });
+  }
+
+  updateSliderControls(): void {
+    const slider = this.guestSlider?.nativeElement;
+
+    if (!slider) {
+      this.canScrollPrev = false;
+      this.canScrollNext = false;
+      return;
+    }
+
+    this.canScrollPrev = slider.scrollLeft > 1;
+
+    this.canScrollNext = slider.scrollLeft + slider.clientWidth < slider.scrollWidth - 1;
   }
 }

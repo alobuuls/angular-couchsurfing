@@ -31,7 +31,7 @@
   mat-stroked-button
   (click)="addGuestForm()"
 >
-  {{ 'GUESTS_FORM.ADD_GUEST' | translate }}
+  {{ 'GUESTS_FORM.ADD_GUEST.ADD_ANOTHER_GUEST' | translate }}
 </button>
 
 <!-- Form -->
@@ -40,65 +40,45 @@
   <app-trip-form [trip]="guest || group?.[0]"></app-trip-form>
 
   <!-- Guests -->
-  <ng-container *ngIf="guestFormItems.length <= 2; else multipleGuestsLayout">
-    <!-- Solo / Couple -->
-    <div class="guest-forms-grid" [class.single-guest]="guestFormItems.length === 1">
-      <app-guest-form
-        *ngFor="let item of guestFormItems; let i = index; trackBy: trackByGuestForm"
-        [guest]="item.guest"
-        [guestNumber]="selectedGroupType !== 'solo' ? i + 1 : undefined"
-        [selectedGroupType]="selectedGroupType"
-        [showRemoveButton]="selectedGroupType !== 'solo'"
-        (remove)="removeGuestForm(item.id)"
-      ></app-guest-form>
-    </div>
-  </ng-container>
+  <div class="guest-forms-layout" [class.single-guest]="guestFormItems.length === 1">
+    <!-- Guest Forms Counter -->
+    <div class="guest-forms-counter">
+      <mat-icon>groups</mat-icon>
 
-  <!-- Friends / Family: More than 2 guests -->
-  <ng-template #multipleGuestsLayout>
-    <div class="guest-forms-slider-layout">
-      <!-- First Guest -->
-      <div class="guest-form-primary">
+      <span>
+        {{
+          guestFormItems.length === 1
+            ? ('GUESTS_FORM.FORM_COUNT_SINGULAR' | translate)
+            : ('GUESTS_FORM.FORM_COUNT' | translate: { count: guestFormItems.length })
+        }}
+      </span>
+    </div>
+
+    <!-- Slider Controls -->
+    <div class="guest-slider-controls" *ngIf="guestFormItems.length > 2">
+      <button type="button" mat-icon-button [disabled]="!canScrollPrev" (click)="scrollGuestSlider('prev')">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+
+      <button type="button" mat-icon-button [disabled]="!canScrollNext" (click)="scrollGuestSlider('next')">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+
+    <!-- Guest Forms Slider -->
+    <div #guestSlider class="guest-slider-track" (scroll)="updateSliderControls()">
+      <div class="guest-slider-item" *ngFor="let item of guestFormItems; let i = index; trackBy: trackByGuestForm">
         <app-guest-form
-          [guest]="guestFormItems[0].guest"
-          [guestNumber]="1"
+          [guest]="item.guest"
+          [formItemId]="item.id"
+          [guestNumber]="selectedGroupType !== 'solo' ? i + 1 : undefined"
           [selectedGroupType]="selectedGroupType"
-          [showRemoveButton]="true"
-          (remove)="removeGuestForm(guestFormItems[0].id)"
+          [showRemoveButton]="guestFormItems.length > 1"
+          (remove)="removeGuestForm(item.id)"
         ></app-guest-form>
       </div>
-
-      <!-- Remaining Guests Slider -->
-      <div class="guest-slider-panel">
-        <!-- Slider Navigation -->
-        <div class="guest-slider-controls">
-          <button type="button" mat-icon-button aria-label="Previous guest" (click)="scrollGuestSlider('prev')">
-            <mat-icon>chevron_left</mat-icon>
-          </button>
-
-          <button type="button" mat-icon-button aria-label="Next guest" (click)="scrollGuestSlider('next')">
-            <mat-icon>chevron_right</mat-icon>
-          </button>
-        </div>
-
-        <!-- Slider -->
-        <div #guestSlider class="guest-slider-track">
-          <div
-            class="guest-slider-item"
-            *ngFor="let item of guestFormItems.slice(1); let i = index; trackBy: trackByGuestForm"
-          >
-            <app-guest-form
-              [guest]="item.guest"
-              [guestNumber]="i + 2"
-              [selectedGroupType]="selectedGroupType"
-              [showRemoveButton]="true"
-              (remove)="removeGuestForm(item.id)"
-            ></app-guest-form>
-          </div>
-        </div>
-      </div>
     </div>
-  </ng-template>
+  </div>
 
   <!-- Submit -->
   <button id="btn-create-guest" type="submit" mat-raised-button [disabled]="wasFormSubmitted" (click)="submit()">
