@@ -34,6 +34,11 @@ import type { Feature, MultiPolygon, Polygon } from 'geojson';
 export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
   @Input() data: IGuestTableRow[] = [];
 
+  private selectedCountryIso3 = '';
+
+  // Each marker corresponds to a specific guest
+  private guestMarkerPeople = new Map<L.Marker, IGuestTableMember>();
+
   private readonly _map = inject(MapService);
   private readonly _language = inject(LanguageService);
   private readonly _translate = inject(TranslateService);
@@ -75,40 +80,14 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
   private resizeObserver?: ResizeObserver;
 
-  /**
-   * Guests por país.
-   *
-   * Siempre intentamos guardar aquí ISO3:
-   *
-   * {
-   *   col: 10,
-   *   fra: 4,
-   *   nor: 2
-   * }
-   */
   private guestCounts: Record<string, number> = {};
 
-  /**
-   * Lookup ISO3 -> Country
-   */
+  // ISO
   private readonly countriesByIso3: Record<string, ICountry> = {};
-
-  /**
-   * Lookup ISO2 -> Country
-   */
   private readonly countriesByIso2: Record<string, ICountry> = {};
-
-  /**
-   * Lookup nombre normalizado -> Country
-   */
   private readonly countriesByName: Record<string, ICountry> = {};
 
-  /**
-   * Lookup Country -> ISO3
-   *
-   * Nos evita tener que hacer Object.entries(WORLD).find(...)
-   * cada vez.
-   */
+  // It saves us from having to call Object.entries(WORLD).find(...) every time.
   private readonly iso3ByCountry = new Map<ICountry, string>();
 
   private topGuestCountryIso3 = '';
@@ -164,6 +143,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
     this.guestMarkersLayer?.clearLayers();
     this.guestMarkersLayer = undefined;
+    this.guestMarkerPeople.clear();
   }
 
   getContinentName(continent: Continents): string {
@@ -173,6 +153,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
   private watchLanguageChanges(): void {
     this.languageSubscription = this._translate.onLangChange.subscribe(() => {
       this.updateTooltipsLanguage();
+      this.updateGuestMarkerPopupsLanguage();
 
       const active = this.activePopup;
       if (!active) return;
@@ -190,17 +171,29 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
       } else {
         // Rebuild the UK region popup using the new language.
         const regionName = this._translate.instant(`UK_REGIONS.${active.code.toLowerCase()}`);
-
         html = this.getAdminRegionPopupHtml(regionName, active.code, active.count);
       }
 
       // Replace the content of the popup that is already open.
       popup.setContent(html);
       popup.update();
-
       // The country popup contains a dynamically generated navigation link.
       if (active.type === 'country') {
         this.bindCountryPopupButton(popup, active.count);
+      }
+    });
+  }
+  private updateGuestMarkerPopupsLanguage(): void {
+    this.guestMarkerPeople.forEach((person, marker) => {
+      const popup = marker.getPopup();
+
+      if (!popup) return;
+
+      // Rebuild the guest popup using the current language.
+      popup.setContent(this.createGuestPopup(person));
+
+      if (popup.isOpen()) {
+        popup.update();
       }
     });
   }
@@ -255,25 +248,12 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
       const normalizedIso3 = iso3.toLowerCase().trim();
 
       this.countriesByIso3[normalizedIso3] = country;
-
       this.iso3ByCountry.set(country, normalizedIso3);
 
-      /**
-       * ISO2
-       *
-       * country.flag contiene:
-       *
-       * col -> co
-       * fra -> fr
-       * nor -> no
-       */
+      // ISO2
       if (country.flag) {
         this.countriesByIso2[country.flag.toLowerCase().trim()] = country;
       }
-
-      /**
-       * Nombre
-       */
       if (country.name) {
         this.countriesByName[this.normalizeCountryName(country.name.en)] = country;
       }
@@ -299,15 +279,11 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     const iso3Candidates = [properties['ISO3166-1-Alpha-3'], properties.ISO_A3, properties.ISO_A3_EH, properties.ADM0_A3, properties.WB_A3, properties.ISO3, feature?.id];
 
     for (const value of iso3Candidates) {
-      if (!value) {
-        continue;
-      }
+      if (!value) continue;
 
       const code = String(value).toLowerCase().trim();
 
-      if (code === '-99' || code === 'null' || code === 'undefined' || code.length !== 3) {
-        continue;
-      }
+      if (code === '-99' || code === 'null' || code === 'undefined' || code.length !== 3) continue;
 
       const country = this.countriesByIso3[code];
 
@@ -323,14 +299,11 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     const iso2Candidates = [properties.ISO_A2, properties.ISO_A2_EH, properties.ISO2, properties['ISO3166-1-Alpha-2']];
 
     for (const value of iso2Candidates) {
-      if (!value) {
-        continue;
-      }
+      if (!value) continue;
       const code = String(value).toLowerCase().trim();
 
-      if (code === '-99' || code === 'null' || code === 'undefined' || code.length !== 2) {
-        continue;
-      }
+      if (code === '-99' || code === 'null' || code === 'undefined' || code.length !== 2) continue;
+
       const country = this.countriesByIso2[code];
 
       if (country) {
@@ -499,9 +472,8 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
   // RESIZE OBSERVER
   private setupResizeObserver(): void {
-    if (!this.mapContainer || !this.map) {
-      return;
-    }
+    if (!this.mapContainer || !this.map) return;
+
     this.resizeObserver?.disconnect();
     this.resizeObserver = new ResizeObserver(() => {
       this.map?.invalidateSize({ animate: false });
@@ -531,12 +503,8 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     });
 
     // INITIAL POSITION
-    /**
-     * No usamos fitBounds() porque algunos GeoJSON mundiales pueden
-     * tener geometrías que provocan bounds demasiado grandes o extraños.
-     *
-     * Esta posición es mucho más estable.
-     */
+    // We don't use fitBounds() because some global GeoJSON files may contain geometries that cause bounds to be excessively large or unusual.
+    // This position is much more stable.
     this.map.setView([28, 0], 2);
     requestAnimationFrame(() => {
       this.map?.invalidateSize({
@@ -549,8 +517,19 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
   private getCountryStyle(feature: any): L.PathOptions {
     const iso = this.getFeatureCode(feature);
     const count = iso ? (this.guestCounts[iso] ?? 0) : 0;
-
     const borderColor = this.getMapColor('--map-country-border', '#ffffff');
+
+    // Highlight the selected country.
+    if (this.selectedCountryIso3 && iso === this.selectedCountryIso3) {
+      return {
+        color: this.getMapColor('--color-primary', '#2457a7'),
+        weight: 2,
+        opacity: 1,
+        fillColor: this.getMapColor('--color-accent', '#e5bd63'),
+        fillOpacity: 0.95,
+        interactive: true,
+      };
+    }
 
     // Highlight the country with the most guests.
     if (iso === this.topGuestCountryIso3 && count > 0) {
@@ -604,9 +583,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
       this.geoLayer.eachLayer((layer: L.Layer) => {
         const feature = (layer as any).feature;
 
-        if (!feature) {
-          return;
-        }
+        if (!feature) return;
 
         const style = this.getCountryStyle(feature);
 
@@ -694,9 +671,11 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     // CLICK
     layer.on('click', () => {
       const currentCount = iso3 ? (this.guestCounts[iso3] ?? 0) : 0;
+      // Only countries with guests can be selected.
+      if (currentCount === 0 || !country || !iso3) return;
 
-      // If there are not guest, the popup is not
-      if (currentCount === 0 || !country) return;
+      this.selectedCountryIso3 = iso3;
+      this.updateCountryStyles();
       this.showCountryPopup(layer, country, currentCount, iso3);
     });
   }
@@ -721,6 +700,18 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
       maxWidth: 280,
     });
 
+    // Remove the selected country highlight when its popup closes.
+    layer.once('popupclose', () => {
+      if (this.selectedCountryIso3 === iso3) {
+        this.selectedCountryIso3 = '';
+        this.updateCountryStyles();
+      }
+
+      if (this.activePopup?.layer === layer) {
+        this.activePopup = undefined;
+      }
+    });
+
     layer.once('popupopen', (event: L.PopupEvent) => {
       this.bindCountryPopupButton(event.popup, count);
     });
@@ -730,20 +721,19 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
   private getCountryPopupHtml(country: ICountry, count: number, iso3: string): string {
     const lang = this._language.currentLanguage;
-
     const countryName = country.name[lang] ?? country.name.en ?? iso3.toUpperCase();
-
     const region = REGION_NAMES[country.region]?.[lang] ?? REGION_NAMES[country.region]?.en ?? country.region;
-
     const continent = this.getContinentName(country.continent);
-
     const txtBtnGuest = this._translate.instant(count === 1 ? 'MAP.VIEW_GUEST' : 'MAP.VIEW_GUESTS');
+    const flagClass = this.getFlagClass(iso3);
 
     return `
     <div class="country-popup">
       <div class="country-popup-title">${countryName}</div>
 
-      <div class="country-popup-code">${iso3.toUpperCase()}</div>
+      <div class="country-popup-code">
+        <span class="${flagClass}" aria-label="${countryName}"></span>
+      </div>
 
       <div class="country-popup-divider"></div>
 
@@ -965,14 +955,8 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
       }
       featuresByRegion[code].push(feature);
     }
-    // Unimos las regiones internas de cada país
-    // Scotland:
-    //   Scottish Borders
-    //   Highland
-    //   Glasgow
-    //   etc.
-    // ↓
-    // Scotland = una sola geometría
+
+    // We merge the internal regions of each country Scotland: Scottish Borders, Highland,Glasgow etc: Scotland = a single geometry
 
     const dissolvedFeatures: any[] = [];
     for (const code of this.ukRegionCodes) {
@@ -987,7 +971,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
           continue;
         }
 
-        // Conservamos nuestro código
+        // We keep our code
         merged.properties = {
           ...merged.properties,
           gu_a3: code.toUpperCase(),
@@ -999,12 +983,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
       }
     }
 
-    // Creamos UNA sola geometría por:
-    // SCT
-    // WLS
-    // NIR
-    // ENG
-
+    // We create a SINGLE geometry for each:SCT, WLS, NIR, ENG
     this.adminRegionsLayer = L.geoJSON(
       {
         type: 'FeatureCollection',
@@ -1162,7 +1141,6 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
       return null;
     }
 
-    // Normalize names to avoid mismatches caused by accents or casing
     const normalize = (value: string): string =>
       value
         .normalize('NFD')
@@ -1170,17 +1148,18 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
         .toLowerCase()
         .trim();
 
-    const country = normalize(countryCode);
-    const state = normalize(stateName);
+    const rawCountry = normalize(countryCode);
 
-    // Handle regions that may have different names in the GeoJSON
+    // Convert ISO2 country codes to ISO3.
+    const countryInfo = rawCountry.length === 2 ? this.countriesByIso2[rawCountry] : this.countriesByIso3[rawCountry];
+    const country = countryInfo ? (this.iso3ByCountry.get(countryInfo) ?? '') : rawCountry;
+    const state = normalize(stateName);
     const stateAliases: Record<string, string[]> = {
       'canary islands': ['canary is.', 'las palmas', 'santa cruz de tenerife'],
     };
 
     const searchNames = [state, ...(stateAliases[state] ?? []).map(normalize)];
 
-    // Filter regions by country and any matching region name
     const matches = this.adminRegionsGeoJsonData.features.filter(feature => {
       const properties = feature.properties as Record<string, unknown>;
       const featureCountry = normalize(String(properties['adm0_a3'] ?? ''));
@@ -1195,11 +1174,47 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     });
 
     if (!matches.length) return null;
-    if (matches.length === 1) return matches[0] as Feature<Polygon | MultiPolygon>;
 
-    // Merge multiple matching regions into a single polygon
+    if (matches.length === 1) {
+      return matches[0] as Feature<Polygon | MultiPolygon>;
+    }
+
     const collection = featureCollection(matches as Feature<Polygon | MultiPolygon>[]);
+
     return union(collection) as Feature<Polygon | MultiPolygon> | null;
+  }
+
+  // Finds the country polygon when the hometown region cannot be matched.
+  private getCountryPolygon(countryCode: string): Feature<Polygon | MultiPolygon> | null {
+    if (!this.geoJsonData || !countryCode) {
+      return null;
+    }
+
+    const rawCode = countryCode.toLowerCase().trim();
+
+    const countryInfo = rawCode.length === 2 ? this.countriesByIso2[rawCode] : this.countriesByIso3[rawCode];
+
+    const iso3 = countryInfo ? (this.iso3ByCountry.get(countryInfo) ?? '') : rawCode;
+
+    // Map territories to their corresponding country.
+    const countryAliases: Record<string, string> = {
+      mtq: 'fra',
+      sct: 'gbr',
+    };
+
+    const resolvedIso3 = countryAliases[iso3] ?? iso3;
+
+    if (!resolvedIso3) return null;
+
+    const countryFeature = this.geoJsonData.features.find(feature => {
+      return this.getCountryConfig(feature).iso3 === resolvedIso3;
+    });
+
+    if (!countryFeature || !['Polygon', 'MultiPolygon'].includes(countryFeature.geometry.type)) {
+      return null;
+    }
+
+    return countryFeature as Feature<Polygon | MultiPolygon>;
   }
 
   // Generates a reproducible random number sequence from a string seed
@@ -1271,7 +1286,6 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   // Rebuilds guest markers using their hometown regions and generated coordinates.
-
   private updateGuestMarkers(): void {
     if (!this.map || !this.adminRegionsGeoJsonData || !this.guestMarkersLayer) {
       return;
@@ -1279,6 +1293,8 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
     // Remove previous markers before rebuilding.
     this.guestMarkersLayer.clearLayers();
+    this.guestMarkerPeople.clear();
+
     const processedGuests = new Set<string>();
 
     // Cache polygons to avoid searching the GeoJSON repeatedly.
@@ -1301,9 +1317,17 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
           polygonCache.set(cacheKey, this.getHometownPolygon(countryCode, stateName));
         }
 
-        const polygon = polygonCache.get(cacheKey);
+        // Use the country polygon when the hometown region cannot be matched.
+        const polygon = polygonCache.get(cacheKey) ?? this.getCountryPolygon(countryCode);
 
-        if (!polygon) continue;
+        if (!polygon) {
+          console.warn('[Guest marker] Country polygon not found:', {
+            countryCode,
+            stateName,
+          });
+
+          continue;
+        }
 
         // Generate a stable position for each guest.
         const coordinates = this.getGuestCoordinates(polygon, guestId);
@@ -1315,14 +1339,19 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
           title: person.fullName,
           icon: this.createGuestMarkerIcon(),
         });
-        marker.bindPopup(this.createGuestPopup(person));
+        marker.bindPopup(this.createGuestPopup(person), {
+          className: 'guest-map-popup-container',
+        });
+
+        // Keep the guest associated with its marker.
+        this.guestMarkerPeople.set(marker, person);
+
         marker.addTo(this.guestMarkersLayer);
       }
     }
   }
 
   // Builds the HTML content displayed when a guest marker is clicked.
-
   private createGuestPopup(person: IGuestTableMember): HTMLElement {
     const container = document.createElement('div');
     container.className = 'guest-map-popup';
@@ -1331,14 +1360,22 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     name.textContent = person.fullName;
 
     const hometown = document.createElement('p');
-    hometown.textContent = [person.hometown?.city, person.hometown?.state, person.hometown?.code].filter(Boolean).join(', ');
+    const location = [person.hometown?.city, person.hometown?.state].filter(Boolean).join(', ');
+    const countryCode = person.hometown?.code;
+    const flag = document.createElement('span');
+    flag.className = this.getFlagClass(countryCode);
+
+    hometown.append(flag);
+
+    if (location) {
+      hometown.append(document.createTextNode(` ${location}`));
+    }
 
     // Create a button to navigate to the guest detail page.
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'guest-map-popup-btn';
     button.textContent = this._translate.instant('MAP.VIEW_GUEST');
-
     button.addEventListener('click', () => {
       if (!person.guestId) return;
 
@@ -1348,5 +1385,11 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     button.disabled = !person.guestId;
     container.append(name, hometown, button);
     return container;
+  }
+
+  private getFlagClass(countryCode?: string | null): string {
+    if (!countryCode) return 'fi fi-xx';
+    const key = countryCode.toLowerCase() as keyof typeof WORLD;
+    return WORLD[key] ? `fi fi-${WORLD[key].flag}` : 'fi fi-xx';
   }
 }
