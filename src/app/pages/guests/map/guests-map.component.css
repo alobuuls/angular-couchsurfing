@@ -7,31 +7,77 @@
 }
 
 /* POP UP GUEST MARKER */
-.guest-map-popup {
+:host ::ng-deep .guest-map-popup {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  background-color: inherit;
 }
 
-.guest-map-popup p {
+:host ::ng-deep .leaflet-popup-content-wrapper,
+:host ::ng-deep .leaflet-popup-tip {
+  background-color: color-mix(in srgb, var(--color-primary) 20%, var(--color-surface));
+}
+
+/* POPUP CONTENT */
+:host ::ng-deep .guest-map-popup strong {
+  color: var(--color-text);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+:host ::ng-deep .guest-map-popup p {
   margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 12px;
 }
 
-.guest-map-popup-btn {
+/* POPUP BUTTON */
+:host ::ng-deep .guest-map-popup-btn {
   width: 100%;
   padding: 0.5rem 0.75rem;
   border: none;
-  border-radius: 0.5rem;
-  background: var(--color-primary);
-  color: white;
+  border-radius: 0.25rem;
+  background-color: var(--color-secondary);
+  color: var(--color-surface);
+  font-size: 12px;
+  font-weight: 700;
   cursor: pointer;
+  text-align: center;
+  transition:
+    background-color 0.3s ease-in-out,
+    box-shadow 0.3s ease-in-out,
+    translate 0.3s ease-in-out;
+  box-shadow:
+    1px 0px color-mix(in srgb, var(--color-secondary) 50%, var(--color-surface)),
+    0px 1px color-mix(in srgb, var(--color-secondary) 50%, var(--color-surface)),
+    2px 1px color-mix(in srgb, var(--color-secondary) 50%, var(--color-surface)),
+    1px 2px color-mix(in srgb, var(--color-secondary) 50%, var(--color-surface)),
+    3px 2px color-mix(in srgb, var(--color-secondary) 50%, var(--color-surface)),
+    2px 3px color-mix(in srgb, var(--color-secondary) 50%, var(--color-surface)),
+    4px 3px color-mix(in srgb, var(--color-secondary) 50%, var(--color-surface)),
+    3px 4px color-mix(in srgb, var(--color-secondary) 50%, var(--color-surface)),
+    5px 4px color-mix(in srgb, var(--color-secondary) 50%, var(--color-surface)),
+    4px 5px color-mix(in srgb, var(--color-secondary) 50%, var(--color-surface)),
+    6px 5px color-mix(in srgb, var(--color-secondary) 50%, var(--color-surface)),
+    5px 6px color-mix(in srgb, var(--color-secondary) 50%, var(--color-surface));
 }
 
-.guest-map-popup-btn:disabled {
+:host ::ng-deep .guest-map-popup-btn:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-secondary) 10%, var(--color-text));
+}
+
+:host ::ng-deep .guest-map-popup-btn:active:not(:disabled) {
+  translate: 2px 2px;
+}
+
+:host ::ng-deep .guest-map-popup-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
+/* tooltip country */
 .map-wrapper {
   position: relative;
   width: 100%;
