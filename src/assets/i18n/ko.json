@@ -1,7 +1,9 @@
 {
   "GENERAL": {
-    "LOADING": "로딩 중...",
-    "BACK": "뒤로"
+    "LOADING": "로딩 중",
+    "BACK": "뒤로",
+    "ERROR": "오류",
+    "CLOSE": "닫기"
   },
   "MENU": {
     "HOME": "홈",
@@ -63,7 +65,8 @@
     "YES": "예",
     "NO": "아니요",
     "CLEAR": "지우기",
-    "SEARCH": "검색"
+    "SEARCH": "검색",
+    "SEARCHING": "검색 중"
   },
   "GUESTS_ACTIONS": {
     "SEE_STATS": "통계 보기",
@@ -283,6 +286,24 @@
       "SUCCESS": "새 게스트 양식이 추가되었습니다"
     },
     "CREATE": "생성",
+    "CREATING": "생성 중",
+    "UPDATE": "업데이트",
+    "UPDATING": "업데이트 중",
+    "MAX_MEMBERS": "최대 5명의 멤버를 추가할 수 있습니다",
+    "REMOVE_GUEST": {
+      "TITLE": "게스트 삭제",
+      "DESCRIPTION": "이 게스트를 양식에서 삭제하시겠습니까?",
+      "CONFIRM": "예, 삭제"
+    },
+    "GUEST_NUMBER": "게스트 #{{number}}",
+    "FORM_COUNT_SINGULAR": "게스트 양식 1개",
+    "FORM_COUNT": "게스트 양식 {{count}}개",
+    "NO_CHANGES": {
+      "TITLE": "변경 사항 없음",
+      "DESCRIPTION": "이 양식의 정보를 수정하지 않았습니다. 저장하지 않고 나가시겠습니까?",
+      "EXIT": "저장하지 않고 나가기",
+      "CONTINUE": "계속 편집하기"
+    },
     "UPDATE": "수정",
     "MAX_MEMBERS": "최대 5명의 멤버를 추가할 수 있습니다",
     "REMOVE_GUEST": {

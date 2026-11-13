@@ -81,13 +81,19 @@
   </div>
 
   <!-- Submit -->
-  <button id="btn-create-guest" type="submit" mat-raised-button [disabled]="wasFormSubmitted" (click)="submit()">
-    <mat-icon
-      *ngIf="wasFormSubmitted"
-      class="material-symbols-outlined loading-animation"
-      fontIcon="refresh"
-    ></mat-icon>
+  <button id="btn-create-guest" type="submit" mat-raised-button [disabled]="isSubmitting" (click)="submit()">
+    <ng-container *ngIf="isSubmitting; else submitText">
+      <span class="loading-content">
+        <span class="loading-text">
+          {{ (mode === 'create' ? 'GUESTS_FORM.CREATING' : 'GUESTS_FORM.UPDATING') | translate }}
+        </span>
 
-    {{ (mode === 'create' ? 'GUESTS_FORM.CREATE' : 'GUESTS_FORM.UPDATE') | translate }}
+        <mat-icon class="loading-spinner">autorenew</mat-icon>
+      </span>
+    </ng-container>
+
+    <ng-template #submitText>
+      {{ (mode === 'create' ? 'GUESTS_FORM.CREATE' : 'GUESTS_FORM.UPDATE') | translate }}
+    </ng-template>
   </button>
 </section>

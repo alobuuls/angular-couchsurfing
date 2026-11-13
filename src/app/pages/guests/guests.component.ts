@@ -2,25 +2,23 @@ import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core'
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
-import { combineLatestWith, map, switchMap } from 'rxjs/operators';
+import { combineLatestWith, map, switchMap, tap, finalize } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 
 // Material
 import { Sort } from '@angular/material/sort';
 import { PageEvent } from '@angular/material/paginator';
-import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 // Services
 import { GuestsService } from '@services/guests.service';
 import { DeleteConfirmationService } from '@core/services/delete-confirmation.service';
 import { ErrorHandlerService } from '@core/services/err-handler.service';
+import { AlertsService } from '@core/services/alerts.service';
 import { GuestSortService } from '@services/guest-sort.service';
 import { GeonameService } from '@services/geoname.service';
 import { FormatService } from '@services/format.service';
 import { StatsService } from '@services/stats.service';
-
-// Helpers
-import { withReqState, isGroup, mapGuestTable } from '@utils';
 
 // Interfaces
 import { IGuestListItem, IQueryParamsGuests, IYearlyStat } from '@interfaces/guests.interface';
@@ -34,7 +32,7 @@ import { WORLD } from '@config/world';
 import { REGION_NAMES } from '@config/world/regions';
 
 // Utils
-import { parseBooleanParam, parseMultiParam } from '@utils';
+import { withReqState, isGroup, mapGuestTable, parseBooleanParam, parseMultiParam } from '@utils';
 
 @Component({
   providers: [GuestSortService, StatsService],
@@ -47,6 +45,10 @@ export class GuestsComponent implements OnInit {
 
   // Filters
   filtersForm!: FormGroup;
+
+  // Search button loading
+  isSearching = false;
+  private searchView: ICurrentView | null = null;
 
   // Countries
   countries: Array<ICountry & { countryCode: CountriesCodes }> = [];
@@ -112,6 +114,7 @@ export class GuestsComponent implements OnInit {
   private _sortService = inject(GuestSortService);
   private _deleteService = inject(DeleteConfirmationService);
   private _errH = inject(ErrorHandlerService);
+  private _alerts = inject(AlertsService);
   private readonly _geoname = inject(GeonameService);
   private readonly _format = inject(FormatService);
   private _translate = inject(TranslateService);
@@ -153,6 +156,12 @@ export class GuestsComponent implements OnInit {
   }
 
   onFiltersSubmit(): void {
+    // Prevent repeated submissions
+    if (this.isSearching) return;
+
+    this.isSearching = true;
+    this.searchView = this.currentView;
+
     const formValue = this.filtersForm.getRawValue();
 
     const filters: IQueryParamsGuests = {
@@ -168,25 +177,20 @@ export class GuestsComponent implements OnInit {
       hangOut: this.getBooleanFilter(formValue.hangOut),
     };
 
-    // Reset table pagination first
     this.page$.next({
       page: 1,
       size: this.page$.value.size,
     });
 
-    // Update filters
     this.filters$.next(filters);
     this.updateFiltersInUrl(filters);
 
-    // Reset cards infinite scroll
     this.resetCards();
 
-    // Reload cards if the current view is cards
     if (this.currentView === 'cards') {
       this.loadMoreCards();
     }
 
-    // Reload map if the current view is map
     if (this.currentView === 'map') {
       this.loadMapData();
     }
@@ -271,7 +275,14 @@ export class GuestsComponent implements OnInit {
   private initVm(): void {
     this.vm$ = combineLatest([this.page$, this.filters$]).pipe(
       switchMap(([{ page, size: limit }, filters]) => withReqState(this._guests.getAllGuests({ limit, page, ...filters }), this._errH)),
+      tap(vm => {
+        if (this.isSearching && this.searchView === 'table' && vm.status !== 'loading') {
+          this.isSearching = false;
+          this.searchView = null;
+        }
 
+        if (vm.status === 'error' && vm.error) this._alerts.showAlert({ icon: 'error', title: 'Error', html: vm.error.message, showCancelButton: false, confirmText: 'Close' });
+      }),
       map(vm => {
         if (vm.status !== 'success') {
           return {
@@ -450,10 +461,6 @@ export class GuestsComponent implements OnInit {
     const selectedCountries = (countryCtrl?.value ?? []) as CountriesCodes[];
 
     countryCtrl?.setValue(selectedCountries.filter(code => code !== countryCode));
-  }
-
-  getDetailForShowingMore(guestId: string) {
-    this._guests.getGuestById(guestId).subscribe(res => res);
   }
 
   // UPDATE VIEW IN URL
@@ -668,8 +675,16 @@ export class GuestsComponent implements OnInit {
             this.cardsHasMore = false;
           }
           this.cardsLoading = false;
+          if (this.searchView === 'cards') {
+            this.isSearching = false;
+            this.searchView = null;
+          }
         },
         error: () => {
+          if (this.searchView === 'cards') {
+            this.isSearching = false;
+            this.searchView = null;
+          }
           this.cardsLoading = false;
         },
       });
@@ -686,6 +701,7 @@ export class GuestsComponent implements OnInit {
   // MAP
   loadMapData(): void {
     if (this.mapLoading) return;
+
     this.mapLoading = true;
 
     this._guests
@@ -694,14 +710,22 @@ export class GuestsComponent implements OnInit {
         page: 1,
         ...this.filters$.value,
       })
+      .pipe(
+        finalize(() => {
+          this.mapLoading = false;
+
+          if (this.searchView === 'map') {
+            this.isSearching = false;
+            this.searchView = null;
+          }
+        })
+      )
       .subscribe({
         next: response => {
           this.mapData = mapGuestTable(response.data);
-          this.mapLoading = false;
         },
         error: () => {
           this.mapData = [];
-          this.mapLoading = false;
         },
       });
   }

@@ -248,9 +248,8 @@
                 <ng-container *ngIf="isCardLoading(guest); else loadedText">
                   <span class="loading-text">
                     {{ 'GENERAL.LOADING' | translate }}
+                    <mat-icon class="loading-spinner">autorenew</mat-icon>
                   </span>
-
-                  <mat-icon class="loading-spinner">autorenew</mat-icon>
                 </ng-container>
 
                 <ng-template #loadedText>

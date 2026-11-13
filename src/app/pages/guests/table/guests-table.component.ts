@@ -42,7 +42,6 @@ export class GuestsTableComponent {
   }
 
   @Output() remove = new EventEmitter<IGuestListItem>();
-  @Output() detailGuest = new EventEmitter<string>();
 
   @Output() page = new EventEmitter<PageEvent>();
   @Output() sort = new EventEmitter<Sort>();

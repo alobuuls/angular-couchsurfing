@@ -587,6 +587,27 @@ button {
   margin-right: 0.3rem;
 }
 
+.loading-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  gap: 0.4rem;
+}
+
+.loading-spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  width: 1.3rem !important;
+  height: 1.3rem !important;
+  line-height: 1;
+  margin-left: 0.15rem;
+  animation: spin 1s linear infinite;
+  transform-origin: center;
+}
+
 /* =========================================================
   9. STATISTICS BUTTONS
    ========================================================= */
@@ -929,6 +950,12 @@ html.backward::view-transition-new(root) {
 @keyframes spinner {
   to {
     rotate: 1turn;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 

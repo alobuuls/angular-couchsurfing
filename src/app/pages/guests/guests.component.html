@@ -239,9 +239,20 @@
         {{ 'GUESTS_FILTERS.CLEAR' | translate }}
       </button>
 
-      <button type="submit" mat-raised-button class="btn-search">
-        <mat-icon class="material-symbols-outlined">search</mat-icon>
-        {{ 'GUESTS_FILTERS.SEARCH' | translate }}
+      <button type="submit" mat-raised-button class="btn-search" [disabled]="isSearching">
+        <ng-container *ngIf="isSearching; else searchText">
+          <span class="loading-text">
+            {{ 'GUESTS_FILTERS.SEARCHING' | translate }}
+            <mat-icon class="loading-spinner-btn">autorenew</mat-icon>
+          </span>
+        </ng-container>
+
+        <ng-template #searchText>
+          <span class="loading-text">
+            <mat-icon class="material-symbols-outlined">search</mat-icon>
+            {{ 'GUESTS_FILTERS.SEARCH' | translate }}
+          </span>
+        </ng-template>
       </button>
     </div>
   </form>
@@ -350,7 +361,6 @@
     [pagination]="vm.pagination"
     [offset]="vm.offset"
     (remove)="removeGuestConfirmation($event)"
-    (detailGuest)="getDetailForShowingMore($event)"
     (sort)="onSortChange($event)"
     (page)="onPageChange($event)"
   >

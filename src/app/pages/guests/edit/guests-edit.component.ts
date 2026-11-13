@@ -1,16 +1,16 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { finalize, switchMap } from 'rxjs';
 
 // Services
 import { GuestsService } from '@services/guests.service';
-import { AlertsService } from '../../../core/services/alerts.service';
+import { AlertsService } from '@core/services/alerts.service';
 import { TranslateService } from '@ngx-translate/core';
 
 // Interfaces
 import { IGroupCreatePayload, IGroupEdit, IGroupUpdatePayload, IGuestCreatePayload, IGuestDetail } from '@interfaces/guests.interface';
-import { IGuestsFormSubmit } from '../../../interfaces/guest-form.interface';
-
-import { switchMap } from 'rxjs';
+import { IGuestsFormSubmit } from '@interfaces/guest-form.interface';
 
 @Component({
   selector: 'guests-edit',
@@ -22,6 +22,10 @@ export class GuestsEditComponent implements OnInit {
   group?: IGroupEdit;
   groupId?: string;
 
+  isLoading = true;
+  isUpdating = false;
+
+  private location = inject(Location);
   private _guests = inject(GuestsService);
   private _alerts = inject(AlertsService);
   private router = inject(Router);
@@ -38,20 +42,35 @@ export class GuestsEditComponent implements OnInit {
 
     if (groupId) {
       this.groupId = groupId;
-      this._guests.getGroupById(groupId).subscribe(resp => {
-        this.group = resp.data;
-      });
+
+      this._guests
+        .getGroupById(groupId)
+        .pipe(finalize(() => (this.isLoading = false)))
+        .subscribe(resp => {
+          this.group = resp.data;
+        });
+
       return;
     }
 
     if (guestId) {
-      this._guests.getGuestById(guestId).subscribe(resp => {
-        this.guest = resp.data;
-      });
+      this._guests
+        .getGuestById(guestId)
+        .pipe(finalize(() => (this.isLoading = false)))
+        .subscribe(resp => {
+          this.guest = resp.data;
+        });
+
+      return;
     }
+
+    this.isLoading = false;
   }
 
-  // TOAST NOTIFICATIONS
+  cancelEdit(): void {
+    this.location.back();
+  }
+  // ALERTS NOTIFICATIONS
   private showToast(icon: 'success' | 'error', title: string): void {
     this._alerts.showToast({
       icon,
@@ -59,7 +78,25 @@ export class GuestsEditComponent implements OnInit {
     });
   }
 
+  private showOfflineAlert(): void {
+    this._alerts.showAlert({
+      icon: 'error',
+      title: this._translate.instant('GENERAL.ERROR'),
+      html: this._translate.instant('ERRORS.HTTP.502'),
+      showCancelButton: false,
+      confirmText: this._translate.instant('GENERAL.CLOSE'),
+    });
+  }
+
   update(data: IGuestsFormSubmit): void {
+    if (this.isUpdating) return;
+
+    // CHECK INTERNET CONNECTION
+    if (!navigator.onLine) {
+      this.showOfflineAlert();
+      return;
+    }
+
     // SOLO → SOLO
     if (this.guest && data.groupType === 'solo') {
       this.updateSolo(data);
@@ -93,10 +130,15 @@ export class GuestsEditComponent implements OnInit {
       groupType: 'solo',
     };
 
-    this._guests.updateGuestById(this.guest.guestId, payload).subscribe(() => {
-      this.showToast('success', 'ALERTS.EDIT.GUEST_SUCCESS');
-      this.router.navigate(['/guests']);
-    });
+    this.isUpdating = true;
+
+    this._guests
+      .updateGuestById(this.guest.guestId, payload)
+      .pipe(finalize(() => (this.isUpdating = false)))
+      .subscribe(() => {
+        this.showToast('success', 'ALERTS.EDIT.GUEST_SUCCESS');
+        this.router.navigate(['/guests']);
+      });
   }
 
   private convertSoloToGroup(data: IGuestsFormSubmit): void {
@@ -111,9 +153,14 @@ export class GuestsEditComponent implements OnInit {
       })),
     };
 
+    this.isUpdating = true;
+
     this._guests
       .createNewGroup(payload)
-      .pipe(switchMap(() => this._guests.removeGuestById(this.guest!.guestId)))
+      .pipe(
+        switchMap(() => this._guests.removeGuestById(this.guest!.guestId)),
+        finalize(() => (this.isUpdating = false))
+      )
       .subscribe(() => {
         this.showToast('success', 'ALERTS.EDIT.GROUP_SUCCESS');
         this.router.navigate(['/guests']);
@@ -129,9 +176,14 @@ export class GuestsEditComponent implements OnInit {
       groupType: 'solo',
     };
 
+    this.isUpdating = true;
+
     this._guests
       .createNewGuest(payload)
-      .pipe(switchMap(() => this._guests.removeGroupById(this.groupId!)))
+      .pipe(
+        switchMap(() => this._guests.removeGroupById(this.groupId!)),
+        finalize(() => (this.isUpdating = false))
+      )
       .subscribe(() => {
         this.showToast('success', 'ALERTS.EDIT.GUEST_SUCCESS');
         this.router.navigate(['/guests']);
@@ -151,9 +203,14 @@ export class GuestsEditComponent implements OnInit {
       })),
     };
 
-    this._guests.updateGroupById(this.groupId, payload).subscribe(() => {
-      this.showToast('success', 'ALERTS.EDIT.GROUP_SUCCESS');
-      this.router.navigate(['/guests']);
-    });
+    this.isUpdating = true;
+
+    this._guests
+      .updateGroupById(this.groupId, payload)
+      .pipe(finalize(() => (this.isUpdating = false)))
+      .subscribe(() => {
+        this.showToast('success', 'ALERTS.EDIT.GROUP_SUCCESS');
+        this.router.navigate(['/guests']);
+      });
   }
 }

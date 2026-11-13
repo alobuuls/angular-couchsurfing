@@ -21,6 +21,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Services
 import { GuestsService } from '@services/guests.service';
@@ -64,6 +65,7 @@ const MATERIAL_MODULES = [
   MatSelectModule,
   MatChipsModule,
   MatAutocompleteModule,
+  MatProgressSpinnerModule,
 ];
 
 @NgModule({

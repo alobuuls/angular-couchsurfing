@@ -24,11 +24,6 @@ export interface GuestsVM {
   error?: IErrResp;
 }
 
-interface IAge {
-  ageWhenVisited: number | '?';
-  currentAge: number | '?';
-}
-
 export interface IGuestTableMember {
   fullName: string;
   ambassador?: boolean;
