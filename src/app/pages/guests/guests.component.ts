@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
@@ -74,8 +74,6 @@ export class GuestsComponent implements OnInit {
 
   currentView: ICurrentView = 'table';
 
-  @ViewChild('countryInput') countryInput!: ElementRef<HTMLInputElement>;
-
   // Current Filters
   private filters$ = new BehaviorSubject<IQueryParamsGuests>({});
 
@@ -107,6 +105,19 @@ export class GuestsComponent implements OnInit {
   // Year stats
   monthlyStats: IYearlyStat[] = [];
 
+  // load cards
+  private cardsNetworkErrors = 0;
+  private readonly maxCardsNetworkErrors = 2;
+  private cardsLoadBlocked = false;
+
+  @ViewChild('countryInput') countryInput!: ElementRef<HTMLInputElement>;
+
+  @HostListener('window:online')
+  onConnectionRestored(): void {
+    this.cardsNetworkErrors = 0;
+    this.cardsLoadBlocked = false;
+  }
+
   private fb = inject(FormBuilder);
   private _route = inject(ActivatedRoute);
   private _router = inject(Router);
@@ -130,6 +141,20 @@ export class GuestsComponent implements OnInit {
   }
 
   countrySearchCtrl = this.fb.control('');
+
+  // ALERTS
+  private showOfflineAlertScroll(): void {
+    this._alerts.showAlert({
+      icon: 'error',
+      title: this._translate.instant('GENERAL.ERROR'),
+      html: this._translate.instant('ERRORS.HTTP.502'),
+      showCancelButton: false,
+      allowClose: false,
+      opts: {
+        showConfirmButton: false,
+      },
+    });
+  }
 
   // FILTERS
   private initFiltersForm(): void {
@@ -650,9 +675,18 @@ export class GuestsComponent implements OnInit {
   // INFINITE SCROLL
   // Load the next page of guests for the cards view
   loadMoreCards(): void {
-    // Prevent duplicated requests while loading or when there is no more data
-    if (this.cardsLoading || !this.cardsHasMore) return;
+    // Prevent duplicated requests, blocked requests or loading without more data
+    if (this.cardsLoading || !this.cardsHasMore || this.cardsLoadBlocked) return;
+
+    // Check browser connection before making the request
+    if (!navigator.onLine) {
+      this.cardsLoadBlocked = true;
+      this.showOfflineAlertScroll();
+      return;
+    }
+
     this.cardsLoading = true;
+
     this._guests
       .getAllGuests({
         limit: this.cardsPageSize,
@@ -663,29 +697,46 @@ export class GuestsComponent implements OnInit {
         next: response => {
           const newGuests = mapGuestTable(response.data);
 
-          // Append the new guests instead of replacing the existing cards
+          // Append the new guests instead of replacing existing cards
           this.cardsData = [...this.cardsData, ...newGuests];
 
-          // Move to the next page for the next scroll
+          // Move to the next page
           this.cardsPage++;
 
-          // If the API returned fewer guests than requested,
-          // there are no more pages to load
           if (newGuests.length < this.cardsPageSize) {
             this.cardsHasMore = false;
           }
+
+          // Reset network errors after a successful request
+          this.cardsNetworkErrors = 0;
+          this.cardsLoadBlocked = false;
+
           this.cardsLoading = false;
+
           if (this.searchView === 'cards') {
             this.isSearching = false;
             this.searchView = null;
           }
         },
-        error: () => {
+
+        error: error => {
           if (this.searchView === 'cards') {
             this.isSearching = false;
             this.searchView = null;
           }
+
           this.cardsLoading = false;
+
+          // Detect network errors
+          if (!navigator.onLine || error?.status === 0) {
+            this.cardsNetworkErrors++;
+
+            // Block further requests after two failed attempts
+            if (this.cardsNetworkErrors >= this.maxCardsNetworkErrors) {
+              this.cardsLoadBlocked = true;
+              this.showOfflineAlertScroll();
+            }
+          }
         },
       });
   }
