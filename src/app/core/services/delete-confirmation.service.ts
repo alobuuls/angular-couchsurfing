@@ -20,14 +20,15 @@ export class DeleteConfirmationService {
 
   async confirmAndDelete(guest: IGuestListItem, deleteFn: (guest: IGuestListItem) => Observable<unknown>): Promise<boolean> {
     const group = isGroup(guest);
-    const fullname = group ? guest.members[0].fullName : guest.fullName;
+
+    const names = group ? guest.members.map(member => member.fullName).join(' & ') : guest.fullName;
 
     // First confirmation
     const first = await this._alerts.showAlert({
       icon: 'question',
       title: '',
       html: this._translate.instant('ALERTS.DELETE_GUEST.CONFIRMATION.MESSAGE'),
-      confirmText: this._translate.instant('ALERTS.DELETE_GUEST.CONFIRMATION.CONFIRM_BUTTON'),
+      confirmText: this._translate.instant(group ? 'ALERTS.DELETE_GUEST.CONFIRMATION.GROUP_CONFIRM_BUTTON' : 'ALERTS.DELETE_GUEST.CONFIRMATION.CONFIRM_BUTTON'),
       showCancelButton: false,
     });
 
@@ -37,7 +38,7 @@ export class DeleteConfirmationService {
     const second = await this._alerts.showAlert({
       icon: 'warning',
       title: this._translate.instant('ALERTS.DELETE_GUEST.WARNING.TITLE'),
-      html: this._translate.instant('ALERTS.DELETE_GUEST.WARNING.MESSAGE', { name: fullname }),
+      html: this._translate.instant(group ? 'ALERTS.DELETE_GUEST.WARNING.GROUP_MESSAGE' : 'ALERTS.DELETE_GUEST.WARNING.MESSAGE', { name: names }),
       confirmText: this._translate.instant('ALERTS.DELETE_GUEST.WARNING.CONFIRM_BUTTON'),
       showCancelButton: false,
     });
@@ -45,7 +46,7 @@ export class DeleteConfirmationService {
     if (!second.isConfirmed) return false;
 
     // Type fullname to confirm
-    const { isConfirmed } = await this._alerts.showDeleteConfirmation(this._translate.instant('ALERTS.DELETE_GUEST.TYPE_TO_CONFIRM.TITLE', { name: fullname }), fullname);
+    const { isConfirmed } = await this._alerts.showDeleteConfirmation(this._translate.instant('ALERTS.DELETE_GUEST.TYPE_TO_CONFIRM.TITLE', { name: names }), names);
 
     if (!isConfirmed) return false;
 
@@ -56,7 +57,7 @@ export class DeleteConfirmationService {
     // Success
     this._alerts.showToast({
       icon: 'success',
-      title: this._translate.instant('ALERTS.DELETE_GUEST.SUCCESS.MESSAGE', { name: fullname }),
+      title: this._translate.instant(group ? 'ALERTS.DELETE_GUEST.SUCCESS.GROUP_MESSAGE' : 'ALERTS.DELETE_GUEST.SUCCESS.MESSAGE', group ? { names } : { name: names }),
       time: 6000,
     });
 

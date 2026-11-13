@@ -71,6 +71,28 @@ export class AlertsService {
         confirmButton: 'custom-swal-danger',
         cancelButton: 'custom-swal-cancel',
       },
+      didOpen: popup => {
+        const input = Swal.getInput();
+        if (!input) return;
+
+        const copyButton = document.createElement('button');
+        copyButton.type = 'button';
+        copyButton.className = 'swal-copy-name';
+        copyButton.textContent = `📋 ${this._translate.instant('ALERTS.BUTTONS.COPY')}`;
+
+        copyButton.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(fullname);
+
+            copyButton.textContent = `✓ ${this._translate.instant('ALERTS.BUTTONS.COPIED')}`;
+            copyButton.classList.add('copied');
+          } catch {
+            // Clipboard permission or browser support error
+          }
+        });
+
+        input.insertAdjacentElement('afterend', copyButton);
+      },
       preConfirm: (value: string) => {
         if (value === fullname) return true;
 

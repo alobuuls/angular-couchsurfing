@@ -784,7 +784,8 @@
         "CONFIRM_BUTTON": "게스트 삭제"
       },
       "SUCCESS": {
-        "MESSAGE": "<strong class=\"danger\">{{name}}</strong>이(가) 성공적으로 삭제되었습니다"
+        "GUEST_MESSAGE": "<strong class=\"danger\">{{name}}</strong>이(가) 성공적으로 삭제되었습니다",
+        "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong>이(가) 성공적으로 삭제되었습니다"
       }
     },
     "CREATE": {
@@ -798,6 +799,33 @@
       "GUEST_ERROR": "게스트 정보 수정 중 오류가 발생했습니다",
       "GROUP_SUCCESS": "그룹 정보가 성공적으로 수정되었습니다",
       "GROUP_ERROR": "그룹 정보 수정 중 오류가 발생했습니다"
+    },
+    "BUTTONS": {
+      "SAVE": "저장",
+      "CLOSE": "닫기",
+      "DELETE": "삭제",
+      "COPY": "복사",
+      "COPIED": "복사되었습니다!"
+    },
+    "DELETE_GUEST": {
+      "CONFIRMATION": {
+        "MESSAGE": "정말 삭제하시겠습니까?",
+        "CONFIRM_BUTTON": "이 게스트를 삭제하겠습니다",
+        "GROUP_CONFIRM_BUTTON": "이 그룹을 삭제하겠습니다"
+      },
+      "WARNING": {
+        "TITLE": "계속하기 전에 주의 깊게 읽어 주세요",
+        "MESSAGE": "게스트 <strong class=\"danger\">{{name}}</strong>가 영구적으로 삭제됩니다.",
+        "GROUP_MESSAGE": "그룹 <strong class=\"danger\">{{name}}</strong>가 영구적으로 삭제됩니다.",
+        "CONFIRM_BUTTON": "삭제 결과를 이해했습니다"
+      },
+      "TYPE_TO_CONFIRM": {
+        "TITLE": "확인하려면 \"<strong class=\"danger\">{{name}}</strong>\"을 입력하세요"
+      },
+      "SUCCESS": {
+        "MESSAGE": "<strong class=\"danger\">{{name}}</strong>가 성공적으로 삭제되었습니다",
+        "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong>가 성공적으로 삭제되었습니다"
+      }
     }
   },
   "ERRORS": {

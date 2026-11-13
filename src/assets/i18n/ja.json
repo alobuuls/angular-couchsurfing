@@ -783,7 +783,8 @@
         "CONFIRM_BUTTON": "ゲストを削除"
       },
       "SUCCESS": {
-        "MESSAGE": "<strong class=\"danger\">{{name}}</strong>を正常に削除しました"
+        "GUEST_MESSAGE": "<strong class=\"danger\">{{name}}</strong>を正常に削除しました",
+        "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong>を正常に削除しました"
       }
     },
     "CREATE": {
@@ -797,6 +798,33 @@
       "GUEST_ERROR": "ゲストの更新中にエラーが発生しました",
       "GROUP_SUCCESS": "グループを更新しました",
       "GROUP_ERROR": "グループの更新中にエラーが発生しました"
+    },
+    "BUTTONS": {
+      "SAVE": "保存",
+      "CLOSE": "閉じる",
+      "DELETE": "削除",
+      "COPY": "コピー",
+      "COPIED": "コピーしました！"
+    },
+    "DELETE_GUEST": {
+      "CONFIRMATION": {
+        "MESSAGE": "本当に削除しますか？",
+        "CONFIRM_BUTTON": "このゲストを削除する",
+        "GROUP_CONFIRM_BUTTON": "このグループを削除する"
+      },
+      "WARNING": {
+        "TITLE": "続行する前に注意事項をよくお読みください",
+        "MESSAGE": "ゲスト <strong class=\"danger\">{{name}}</strong> は完全に削除されます。",
+        "GROUP_MESSAGE": "グループ <strong class=\"danger\">{{name}}</strong> は完全に削除されます。",
+        "CONFIRM_BUTTON": "削除による影響を理解しました"
+      },
+      "TYPE_TO_CONFIRM": {
+        "TITLE": "確認するには \"<strong class=\"danger\">{{name}}</strong>\" と入力してください"
+      },
+      "SUCCESS": {
+        "MESSAGE": "<strong class=\"danger\">{{name}}</strong> を正常に削除しました",
+        "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong> を正常に削除しました"
+      }
     }
   },
   "ERRORS": {
