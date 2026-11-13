@@ -1,3 +1,18 @@
-<sh-title [titleTxt]="'GUESTS_TABLE.EDIT_GUEST' | translate"></sh-title>
+<ng-container *ngIf="!isLoading; else loadingTemplate">
+  <sh-title [titleTxt]="'GUESTS_TABLE.EDIT_GUEST' | translate"></sh-title>
 
-<guest-visit-form mode="edit" [guest]="guest" [group]="group" (submitForm)="update($event)"> </guest-visit-form>
+  <guest-visit-form
+    mode="edit"
+    [guest]="guest"
+    [group]="group"
+    [isSubmitting]="isUpdating"
+    (submitForm)="update($event)"
+    (exitWithoutChanges)="cancelEdit()"
+  ></guest-visit-form>
+</ng-container>
+
+<ng-template #loadingTemplate>
+  <div class="edit-loading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+</ng-template>

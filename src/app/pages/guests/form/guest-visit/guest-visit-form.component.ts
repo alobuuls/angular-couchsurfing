@@ -1,7 +1,10 @@
 import { Component, EventEmitter, Input, Output, QueryList, ViewChild, ViewChildren, OnChanges, inject, SimpleChanges, ElementRef } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { MatRadioGroup } from '@angular/material/radio';
 
 // Interfaces
 import { IGroupEdit, IGuestDetail } from '@interfaces/guests.interface';
+import { IGuestFormItem, IGuestsFormSubmit } from '@interfaces/guest-form.interface';
 
 // Components
 import { TripFormComponent } from '@pages/guests/form/trip-form/trip-form.component';
@@ -9,10 +12,7 @@ import { GuestFormComponent } from '@pages/guests/form/guest-form/guest-form.com
 
 // Services
 import { AlertsService } from '@core/services/alerts.service';
-import { TranslateService } from '@ngx-translate/core';
-import { IGuestFormItem, IGuestsFormSubmit } from '../../../../interfaces/guest-form.interface';
 import Swal from 'sweetalert2';
-import { MatRadioGroup } from '@angular/material/radio';
 
 @Component({
   selector: 'guest-visit-form',
@@ -38,18 +38,21 @@ export class GuestsFormComponent implements OnChanges {
   @Input() group?: IGroupEdit;
 
   @Input() mode: 'create' | 'edit' = 'create';
+  @Output() exitWithoutChanges = new EventEmitter<void>();
 
   // Group Type
   public selectedGroupType: 'solo' | 'couple' | 'friends' | 'family' | null = null;
 
   formsToShow = 0;
 
-  // Form
-  wasFormSubmitted = false;
-
   // Guest Forms
   guestFormItems: IGuestFormItem[] = [];
   private nextGuestFormId = 0;
+
+  // Initial form state (edit mode)
+  private initialFormSnapshot: string | null = null;
+
+  @Input() isSubmitting = false;
 
   // Add Form
   limitGroupMembers = 5;
@@ -66,7 +69,8 @@ export class GuestsFormComponent implements OnChanges {
   }
 
   private loadData(): void {
-    // Reset form collection
+    // Reset initial state and form collection
+    this.initialFormSnapshot = null;
     this.guestFormItems = [];
     this.nextGuestFormId = 0;
 
@@ -82,6 +86,9 @@ export class GuestsFormComponent implements OnChanges {
         },
       ];
 
+      // Wait until Angular initializes the child forms
+      setTimeout(() => this.captureInitialState());
+
       return;
     }
 
@@ -94,7 +101,65 @@ export class GuestsFormComponent implements OnChanges {
         id: this.nextGuestFormId++,
         guest: member,
       }));
+
+      // Wait until Angular initializes the child forms
+      setTimeout(() => this.captureInitialState());
     }
+  }
+
+  // Capture the original values of all forms
+  private captureInitialState(): void {
+    if (this.mode !== 'edit' || !this.selectedGroupType || !this.tripFormComponent || !this.guestForms) {
+      return;
+    }
+
+    const guestForms = this.guestForms.toArray();
+
+    // Make sure all guest forms have been initialized
+    if (guestForms.length !== this.guestFormItems.length) {
+      return;
+    }
+
+    const initialData: IGuestsFormSubmit = {
+      groupType: this.selectedGroupType,
+      trip: this.tripFormComponent.getFormValue(),
+      guests: guestForms.map(form => form.getFormValue()),
+    };
+
+    this.initialFormSnapshot = this.createFormSnapshot(initialData);
+  }
+
+  // Create a consistent snapshot for comparison
+  private createFormSnapshot(data: IGuestsFormSubmit): string {
+    return JSON.stringify(this.normalizeForComparison(data));
+  }
+
+  // Normalize values so object property order does not affect comparison
+  private normalizeForComparison(value: any): any {
+    if (value instanceof Date) {
+      return value.toISOString();
+    }
+
+    if (Array.isArray(value)) {
+      return value.map(item => this.normalizeForComparison(item));
+    }
+
+    if (value && typeof value === 'object') {
+      return Object.keys(value)
+        .sort()
+        .reduce(
+          (normalized, key) => {
+            if (value[key] !== undefined) {
+              normalized[key] = this.normalizeForComparison(value[key]);
+            }
+
+            return normalized;
+          },
+          {} as Record<string, any>
+        );
+    }
+
+    return value;
   }
 
   trackByGuestForm(index: number, item: IGuestFormItem): number {
@@ -111,7 +176,6 @@ export class GuestsFormComponent implements OnChanges {
     // Check if the new type requires removing members
     if (this.guestFormItems.length > requiredForms) {
       // Check only the forms that will be removed
-
       const formsToRemove = this.guestForms?.toArray().slice(requiredForms);
 
       const hasDataToRemove = formsToRemove?.some(form => form.hasFormData()) ?? false;
@@ -137,7 +201,7 @@ export class GuestsFormComponent implements OnChanges {
     setTimeout(() => this.updateSliderControls());
   }
 
-  submit(): void {
+  async submit(): Promise<void> {
     if (!this.selectedGroupType) return;
 
     this.tripFormComponent.formTrip.markAllAsTouched();
@@ -162,14 +226,30 @@ export class GuestsFormComponent implements OnChanges {
       return;
     }
 
-    const trip = this.tripFormComponent.getFormValue();
-    const guests = guestForms.map(form => form.getFormValue());
-
-    this.submitForm.emit({
+    const formData: IGuestsFormSubmit = {
       groupType: this.selectedGroupType,
-      trip,
-      guests,
-    });
+      trip: this.tripFormComponent.getFormValue(),
+      guests: guestForms.map(form => form.getFormValue()),
+    };
+
+    // Check if the form has changed
+    if (this.mode === 'edit' && this.initialFormSnapshot !== null && this.createFormSnapshot(formData) === this.initialFormSnapshot) {
+      const result = await this._alerts.showAlert({
+        title: this._translate.instant('GUESTS_FORM.NO_CHANGES.TITLE'),
+        html: this._translate.instant('GUESTS_FORM.NO_CHANGES.DESCRIPTION'),
+        icon: 'info',
+        confirmText: this._translate.instant('GUESTS_FORM.NO_CHANGES.EXIT'),
+        cancelText: this._translate.instant('GUESTS_FORM.NO_CHANGES.CONTINUE'),
+      });
+
+      if (result.isConfirmed) {
+        this.exitWithoutChanges.emit();
+      }
+
+      return;
+    }
+
+    this.submitForm.emit(formData);
   }
 
   addGuestForm(): void {
@@ -181,6 +261,7 @@ export class GuestsFormComponent implements OnChanges {
       });
       return;
     }
+
     this.guestFormItems.push({
       id: this.nextGuestFormId++,
     });
@@ -192,7 +273,7 @@ export class GuestsFormComponent implements OnChanges {
       title: this._translate.instant('GUESTS_FORM.ADD_GUEST.SUCCESS'),
     });
 
-    // Wait until Angular renders the new guest form.
+    // Wait until Angular renders the new guest form
     setTimeout(() => {
       const slider = this.guestSlider?.nativeElement;
 
@@ -230,6 +311,7 @@ export class GuestsFormComponent implements OnChanges {
     if (this.guestFormItems.length === 1) {
       this.selectedGroupType = 'solo';
     }
+
     this.formsToShow = this.guestFormItems.length;
     setTimeout(() => this.updateSliderControls());
   }
@@ -243,21 +325,31 @@ export class GuestsFormComponent implements OnChanges {
     const maxSelections = isSolo ? 1 : requiredForms;
 
     // Build the member selection list
+    const guestForms = this.guestForms.toArray();
+
     const html = this.guestFormItems
-      .map(
-        (item, index) => `
+      .map((item, index) => {
+        // Read the current value from the guest form
+        const fullName = guestForms[index]?.formCreateGuest.get('fullName')?.value?.trim();
+
+        // Use the guest name or fallback to the guest number
+        const guestLabel =
+          fullName ||
+          this._translate.instant('GUESTS_FORM.GUEST_NUMBER', {
+            number: index + 1,
+          });
+
+        return `
       <label class="guest-selection-item">
         <input
           type="${inputType}"
           name="${inputName}"
           value="${item.id}"
         />
-        ${this._translate.instant('GUESTS_FORM.GUEST_NUMBER', {
-          number: index + 1,
-        })}
+        ${guestLabel}
       </label>
-    `
-      )
+    `;
+      })
       .join('');
 
     // First confirmation: Select members to keep

@@ -1,7 +1,9 @@
 {
   "GENERAL": {
-    "LOADING": "読み込み中...",
-    "BACK": "戻る"
+    "LOADING": "読み込み中",
+    "BACK": "戻る",
+    "ERROR": "エラー",
+    "CLOSE": "閉じる"
   },
   "MENU": {
     "HOME": "ホーム",
@@ -63,7 +65,8 @@
     "YES": "はい",
     "NO": "いいえ",
     "CLEAR": "クリア",
-    "SEARCH": "検索"
+    "SEARCH": "検索",
+    "SEARCHING": "検索中"
   },
   "GUESTS_ACTIONS": {
     "SEE_STATS": "統計を見る",
@@ -283,6 +286,24 @@
       "SUCCESS": "新しいゲストフォームが追加されました"
     },
     "CREATE": "作成",
+    "CREATING": "作成中",
+    "UPDATE": "更新",
+    "UPDATING": "更新中",
+    "MAX_MEMBERS": "追加できるメンバーは最大5人です",
+    "REMOVE_GUEST": {
+      "TITLE": "ゲストを削除",
+      "DESCRIPTION": "このゲストをフォームから削除してもよろしいですか？",
+      "CONFIRM": "はい、削除"
+    },
+    "GUEST_NUMBER": "ゲスト #{{number}}",
+    "FORM_COUNT_SINGULAR": "ゲストフォーム1件",
+    "FORM_COUNT": "ゲストフォーム{{count}}件",
+    "NO_CHANGES": {
+      "TITLE": "変更はありません",
+      "DESCRIPTION": "このフォームの情報は変更されていません。保存せずに終了しますか？",
+      "EXIT": "保存せずに終了",
+      "CONTINUE": "編集を続ける"
+    },
     "UPDATE": "更新",
     "MAX_MEMBERS": "追加できるメンバーは最大5人です",
     "REMOVE_GUEST": {

@@ -5,9 +5,7 @@ import { environment } from '@env/environment';
 
 // Interfaces
 import {
-  IBodyGuest,
   IGroupCreatePayload,
-  IGroupDetail,
   IGroupDetailResp,
   IGroupUpdatePayload,
   IGuestCreatePayload,

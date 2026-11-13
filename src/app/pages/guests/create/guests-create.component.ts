@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { finalize } from 'rxjs';
 
 // Services
 import { GuestsService } from '@services/guests.service';
@@ -17,7 +18,27 @@ export class GuestsCreateComponent {
   private _translate = inject(TranslateService);
   private router = inject(Router);
 
+  isCreating = false;
+
+  private showOfflineAlert(): void {
+    this._alerts.showAlert({
+      icon: 'error',
+      title: this._translate.instant('GENERAL.ERROR'),
+      html: this._translate.instant('ERRORS.HTTP.502'),
+      showCancelButton: false,
+      confirmText: this._translate.instant('GENERAL.CLOSE'),
+    });
+  }
+
   create(data: any): void {
+    if (this.isCreating) return;
+
+    // CHECK INTERNET CONNECTION
+    if (!navigator.onLine) {
+      this.showOfflineAlert();
+      return;
+    }
+
     let payload: any;
 
     if (data.groupType === 'solo') {
@@ -26,22 +47,27 @@ export class GuestsCreateComponent {
         ...data.guests[0],
       };
 
-      this._guests.createNewGuest(payload).subscribe({
-        next: () => {
-          this._alerts.showToast({
-            icon: 'success',
-            title: this._translate.instant('ALERTS.CREATE.GUEST_SUCCESS'),
-          });
+      this.isCreating = true;
 
-          this.router.navigateByUrl('/guests');
-        },
-        error: () => {
-          this._alerts.showToast({
-            icon: 'error',
-            title: this._translate.instant('ALERTS.CREATE.GUEST_ERROR'),
-          });
-        },
-      });
+      this._guests
+        .createNewGuest(payload)
+        .pipe(finalize(() => (this.isCreating = false)))
+        .subscribe({
+          next: () => {
+            this._alerts.showToast({
+              icon: 'success',
+              title: this._translate.instant('ALERTS.CREATE.GUEST_SUCCESS'),
+            });
+
+            this.router.navigateByUrl('/guests');
+          },
+          error: () => {
+            this._alerts.showToast({
+              icon: 'error',
+              title: this._translate.instant('ALERTS.CREATE.GUEST_ERROR'),
+            });
+          },
+        });
 
       return;
     }
@@ -52,21 +78,26 @@ export class GuestsCreateComponent {
       members: data.guests,
     };
 
-    this._guests.createNewGroup(payload).subscribe({
-      next: () => {
-        this._alerts.showToast({
-          icon: 'success',
-          title: this._translate.instant('ALERTS.CREATE.GROUP_SUCCESS'),
-        });
+    this.isCreating = true;
 
-        this.router.navigateByUrl('/guests'); // TODO
-      },
-      error: () => {
-        this._alerts.showToast({
-          icon: 'error',
-          title: this._translate.instant('ALERTS.CREATE.GROUP_ERROR'),
-        });
-      },
-    });
+    this._guests
+      .createNewGroup(payload)
+      .pipe(finalize(() => (this.isCreating = false)))
+      .subscribe({
+        next: () => {
+          this._alerts.showToast({
+            icon: 'success',
+            title: this._translate.instant('ALERTS.CREATE.GROUP_SUCCESS'),
+          });
+
+          this.router.navigateByUrl('/guests');
+        },
+        error: () => {
+          this._alerts.showToast({
+            icon: 'error',
+            title: this._translate.instant('ALERTS.CREATE.GROUP_ERROR'),
+          });
+        },
+      });
   }
 }

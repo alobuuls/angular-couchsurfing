@@ -1,7 +1,9 @@
 {
   "GENERAL": {
-    "LOADING": "Chargement...",
-    "BACK": "Retour"
+    "LOADING": "Chargement",
+    "BACK": "Retour",
+    "ERROR": "Erreur",
+    "CLOSE": "Fermer"
   },
   "MENU": {
     "HOME": "Accueil",
@@ -63,7 +65,8 @@
     "YES": "Oui",
     "NO": "Non",
     "CLEAR": "Effacer",
-    "SEARCH": "Rechercher"
+    "SEARCH": "Rechercher",
+    "SEARCHING": "Recherche en cours"
   },
   "GUESTS_ACTIONS": {
     "SEE_STATS": "Voir les statistiques",
@@ -283,6 +286,24 @@
       "SUCCESS": "Un autre formulaire d'invité a été ajouté"
     },
     "CREATE": "Créer",
+    "CREATING": "Création en cours",
+    "UPDATE": "Mettre à jour",
+    "UPDATING": "Mise à jour en cours",
+    "MAX_MEMBERS": "Vous pouvez ajouter un maximum de 5 membres",
+    "REMOVE_GUEST": {
+      "TITLE": "Supprimer l'invité",
+      "DESCRIPTION": "Voulez-vous vraiment supprimer cet invité du formulaire ?",
+      "CONFIRM": "Oui, supprimer"
+    },
+    "GUEST_NUMBER": "Invité n° {{number}}",
+    "FORM_COUNT_SINGULAR": "1 formulaire d'invité",
+    "FORM_COUNT": "{{count}} formulaires d'invité",
+    "NO_CHANGES": {
+      "TITLE": "Aucune modification effectuée",
+      "DESCRIPTION": "Vous n'avez modifié aucune information dans ce formulaire. Voulez-vous quitter sans enregistrer ?",
+      "EXIT": "Quitter sans enregistrer",
+      "CONTINUE": "Continuer la modification"
+    },
     "UPDATE": "Mettre à jour",
     "MAX_MEMBERS": "Puedes añadir un máximo de 5 miembros",
     "REMOVE_GUEST": {

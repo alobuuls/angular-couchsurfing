@@ -9,6 +9,8 @@ import { GuestsService } from '@services/guests.service';
 import { FormatService } from '@services/format.service';
 import { GeonameService } from '@services/geoname.service';
 import { LanguageService } from '@core/services/language.service';
+import { AlertsService } from '@core/services/alerts.service';
+import { ErrorHandlerService } from '@core/services/err-handler.service';
 
 // Interfaces
 import { IGuestTableMember, IGuestTableRow } from '@interfaces/data-structure-api';
@@ -20,10 +22,7 @@ import { DataState } from '@interfaces/data-structure-api';
 import { LINK_BASE_COUCHSURFING, LINK_BASE_INSTAGRAM, LINK_BASE_WHATSAPP } from '@config/social/social-links';
 
 // Utils
-import { withReqStateSimple } from '@utils';
-
-// Helpers
-import { getGuestDetailRoute } from '../../../utils/helpers/guest-routing.utils';
+import { withReqStateSimple, getGuestDetailRoute } from '@utils';
 
 @Component({
   selector: 'guests-cards',
@@ -33,49 +32,36 @@ import { getGuestDetailRoute } from '../../../utils/helpers/guest-routing.utils'
 export class GuestsCardsComponent implements OnDestroy {
   getGuestDetailRoute = getGuestDetailRoute;
   private canLoadMore = true;
+  private _data: IGuestTableRow[] = [];
+
+  linkBaseCouchsurfing: string = LINK_BASE_COUCHSURFING;
+  linkBaseInstagram: string = LINK_BASE_INSTAGRAM;
+  linkBaseWhatsapp: string = LINK_BASE_WHATSAPP;
+
+  // Cards
+  cardStates = new Map<string, DataState<ICardGuest[]>>();
+  cardsGuest: IGuestYearGroup[] = [];
+  // Cards that are currently open
+  openCards = new Set<string>();
+
+  showBackToTop = false;
 
   private _guests = inject(GuestsService);
   _format = inject(FormatService);
   private readonly _translate = inject(TranslateService);
   private readonly _language = inject(LanguageService);
   private readonly _geoname = inject(GeonameService);
+  private readonly _alerts = inject(AlertsService);
+  private readonly _errHandler = inject(ErrorHandlerService);
   private readonly _router = inject(Router);
 
-  private _data: IGuestTableRow[] = [];
   private readonly _langChangeSubscription = this._translate.onLangChange.subscribe(() => this.buildCardsGroups());
-
-  linkBaseCouchsurfing: string = LINK_BASE_COUCHSURFING;
-  linkBaseInstagram: string = LINK_BASE_INSTAGRAM;
-  linkBaseWhatsapp: string = LINK_BASE_WHATSAPP;
-
-  @Input()
-  set monthlyStats(value: IYearlyStat[] | undefined) {
-    this._monthlyStats = value ?? [];
-    this.buildCardsGroups();
-  }
-
+  readonly skeletonCards = Array.from({ length: 10 });
+  readonly skeletonStars = [1, 2, 3, 4, 5];
   private _monthlyStats: IYearlyStat[] = [];
-
-  getRegionName(region: Regions): string {
-    return this._geoname.getRegionName(region);
-  }
-
-  getContinentName(continent: Continents): string {
-    return this._geoname.getContinentName(continent);
-  }
-
-  ngOnDestroy(): void {
-    this._langChangeSubscription.unsubscribe();
-  }
-
-  @Output() remove = new EventEmitter<IGuestListItem>();
-
-  showBackToTop = false;
 
   @Input() loading = false;
   @Input() cardsHasMore: boolean = false;
-  readonly skeletonCards = Array.from({ length: 10 });
-  readonly skeletonStars = [1, 2, 3, 4, 5];
 
   @Input()
   set data(value: IGuestTableRow[]) {
@@ -83,12 +69,19 @@ export class GuestsCardsComponent implements OnDestroy {
     this.buildCardsGroups();
   }
 
+  @Input()
+  set monthlyStats(value: IYearlyStat[] | undefined) {
+    this._monthlyStats = value ?? [];
+    this.buildCardsGroups();
+  }
+
+  @Output() remove = new EventEmitter<IGuestListItem>();
+  // To infinite Scroll
+  @Output() loadMore = new EventEmitter<void>();
+
   get data(): IGuestTableRow[] {
     return this._data;
   }
-
-  // To infinite Scroll
-  @Output() loadMore = new EventEmitter<void>();
 
   // Listen for scroll events on the browser window.
   @HostListener('window:scroll')
@@ -98,9 +91,7 @@ export class GuestsCardsComponent implements OnDestroy {
     this.showBackToTop = window.scrollY > backToTopThreshold;
 
     // INFINITE SCROLL
-    if (!this.canLoadMore || this.loading || !this.cardsHasMore) {
-      return;
-    }
+    if (!this.canLoadMore || this.loading || !this.cardsHasMore) return;
 
     const infiniteScrollThreshold = 900;
     // Current scroll position.
@@ -114,24 +105,17 @@ export class GuestsCardsComponent implements OnDestroy {
     }
   }
 
-  scrollToTop(): void {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['loading'] && !this.loading) this.canLoadMore = true;
     if (changes['cardsHasMore'] && !this.cardsHasMore) this.canLoadMore = false;
   }
 
-  // Cards
-  cardStates = new Map<string, DataState<ICardGuest[]>>();
-  cardsGuest: IGuestYearGroup[] = [];
-
-  // Cards that are currently open
-  openCards = new Set<string>();
+  // Open / close a card
+  private getCardId(guest: IGuestTableRow): string | undefined {
+    if ('groupId' in guest) return guest.groupId;
+    if ('guestId' in guest) return guest.guestId;
+    return undefined;
+  }
 
   private buildCardsGroups(): void {
     const guestsByMonth = new Map<string, IGuestTableRow[]>();
@@ -178,115 +162,6 @@ export class GuestsCardsComponent implements OnDestroy {
     }).format(new Date(2024, month, 1));
   }
 
-  formatDate(value: Date | string): string {
-    if (!value) return '';
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return '';
-    return this._format.formatDate(date.toISOString());
-  }
-
-  // Open / close a card
-  private getCardId(guest: IGuestTableRow): string | undefined {
-    if ('groupId' in guest) return guest.groupId;
-    if ('guestId' in guest) return guest.guestId;
-    return undefined;
-  }
-
-  toggleCard(guest: IGuestTableRow): void {
-    const cardId = this.getCardId(guest);
-
-    if (!cardId) return;
-
-    // Close card
-    if (this.openCards.has(cardId)) {
-      this.openCards.delete(cardId);
-      return;
-    }
-
-    // Open card
-    this.openCards.add(cardId);
-
-    const currentState = this.cardStates.get(cardId);
-
-    // Already loading or successfully loaded
-    if (currentState?.status === 'loading' || currentState?.status === 'success') {
-      return;
-    }
-
-    // Load solo guest
-    if (guest.groupType === 'solo') {
-      const request$ = this._guests.getGuestById(guest.guestId).pipe(
-        map(response => ({
-          data: [response.data],
-        }))
-      );
-
-      withReqStateSimple<ICardGuest[]>(request$).subscribe(state => {
-        this.cardStates.set(cardId, state);
-      });
-      return;
-    }
-
-    // Load group
-    if (!guest.groupId) return;
-    {
-      withReqStateSimple<ICardGuest[]>(this._guests.getGroupById(guest.groupId)).subscribe(state => {
-        this.cardStates.set(cardId, state);
-      });
-    }
-  }
-
-  isCardOpen(guest: IGuestTableRow): boolean {
-    const cardId = this.getCardId(guest);
-    if (!cardId) return false;
-    return this.openCards.has(cardId);
-  }
-
-  getCardDetails(guest: IGuestTableRow): ICardGuest[] {
-    const cardId = this.getCardId(guest);
-    if (!cardId) return [];
-
-    const state = this.cardStates.get(cardId);
-    return state?.status === 'success' ? state.data : [];
-  }
-
-  isCardLoading(guest: IGuestTableRow): boolean {
-    const cardId = this.getCardId(guest);
-    return cardId ? this.cardStates.get(cardId)?.status === 'loading' : false;
-  }
-
-  //  Get the names of the people in the guest/trip
-  getGuestNames(guest: IGuestTableRow): string {
-    return guest.people.map(person => person.fullName).join(' & ');
-  }
-
-  hasFiveStars(guest: IGuestTableRow): boolean {
-    return guest.people.length > 0 && guest.people.every(person => person.rating === 5);
-  }
-
-  hasAmbassador(guest: IGuestTableRow): boolean {
-    return guest.people.some(person => person.ambassador);
-  }
-
-  // Show one badge on the card when the solo guest or all group members are first time
-  showFirstTimeCardBadge(guest: IGuestTableRow): boolean {
-    if (guest.groupType === 'solo') return guest.isFirstTime === true;
-    return guest.people.length > 0 && guest.people.every(person => person.isFirstTime === true);
-  }
-
-  // Show individual badges when only some group members are first time
-  showFirstTimePersonBadge(guest: IGuestTableRow, person: IGuestTableMember): boolean {
-    return guest.groupType !== 'solo' && !this.showFirstTimeCardBadge(guest) && person.isFirstTime === true;
-  }
-
-  // Show guest name and the first letter os the last name
-  formatGuestName(fullName: string): string {
-    if (!fullName) return '';
-    const parts = fullName.trim().split(/\s+/);
-    if (parts.length === 1) return parts[0];
-    return `${parts[0]} ${parts[1].charAt(0).toUpperCase()}.`;
-  }
-
   // NAVIGATE TO GUEST/GROUP DETAIL WITH VIEW TRANSITION
   async navigateWithTransition(guest: IGuestListItem): Promise<void> {
     // Get the route corresponding to the selected guest or group.
@@ -329,5 +204,137 @@ export class GuestsCardsComponent implements OnDestroy {
       // Remove the forward class to prevent it from affecting future navigations.
       root.classList.remove('forward');
     }
+  }
+
+  formatDate(value: Date | string): string {
+    if (!value) return '';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return '';
+    return this._format.formatDate(date.toISOString());
+  }
+
+  toggleCard(guest: IGuestTableRow): void {
+    const cardId = this.getCardId(guest);
+    if (!cardId) return;
+
+    // CLOSE CARD
+    if (this.openCards.has(cardId)) {
+      this.openCards.delete(cardId);
+      return;
+    }
+
+    // OPEN CARD
+    this.openCards.add(cardId);
+
+    const currentState = this.cardStates.get(cardId);
+
+    // Already loading or successfully loaded
+    if (currentState?.status === 'loading' || currentState?.status === 'success') return;
+
+    // Handle request states
+    const handleRequestState = (state: DataState<ICardGuest[]>): void => {
+      // Save every state: loading, success or error
+      this.cardStates.set(cardId, state);
+
+      if (state.status === 'error' && state.error) {
+        // Close card so the user can retry
+        this.openCards.delete(cardId);
+
+        this._alerts.showAlert({
+          icon: 'error',
+          title: 'Error',
+          html: state.error.message,
+          showCancelButton: false,
+          confirmText: 'Close',
+        });
+      }
+    };
+
+    // LOAD SOLO GUEST
+    if (guest.groupType === 'solo') {
+      const request$ = this._guests.getGuestById(guest.guestId).pipe(map(response => ({ data: [response.data] })));
+
+      withReqStateSimple<ICardGuest[]>(request$, this._errHandler).subscribe(handleRequestState);
+      return;
+    }
+
+    // LOAD GROUP
+    if (!guest.groupId) {
+      this.openCards.delete(cardId);
+      return;
+    }
+
+    const isAGroup = ['couple', 'friends', 'family'].includes(guest.groupType);
+
+    if (isAGroup) {
+      withReqStateSimple<ICardGuest[]>(this._guests.getGroupById(guest.groupId), this._errHandler).subscribe(handleRequestState);
+    }
+  }
+
+  isCardOpen(guest: IGuestTableRow): boolean {
+    const cardId = this.getCardId(guest);
+    if (!cardId) return false;
+    return this.openCards.has(cardId);
+  }
+
+  isCardLoading(guest: IGuestTableRow): boolean {
+    const cardId = this.getCardId(guest);
+    return cardId ? this.cardStates.get(cardId)?.status === 'loading' : false;
+  }
+
+  getRegionName(region: Regions): string {
+    return this._geoname.getRegionName(region);
+  }
+
+  getContinentName(continent: Continents): string {
+    return this._geoname.getContinentName(continent);
+  }
+
+  getCardDetails(guest: IGuestTableRow): ICardGuest[] {
+    const cardId = this.getCardId(guest);
+    if (!cardId) return [];
+
+    const state = this.cardStates.get(cardId);
+    return state?.status === 'success' ? state.data : [];
+  }
+
+  //  Get the names of the people in the guest/trip
+  getGuestNames(guest: IGuestTableRow): string {
+    return guest.people.map(person => person.fullName).join(' & ');
+  }
+
+  hasFiveStars(guest: IGuestTableRow): boolean {
+    return guest.people.length > 0 && guest.people.every(person => person.rating === 5);
+  }
+
+  hasAmbassador(guest: IGuestTableRow): boolean {
+    return guest.people.some(person => person.ambassador);
+  }
+
+  // Show one badge on the card when the solo guest or all group members are first time
+  showFirstTimeCardBadge(guest: IGuestTableRow): boolean {
+    if (guest.groupType === 'solo') return guest.isFirstTime === true;
+    return guest.people.length > 0 && guest.people.every(person => person.isFirstTime === true);
+  }
+
+  // Show individual badges when only some group members are first time
+  showFirstTimePersonBadge(guest: IGuestTableRow, person: IGuestTableMember): boolean {
+    return guest.groupType !== 'solo' && !this.showFirstTimeCardBadge(guest) && person.isFirstTime === true;
+  }
+
+  // Show guest name and the first letter os the last name
+  formatGuestName(fullName: string): string {
+    if (!fullName) return '';
+    const parts = fullName.trim().split(/\s+/);
+    if (parts.length === 1) return parts[0];
+    return `${parts[0]} ${parts[1].charAt(0).toUpperCase()}.`;
+  }
+
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  ngOnDestroy(): void {
+    this._langChangeSubscription.unsubscribe();
   }
 }

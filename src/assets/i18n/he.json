@@ -1,7 +1,9 @@
 {
   "GENERAL": {
-    "LOADING": "טוען...",
-    "BACK": "חזרה"
+    "LOADING": "טוען",
+    "BACK": "חזרה",
+    "ERROR": "שגיאה",
+    "CLOSE": "סגירה"
   },
   "MENU": {
     "HOME": "בית",
@@ -63,7 +65,8 @@
     "YES": "כן",
     "NO": "לא",
     "CLEAR": "ניקוי",
-    "SEARCH": "חיפוש"
+    "SEARCH": "חיפוש",
+    "SEARCHING": "מתבצע חיפוש"
   },
   "GUESTS_ACTIONS": {
     "SEE_STATS": "צפייה בסטטיסטיקות",
@@ -282,6 +285,24 @@
       "SUCCESS": "נוסף טופס נוסף עבור אורח"
     },
     "CREATE": "יצירה",
+    "CREATING": "יוצר",
+    "UPDATE": "עדכון",
+    "UPDATING": "מעדכן",
+    "MAX_MEMBERS": "ניתן להוסיף עד 5 חברים",
+    "REMOVE_GUEST": {
+      "TITLE": "הסרת אורח",
+      "DESCRIPTION": "האם ברצונך להסיר את האורח הזה מהטופס?",
+      "CONFIRM": "כן, הסר"
+    },
+    "GUEST_NUMBER": "אורח מס׳ {{number}}",
+    "FORM_COUNT_SINGULAR": "טופס אורח אחד",
+    "FORM_COUNT": "{{count}} טפסי אורחים",
+    "NO_CHANGES": {
+      "TITLE": "לא בוצעו שינויים",
+      "DESCRIPTION": "לא שינית שום מידע בטופס הזה. האם ברצונך לצאת מבלי לשמור?",
+      "EXIT": "יציאה ללא שמירה",
+      "CONTINUE": "המשך בעריכה"
+    },
     "UPDATE": "עדכון",
     "MAX_MEMBERS": "ניתן להוסיף עד 5 חברים",
     "REMOVE_GUEST": {
