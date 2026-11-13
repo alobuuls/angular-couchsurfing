@@ -1,5 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, Output, SimpleChanges, inject } from '@angular/core';
-import { OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges, inject, NgZone, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -28,8 +27,16 @@ import { withReqStateSimple, getGuestDetailRoute } from '@utils';
   selector: 'guests-cards',
   templateUrl: './guests-cards.component.html',
   styleUrls: ['./guests-cards.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GuestsCardsComponent implements OnDestroy {
+export class GuestsCardsComponent implements OnInit, OnDestroy {
+  // Scroll
+  private readonly _ngZone = inject(NgZone);
+  private scrollListener?: () => void;
+  private scrollFrame: number | null = null;
+
+  readonly ratingStars = [1, 2, 3, 4, 5];
+
   getGuestDetailRoute = getGuestDetailRoute;
   private canLoadMore = true;
   private _data: IGuestTableRow[] = [];
@@ -54,6 +61,7 @@ export class GuestsCardsComponent implements OnDestroy {
   private readonly _alerts = inject(AlertsService);
   private readonly _errHandler = inject(ErrorHandlerService);
   private readonly _router = inject(Router);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   private readonly _langChangeSubscription = this._translate.onLangChange.subscribe(() => this.buildCardsGroups());
   readonly skeletonCards = Array.from({ length: 10 });
@@ -83,35 +91,69 @@ export class GuestsCardsComponent implements OnDestroy {
     return this._data;
   }
 
-  // Listen for scroll events on the browser window.
-  @HostListener('window:scroll')
-  onScroll(): void {
-    // BACK TO TOP
-    const backToTopThreshold = 900;
-    this.showBackToTop = window.scrollY > backToTopThreshold;
-
-    // INFINITE SCROLL
-    if (!this.canLoadMore || this.loading || !this.cardsHasMore) return;
-
-    const infiniteScrollThreshold = 900;
-    // Current scroll position.
-    const scrollPosition = window.innerHeight + window.scrollY;
-    // Total document height.
-    const pageHeight = document.documentElement.scrollHeight;
-
-    if (scrollPosition >= pageHeight - infiniteScrollThreshold) {
-      this.canLoadMore = false;
-      this.loadMore.emit();
-    }
+  ngOnInit(): void {
+    this.initScrollListener();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['loading'] && !this.loading) this.canLoadMore = true;
-    if (changes['cardsHasMore'] && !this.cardsHasMore) this.canLoadMore = false;
+    if (changes['loading'] && !this.loading) {
+      this.canLoadMore = true;
+    }
+
+    if (changes['cardsHasMore'] && !this.cardsHasMore) {
+      this.canLoadMore = false;
+    }
+  }
+
+  private initScrollListener(): void {
+    this._ngZone.runOutsideAngular(() => {
+      this.scrollListener = () => {
+        if (this.scrollFrame !== null) return;
+
+        this.scrollFrame = requestAnimationFrame(() => {
+          this.scrollFrame = null;
+
+          // BACK TO TOP
+          const shouldShowBackToTop = window.scrollY > 900;
+
+          // INFINITE SCROLL
+          const scrollPosition = window.innerHeight + window.scrollY;
+          const pageHeight = document.documentElement.scrollHeight;
+
+          const shouldLoadMore = this.canLoadMore && !this.loading && this.cardsHasMore && scrollPosition >= pageHeight - 900;
+
+          if (shouldShowBackToTop !== this.showBackToTop || shouldLoadMore) {
+            this._ngZone.run(() => {
+              this.showBackToTop = shouldShowBackToTop;
+              this.cdr.markForCheck();
+
+              if (shouldLoadMore) {
+                this.canLoadMore = false;
+                this.loadMore.emit();
+              }
+            });
+          }
+        });
+      };
+
+      window.addEventListener('scroll', this.scrollListener, { passive: true });
+    });
+  }
+
+  private removeScrollListener(): void {
+    if (this.scrollListener) {
+      window.removeEventListener('scroll', this.scrollListener);
+      this.scrollListener = undefined;
+    }
+
+    if (this.scrollFrame !== null) {
+      cancelAnimationFrame(this.scrollFrame);
+      this.scrollFrame = null;
+    }
   }
 
   // Open / close a card
-  private getCardId(guest: IGuestTableRow): string | undefined {
+  getCardId(guest: IGuestTableRow): string | undefined {
     if ('groupId' in guest) return guest.groupId;
     if ('guestId' in guest) return guest.guestId;
     return undefined;
@@ -220,11 +262,13 @@ export class GuestsCardsComponent implements OnDestroy {
     // CLOSE CARD
     if (this.openCards.has(cardId)) {
       this.openCards.delete(cardId);
+      this.cdr.markForCheck();
       return;
     }
 
     // OPEN CARD
     this.openCards.add(cardId);
+    this.cdr.markForCheck();
 
     const currentState = this.cardStates.get(cardId);
 
@@ -235,10 +279,12 @@ export class GuestsCardsComponent implements OnDestroy {
     const handleRequestState = (state: DataState<ICardGuest[]>): void => {
       // Save every state: loading, success or error
       this.cardStates.set(cardId, state);
+      this.cdr.markForCheck();
 
       if (state.status === 'error' && state.error) {
         // Close card so the user can retry
         this.openCards.delete(cardId);
+        this.cdr.markForCheck();
 
         this._alerts.showAlert({
           icon: 'error',
@@ -261,6 +307,7 @@ export class GuestsCardsComponent implements OnDestroy {
     // LOAD GROUP
     if (!guest.groupId) {
       this.openCards.delete(cardId);
+      this.cdr.markForCheck();
       return;
     }
 
@@ -271,10 +318,8 @@ export class GuestsCardsComponent implements OnDestroy {
     }
   }
 
-  isCardOpen(guest: IGuestTableRow): boolean {
-    const cardId = this.getCardId(guest);
-    if (!cardId) return false;
-    return this.openCards.has(cardId);
+  isCardOpenById(cardId: string | undefined): boolean {
+    return !!cardId && this.openCards.has(cardId);
   }
 
   isCardLoading(guest: IGuestTableRow): boolean {
@@ -334,7 +379,20 @@ export class GuestsCardsComponent implements OnDestroy {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  trackByYear(index: number, year: IGuestYearGroup): number {
+    return year.year;
+  }
+
+  trackByMonth(index: number, month: IGuestYearGroup['months'][number]): number {
+    return month.month;
+  }
+
+  trackByGuest = (index: number, guest: IGuestTableRow): string => {
+    return this.getCardId(guest) ?? String(index);
+  };
+
   ngOnDestroy(): void {
+    this.removeScrollListener();
     this._langChangeSubscription.unsubscribe();
   }
 }

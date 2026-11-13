@@ -55,7 +55,7 @@
   </div>
 
   <!-- YEARS -->
-  <div *ngFor="let year of cardsGuest" class="year-group">
+  <div *ngFor="let year of cardsGuest; trackBy: trackByYear" class="year-group">
     <div class="year-header">
       <h2 class="year-title">{{ year.year }}</h2>
 
@@ -72,7 +72,7 @@
     </div>
 
     <!-- MONTHS -->
-    <div *ngFor="let month of year.months" class="month-group">
+    <div *ngFor="let month of year.months; trackBy: trackByMonth" class="month-group">
       <div class="month-header">
         <h3 class="month-title">{{ month.monthName | uppercase }}</h3>
 
@@ -93,9 +93,9 @@
       <div class="cards">
         <!-- ONE CARD PER GUEST/TRIP -->
         <div
-          *ngFor="let guest of month.guests"
+          *ngFor="let guest of month.guests; trackBy: trackByGuest"
           class="card"
-          [class.expanded]="isCardOpen(guest)"
+          [class.expanded]="isCardOpenById(getCardId(guest))"
           [class.group-card]="guest.groupType !== 'solo'"
           [class.five-stars]="hasFiveStars(guest)"
         >
@@ -154,7 +154,7 @@
                   <div class="ctn-stars">
                     <mat-icon
                       class="material-symbols-outlined"
-                      *ngFor="let s of [1, 2, 3, 4, 5]"
+                      *ngFor="let s of ratingStars"
                       [class.filled]="s <= p.rating"
                       fontIcon="star"
                     ></mat-icon>
@@ -244,18 +244,23 @@
 
             <div class="ctn-btn-actions-card">
               <!-- READ MORE -->
-              <button class="btn-read-more" type="button" [disabled]="isCardLoading(guest)" (click)="toggleCard(guest)">
-                <ng-container *ngIf="isCardLoading(guest); else loadedText">
-                  <span class="loading-text">
-                    {{ 'GENERAL.LOADING' | translate }}
-                    <mat-icon class="loading-spinner">autorenew</mat-icon>
-                  </span>
-                </ng-container>
+              <ng-container *ngIf="{ loading: isCardLoading(guest) } as cardState">
+                <button class="btn-read-more" type="button" [disabled]="cardState.loading" (click)="toggleCard(guest)">
+                  <ng-container *ngIf="cardState.loading; else loadedText">
+                    <span class="loading-text">
+                      {{ 'GENERAL.LOADING' | translate }}
+                      <mat-icon class="loading-spinner">autorenew</mat-icon>
+                    </span>
+                  </ng-container>
 
-                <ng-template #loadedText>
-                  {{ (isCardOpen(guest) ? 'GUESTS_CARDS.SHOW_LESS' : 'GUESTS_CARDS.READ_MORE') | translate }}
-                </ng-template>
-              </button>
+                  <ng-template #loadedText>
+                    {{
+                      (isCardOpenById(getCardId(guest)) ? 'GUESTS_CARDS.SHOW_LESS' : 'GUESTS_CARDS.READ_MORE')
+                        | translate
+                    }}
+                  </ng-template>
+                </button>
+              </ng-container>
 
               <!-- DELETE -->
               <button (click)="remove.emit(guest); $event.stopPropagation()" class="btn-delete-guest" type="button">
@@ -265,7 +270,7 @@
               </button>
 
               <!-- DETAILS -->
-              <div *ngIf="isCardOpen(guest)" class="card-details">
+              <div *ngIf="isCardOpenById(getCardId(guest))" class="card-details">
                 <ng-container *ngIf="getCardDetails(guest) as details">
                   <ng-container *ngIf="details.length > 0">
                     <!-- TRIP -->
