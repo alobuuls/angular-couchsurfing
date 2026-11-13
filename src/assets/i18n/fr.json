@@ -784,7 +784,8 @@
         "CONFIRM_BUTTON": "Supprimer l'invité"
       },
       "SUCCESS": {
-        "MESSAGE": "<strong class=\"danger\">{{name}}</strong> a été supprimé avec succès"
+        "GUEST_MESSAGE": "<strong class=\"danger\">{{name}}</strong> a été supprimé avec succès",
+        "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong> ont été supprimés avec succès"
       }
     },
     "CREATE": {
@@ -798,6 +799,33 @@
       "GUEST_ERROR": "Erreur lors de la mise à jour de l'invité",
       "GROUP_SUCCESS": "Groupe mis à jour avec succès",
       "GROUP_ERROR": "Erreur lors de la mise à jour du groupe"
+    },
+    "BUTTONS": {
+      "SAVE": "Enregistrer",
+      "CLOSE": "Fermer",
+      "DELETE": "Supprimer",
+      "COPY": "Copier",
+      "COPIED": "Copié !"
+    },
+    "DELETE_GUEST": {
+      "CONFIRMATION": {
+        "MESSAGE": "Voulez-vous vraiment supprimer ?",
+        "CONFIRM_BUTTON": "Je veux supprimer cet invité",
+        "GROUP_CONFIRM_BUTTON": "Je veux supprimer ce groupe"
+      },
+      "WARNING": {
+        "TITLE": "Veuillez lire attentivement avant de continuer",
+        "MESSAGE": "Cela supprimera définitivement l'invité <strong class=\"danger\">{{name}}</strong>.",
+        "GROUP_MESSAGE": "Cela supprimera définitivement le groupe <strong class=\"danger\">{{name}}</strong>.",
+        "CONFIRM_BUTTON": "Je comprends les conséquences"
+      },
+      "TYPE_TO_CONFIRM": {
+        "TITLE": "Pour confirmer, saisissez \"<strong class=\"danger\">{{name}}</strong>\""
+      },
+      "SUCCESS": {
+        "MESSAGE": "<strong class=\"danger\">{{name}}</strong> a été supprimé avec succès",
+        "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong> ont été supprimés avec succès"
+      }
     }
   },
   "ERRORS": {
