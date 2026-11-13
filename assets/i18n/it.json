@@ -283,7 +283,8 @@
     },
     "ADD_GUEST": {
       "ADD_ANOTHER_GUEST": "Aggiungi un altro ospite",
-      "SUCCESS": "È stato aggiunto un altro modulo per l'ospite"
+      "GUEST_MESSAGE": "<strong class=\"danger\">{{name}}</strong> è stato eliminato con successo",
+      "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong> sono stati eliminati con successo"
     },
     "CREATE": "Crea",
     "CREATING": "Creazione in corso",
@@ -797,6 +798,33 @@
       "GUEST_ERROR": "Errore durante l'aggiornamento dell'ospite",
       "GROUP_SUCCESS": "Gruppo aggiornato correttamente",
       "GROUP_ERROR": "Errore durante l'aggiornamento del gruppo"
+    },
+    "BUTTONS": {
+      "SAVE": "Salva",
+      "CLOSE": "Chiudi",
+      "DELETE": "Elimina",
+      "COPY": "Copia",
+      "COPIED": "Copiato!"
+    },
+    "DELETE_GUEST": {
+      "CONFIRMATION": {
+        "MESSAGE": "Sei sicuro di voler eliminare?",
+        "CONFIRM_BUTTON": "Voglio eliminare questo ospite",
+        "GROUP_CONFIRM_BUTTON": "Voglio eliminare questo gruppo"
+      },
+      "WARNING": {
+        "TITLE": "Leggi attentamente prima di continuare",
+        "MESSAGE": "Questa operazione eliminerà definitivamente l'ospite <strong class=\"danger\">{{name}}</strong>.",
+        "GROUP_MESSAGE": "Questa operazione eliminerà definitivamente il gruppo <strong class=\"danger\">{{name}}</strong>.",
+        "CONFIRM_BUTTON": "Comprendo le conseguenze"
+      },
+      "TYPE_TO_CONFIRM": {
+        "TITLE": "Per confermare, digita \"<strong class=\"danger\">{{name}}</strong>\""
+      },
+      "SUCCESS": {
+        "MESSAGE": "<strong class=\"danger\">{{name}}</strong> è stato eliminato correttamente",
+        "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong> sono stati eliminati correttamente"
+      }
     }
   },
   "ERRORS": {

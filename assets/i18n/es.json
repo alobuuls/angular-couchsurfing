@@ -783,7 +783,8 @@
         "CONFIRM_BUTTON": "Eliminar huésped"
       },
       "SUCCESS": {
-        "MESSAGE": "<strong class=\"danger\">{{name}}</strong> se ha eliminado correctamente"
+        "GUEST_MESSAGE": "<strong class=\"danger\">{{name}}</strong> se ha eliminado correctamente",
+        "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong> se han eliminado correctamente"
       }
     },
     "CREATE": {
@@ -797,6 +798,33 @@
       "GUEST_ERROR": "Error al actualizar el huésped",
       "GROUP_SUCCESS": "Grupo actualizado correctamente",
       "GROUP_ERROR": "Error al actualizar el grupo"
+    },
+    "BUTTONS": {
+      "SAVE": "Guardar",
+      "CLOSE": "Cerrar",
+      "DELETE": "Eliminar",
+      "COPY": "Copiar",
+      "COPIED": "¡Copiado!"
+    },
+    "DELETE_GUEST": {
+      "CONFIRMATION": {
+        "MESSAGE": "¿Estás seguro de que deseas eliminar?",
+        "CONFIRM_BUTTON": "Quiero eliminar a este huésped",
+        "GROUP_CONFIRM_BUTTON": "Quiero eliminar este grupo"
+      },
+      "WARNING": {
+        "TITLE": "Lee atentamente antes de continuar",
+        "MESSAGE": "Esto eliminará permanentemente al huésped <strong class=\"danger\">{{name}}</strong>.",
+        "GROUP_MESSAGE": "Esto eliminará permanentemente al grupo <strong class=\"danger\">{{name}}</strong>.",
+        "CONFIRM_BUTTON": "Entiendo las consecuencias"
+      },
+      "TYPE_TO_CONFIRM": {
+        "TITLE": "Para confirmar, escribe \"<strong class=\"danger\">{{name}}</strong>\""
+      },
+      "SUCCESS": {
+        "MESSAGE": "<strong class=\"danger\">{{name}}</strong> se ha eliminado correctamente",
+        "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong> se han eliminado correctamente"
+      }
     }
   },
   "ERRORS": {

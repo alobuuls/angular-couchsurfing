@@ -784,7 +784,8 @@
         "CONFIRM_BUTTON": "Gast löschen"
       },
       "SUCCESS": {
-        "MESSAGE": "<strong class=\"danger\">{{name}}</strong> wurde erfolgreich gelöscht"
+        "GUEST_MESSAGE": "<strong class=\"danger\">{{name}}</strong> wurde erfolgreich gelöscht",
+        "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong> wurden erfolgreich gelöscht"
       }
     },
     "CREATE": {
@@ -798,6 +799,33 @@
       "GUEST_ERROR": "Fehler beim Aktualisieren des Gastes",
       "GROUP_SUCCESS": "Gruppe erfolgreich aktualisiert",
       "GROUP_ERROR": "Fehler beim Aktualisieren der Gruppe"
+    },
+    "BUTTONS": {
+      "SAVE": "Speichern",
+      "CLOSE": "Schließen",
+      "DELETE": "Löschen",
+      "COPY": "Kopieren",
+      "COPIED": "Kopiert!"
+    },
+    "DELETE_GUEST": {
+      "CONFIRMATION": {
+        "MESSAGE": "Möchtest du wirklich löschen?",
+        "CONFIRM_BUTTON": "Ich möchte diesen Gast löschen",
+        "GROUP_CONFIRM_BUTTON": "Ich möchte diese Gruppe löschen"
+      },
+      "WARNING": {
+        "TITLE": "Bitte lies alles sorgfältig durch, bevor du fortfährst",
+        "MESSAGE": "Dadurch wird der Gast <strong class=\"danger\">{{name}}</strong> dauerhaft gelöscht.",
+        "GROUP_MESSAGE": "Dadurch wird die Gruppe <strong class=\"danger\">{{name}}</strong> dauerhaft gelöscht.",
+        "CONFIRM_BUTTON": "Ich verstehe die Konsequenzen"
+      },
+      "TYPE_TO_CONFIRM": {
+        "TITLE": "Gib zur Bestätigung \"<strong class=\"danger\">{{name}}</strong>\" ein"
+      },
+      "SUCCESS": {
+        "MESSAGE": "<strong class=\"danger\">{{name}}</strong> wurde erfolgreich gelöscht",
+        "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong> wurden erfolgreich gelöscht"
+      }
     }
   },
   "ERRORS": {

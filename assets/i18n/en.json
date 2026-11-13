@@ -1,6 +1,6 @@
 {
   "GENERAL": {
-    "LOADING": "Loading...",
+    "LOADING": "Loading",
     "BACK": "Back",
     "ERROR": "Error",
     "CLOSE": "Close"
@@ -774,7 +774,8 @@
         "CONFIRM_BUTTON": "Delete guest"
       },
       "SUCCESS": {
-        "MESSAGE": "<strong class=\"danger\">{{name}}</strong> has been deleted successfully"
+        "GUEST_MESSAGE": "<strong class=\"danger\">{{name}}</strong> has been deleted successfully",
+        "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong> have been deleted successfully"
       }
     },
     "CREATE": {
@@ -788,6 +789,33 @@
       "GUEST_ERROR": "Error updating guest",
       "GROUP_SUCCESS": "Group updated successfully",
       "GROUP_ERROR": "Error updating group"
+    },
+    "BUTTONS": {
+      "SAVE": "Save",
+      "CLOSE": "Close",
+      "DELETE": "Delete",
+      "COPY": "Copy",
+      "COPIED": "Copied!"
+    },
+    "DELETE_GUEST": {
+      "CONFIRMATION": {
+        "MESSAGE": "Are you sure you want to delete?",
+        "CONFIRM_BUTTON": "I want to delete this guest",
+        "GROUP_CONFIRM_BUTTON": "I want to delete this group"
+      },
+      "WARNING": {
+        "TITLE": "Please read carefully before continuing",
+        "MESSAGE": "This will permanently delete the guest <strong class=\"danger\">{{name}}</strong>.",
+        "GROUP_MESSAGE": "This will permanently delete the group <strong class=\"danger\">{{name}}</strong>.",
+        "CONFIRM_BUTTON": "I understand the consequences"
+      },
+      "TYPE_TO_CONFIRM": {
+        "TITLE": "To confirm, type \"<strong class=\"danger\">{{name}}</strong>\""
+      },
+      "SUCCESS": {
+        "MESSAGE": "<strong class=\"danger\">{{name}}</strong> has been deleted successfully",
+        "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong> have been deleted successfully"
+      }
     }
   },
   "ERRORS": {

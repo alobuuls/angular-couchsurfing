@@ -783,7 +783,8 @@
         "CONFIRM_BUTTON": "मेहमान हटाएँ"
       },
       "SUCCESS": {
-        "MESSAGE": "<strong class=\"danger\">{{name}}</strong> को सफलतापूर्वक हटा दिया गया है"
+        "GUEST_MESSAGE": "<strong class=\"danger\">{{name}}</strong> को सफलतापूर्वक हटा दिया गया है",
+        "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong> को सफलतापूर्वक हटा दिया गया है"
       }
     },
     "CREATE": {
@@ -797,6 +798,33 @@
       "GUEST_ERROR": "मेहमान अपडेट करने में त्रुटि",
       "GROUP_SUCCESS": "समूह सफलतापूर्वक अपडेट किया गया",
       "GROUP_ERROR": "समूह अपडेट करने में त्रुटि"
+    },
+    "BUTTONS": {
+      "SAVE": "सहेजें",
+      "CLOSE": "बंद करें",
+      "DELETE": "हटाएँ",
+      "COPY": "कॉपी करें",
+      "COPIED": "कॉपी हो गया!"
+    },
+    "DELETE_GUEST": {
+      "CONFIRMATION": {
+        "MESSAGE": "क्या आप वाकई हटाना चाहते हैं?",
+        "CONFIRM_BUTTON": "मैं इस मेहमान को हटाना चाहता/चाहती हूँ",
+        "GROUP_CONFIRM_BUTTON": "मैं इस समूह को हटाना चाहता/चाहती हूँ"
+      },
+      "WARNING": {
+        "TITLE": "आगे बढ़ने से पहले कृपया ध्यान से पढ़ें",
+        "MESSAGE": "इससे मेहमान <strong class=\"danger\">{{name}}</strong> हमेशा के लिए हट जाएगा।",
+        "GROUP_MESSAGE": "इससे समूह <strong class=\"danger\">{{name}}</strong> हमेशा के लिए हट जाएगा।",
+        "CONFIRM_BUTTON": "मैं इसके परिणामों को समझता/समझती हूँ"
+      },
+      "TYPE_TO_CONFIRM": {
+        "TITLE": "पुष्टि करने के लिए \"<strong class=\"danger\">{{name}}</strong>\" टाइप करें"
+      },
+      "SUCCESS": {
+        "MESSAGE": "<strong class=\"danger\">{{name}}</strong> को सफलतापूर्वक हटा दिया गया है",
+        "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong> को सफलतापूर्वक हटा दिया गया है"
+      }
     }
   },
   "ERRORS": {

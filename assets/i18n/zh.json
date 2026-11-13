@@ -788,7 +788,8 @@
         "CONFIRM_BUTTON": "删除客人"
       },
       "SUCCESS": {
-        "MESSAGE": "客人 <strong class=\"danger\">{{name}}</strong> 已成功删除"
+        "GUEST_MESSAGE": "已成功删除<strong class=\"danger\">{{name}}</strong>",
+        "GROUP_MESSAGE": "已成功删除<strong class=\"danger\">{{names}}</strong>"
       }
     },
     "CREATE": {
@@ -802,6 +803,33 @@
       "GUEST_ERROR": "更新客人时出错",
       "GROUP_SUCCESS": "团体更新成功",
       "GROUP_ERROR": "更新团体时出错"
+    },
+    "BUTTONS": {
+      "SAVE": "Сохранить",
+      "CLOSE": "Закрыть",
+      "DELETE": "Удалить",
+      "COPY": "Копировать",
+      "COPIED": "Скопировано!"
+    },
+    "DELETE_GUEST": {
+      "CONFIRMATION": {
+        "MESSAGE": "Вы уверены, что хотите удалить?",
+        "CONFIRM_BUTTON": "Я хочу удалить этого гостя",
+        "GROUP_CONFIRM_BUTTON": "Я хочу удалить эту группу"
+      },
+      "WARNING": {
+        "TITLE": "Внимательно прочитайте перед продолжением",
+        "MESSAGE": "Гость <strong class=\"danger\">{{name}}</strong> будет удалён без возможности восстановления.",
+        "GROUP_MESSAGE": "Группа <strong class=\"danger\">{{name}}</strong> будет удалена без возможности восстановления.",
+        "CONFIRM_BUTTON": "Я понимаю последствия"
+      },
+      "TYPE_TO_CONFIRM": {
+        "TITLE": "Для подтверждения введите \"<strong class=\"danger\">{{name}}</strong>\""
+      },
+      "SUCCESS": {
+        "MESSAGE": "<strong class=\"danger\">{{name}}</strong> успешно удалён",
+        "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong> успешно удалены"
+      }
     }
   },
   "ERRORS": {
