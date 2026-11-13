@@ -1,7 +1,9 @@
 {
   "GENERAL": {
     "LOADING": "Loading...",
-    "BACK": "Back"
+    "BACK": "Back",
+    "ERROR": "Error",
+    "CLOSE": "Close"
   },
   "MENU": {
     "HOME": "Home",
@@ -63,7 +65,8 @@
     "YES": "Yes",
     "NO": "No",
     "CLEAR": "Clear",
-    "SEARCH": "Search"
+    "SEARCH": "Search",
+    "SEARCHING": "Searching..."
   },
   "GUESTS_ACTIONS": {
     "SEE_STATS": "See stats",
@@ -283,7 +286,9 @@
       "SUCCESS": "Another guest form has been added"
     },
     "CREATE": "Create",
+    "CREATING": "Creating...",
     "UPDATE": "Update",
+    "UPDATING": "Updating...",
     "MAX_MEMBERS": "You can add a maximum of 5 members",
     "REMOVE_GUEST": {
       "TITLE": "Remove guest",
@@ -292,7 +297,13 @@
     },
     "GUEST_NUMBER": "Guest #{{number}}",
     "FORM_COUNT_SINGULAR": "1 guest form",
-    "FORM_COUNT": "{{count}} guest forms"
+    "FORM_COUNT": "{{count}} guest forms",
+    "NO_CHANGES": {
+      "TITLE": "No changes made",
+      "DESCRIPTION": "You haven't modified any information in this form. Do you want to leave without saving?",
+      "EXIT": "Leave without saving",
+      "CONTINUE": "Continue editing"
+    }
   },
   "TRIP_FORM": {
     "TITLE": "Trip Information",

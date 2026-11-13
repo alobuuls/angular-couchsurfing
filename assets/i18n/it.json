@@ -1,7 +1,9 @@
 {
   "GENERAL": {
-    "LOADING": "Caricamento...",
-    "BACK": "Indietro"
+    "LOADING": "Caricamento",
+    "BACK": "Indietro",
+    "ERROR": "Errore",
+    "CLOSE": "Chiudi"
   },
   "MENU": {
     "HOME": "Home",
@@ -63,7 +65,8 @@
     "YES": "Sì",
     "NO": "No",
     "CLEAR": "Cancella",
-    "SEARCH": "Cerca"
+    "SEARCH": "Cerca",
+    "SEARCHING": "Ricerca in corso"
   },
   "GUESTS_ACTIONS": {
     "SEE_STATS": "Visualizza statistiche",
@@ -283,6 +286,24 @@
       "SUCCESS": "È stato aggiunto un altro modulo per l'ospite"
     },
     "CREATE": "Crea",
+    "CREATING": "Creazione in corso",
+    "UPDATE": "Aggiorna",
+    "UPDATING": "Aggiornamento in corso",
+    "MAX_MEMBERS": "Puoi aggiungere al massimo 5 membri",
+    "REMOVE_GUEST": {
+      "TITLE": "Rimuovi ospite",
+      "DESCRIPTION": "Sei sicuro di voler rimuovere questo ospite dal modulo?",
+      "CONFIRM": "Sì, rimuovi"
+    },
+    "GUEST_NUMBER": "Ospite n. {{number}}",
+    "FORM_COUNT_SINGULAR": "1 modulo per ospite",
+    "FORM_COUNT": "{{count}} moduli per ospiti",
+    "NO_CHANGES": {
+      "TITLE": "Nessuna modifica apportata",
+      "DESCRIPTION": "Non hai modificato alcuna informazione in questo modulo. Vuoi uscire senza salvare?",
+      "EXIT": "Esci senza salvare",
+      "CONTINUE": "Continua a modificare"
+    },
     "UPDATE": "Aggiorna",
     "MAX_MEMBERS": "Puoi aggiungere al massimo 5 membri",
     "REMOVE_GUEST": {

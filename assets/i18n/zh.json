@@ -1,7 +1,9 @@
 {
   "GENERAL": {
-    "LOADING": "加载中...",
-    "BACK": "返回"
+    "LOADING": "加载中",
+    "BACK": "返回",
+    "ERROR": "错误",
+    "CLOSE": "关闭"
   },
   "MENU": {
     "HOME": "首页",
@@ -63,7 +65,8 @@
     "YES": "是",
     "NO": "否",
     "CLEAR": "清除",
-    "SEARCH": "搜索"
+    "SEARCH": "搜索",
+    "SEARCHING": "正在搜索"
   },
   "GUESTS_ACTIONS": {
     "SEE_STATS": "查看统计数据",
@@ -287,6 +290,24 @@
       "SUCCESS": "已添加另一份客人表单"
     },
     "CREATE": "创建",
+    "CREATING": "正在创建",
+    "UPDATE": "更新",
+    "UPDATING": "正在更新",
+    "MAX_MEMBERS": "最多可添加 5 位成员",
+    "REMOVE_GUEST": {
+      "TITLE": "移除客人",
+      "DESCRIPTION": "确定要从表单中移除此客人吗？",
+      "CONFIRM": "是，移除"
+    },
+    "GUEST_NUMBER": "客人 #{{number}}",
+    "FORM_COUNT_SINGULAR": "1份客人表单",
+    "FORM_COUNT": "{{count}}份客人表单",
+    "NO_CHANGES": {
+      "TITLE": "未进行任何更改",
+      "DESCRIPTION": "你尚未修改此表单中的任何信息。确定要不保存就离开吗？",
+      "EXIT": "不保存并离开",
+      "CONTINUE": "继续编辑"
+    },
     "UPDATE": "更新",
     "MAX_MEMBERS": "最多可添加 5 位成员",
     "REMOVE_GUEST": {

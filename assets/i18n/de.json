@@ -1,7 +1,9 @@
 {
   "GENERAL": {
-    "LOADING": "Wird geladen...",
-    "BACK": "Zurück"
+    "LOADING": "Wird geladen",
+    "BACK": "Zurück",
+    "ERROR": "Fehler",
+    "CLOSE": "Schließen"
   },
   "MENU": {
     "HOME": "Startseite",
@@ -63,7 +65,8 @@
     "YES": "Ja",
     "NO": "Nein",
     "CLEAR": "Zurücksetzen",
-    "SEARCH": "Suchen"
+    "SEARCH": "Suchen",
+    "SEARCHING": "Suche läuft"
   },
   "GUESTS_ACTIONS": {
     "SEE_STATS": "Statistiken ansehen",
@@ -283,6 +286,24 @@
       "SUCCESS": "Ein weiteres Gästeformular wurde hinzugefügt"
     },
     "CREATE": "Erstellen",
+    "CREATING": "Wird erstellt",
+    "UPDATE": "Aktualisieren",
+    "UPDATING": "Wird aktualisiert",
+    "MAX_MEMBERS": "Du kannst maximal 5 Mitglieder hinzufügen",
+    "REMOVE_GUEST": {
+      "TITLE": "Gast entfernen",
+      "DESCRIPTION": "Möchtest du diesen Gast wirklich aus dem Formular entfernen?",
+      "CONFIRM": "Ja, entfernen"
+    },
+    "GUEST_NUMBER": "Gast Nr. {{number}}",
+    "FORM_COUNT_SINGULAR": "1 Gästeformular",
+    "FORM_COUNT": "{{count}} Gästeformulare",
+    "NO_CHANGES": {
+      "TITLE": "Keine Änderungen vorgenommen",
+      "DESCRIPTION": "Du hast keine Informationen in diesem Formular geändert. Möchtest du es verlassen, ohne zu speichern?",
+      "EXIT": "Ohne Speichern verlassen",
+      "CONTINUE": "Weiter bearbeiten"
+    },
     "UPDATE": "Aktualisieren",
     "MAX_MEMBERS": "Du kannst maximal 5 Mitglieder hinzufügen",
     "REMOVE_GUEST": {

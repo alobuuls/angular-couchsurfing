@@ -1,7 +1,9 @@
 {
   "GENERAL": {
-    "LOADING": "Загрузка...",
-    "BACK": "Назад"
+    "LOADING": "Загрузка",
+    "BACK": "Назад",
+    "ERROR": "Ошибка",
+    "CLOSE": "Закрыть"
   },
   "MENU": {
     "HOME": "Главная",
@@ -63,7 +65,8 @@
     "YES": "Да",
     "NO": "Нет",
     "CLEAR": "Очистить",
-    "SEARCH": "Поиск"
+    "SEARCH": "Поиск",
+    "SEARCHING": "Идёт поиск"
   },
   "GUESTS_ACTIONS": {
     "SEE_STATS": "Посмотреть статистику",
@@ -283,6 +286,24 @@
       "SUCCESS": "Добавлена ещё одна форма гостя"
     },
     "CREATE": "Создать",
+    "CREATING": "Создание",
+    "UPDATE": "Обновить",
+    "UPDATING": "Обновление",
+    "MAX_MEMBERS": "Можно добавить не более 5 участников",
+    "REMOVE_GUEST": {
+      "TITLE": "Удалить гостя",
+      "DESCRIPTION": "Вы уверены, что хотите удалить этого гостя из формы?",
+      "CONFIRM": "Да, удалить"
+    },
+    "GUEST_NUMBER": "Гость № {{number}}",
+    "FORM_COUNT_SINGULAR": "1 анкета гостя",
+    "FORM_COUNT": "{{count}} анкет гостей",
+    "NO_CHANGES": {
+      "TITLE": "Изменения не внесены",
+      "DESCRIPTION": "Вы не изменили информацию в этой форме. Хотите выйти без сохранения?",
+      "EXIT": "Выйти без сохранения",
+      "CONTINUE": "Продолжить редактирование"
+    },
     "UPDATE": "Обновить",
     "MAX_MEMBERS": "Você pode adicionar no máximo 5 membros",
     "REMOVE_GUEST": {

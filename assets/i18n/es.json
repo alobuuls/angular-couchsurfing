@@ -1,7 +1,9 @@
 {
   "GENERAL": {
-    "LOADING": "Cargando...",
-    "BACK": "Volver"
+    "LOADING": "Cargando",
+    "BACK": "Volver",
+    "ERROR": "Error",
+    "CLOSE": "Cerrar"
   },
   "MENU": {
     "HOME": "Inicio",
@@ -63,7 +65,8 @@
     "YES": "Sí",
     "NO": "No",
     "CLEAR": "Limpiar",
-    "SEARCH": "Buscar"
+    "SEARCH": "Buscar",
+    "SEARCHING": "Buscando"
   },
   "GUESTS_ACTIONS": {
     "SEE_STATS": "Ver estadísticas",
@@ -284,6 +287,24 @@
       "SUCCESS": "Se ha añadido otro formulario de huésped"
     },
     "CREATE": "Crear",
+    "CREATING": "Creando",
+    "UPDATE": "Actualizar",
+    "UPDATING": "Actualizando",
+    "MAX_MEMBERS": "Puedes añadir un máximo de 5 miembros",
+    "REMOVE_GUEST": {
+      "TITLE": "Eliminar huésped",
+      "DESCRIPTION": "¿Estás seguro de que deseas eliminar a este huésped del formulario?",
+      "CONFIRM": "Sí, eliminar"
+    },
+    "GUEST_NUMBER": "Huésped n.º {{number}}",
+    "FORM_COUNT_SINGULAR": "1 formulario de huésped",
+    "FORM_COUNT": "{{count}} formularios de huésped",
+    "NO_CHANGES": {
+      "TITLE": "No se realizaron cambios",
+      "DESCRIPTION": "No has modificado ninguna información de este formulario. ¿Quieres salir sin guardar?",
+      "EXIT": "Salir sin guardar",
+      "CONTINUE": "Seguir editando"
+    },
     "UPDATE": "Actualizar",
     "MAX_MEMBERS": "Puedes añadir un máximo de 5 miembros",
     "REMOVE_GUEST": {
