@@ -81,7 +81,14 @@
     "CHANGE_SEARCH": "Intenta cambiar los criterios de búsqueda.",
     "CHANGE_TO_CARDS": "Cambiar a vista de tarjetas",
     "CHANGE_TO_MAP": "Cambiar a vista de mapa",
-    "CHANGE_TO_TABLE": "Cambiar a vista de tabla"
+    "CHANGE_TO_TABLE": "Cambiar a la vista de tabla",
+    "RETRY": "Intentar de nuevo",
+    "LOAD_ERROR": "No se pudieron cargar más huéspedes.",
+    "CARDS_END": "Has llegado al final de la lista de huéspedes.",
+    "CARDS_END_COUNTRY": "Has llegado al final de la lista de huéspedes de {{country}}.",
+    "CARDS_END_REGION": "Has llegado al final de la lista de huéspedes de {{region}}.",
+    "CARDS_END_CONTINENT": "Has llegado al final de la lista de huéspedes de {{continent}}.",
+    "CARDS_END_FILTERS": "Has llegado al final de los resultados para los filtros seleccionados."
   },
   "GUESTS_LOADING": {
     "MAP_1": "Cargando el mapa",
@@ -150,7 +157,8 @@
     },
     "DELETE_GUEST": "Eliminar invitado",
     "DELETE_GUESTS": "Eliminar invitados",
-    "VIEW_GROUP": "Ver grupo"
+    "VIEW_GROUP": "Ver grupo",
+    "LOAD_MORE_ERROR": "No se pudieron cargar más huéspedes. Inténtalo de nuevo más tarde."
   },
   "GUEST_DETAIL": {
     "TITLE": "Detalles del huésped",

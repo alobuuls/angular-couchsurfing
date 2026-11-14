@@ -12,10 +12,9 @@ import { AlertsService } from '@core/services/alerts.service';
 import { ErrorHandlerService } from '@core/services/err-handler.service';
 
 // Interfaces
-import { IGuestTableMember, IGuestTableRow } from '@interfaces/data-structure-api';
+import { IGuestTableMember, IGuestTableRow, DataState } from '@interfaces/data-structure-api';
 import { ICardGuest, IGuestListItem, IGuestYearGroup, IYearlyStat } from '@interfaces/guests.interface';
 import { Continents, Regions } from '@type/word.types';
-import { DataState } from '@interfaces/data-structure-api';
 
 // Const
 import { LINK_BASE_COUCHSURFING, LINK_BASE_INSTAGRAM, LINK_BASE_WHATSAPP } from '@config/social/social-links';
@@ -71,21 +70,37 @@ export class GuestsCardsComponent implements OnInit, OnDestroy {
   @Input() loading = false;
   @Input() cardsHasMore: boolean = false;
 
+  // Error
+  @Input() hasError = false;
+  @Input() errorMessage: string | null = null;
+
   @Input()
   set data(value: IGuestTableRow[]) {
     this._data = value ?? [];
     this.buildCardsGroups();
+
+    // Check if more cards should be loaded after receiving new data
+    this.checkScrollPosition();
   }
 
   @Input()
   set monthlyStats(value: IYearlyStat[] | undefined) {
     this._monthlyStats = value ?? [];
     this.buildCardsGroups();
+    this.checkScrollPosition();
   }
+
+  @Input() endMessage: {
+    key: string;
+    params?: Record<string, string>;
+  } = {
+    key: 'GUESTS_VIEW.CARDS_END',
+  };
 
   @Output() remove = new EventEmitter<IGuestListItem>();
   // To infinite Scroll
   @Output() loadMore = new EventEmitter<void>();
+  @Output() retry = new EventEmitter<void>();
 
   get data(): IGuestTableRow[] {
     return this._data;
@@ -96,47 +111,51 @@ export class GuestsCardsComponent implements OnInit, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['loading'] && !this.loading) {
+    if (changes['loading'] && !this.loading && !this.hasError) {
       this.canLoadMore = true;
     }
 
-    if (changes['cardsHasMore'] && !this.cardsHasMore) {
+    if (this.hasError || (changes['cardsHasMore'] && !this.cardsHasMore)) {
       this.canLoadMore = false;
     }
   }
 
   private initScrollListener(): void {
     this._ngZone.runOutsideAngular(() => {
-      this.scrollListener = () => {
-        if (this.scrollFrame !== null) return;
-
-        this.scrollFrame = requestAnimationFrame(() => {
-          this.scrollFrame = null;
-
-          // BACK TO TOP
-          const shouldShowBackToTop = window.scrollY > 900;
-
-          // INFINITE SCROLL
-          const scrollPosition = window.innerHeight + window.scrollY;
-          const pageHeight = document.documentElement.scrollHeight;
-
-          const shouldLoadMore = this.canLoadMore && !this.loading && this.cardsHasMore && scrollPosition >= pageHeight - 900;
-
-          if (shouldShowBackToTop !== this.showBackToTop || shouldLoadMore) {
-            this._ngZone.run(() => {
-              this.showBackToTop = shouldShowBackToTop;
-              this.cdr.markForCheck();
-
-              if (shouldLoadMore) {
-                this.canLoadMore = false;
-                this.loadMore.emit();
-              }
-            });
-          }
-        });
-      };
+      this.scrollListener = () => this.checkScrollPosition();
 
       window.addEventListener('scroll', this.scrollListener, { passive: true });
+    });
+  }
+
+  private checkScrollPosition(): void {
+    this._ngZone.runOutsideAngular(() => {
+      if (this.scrollFrame !== null) return;
+
+      this.scrollFrame = requestAnimationFrame(() => {
+        this.scrollFrame = null;
+
+        // BACK TO TOP
+        const shouldShowBackToTop = window.scrollY > 900;
+
+        // INFINITE SCROLL
+        const scrollPosition = window.innerHeight + window.scrollY;
+        const pageHeight = document.documentElement.scrollHeight;
+
+        const shouldLoadMore = this.canLoadMore && !this.loading && !this.hasError && this.cardsHasMore && scrollPosition >= pageHeight - 900;
+
+        if (shouldShowBackToTop !== this.showBackToTop || shouldLoadMore) {
+          this._ngZone.run(() => {
+            this.showBackToTop = shouldShowBackToTop;
+            this.cdr.markForCheck();
+
+            if (shouldLoadMore) {
+              this.canLoadMore = false;
+              this.loadMore.emit();
+            }
+          });
+        }
+      });
     });
   }
 

@@ -81,7 +81,14 @@
     "CHANGE_SEARCH": "Prova a modificare i criteri di ricerca.",
     "CHANGE_TO_CARDS": "Passa alla visualizzazione a schede",
     "CHANGE_TO_MAP": "Passa alla visualizzazione mappa",
-    "CHANGE_TO_TABLE": "Passa alla visualizzazione tabella"
+    "CHANGE_TO_TABLE": "Passa alla visualizzazione tabella",
+    "RETRY": "Riprova",
+    "LOAD_ERROR": "Non è stato possibile caricare altri ospiti.",
+    "CARDS_END": "Hai raggiunto la fine dell'elenco degli ospiti.",
+    "CARDS_END_COUNTRY": "Hai raggiunto la fine dell'elenco degli ospiti di {{country}}.",
+    "CARDS_END_REGION": "Hai raggiunto la fine dell'elenco degli ospiti di {{region}}.",
+    "CARDS_END_CONTINENT": "Hai raggiunto la fine dell'elenco degli ospiti di {{continent}}.",
+    "CARDS_END_FILTERS": "Hai raggiunto la fine dei risultati per i filtri selezionati."
   },
   "GUESTS_LOADING": {
     "MAP_1": "Caricamento della mappa",
@@ -149,7 +156,8 @@
     },
     "DELETE_GUEST": "Elimina ospite",
     "DELETE_GUESTS": "Elimina ospiti",
-    "VIEW_GROUP": "Visualizza gruppo"
+    "VIEW_GROUP": "Visualizza gruppo",
+    "LOAD_MORE_ERROR": "Non è stato possibile caricare altri ospiti. Riprova più tardi."
   },
   "GUEST_DETAIL": {
     "TITLE": "Dettagli dell'ospite",

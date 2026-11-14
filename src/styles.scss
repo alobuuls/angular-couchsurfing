@@ -608,6 +608,17 @@ button {
   transform-origin: center;
 }
 
+/* SHARED ERROR MESSAGES */
+.app-error-message {
+  color: var(--color-danger);
+  font-weight: 600;
+}
+
+.app-error-detail {
+  color: var(--color-text-secondary);
+  font-weight: 400;
+}
+
 /* =========================================================
   9. STATISTICS BUTTONS
    ========================================================= */

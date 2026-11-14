@@ -1,8 +1,8 @@
 import { Component, ElementRef, HostListener, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
-import { combineLatestWith, map, switchMap, tap, finalize } from 'rxjs/operators';
+import { Observable, BehaviorSubject, combineLatest, timer, throwError } from 'rxjs';
+import { combineLatestWith, map, switchMap, tap, finalize, retry } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 
 // Material
@@ -22,10 +22,11 @@ import { StatsService } from '@services/stats.service';
 
 // Interfaces
 import { IGuestListItem, IQueryParamsGuests, IYearlyStat } from '@interfaces/guests.interface';
-import { ICurrentView, IGuestsTableVM, IGuestTableRow, IGuestTableRowWithIndex, VIEW_CONFIG } from '@interfaces/data-structure-api';
+import { ICurrentView, IGuestsTableVM, IGuestTableRow, IGuestTableRowWithIndex, VIEW_CONFIG, IErrResp } from '@interfaces/data-structure-api';
 
 // Types
 import { CONTINENTS, Continents, CountriesCodes, ICountry, LANG, Language, Regions } from '@type/word.types';
+import { LocationFilter } from '@type/guest.types';
 
 // Constants
 import { WORLD } from '@config/world';
@@ -77,6 +78,31 @@ export class GuestsComponent implements OnInit {
   // Current Filters
   private filters$ = new BehaviorSubject<IQueryParamsGuests>({});
 
+  private readonly cardsEndMessageConfig: Record<
+    LocationFilter,
+    {
+      key: string;
+      param: string;
+      getName: (value: string) => string;
+    }
+  > = {
+    country: {
+      key: 'GUESTS_VIEW.CARDS_END_COUNTRY',
+      param: 'country',
+      getName: value => this.getCountryName(value),
+    },
+    region: {
+      key: 'GUESTS_VIEW.CARDS_END_REGION',
+      param: 'region',
+      getName: value => this.getRegionName(value as Regions),
+    },
+    continent: {
+      key: 'GUESTS_VIEW.CARDS_END_CONTINENT',
+      param: 'continent',
+      getName: value => this.getContinentName(value as Continents),
+    },
+  };
+
   // Table pagination
   private page$ = new BehaviorSubject<{ page: number; size: number }>({
     page: 1,
@@ -89,6 +115,8 @@ export class GuestsComponent implements OnInit {
   cardsPageSize = 10;
   cardsLoading = false;
   cardsHasMore = true;
+
+  cardsError: IErrResp | null = null;
 
   // Map
   mapData: IGuestTableRow[] = [];
@@ -105,17 +133,15 @@ export class GuestsComponent implements OnInit {
   // Year stats
   monthlyStats: IYearlyStat[] = [];
 
-  // load cards
-  private cardsNetworkErrors = 0;
-  private readonly maxCardsNetworkErrors = 2;
-  private cardsLoadBlocked = false;
-
   @ViewChild('countryInput') countryInput!: ElementRef<HTMLInputElement>;
 
   @HostListener('window:online')
   onConnectionRestored(): void {
-    this.cardsNetworkErrors = 0;
-    this.cardsLoadBlocked = false;
+    if (this.currentView !== 'cards' || !this.cardsHasMore || this.cardsLoading) return;
+
+    if (this.cardsError) {
+      this.retryCards();
+    }
   }
 
   private fb = inject(FormBuilder);
@@ -141,20 +167,6 @@ export class GuestsComponent implements OnInit {
   }
 
   countrySearchCtrl = this.fb.control('');
-
-  // ALERTS
-  private showOfflineAlertScroll(): void {
-    this._alerts.showAlert({
-      icon: 'error',
-      title: this._translate.instant('GENERAL.ERROR'),
-      html: this._translate.instant('ERRORS.HTTP.502'),
-      showCancelButton: false,
-      allowClose: false,
-      opts: {
-        showConfirmButton: false,
-      },
-    });
-  }
 
   // FILTERS
   private initFiltersForm(): void {
@@ -543,6 +555,46 @@ export class GuestsComponent implements OnInit {
     return icons[nextView];
   }
 
+  get cardsEndMessage(): { key: string; params?: Record<string, string> } {
+    const filters = this.filters$.value;
+    const priority: LocationFilter[] = ['country', 'region', 'continent'];
+
+    // Find a single selected location filter
+    const selectedFilter = priority
+      .map(filter => ({
+        filter,
+        values: filters[filter]?.split(',').filter(Boolean) ?? [],
+      }))
+      .find(item => item.values.length === 1);
+
+    // Check whether multiple locations are selected
+    const hasMultipleLocations = priority.some(filter => {
+      const values = filters[filter]?.split(',').filter(Boolean) ?? [];
+      return values.length > 1;
+    });
+
+    // Check whether other filters are active
+    const hasOtherFilters = Object.entries(filters).some(([key, value]) => {
+      if ([...priority, 'from', 'to', 'limit', 'page'].includes(key)) {
+        return false;
+      }
+      return value !== undefined && value !== null && value !== '';
+    });
+
+    if (selectedFilter && !hasMultipleLocations) {
+      const config = this.cardsEndMessageConfig[selectedFilter.filter];
+      return {
+        key: config.key,
+        params: {
+          [config.param]: config.getName(selectedFilter.values[0]),
+        },
+      };
+    }
+    return {
+      key: hasOtherFilters || hasMultipleLocations ? 'GUESTS_VIEW.CARDS_END_FILTERS' : 'GUESTS_VIEW.CARDS_END',
+    };
+  }
+
   private listenQueryParams(): void {
     this._route.queryParams.subscribe(params => {
       // CURRENT VIEW
@@ -675,15 +727,8 @@ export class GuestsComponent implements OnInit {
   // INFINITE SCROLL
   // Load the next page of guests for the cards view
   loadMoreCards(): void {
-    // Prevent duplicated requests, blocked requests or loading without more data
-    if (this.cardsLoading || !this.cardsHasMore || this.cardsLoadBlocked) return;
-
-    // Check browser connection before making the request
-    if (!navigator.onLine) {
-      this.cardsLoadBlocked = true;
-      this.showOfflineAlertScroll();
-      return;
-    }
+    // Prevent duplicated requests or requests after an error
+    if (this.cardsLoading || !this.cardsHasMore || this.cardsError) return;
 
     this.cardsLoading = true;
 
@@ -693,6 +738,16 @@ export class GuestsComponent implements OnInit {
         page: this.cardsPage,
         ...this.filters$.value,
       })
+      .pipe(
+        retry({
+          count: 3,
+          delay: error => {
+            const isNetworkOrServerError = error.status === 0 || error.status >= 500;
+
+            return isNetworkOrServerError ? timer(1000) : throwError(() => error);
+          },
+        })
+      )
       .subscribe({
         next: response => {
           const newGuests = mapGuestTable(response.data);
@@ -700,17 +755,11 @@ export class GuestsComponent implements OnInit {
           // Append the new guests instead of replacing existing cards
           this.cardsData = [...this.cardsData, ...newGuests];
 
-          // Move to the next page
-          this.cardsPage++;
+          // Update pagination using the API response
+          this.cardsPage = response.pagination.page + 1;
+          this.cardsHasMore = response.pagination.hasNextPage;
 
-          if (newGuests.length < this.cardsPageSize) {
-            this.cardsHasMore = false;
-          }
-
-          // Reset network errors after a successful request
-          this.cardsNetworkErrors = 0;
-          this.cardsLoadBlocked = false;
-
+          this.cardsError = null;
           this.cardsLoading = false;
 
           if (this.searchView === 'cards') {
@@ -727,16 +776,17 @@ export class GuestsComponent implements OnInit {
 
           this.cardsLoading = false;
 
-          // Detect network errors
-          if (!navigator.onLine || error?.status === 0) {
-            this.cardsNetworkErrors++;
+          // Store the translated error state
+          this.cardsError = this._errH.handle(error);
 
-            // Block further requests after two failed attempts
-            if (this.cardsNetworkErrors >= this.maxCardsNetworkErrors) {
-              this.cardsLoadBlocked = true;
-              this.showOfflineAlertScroll();
-            }
-          }
+          // Show the error alert only after all automatic retries fail
+          this._alerts.showAlert({
+            icon: 'error',
+            title: this._translate.instant('GENERAL.ERROR'),
+            html: this.cardsError.message,
+            showCancelButton: false,
+            confirmText: this._translate.instant('GENERAL.CLOSE'),
+          });
         },
       });
   }
@@ -747,6 +797,14 @@ export class GuestsComponent implements OnInit {
     this.cardsPage = 1;
     this.cardsHasMore = true;
     this.cardsLoading = false;
+    this.cardsError = null;
+  }
+
+  retryCards(): void {
+    if (this.cardsLoading || !this.cardsError) return;
+
+    this.cardsError = null;
+    this.loadMoreCards();
   }
 
   // MAP

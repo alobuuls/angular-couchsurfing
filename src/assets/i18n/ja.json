@@ -81,7 +81,14 @@
     "CHANGE_SEARCH": "検索条件を変更してみてください。",
     "CHANGE_TO_CARDS": "カード表示に切り替え",
     "CHANGE_TO_MAP": "地図表示に切り替え",
-    "CHANGE_TO_TABLE": "テーブル表示に切り替え"
+    "CHANGE_TO_TABLE": "テーブル表示に切り替える",
+    "RETRY": "再試行",
+    "LOAD_ERROR": "これ以上ゲストを読み込めませんでした。",
+    "CARDS_END": "ゲスト一覧の最後に到達しました。",
+    "CARDS_END_COUNTRY": "{{country}}のゲスト一覧の最後に到達しました。",
+    "CARDS_END_REGION": "{{region}}のゲスト一覧の最後に到達しました。",
+    "CARDS_END_CONTINENT": "{{continent}}のゲスト一覧の最後に到達しました。",
+    "CARDS_END_FILTERS": "選択したフィルターに一致する結果は以上です。"
   },
   "GUESTS_LOADING": {
     "MAP_1": "地図を読み込んでいます",
@@ -149,7 +156,8 @@
     },
     "DELETE_GUEST": "ゲストを削除",
     "DELETE_GUESTS": "ゲストを削除",
-    "VIEW_GROUP": "グループを表示"
+    "VIEW_GROUP": "グループを表示",
+    "LOAD_MORE_ERROR": "これ以上ゲストを読み込めませんでした。しばらくしてからもう一度お試しください。"
   },
   "GUEST_DETAIL": {
     "TITLE": "ゲストの詳細",
