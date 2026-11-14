@@ -81,7 +81,14 @@
     "CHANGE_SEARCH": "Tente alterar os critérios de pesquisa.",
     "CHANGE_TO_CARDS": "Mudar para visualização em cartões",
     "CHANGE_TO_MAP": "Mudar para visualização em mapa",
-    "CHANGE_TO_TABLE": "Mudar para visualização em tabela"
+    "CHANGE_TO_TABLE": "Mudar para a visualização em tabela",
+    "RETRY": "Tentar novamente",
+    "LOAD_ERROR": "Não foi possível carregar mais hóspedes.",
+    "CARDS_END": "Você chegou ao fim da lista de hóspedes.",
+    "CARDS_END_COUNTRY": "Você chegou ao fim da lista de hóspedes de {{country}}.",
+    "CARDS_END_REGION": "Você chegou ao fim da lista de hóspedes de {{region}}.",
+    "CARDS_END_CONTINENT": "Você chegou ao fim da lista de hóspedes de {{continent}}.",
+    "CARDS_END_FILTERS": "Você chegou ao fim dos resultados para os filtros selecionados."
   },
   "GUESTS_LOADING": {
     "MAP_1": "Carregando o mapa",
@@ -149,7 +156,8 @@
     },
     "DELETE_GUEST": "Excluir hóspede",
     "DELETE_GUESTS": "Excluir hóspedes",
-    "VIEW_GROUP": "Ver grupo"
+    "VIEW_GROUP": "Ver grupo",
+    "LOAD_MORE_ERROR": "Não foi possível carregar mais hóspedes. Tente novamente mais tarde."
   },
   "GUEST_DETAIL": {
     "TITLE": "Detalhes do hóspede",

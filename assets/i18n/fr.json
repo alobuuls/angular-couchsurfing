@@ -81,7 +81,14 @@
     "CHANGE_SEARCH": "Essayez de modifier vos critères de recherche.",
     "CHANGE_TO_CARDS": "Passer à la vue en cartes",
     "CHANGE_TO_MAP": "Passer à la vue en carte",
-    "CHANGE_TO_TABLE": "Passer à la vue en tableau"
+    "CHANGE_TO_TABLE": "Passer à la vue en tableau",
+    "RETRY": "Réessayer",
+    "LOAD_ERROR": "Impossible de charger davantage d’invités.",
+    "CARDS_END": "Vous avez atteint la fin de la liste des invités.",
+    "CARDS_END_COUNTRY": "Vous avez atteint la fin de la liste des invités de {{country}}.",
+    "CARDS_END_REGION": "Vous avez atteint la fin de la liste des invités de {{region}}.",
+    "CARDS_END_CONTINENT": "Vous avez atteint la fin de la liste des invités de {{continent}}.",
+    "CARDS_END_FILTERS": "Vous avez atteint la fin des résultats correspondant aux filtres sélectionnés."
   },
   "GUESTS_LOADING": {
     "MAP_1": "Chargement de la carte",
@@ -149,7 +156,8 @@
     },
     "DELETE_GUEST": "Supprimer l'invité",
     "DELETE_GUESTS": "Supprimer les invités",
-    "VIEW_GROUP": "Voir le groupe"
+    "VIEW_GROUP": "Voir le groupe",
+    "LOAD_MORE_ERROR": "Impossible de charger davantage d’invités. Veuillez réessayer plus tard."
   },
   "GUEST_DETAIL": {
     "TITLE": "Détails de l'invité",

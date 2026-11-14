@@ -81,7 +81,14 @@
     "CHANGE_SEARCH": "נסו לשנות את קריטריוני החיפוש.",
     "CHANGE_TO_CARDS": "מעבר לתצוגת כרטיסים",
     "CHANGE_TO_MAP": "מעבר לתצוגת מפה",
-    "CHANGE_TO_TABLE": "מעבר לתצוגת טבלה"
+    "CHANGE_TO_TABLE": "מעבר לתצוגת טבלה",
+    "RETRY": "נסה שוב",
+    "LOAD_ERROR": "לא ניתן לטעון אורחים נוספים.",
+    "CARDS_END": "הגעת לסוף רשימת האורחים.",
+    "CARDS_END_COUNTRY": "הגעת לסוף רשימת האורחים מ־{{country}}.",
+    "CARDS_END_REGION": "הגעת לסוף רשימת האורחים מ־{{region}}.",
+    "CARDS_END_CONTINENT": "הגעת לסוף רשימת האורחים מ־{{continent}}.",
+    "CARDS_END_FILTERS": "הגעת לסוף התוצאות עבור המסננים שבחרת."
   },
   "GUESTS_LOADING": {
     "MAP_1": "המפה נטענת",
@@ -148,7 +155,8 @@
     },
     "DELETE_GUEST": "מחיקת אורח",
     "DELETE_GUESTS": "מחיקת אורחים",
-    "VIEW_GROUP": "הצגת קבוצה"
+    "VIEW_GROUP": "הצג קבוצה",
+    "LOAD_MORE_ERROR": "לא ניתן לטעון אורחים נוספים. נסה שוב מאוחר יותר."
   },
   "GUEST_DETAIL": {
     "TITLE": "פרטי האורח",
