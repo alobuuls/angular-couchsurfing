@@ -81,7 +81,14 @@
     "CHANGE_SEARCH": "Try changing your search criteria.",
     "CHANGE_TO_CARDS": "Change view to cards",
     "CHANGE_TO_MAP": "Change view to map",
-    "CHANGE_TO_TABLE": "Change view to table"
+    "CHANGE_TO_TABLE": "Change view to table",
+    "RETRY": "Try again",
+    "LOAD_ERROR": "We couldn't load more guests.",
+    "CARDS_END": "You've reached the end of the guest list.",
+    "CARDS_END_COUNTRY": "You've reached the end of the guests from {{country}}.",
+    "CARDS_END_REGION": "You've reached the end of the guests from {{region}}.",
+    "CARDS_END_CONTINENT": "You've reached the end of the guests from {{continent}}.",
+    "CARDS_END_FILTERS": "You've reached the end of the results for your selected filters."
   },
   "GUESTS_LOADING": {
     "MAP_1": "Loading the map",
@@ -149,7 +156,8 @@
     },
     "DELETE_GUEST": "Delete guest",
     "DELETE_GUESTS": "Delete guests",
-    "VIEW_GROUP": "View group"
+    "VIEW_GROUP": "View group",
+    "LOAD_MORE_ERROR": "We couldn't load more guests. Please try again later."
   },
   "GUEST_DETAIL": {
     "TITLE": "Guest Details",

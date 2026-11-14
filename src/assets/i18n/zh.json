@@ -81,7 +81,14 @@
     "CHANGE_SEARCH": "尝试更改搜索条件。",
     "CHANGE_TO_CARDS": "切换到卡片视图",
     "CHANGE_TO_MAP": "切换到地图视图",
-    "CHANGE_TO_TABLE": "切换到表格视图"
+    "CHANGE_TO_TABLE": "切换到表格视图",
+    "RETRY": "重试",
+    "LOAD_ERROR": "无法加载更多客人。",
+    "CARDS_END": "已到达客人列表的末尾。",
+    "CARDS_END_COUNTRY": "已到达来自{{country}}的客人列表末尾。",
+    "CARDS_END_REGION": "已到达来自{{region}}的客人列表末尾。",
+    "CARDS_END_CONTINENT": "已到达来自{{continent}}的客人列表末尾。",
+    "CARDS_END_FILTERS": "已到达所选筛选条件的结果末尾。"
   },
   "GUESTS_LOADING": {
     "CARDS_1": "正在加载您的客人",
@@ -153,7 +160,8 @@
     },
     "DELETE_GUEST": "删除客人",
     "DELETE_GUESTS": "删除客人",
-    "VIEW_GROUP": "查看群组"
+    "VIEW_GROUP": "查看群组",
+    "LOAD_MORE_ERROR": "无法加载更多客人，请稍后重试。"
   },
   "GUEST_DETAIL": {
     "TITLE": "客人详情",

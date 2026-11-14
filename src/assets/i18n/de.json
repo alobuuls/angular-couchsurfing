@@ -81,7 +81,14 @@
     "CHANGE_SEARCH": "Versuche, deine Suchkriterien zu ändern.",
     "CHANGE_TO_CARDS": "Zur Kartenansicht wechseln",
     "CHANGE_TO_MAP": "Zur Kartenansicht wechseln",
-    "CHANGE_TO_TABLE": "Zur Tabellenansicht wechseln"
+    "CHANGE_TO_TABLE": "Zur Tabellenansicht wechseln",
+    "RETRY": "Erneut versuchen",
+    "LOAD_ERROR": "Weitere Gäste konnten nicht geladen werden.",
+    "CARDS_END": "Du hast das Ende der Gästeliste erreicht.",
+    "CARDS_END_COUNTRY": "Du hast das Ende der Gästeliste aus {{country}} erreicht.",
+    "CARDS_END_REGION": "Du hast das Ende der Gästeliste aus {{region}} erreicht.",
+    "CARDS_END_CONTINENT": "Du hast das Ende der Gästeliste aus {{continent}} erreicht.",
+    "CARDS_END_FILTERS": "Du hast das Ende der Ergebnisse für deine ausgewählten Filter erreicht."
   },
   "GUESTS_LOADING": {
     "MAP_1": "Die Karte wird geladen",
@@ -149,7 +156,8 @@
     },
     "DELETE_GUEST": "Gast löschen",
     "DELETE_GUESTS": "Gäste löschen",
-    "VIEW_GROUP": "Gruppe anzeigen"
+    "VIEW_GROUP": "Gruppe anzeigen",
+    "LOAD_MORE_ERROR": "Weitere Gäste konnten nicht geladen werden. Bitte versuche es später erneut."
   },
   "GUEST_DETAIL": {
     "TITLE": "Gastdetails",

@@ -81,7 +81,14 @@
     "CHANGE_SEARCH": "검색 조건을 변경해 보세요.",
     "CHANGE_TO_CARDS": "카드 보기로 전환",
     "CHANGE_TO_MAP": "지도 보기로 전환",
-    "CHANGE_TO_TABLE": "표 보기로 전환"
+    "CHANGE_TO_TABLE": "표 보기로 전환",
+    "RETRY": "다시 시도",
+    "LOAD_ERROR": "게스트를 더 불러오지 못했습니다.",
+    "CARDS_END": "게스트 목록의 마지막에 도달했습니다.",
+    "CARDS_END_COUNTRY": "{{country}} 출신 게스트 목록의 마지막에 도달했습니다.",
+    "CARDS_END_REGION": "{{region}} 출신 게스트 목록의 마지막에 도달했습니다.",
+    "CARDS_END_CONTINENT": "{{continent}} 출신 게스트 목록의 마지막에 도달했습니다.",
+    "CARDS_END_FILTERS": "선택한 필터에 해당하는 결과의 마지막에 도달했습니다."
   },
   "GUESTS_LOADING": {
     "MAP_1": "지도를 불러오는 중",
@@ -149,7 +156,8 @@
     },
     "DELETE_GUEST": "게스트 삭제",
     "DELETE_GUESTS": "게스트 삭제",
-    "VIEW_GROUP": "그룹 보기"
+    "VIEW_GROUP": "그룹 보기",
+    "LOAD_MORE_ERROR": "게스트를 더 불러오지 못했습니다. 나중에 다시 시도해 주세요."
   },
   "GUEST_DETAIL": {
     "TITLE": "게스트 상세 정보",

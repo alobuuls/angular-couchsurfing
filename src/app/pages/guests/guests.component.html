@@ -299,8 +299,12 @@
     [cardsHasMore]="cardsHasMore"
     [loading]="cardsLoading"
     [monthlyStats]="vm.monthlyStats ?? []"
+    [hasError]="!!cardsError"
+    [errorMessage]="cardsError?.message ?? null"
+    [endMessage]="cardsEndMessage"
     (loadMore)="loadMoreCards()"
     (remove)="removeGuestConfirmation($event)"
+    (retry)="retryCards()"
   >
   </guests-cards>
 
@@ -347,7 +351,7 @@
   ></app-loading>
 
   <!-- EMPTY -->
-  <div *ngIf="vm.status === 'success' && !vm.data.length">
+  <div *ngIf="currentView === 'table' && vm.status === 'success' && !vm.data.length">
     <h1>
       <strong>{{ 'GUESTS_VIEW.NO_GUESTS_FOUND' | translate }}</strong>
     </h1>

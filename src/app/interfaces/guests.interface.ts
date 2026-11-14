@@ -47,7 +47,6 @@ export interface IGuestDetail extends ITripDetail {
 
 // Guest data shared by solo guests and group members
 export type IGuestFormPayload = Omit<IGuestDetail, '_id' | 'guestId' | 'groupId' | 'groupType' | 'age' | 'visitedDate' | 'stayed' | 'nights'>;
-
 export type ICardGuest = IGuestDetail | IBodyGuest;
 
 export interface ITripDetail {

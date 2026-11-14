@@ -54,6 +54,13 @@
     </div>
   </div>
 
+  <!-- EMPTY STATE -->
+  <app-empty-state
+    *ngIf="!loading && !data.length && !cardsHasMore"
+    [title]="'GUESTS_VIEW.NO_GUESTS_FOUND'"
+    [message]="'GUESTS_VIEW.CHANGE_SEARCH'"
+  ></app-empty-state>
+
   <!-- YEARS -->
   <div *ngFor="let year of cardsGuest; trackBy: trackByYear" class="year-group">
     <div class="year-header">
@@ -486,7 +493,7 @@
     class="btn-back-to-top"
     [class.visible]="showBackToTop"
     [matTooltip]="'GUESTS_CARDS.BACK_TO_TOP' | translate"
-    aria-label="Back to top"
+    [attr.aria-label]="'GUESTS_CARDS.BACK_TO_TOP' | translate"
     [attr.aria-hidden]="!showBackToTop"
     [attr.tabindex]="showBackToTop ? 0 : -1"
     (click)="scrollToTop()"
@@ -499,8 +506,20 @@
     <span class="infinite-spinner"></span>
   </div>
 
+  <!-- RETRY AFTER AN ERROR -->
+  <div *ngIf="hasError && !loading" class="cards-retry">
+    <h1 class="app-error-message">{{ 'GUESTS_VIEW.LOAD_ERROR' | translate }}</h1>
+
+    <h2 *ngIf="errorMessage" class="app-error-detail">{{ errorMessage }}</h2>
+
+    <button type="button" (click)="retry.emit()" class="retry-button">
+      <mat-icon>refresh</mat-icon>
+      {{ 'GUESTS_VIEW.RETRY' | translate }}
+    </button>
+  </div>
+
   <!-- NO MORE GUESTS -->
   <div *ngIf="!loading && !cardsHasMore && data.length" class="cards-end">
-    {{ 'GUESTS_VIEW.NO_MORE_GUESTS' | translate }}
+    {{ endMessage.key | translate: endMessage.params }}
   </div>
 </div>
