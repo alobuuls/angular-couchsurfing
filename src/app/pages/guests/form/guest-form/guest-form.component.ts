@@ -21,6 +21,9 @@ import { FormatService } from '@services/format.service';
 import { IBodyGuest, IGuestDetail, IGuestFormPayload } from '@interfaces/guests.interface';
 import { LocationConfig, ICity, IState } from '@interfaces/guest-form.interface';
 
+// Utils
+import { parseDate } from '@utils';
+
 // Types
 import { ICountry, CountriesCodes, LANG, Language } from '@type/word.types';
 
@@ -523,6 +526,76 @@ export class GuestFormComponent implements OnInit {
     this.gifts = (this.guest.gift ?? []).map(name => ({ name }));
   }
 
+  restoreDraft(data: Record<string, any>): void {
+    if (!this.formCreateGuest || !data) return;
+
+    // Restore regular form fields.
+    this.formCreateGuest.patchValue(
+      {
+        ...data,
+        birthDate: parseDate(data['birthDate']) ?? '',
+        groupType: data['groupType'] ?? this.selectedGroupType,
+      },
+      { emitEvent: false }
+    );
+
+    // Restore gifts displayed as chips.
+    this.gifts = (data['gift'] ?? []).map((name: string) => ({ name }));
+
+    // Restore the selected phone prefix country.
+    const prefix = data['prefixCode'];
+
+    this.selectedPrefixCountry = this.countries.find(country => country.prefix === prefix);
+
+    // Restore hometown location.
+    this.initializeLocationFields({
+      countryCode: data['hometownCode'],
+      savedState: this.getLocationName(data['hometownState']),
+      savedCity: this.getLocationName(data['hometownCity']),
+      states: this.hometownStates,
+      setStates: states => (this.hometownStates = states),
+      setCities: cities => (this.hometownCities = cities),
+      setLoadingStates: loading => (this.loadingHometownStates = loading),
+      setLoadingCities: loading => (this.loadingHometownCities = loading),
+      stateControl: 'hometownState',
+      cityControl: 'hometownCity',
+    });
+
+    // Restore current living location.
+    this.initializeLocationFields({
+      countryCode: data['livingInCode'],
+      savedState: this.getLocationName(data['livingInState']),
+      savedCity: this.getLocationName(data['livingInCity']),
+      states: this.livingInStates,
+      setStates: states => (this.livingInStates = states),
+      setCities: cities => (this.livingInCities = cities),
+      setLoadingStates: loading => (this.loadingLivingStates = loading),
+      setLoadingCities: loading => (this.loadingLivingCities = loading),
+      stateControl: 'livingInState',
+      cityControl: 'livingInCity',
+    });
+
+    // Restore where we met.
+    this.initializeLocationFields({
+      countryCode: data['countryCodeWeMet'],
+      savedState: this.getLocationName(data['stateWeMet']),
+      savedCity: this.getLocationName(data['cityWeMet']),
+      states: this.weMetStates,
+      setStates: states => (this.weMetStates = states),
+      setCities: cities => (this.weMetCities = cities),
+      setLoadingStates: loading => (this.loadingWeMetStates = loading),
+      setLoadingCities: loading => (this.loadingWeMetCities = loading),
+      stateControl: 'stateWeMet',
+      cityControl: 'cityWeMet',
+    });
+
+    // Restore occupation options.
+    this.occupations = [...new Set([...this.occupations, ...(data['occupation'] ?? [])])];
+
+    // Refresh country autocomplete labels.
+    this.refreshCountryAutocompleteDisplays();
+  }
+
   initForm(): void {
     this.formCreateGuest = this.fb.group({
       fullName: ['', [Validators.required, Validators.maxLength(this.maxLengths.fullName)]],
@@ -895,6 +968,11 @@ export class GuestFormComponent implements OnInit {
 
   getFormValue(): IGuestFormPayload {
     return this.buildGuestPayload();
+  }
+
+  // Returns the original form values for local draft storage.
+  getDraftValue(): Record<string, any> {
+    return this.formCreateGuest.getRawValue();
   }
 
   hasFormData(): boolean {

@@ -796,6 +796,13 @@
         "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong> foram excluídos com sucesso"
       }
     },
+    "DRAFT_EXIT": {
+      "TITLE": "O que você gostaria de fazer com suas alterações?",
+      "DESCRIPTION": "Você inseriu informações neste formulário. Pode salvar um rascunho para continuar mais tarde ou sair sem manter suas alterações.",
+      "SAVE_AND_EXIT": "Sair e salvar as alterações",
+      "DISCARD_AND_EXIT": "Sair sem salvar",
+      "STAY": "Permanecer"
+    },
     "CREATE": {
       "GUEST_SUCCESS": "Hóspede criado com sucesso",
       "GUEST_ERROR": "Erro ao criar hóspede",

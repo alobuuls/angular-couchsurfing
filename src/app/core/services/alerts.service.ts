@@ -102,4 +102,32 @@ export class AlertsService {
       },
     });
   }
+
+  showDraftExitConfirmation(): Promise<SweetAlertResult> {
+    return Swal.fire({
+      title: this._translate.instant('ALERTS.DRAFT_EXIT.TITLE'),
+      html: this._translate.instant('ALERTS.DRAFT_EXIT.DESCRIPTION'),
+      icon: 'question',
+
+      showConfirmButton: true,
+      showDenyButton: true,
+      showCancelButton: true,
+
+      confirmButtonText: this._translate.instant('ALERTS.DRAFT_EXIT.SAVE_AND_EXIT'),
+      denyButtonText: this._translate.instant('ALERTS.DRAFT_EXIT.DISCARD_AND_EXIT'),
+      cancelButtonText: this._translate.instant('ALERTS.DRAFT_EXIT.STAY'),
+
+      allowEscapeKey: true,
+      allowOutsideClick: false,
+
+      reverseButtons: false,
+
+      customClass: {
+        popup: 'custom-swal',
+        confirmButton: 'custom-swal-confirm',
+        denyButton: 'custom-swal-danger',
+        cancelButton: 'custom-swal-cancel',
+      },
+    });
+  }
 }

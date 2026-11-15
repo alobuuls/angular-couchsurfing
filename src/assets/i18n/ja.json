@@ -795,6 +795,13 @@
         "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong>を正常に削除しました"
       }
     },
+    "DRAFT_EXIT": {
+      "TITLE": "変更内容をどうしますか？",
+      "DESCRIPTION": "このフォームに情報が入力されています。下書きを保存して後で続けることも、変更を保存せずに終了することもできます。",
+      "SAVE_AND_EXIT": "終了して変更を保存",
+      "DISCARD_AND_EXIT": "保存せずに終了",
+      "STAY": "このまま続ける"
+    },
     "CREATE": {
       "GUEST_SUCCESS": "ゲストを作成しました",
       "GUEST_ERROR": "ゲストの作成中にエラーが発生しました",

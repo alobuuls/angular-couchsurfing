@@ -800,6 +800,13 @@
         "GROUP_MESSAGE": "已成功删除<strong class=\"danger\">{{names}}</strong>"
       }
     },
+    "DRAFT_EXIT": {
+      "TITLE": "您想如何处理所做的更改？",
+      "DESCRIPTION": "您已在此表单中输入信息。您可以保存草稿以便稍后继续，也可以直接离开而不保留所做的更改。",
+      "SAVE_AND_EXIT": "退出并保存更改",
+      "DISCARD_AND_EXIT": "不保存直接退出",
+      "STAY": "留在此页面"
+    },
     "CREATE": {
       "GUEST_SUCCESS": "客人创建成功",
       "GUEST_ERROR": "创建客人时出错",
