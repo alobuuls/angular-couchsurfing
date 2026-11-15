@@ -786,6 +786,13 @@
         "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong> have been deleted successfully"
       }
     },
+    "DRAFT_EXIT": {
+      "TITLE": "What would you like to do with your changes?",
+      "DESCRIPTION": "You have entered information in this form. You can save a draft to continue later or leave without keeping your changes.",
+      "SAVE_AND_EXIT": "Exit and save changes",
+      "DISCARD_AND_EXIT": "Exit without saving",
+      "STAY": "Stay"
+    },
     "CREATE": {
       "GUEST_SUCCESS": "Guest created successfully",
       "GUEST_ERROR": "Error creating guest",

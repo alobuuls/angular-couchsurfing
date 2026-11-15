@@ -30,3 +30,9 @@ export interface IGuestsFormSubmit {
   trip: ITripDetail;
   guests: IGuestFormPayload[];
 }
+
+export interface IGuestsFormDraft {
+  groupType: 'solo' | 'couple' | 'friends' | 'family';
+  trip: Record<string, any>;
+  guests: Record<string, any>[];
+}

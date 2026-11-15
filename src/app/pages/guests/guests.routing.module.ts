@@ -7,6 +7,7 @@ import { GuestsCreateComponent } from '@pages/guests/create/guests-create.compon
 import { GuestsDetailComponent } from '@pages/guests/detail/guests-detail.component';
 import { GuestsEditComponent } from '@pages/guests/edit/guests-edit.component';
 import { GuestsStatsComponent } from '@pages/guests/stats/guests-stats.component';
+import { pendingChangesFormGuard } from '@core/guards/pending-changes-form.guard';
 
 const guestsRoutes: Routes = [
   {
@@ -16,6 +17,7 @@ const guestsRoutes: Routes = [
   {
     path: 'add',
     component: GuestsCreateComponent,
+    canDeactivate: [pendingChangesFormGuard],
   },
   {
     path: 'stats',

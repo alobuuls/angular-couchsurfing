@@ -796,6 +796,13 @@
         "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong> ont été supprimés avec succès"
       }
     },
+    "DRAFT_EXIT": {
+      "TITLE": "Que souhaitez-vous faire de vos modifications ?",
+      "DESCRIPTION": "Vous avez saisi des informations dans ce formulaire. Vous pouvez enregistrer un brouillon pour continuer plus tard ou quitter sans conserver vos modifications.",
+      "SAVE_AND_EXIT": "Quitter et enregistrer les modifications",
+      "DISCARD_AND_EXIT": "Quitter sans enregistrer",
+      "STAY": "Rester"
+    },
     "CREATE": {
       "GUEST_SUCCESS": "Invité créé avec succès",
       "GUEST_ERROR": "Erreur lors de la création de l'invité",

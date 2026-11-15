@@ -1,3 +1,4 @@
 <sh-title [titleTxt]="'GUESTS_FORM.FORM_TITLE' | translate"></sh-title>
 
-<guest-visit-form mode="create" [isSubmitting]="isCreating" (submitForm)="create($event)"></guest-visit-form>
+<guest-visit-form #guestsForm mode="create" [isSubmitting]="isCreating" (submitForm)="create($event)">
+</guest-visit-form>

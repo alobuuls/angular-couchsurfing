@@ -796,6 +796,13 @@
         "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong> wurden erfolgreich gelöscht"
       }
     },
+    "DRAFT_EXIT": {
+      "TITLE": "Was möchtest du mit deinen Änderungen machen?",
+      "DESCRIPTION": "Du hast Informationen in dieses Formular eingegeben. Du kannst einen Entwurf speichern, um später fortzufahren, oder das Formular verlassen, ohne deine Änderungen zu speichern.",
+      "SAVE_AND_EXIT": "Verlassen und Änderungen speichern",
+      "DISCARD_AND_EXIT": "Ohne Speichern verlassen",
+      "STAY": "Bleiben"
+    },
     "CREATE": {
       "GUEST_SUCCESS": "Gast erfolgreich erstellt",
       "GUEST_ERROR": "Fehler beim Erstellen des Gastes",

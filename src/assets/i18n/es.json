@@ -795,6 +795,13 @@
         "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong> se han eliminado correctamente"
       }
     },
+    "DRAFT_EXIT": {
+      "TITLE": "¿Qué quieres hacer con tus cambios?",
+      "DESCRIPTION": "Tienes información en este formulario. Puedes guardar el borrador para continuar más tarde o salir sin conservar los cambios.",
+      "SAVE_AND_EXIT": "Salir y guardar cambios",
+      "DISCARD_AND_EXIT": "Salir sin guardar",
+      "STAY": "Quedarme"
+    },
     "CREATE": {
       "GUEST_SUCCESS": "Huésped creado correctamente",
       "GUEST_ERROR": "Error al crear el huésped",

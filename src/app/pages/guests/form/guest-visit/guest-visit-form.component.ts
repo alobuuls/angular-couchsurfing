@@ -1,10 +1,29 @@
-import { Component, EventEmitter, Input, Output, QueryList, ViewChild, ViewChildren, OnChanges, inject, SimpleChanges, ElementRef } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+  OnChanges,
+  inject,
+  SimpleChanges,
+  ElementRef,
+  AfterViewInit,
+  OnDestroy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { MatRadioGroup } from '@angular/material/radio';
+import { Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+
+import Swal from 'sweetalert2';
 
 // Interfaces
 import { IGroupEdit, IGuestDetail } from '@interfaces/guests.interface';
-import { IGuestFormItem, IGuestsFormSubmit } from '@interfaces/guest-form.interface';
+import { IGuestFormItem, IGuestsFormDraft, IGuestsFormSubmit } from '@interfaces/guest-form.interface';
 
 // Components
 import { TripFormComponent } from '@pages/guests/form/trip-form/trip-form.component';
@@ -12,14 +31,14 @@ import { GuestFormComponent } from '@pages/guests/form/guest-form/guest-form.com
 
 // Services
 import { AlertsService } from '@core/services/alerts.service';
-import Swal from 'sweetalert2';
+import { FormDraftService } from '@services/form-draft.service';
 
 @Component({
   selector: 'guest-visit-form',
   templateUrl: './guest-visit-form.component.html',
   styleUrls: ['./guest-visit-form.component.css'],
 })
-export class GuestsFormComponent implements OnChanges {
+export class GuestsFormComponent implements OnChanges, AfterViewInit, OnDestroy {
   @ViewChild(TripFormComponent) tripFormComponent!: TripFormComponent;
   @ViewChild(MatRadioGroup) groupTypeRadio!: MatRadioGroup;
 
@@ -57,8 +76,26 @@ export class GuestsFormComponent implements OnChanges {
   // Add Form
   limitGroupMembers = 5;
 
+  // Draft
+  private draftSubscriptions = new Subscription();
+  private guestFormsChangesSubscription?: Subscription;
+  private isRestoringDraft = false;
+
   private _alerts = inject(AlertsService);
   private _translate = inject(TranslateService);
+  private _draftService = inject(FormDraftService);
+  private _cdr = inject(ChangeDetectorRef);
+
+  ngAfterViewInit(): void {
+    if (this.mode !== 'create') return;
+
+    this.restoreSavedDraft();
+
+    this.guestFormsChangesSubscription = this.guestForms.changes.subscribe(() => {
+      this.bindDraftListeners();
+      this.saveDraft();
+    });
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.mode !== 'edit') return;
@@ -198,7 +235,11 @@ export class GuestsFormComponent implements OnChanges {
     this.selectedGroupType = type;
     this.formsToShow = this.guestFormItems.length;
 
-    setTimeout(() => this.updateSliderControls());
+    setTimeout(() => {
+      this.updateSliderControls();
+      this.bindDraftListeners();
+      this.saveDraft();
+    });
   }
 
   async submit(): Promise<void> {
@@ -453,6 +494,125 @@ export class GuestsFormComponent implements OnChanges {
     }
   }
 
+  // DRAFT
+  private restoreSavedDraft(): void {
+    const draft = this._draftService.get<IGuestsFormDraft>();
+
+    if (!draft) {
+      this.bindDraftListeners();
+      return;
+    }
+
+    this.isRestoringDraft = true;
+
+    // Restore the group type first.
+    this.selectedGroupType = draft.groupType;
+
+    // Recreate the guest forms.
+    const guests = draft.guests?.length ? draft.guests : [{}];
+
+    this.guestFormItems = guests.map(() => ({
+      id: this.nextGuestFormId++,
+    }));
+
+    this.formsToShow = this.guestFormItems.length;
+
+    // Render the dynamic child components.
+    this._cdr.detectChanges();
+
+    // Restore the trip form.
+    this.tripFormComponent?.restoreDraft(draft.trip);
+
+    // Restore each guest form.
+    const guestComponents = this.guestForms.toArray();
+
+    guestComponents.forEach((component, index) => {
+      const guestDraft = draft.guests?.[index];
+
+      if (guestDraft) {
+        component.restoreDraft(guestDraft);
+      }
+    });
+
+    this.isRestoringDraft = false;
+
+    // Start listening only after restoration.
+    this.bindDraftListeners();
+  }
+
+  private bindDraftListeners(): void {
+    // Remove previous subscriptions to avoid duplicates.
+    this.draftSubscriptions.unsubscribe();
+    this.draftSubscriptions = new Subscription();
+
+    if (this.mode !== 'create' || this.isRestoringDraft) return;
+
+    // Listen to trip form changes.
+    if (this.tripFormComponent?.formTrip) {
+      this.draftSubscriptions.add(this.tripFormComponent.formTrip.valueChanges.pipe(debounceTime(300)).subscribe(() => this.saveDraft()));
+    }
+
+    // Listen to every guest form.
+    this.guestForms?.forEach(component => {
+      if (!component.formCreateGuest) return;
+      this.draftSubscriptions.add(component.formCreateGuest.valueChanges.pipe(debounceTime(300)).subscribe(() => this.saveDraft()));
+    });
+  }
+
+  private saveDraft(): void {
+    if (this.mode !== 'create' || this.isRestoringDraft || !this.selectedGroupType || !this.tripFormComponent || !this.guestForms?.length) {
+      return;
+    }
+
+    const draft: IGuestsFormDraft = {
+      groupType: this.selectedGroupType,
+      trip: this.tripFormComponent.getDraftValue(),
+      guests: this.guestForms.map(component => component.getDraftValue()),
+    };
+
+    this._draftService.save(draft);
+  }
+
+  // Check whether there is a pending draft before leaving.
+
+  hasPendingChanges(): boolean {
+    if (this.mode !== 'create') return false;
+
+    // Check whether the trip form contains actual data.
+    const tripData = this.tripFormComponent?.getDraftValue();
+
+    const hasTripData = Object.values(tripData ?? {}).some(value => {
+      if (value === null || value === undefined || value === false || value === '') {
+        return false;
+      }
+
+      if (typeof value === 'string') {
+        return value.trim().length > 0;
+      }
+
+      if (Array.isArray(value)) {
+        return value.length > 0;
+      }
+      return true;
+    });
+
+    // Check whether any guest form contains actual data.
+    const hasGuestData = this.guestForms?.some(form => form.hasFormData()) ?? false;
+
+    const hasData = hasTripData || hasGuestData;
+
+    // Remove an empty draft.
+    if (!hasData) {
+      this._draftService.clear();
+      return false;
+    }
+
+    // Save the latest values before leaving.
+    this.saveDraft();
+
+    return true;
+  }
+
   // Navigate between guest forms in the slider
   scrollGuestSlider(direction: 'prev' | 'next'): void {
     const slider = this.guestSlider?.nativeElement;
@@ -474,7 +634,11 @@ export class GuestsFormComponent implements OnChanges {
     }
 
     this.canScrollPrev = slider.scrollLeft > 1;
-
     this.canScrollNext = slider.scrollLeft + slider.clientWidth < slider.scrollWidth - 1;
+  }
+
+  ngOnDestroy(): void {
+    this.draftSubscriptions.unsubscribe();
+    this.guestFormsChangesSubscription?.unsubscribe();
   }
 }
