@@ -795,6 +795,13 @@
         "MESSAGE": "<strong class=\"danger\">{{name}}</strong> è stato eliminato correttamente"
       }
     },
+    "DRAFT_EXIT": {
+      "TITLE": "Cosa vuoi fare con le modifiche?",
+      "DESCRIPTION": "Hai inserito delle informazioni in questo modulo. Puoi salvare una bozza per continuare più tardi oppure uscire senza conservare le modifiche.",
+      "SAVE_AND_EXIT": "Esci e salva le modifiche",
+      "DISCARD_AND_EXIT": "Esci senza salvare",
+      "STAY": "Resta"
+    },
     "CREATE": {
       "GUEST_SUCCESS": "Ospite creato correttamente",
       "GUEST_ERROR": "Errore durante la creazione dell'ospite",

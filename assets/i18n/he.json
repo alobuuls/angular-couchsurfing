@@ -795,6 +795,13 @@
         "GROUP_MESSAGE": "<strong class=\"danger\">{{names}}</strong> נמחקו בהצלחה"
       }
     },
+    "DRAFT_EXIT": {
+      "TITLE": "מה תרצה לעשות עם השינויים שלך?",
+      "DESCRIPTION": "הזנת מידע בטופס הזה. אפשר לשמור טיוטה ולהמשיך מאוחר יותר, או לצאת בלי לשמור את השינויים.",
+      "SAVE_AND_EXIT": "לצאת ולשמור את השינויים",
+      "DISCARD_AND_EXIT": "לצאת בלי לשמור",
+      "STAY": "להישאר"
+    },
     "CREATE": {
       "GUEST_SUCCESS": "האורח נוצר בהצלחה",
       "GUEST_ERROR": "שגיאה ביצירת האורח",
