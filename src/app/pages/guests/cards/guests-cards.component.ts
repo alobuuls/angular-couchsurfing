@@ -16,9 +16,6 @@ import { IGuestTableMember, IGuestTableRow, DataState } from '@interfaces/data-s
 import { ICardGuest, IGuestListItem, IGuestYearGroup, IYearlyStat } from '@interfaces/guests.interface';
 import { Continents, Regions } from '@type/word.types';
 
-// Const
-import { LINK_BASE_COUCHSURFING, LINK_BASE_INSTAGRAM, LINK_BASE_WHATSAPP } from '@config/social/social-links';
-
 // Utils
 import { withReqStateSimple, getGuestDetailRoute } from '@utils';
 
@@ -39,10 +36,6 @@ export class GuestsCardsComponent implements OnInit, OnDestroy {
   getGuestDetailRoute = getGuestDetailRoute;
   private canLoadMore = true;
   private _data: IGuestTableRow[] = [];
-
-  linkBaseCouchsurfing: string = LINK_BASE_COUCHSURFING;
-  linkBaseInstagram: string = LINK_BASE_INSTAGRAM;
-  linkBaseWhatsapp: string = LINK_BASE_WHATSAPP;
 
   // Cards
   cardStates = new Map<string, DataState<ICardGuest[]>>();

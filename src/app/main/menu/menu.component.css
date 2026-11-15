@@ -4,8 +4,6 @@
 
 :host {
   --size-menu: 17.5vw;
-  --img-header: url('/assets/images/landscape.jpg');
-  --img-sidebar: url('/assets/images/mountain.jpg');
   display: block;
 }
 
@@ -80,7 +78,7 @@ header {
   }
 
   @media (max-width: 768px) {
-    height: 4rem;
+    height: 5rem;
     padding-inline: 0.75rem;
   }
 }
@@ -196,7 +194,7 @@ header {
     border-color: #ffffff45;
     color: #ffffff;
 
-    mat-icon {
+    & mat-icon {
       color: #ffffff;
     }
   }
@@ -205,7 +203,7 @@ header {
     scale: 0.9;
   }
 
-  mat-icon {
+  & mat-icon {
     color: #ffffff;
     filter: drop-shadow(0 1px 3px #000000);
     font-size: 1.5rem;
@@ -244,7 +242,7 @@ header {
     corner-shape: squircle;
   }
 
-  span {
+  & span {
     font-size: 0.8rem;
     font-weight: 700;
   }
@@ -275,23 +273,35 @@ header {
 /* =========================================================
    7. DROPDOWN BASE
    ========================================================= */
-
 .tints,
 .languages {
-  /* background-color: color-mix(in srgb, var(--color-surface) 10%, transparent); */
+  /* LIQUID GLASS + GRADIENTE ORIGINAL */
   background:
-    radial-gradient(ellipse at 50% -80%, color-mix(in srgb, var(--color-primary-dark) 20%, transparent), transparent),
+    radial-gradient(ellipse at 50% -80%, color-mix(in srgb, var(--color-primary-dark) 25%, transparent), transparent),
     linear-gradient(
       115deg,
-      color-mix(in srgb, var(--color-primary-dark) 25%, transparent),
-      color-mix(in srgb, rgba(0, 0, 0, 0.5) 5%, transparent),
-      color-mix(in srgb, var(--color-primary-dark) 50%, transparent)
+      color-mix(in srgb, var(--color-primary-dark) 45%, transparent) 0%,
+      color-mix(in srgb, var(--color-primary) 35%, transparent) 15%,
+      color-mix(in srgb, var(--color-primary-light) 30%, transparent) 30%,
+      color-mix(in srgb, var(--color-secondary) 25%, transparent) 45%,
+      color-mix(in srgb, var(--color-surface) 12%, transparent) 58%,
+      color-mix(in srgb, var(--color-primary-light) 20%, transparent) 72%,
+      color-mix(in srgb, var(--color-primary-dark) 55%, transparent) 88%,
+      color-mix(in srgb, var(--color-primary-dark) 65%, transparent) 100%
     );
-  backdrop-filter: blur(25px);
+
+  backdrop-filter: blur(30px) saturate(100%);
+  -webkit-backdrop-filter: blur(30px) saturate(100%);
+
+  border: 1px solid color-mix(in srgb, var(--color-surface) 18%, transparent);
   border-radius: 1rem;
+
   box-shadow:
     0 0 0 1px color-mix(in srgb, var(--color-text) 10%, transparent) inset,
-    0 8px 30px #00000035;
+    inset 0 1px 1px color-mix(in srgb, var(--color-surface) 28%, transparent),
+    inset 0 -1px 1px color-mix(in srgb, var(--color-surface) 6%, transparent),
+    0 8px 30px #00000035,
+    0 0 25px color-mix(in srgb, var(--color-primary) 15%, transparent);
 
   opacity: 0;
   pointer-events: none;
@@ -308,6 +318,16 @@ header {
     visibility 0.6s 0.2s ease;
   visibility: hidden;
   z-index: 6;
+
+  /* REFLEJO DE CRISTAL */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent 35%, transparent 75%, rgba(255, 255, 255, 0.05));
+    pointer-events: none;
+    border-radius: inherit;
+  }
 }
 
 .tints.active,
@@ -570,7 +590,7 @@ header {
       rotate: 90deg;
     }
 
-    mat-icon {
+    & mat-icon {
       font-size: 2rem;
       height: 2rem;
       width: 2rem;
@@ -593,7 +613,7 @@ header {
   position: relative;
   width: calc(100% - 2rem);
 
-  a {
+  & a {
     align-items: center;
     backdrop-filter: blur(15px);
     border: 1px solid #ffffff15;
@@ -612,7 +632,7 @@ header {
       transform 0.3s ease,
       border-color 0.3s ease;
 
-    mat-icon {
+    & mat-icon {
       flex-shrink: 0;
     }
 
@@ -723,7 +743,7 @@ a:focus-visible {
 
 @media (max-width: 700px) {
   .logo-menu .title-logo-menu {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
 
   .topbar-controls {
@@ -732,13 +752,13 @@ a:focus-visible {
 
   .control-button,
   .hamburger-button {
-    padding: 0.55rem;
+    padding: 0.5rem;
   }
 
   .control-button mat-icon {
-    font-size: 1.25rem;
-    height: 1.25rem;
-    width: 1.25rem;
+    font-size: 1.2rem;
+    height: 1.2rem;
+    width: 1.2rem;
   }
 
   .hamburger-button mat-icon {
@@ -750,17 +770,18 @@ a:focus-visible {
   .btn-language {
     gap: 0.15rem;
 
-    span {
+    & span {
       font-size: 0.7rem;
     }
   }
 
   .languages {
-    width: 20rem;
+    width: 17.5rem;
   }
 
+  .languages,
   .tints {
-    right: -1rem;
+    right: -2rem;
   }
 
   .menu {
@@ -768,12 +789,12 @@ a:focus-visible {
   }
 
   .menu ul li {
-    width: calc(100% - 1rem);
+    width: calc(100% - 2rem);
 
-    a {
+    & a {
       font-size: 0.95rem;
-      gap: 0.5rem;
-      padding-inline: 0.75rem;
+      gap: 0.25rem;
+      padding-inline: 0.5rem;
     }
   }
 }

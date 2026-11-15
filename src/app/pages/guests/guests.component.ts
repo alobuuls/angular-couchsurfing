@@ -189,7 +189,38 @@ export class GuestsComponent implements OnInit {
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
       .toLowerCase()
+      .replace(/[\s_-]/g, '')
       .trim();
+  }
+
+  private matchesCountrySearch(search: string, country: ICountry & { countryCode: CountriesCodes }): boolean {
+    const names = [this.getCountryName(country.countryCode), country.name.en].map(name => this.normalizeSearchText(name));
+    return names.some(name => {
+      if (this.fuzzyMatch(search, name)) return true;
+      return name.split(/[\s_-]+/).some(word => this.fuzzyMatch(search, word));
+    });
+  }
+
+  private fuzzyMatch(search: string, target: string): boolean {
+    if (target.includes(search)) return true;
+    if (search.length < 4) return false;
+    const maxErrors = search.length >= 8 ? 2 : 1;
+    return this.levenshteinDistance(search, target) <= maxErrors;
+  }
+
+  private levenshteinDistance(a: string, b: string): number {
+    if (a.length < b.length) [a, b] = [b, a];
+    let previous = Array.from({ length: b.length + 1 }, (_, i) => i);
+
+    for (let i = 1; i <= a.length; i++) {
+      const current = [i];
+      for (let j = 1; j <= b.length; j++) {
+        current[j] = Math.min(current[j - 1] + 1, previous[j] + 1, previous[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      }
+      previous = current;
+    }
+
+    return previous[b.length];
   }
 
   onFiltersSubmit(): void {
@@ -918,20 +949,16 @@ export class GuestsComponent implements OnInit {
     const selectedContinents = (this.filtersForm.get('continent')?.value ?? []) as Continents[];
     const selectedRegions = (this.filtersForm.get('region')?.value ?? []) as Regions[];
     const selectedCountries = (this.filtersForm.get('country')?.value ?? []) as CountriesCodes[];
-
     const search = this.normalizeSearchText(this.countrySearchCtrl.value ?? '');
 
     const filtered = this.countries.filter(country => {
       const matchesContinent = !selectedContinents.length || selectedContinents.includes(country.continent);
       const matchesRegion = !selectedRegions.length || selectedRegions.includes(country.region);
-      const countryName = this.normalizeSearchText(this.getCountryName(country.countryCode));
-      const englishName = this.normalizeSearchText(country.name.en);
-      const countryCode = this.normalizeSearchText(country.countryCode);
-      const matchesSearch = !search || countryName.includes(search) || englishName.includes(search) || countryCode.includes(search);
+      const matchesSearch = !search || this.matchesCountrySearch(search, country);
       return matchesContinent && matchesRegion && matchesSearch;
     });
 
-    // Mostrar primero los países seleccionados
+    // Show selected countries first
     this.filteredCountries = [
       ...filtered.filter(country => selectedCountries.includes(country.countryCode)),
       ...filtered.filter(country => !selectedCountries.includes(country.countryCode)),

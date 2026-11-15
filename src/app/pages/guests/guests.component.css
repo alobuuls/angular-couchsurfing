@@ -37,7 +37,7 @@
       opacity: 1;
     }
 
-    mat-icon {
+    & mat-icon {
       color: #ffffff;
       width: 16px;
       height: 16px;
@@ -135,7 +135,7 @@
     opacity: 1;
   }
 
-  mat-icon {
+  & mat-icon {
     width: 16px;
     height: 16px;
     font-size: 16px;
@@ -174,7 +174,7 @@
   align-items: center;
   margin-right: 0.5rem;
 
-  i {
+  & i {
     font-size: 1.1rem;
   }
 }

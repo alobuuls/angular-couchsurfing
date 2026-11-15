@@ -176,7 +176,7 @@
                     [class.disabled]="!p.couchsurfing"
                     [matTooltip]="'GUEST_DETAIL.SOCIAL.COUCHSURFING' | translate"
                     [attr.aria-label]="'GUEST_DETAIL.SOCIAL.COUCHSURFING' | translate"
-                    [href]="linkBaseCouchsurfing + '/' + p.couchsurfing"
+                    [href]="p.couchsurfing | socialLink: 'couchsurfing'"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -189,7 +189,7 @@
                     [class.disabled]="!p.whatsapp"
                     [matTooltip]="'GUEST_DETAIL.SOCIAL.WHATSAPP' | translate"
                     [attr.aria-label]="'GUEST_DETAIL.SOCIAL.WHATSAPP' | translate"
-                    [href]="linkBaseWhatsapp + '/' + p.whatsapp"
+                    [href]="p.whatsapp | socialLink: 'whatsapp'"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -202,7 +202,7 @@
                     [class.disabled]="!p.instagram"
                     [matTooltip]="'GUEST_DETAIL.SOCIAL.INSTAGRAM' | translate"
                     [attr.aria-label]="'GUEST_DETAIL.SOCIAL.INSTAGRAM' | translate"
-                    [href]="linkBaseInstagram + '/' + p.instagram"
+                    [href]="p.instagram | socialLink: 'instagram'"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -277,249 +277,266 @@
               </button>
 
               <!-- DETAILS -->
-              <div *ngIf="isCardOpenById(getCardId(guest))" class="card-details">
-                <ng-container *ngIf="getCardDetails(guest) as details">
-                  <ng-container *ngIf="details.length > 0">
-                    <!-- TRIP -->
-                    <ng-container *ngIf="details[0] as trip">
-                      <h3>{{ 'GUESTS_CARDS.TRIP' | translate }}</h3>
+              <div class="card-details-wrapper" [class.open]="isCardOpenById(getCardId(guest))">
+                <div class="card-details">
+                  <!-- LOADING -->
+                  <ng-container *ngIf="isCardLoading(guest); else loadedDetails">
+                    <div class="details-skeleton">
+                      <ngx-skeleton-loader [theme]="{ width: '35%', height: '20px' }" />
 
-                      <ul>
-                        <li *ngIf="trip.visitedDate">
-                          <strong>{{ 'GUESTS_CARDS.VISITED_DATE' | translate }}: </strong>
-                          {{ formatDate(trip.visitedDate) }}
-                        </li>
+                      <ngx-skeleton-loader [theme]="{ width: '90%', height: '14px' }" />
 
-                        <li *ngIf="trip.nights !== null && trip.nights !== undefined">
-                          <strong>{{ 'GUESTS_CARDS.NIGHTS' | translate }}: </strong>
-                          {{ trip.nights }}
-                        </li>
+                      <ngx-skeleton-loader [theme]="{ width: '75%', height: '14px' }" />
 
-                        <li *ngIf="trip.stayed !== null && trip.stayed !== undefined">
-                          <strong>{{ 'GUESTS_CARDS.STAYED' | translate }}: </strong>
-                          <mat-icon
-                            class="material-symbols-outlined"
-                            [fontIcon]="trip.stayed ? 'check' : 'close'"
-                            [class.success]="trip.stayed"
-                            [class.danger]="!trip.stayed"
-                          ></mat-icon>
-                        </li>
+                      <ngx-skeleton-loader [theme]="{ width: '85%', height: '14px' }" />
+                    </div>
+                  </ng-container>
 
-                        <li *ngIf="trip.hangOut !== null && trip.hangOut !== undefined">
-                          <strong>{{ 'GUESTS_CARDS.HANG_OUT' | translate }}: </strong>
-                          <mat-icon
-                            class="material-symbols-outlined"
-                            [fontIcon]="trip.hangOut ? 'check' : 'close'"
-                            [class.success]="trip.hangOut"
-                            [class.danger]="!trip.hangOut"
-                          ></mat-icon>
-                        </li>
-
-                        <li *ngIf="trip.isFirstTime !== null && trip.isFirstTime !== undefined">
-                          <strong>{{ 'GUESTS_CARDS.FIRST_TIME' | translate }}: </strong>
-                          <mat-icon
-                            class="material-symbols-outlined"
-                            [fontIcon]="trip.isFirstTime ? 'check' : 'close'"
-                            [class.success]="trip.isFirstTime"
-                            [class.danger]="!trip.isFirstTime"
-                          ></mat-icon>
-                        </li>
-
-                        <li *ngIf="trip.groupType">
-                          <strong>{{ 'GUESTS_CARDS.GROUP_TYPE' | translate }}: </strong>
-
-                          <span class="gap-icons">
-                            <mat-icon
-                              class="material-symbols-outlined"
-                              [fontIcon]="
-                                trip.groupType === 'solo'
-                                  ? 'person'
-                                  : trip.groupType === 'couple'
-                                    ? 'favorite'
-                                    : trip.groupType === 'friends'
-                                      ? 'groups'
-                                      : 'family_restroom'
-                              "
-                            ></mat-icon>
-
-                            {{ 'GUESTS_CARDS.GROUP_TYPES.' + trip.groupType | translate }}
-                          </span>
-                        </li>
-                      </ul>
-                    </ng-container>
-
-                    <!-- MEMBERS -->
-                    <h3 *ngIf="details.length > 1">
-                      {{ 'GUESTS_CARDS.MEMBERS' | translate }}
-                      ({{ details.length }})
-                    </h3>
-
-                    <!-- OPEN BOOK -->
-                    <div class="book" [class.single-page]="details.length === 1">
-                      <section
-                        *ngFor="let member of details; let i = index"
-                        class="card-member book-page"
-                        [class.left-page]="i === 0"
-                        [class.right-page]="i === 1"
-                      >
-                        <!-- MEMBER NAME / GROUPS -->
-                        <h2 *ngIf="guest.groupType !== 'solo' && member.fullName">
-                          {{ member.fullName }}
-
-                          <mat-icon
-                            class="material-symbols-outlined"
-                            *ngIf="member.ambassador"
-                            [matTooltip]="'GUESTS_CARDS.AMBASSADOR' | translate"
-                            >badge</mat-icon
-                          >
-                        </h2>
-
-                        <!-- PERSONAL INFORMATION -->
-                        <ng-container
-                          *ngIf="
-                            member.fullName ||
-                            member.birthDate ||
-                            member.prefixCode ||
-                            member.whatsapp ||
-                            member.instagram ||
-                            member.urlProfileCs ||
-                            (member.isGay !== null && member.isGay !== undefined) ||
-                            (member.didTheyReq !== null && member.didTheyReq !== undefined)
-                          "
-                        >
-                          <h4>{{ 'GUESTS_CARDS.PERSONAL_INFORMATION' | translate }}</h4>
+                  <ng-template #loadedDetails>
+                    <ng-container *ngIf="getCardDetails(guest) as details">
+                      <ng-container *ngIf="details.length > 0">
+                        <!-- TRIP -->
+                        <ng-container *ngIf="details[0] as trip">
+                          <h3>{{ 'GUESTS_CARDS.TRIP' | translate }}</h3>
 
                           <ul>
-                            <li *ngIf="member.birthDate">
-                              <strong>{{ 'GUESTS_CARDS.BIRTH_DATE' | translate }}: </strong>
-                              {{ formatDate(member.birthDate) }}
+                            <li *ngIf="trip.visitedDate">
+                              <strong>{{ 'GUESTS_CARDS.VISITED_DATE' | translate }}: </strong>
+                              {{ formatDate(trip.visitedDate) }}
                             </li>
 
-                            <li *ngIf="member.isGay === true">
-                              <strong>{{ 'GUESTS_CARDS.GAY' | translate }}: </strong>
+                            <li *ngIf="trip.nights !== null && trip.nights !== undefined">
+                              <strong>{{ 'GUESTS_CARDS.NIGHTS' | translate }}: </strong>
+                              {{ trip.nights }}
+                            </li>
+
+                            <li *ngIf="trip.stayed !== null && trip.stayed !== undefined">
+                              <strong>{{ 'GUESTS_CARDS.STAYED' | translate }}: </strong>
                               <mat-icon
                                 class="material-symbols-outlined"
-                                [fontIcon]="member.isGay ? 'check' : 'close'"
-                                [class.success]="member.isGay"
-                                [class.danger]="!member.isGay"
+                                [fontIcon]="trip.stayed ? 'check' : 'close'"
+                                [class.success]="trip.stayed"
+                                [class.danger]="!trip.stayed"
                               ></mat-icon>
                             </li>
 
-                            <li *ngIf="member.didTheyReq !== null && member.didTheyReq !== undefined">
-                              <ng-container *ngIf="member.didTheyReq; else memberRequestSent">
-                                <strong>{{ 'GUESTS_CARDS.DID_THEY_REQUEST' | translate }}</strong>
-                                <mat-icon class="material-symbols-outlined success" fontIcon="check"></mat-icon>
-                              </ng-container>
-
-                              <ng-template #memberRequestSent>
-                                <strong>{{ 'GUESTS_CARDS.I_SENT_THE_REQUEST' | translate }}</strong>
-                              </ng-template>
-                            </li>
-                          </ul>
-                        </ng-container>
-
-                        <!-- LOCATION -->
-                        <ng-container
-                          *ngIf="
-                            member.continent ||
-                            member.region ||
-                            member.hometownCode ||
-                            member.hometownCity ||
-                            member.hometownState ||
-                            member.livingInCode ||
-                            member.livingInState ||
-                            member.livingInCity ||
-                            member.countryCodeWeMet ||
-                            member.cityWeMet ||
-                            member.stateWeMet ||
-                            member.locationWeMet
-                          "
-                        >
-                          <h4>{{ 'GUESTS_CARDS.LOCATION' | translate }}</h4>
-
-                          <ul>
-                            <li *ngIf="member.hometownCode || member.hometownState">
-                              <strong>{{ 'GUESTS_CARDS.HOMETOWN' | translate }}: </strong>
-                              <span class="gap-icons">
-                                <span *ngIf="member.hometownCode" [class]="member.hometownCode | flag"></span>
-                                {{ member.hometownCity }}, {{ member.hometownState }}
-                              </span>
+                            <li *ngIf="trip.hangOut !== null && trip.hangOut !== undefined">
+                              <strong>{{ 'GUESTS_CARDS.HANG_OUT' | translate }}: </strong>
+                              <mat-icon
+                                class="material-symbols-outlined"
+                                [fontIcon]="trip.hangOut ? 'check' : 'close'"
+                                [class.success]="trip.hangOut"
+                                [class.danger]="!trip.hangOut"
+                              ></mat-icon>
                             </li>
 
-                            <li *ngIf="member.livingInCode || member.livingInState">
-                              <strong>{{ 'GUESTS_CARDS.LIVING_IN' | translate }}: </strong>
-                              <span class="gap-icons">
-                                <span *ngIf="member.livingInCode" [class]="member.livingInCode | flag"></span>
-                                {{ member.livingInCity }}, {{ member.livingInState }}
-                              </span>
+                            <li *ngIf="trip.isFirstTime !== null && trip.isFirstTime !== undefined">
+                              <strong>{{ 'GUESTS_CARDS.FIRST_TIME' | translate }}: </strong>
+                              <mat-icon
+                                class="material-symbols-outlined"
+                                [fontIcon]="trip.isFirstTime ? 'check' : 'close'"
+                                [class.success]="trip.isFirstTime"
+                                [class.danger]="!trip.isFirstTime"
+                              ></mat-icon>
                             </li>
 
-                            <li *ngIf="member.countryCodeWeMet || member.cityWeMet || member.locationWeMet">
-                              <strong>{{ 'GUESTS_CARDS.WE_MET' | translate }}: </strong>
+                            <li *ngIf="trip.groupType">
+                              <strong>{{ 'GUESTS_CARDS.GROUP_TYPE' | translate }}: </strong>
 
                               <span class="gap-icons">
-                                <span
-                                  *ngIf="member.countryCodeWeMet"
-                                  [class]="member.countryCodeWeMet | flag"
-                                  [matTooltip]="_format.formatCountry(member.countryCodeWeMet)"
-                                ></span>
+                                <mat-icon
+                                  class="material-symbols-outlined"
+                                  [fontIcon]="
+                                    trip.groupType === 'solo'
+                                      ? 'person'
+                                      : trip.groupType === 'couple'
+                                        ? 'favorite'
+                                        : trip.groupType === 'friends'
+                                          ? 'groups'
+                                          : 'family_restroom'
+                                  "
+                                ></mat-icon>
 
-                                <span *ngIf="member.countryCodeWeMet">
-                                  {{ _format.formatCountry(member.countryCodeWeMet) }}
-                                </span>
-
-                                <span *ngIf="member.cityWeMet">, {{ member.cityWeMet }}, </span>
-                                <span *ngIf="member.stateWeMet">, {{ member.stateWeMet }} </span>
-                                <span *ngIf="member.locationWeMet"> ({{ member.locationWeMet }}) </span>
+                                {{ 'GUESTS_CARDS.GROUP_TYPES.' + trip.groupType | translate }}
                               </span>
                             </li>
                           </ul>
                         </ng-container>
-                      </section>
-                    </div>
-                  </ng-container>
-                </ng-container>
+
+                        <!-- MEMBERS -->
+                        <h3 *ngIf="details.length > 1">
+                          {{ 'GUESTS_CARDS.MEMBERS' | translate }}
+                          ({{ details.length }})
+                        </h3>
+
+                        <!-- OPEN BOOK -->
+                        <div class="book" [class.single-page]="details.length === 1">
+                          <section
+                            *ngFor="let member of details; let i = index"
+                            class="card-member book-page"
+                            [class.left-page]="i === 0"
+                            [class.right-page]="i === 1"
+                          >
+                            <!-- MEMBER NAME / GROUPS -->
+                            <h2 *ngIf="guest.groupType !== 'solo' && member.fullName">
+                              {{ member.fullName }}
+
+                              <mat-icon
+                                class="material-symbols-outlined"
+                                *ngIf="member.ambassador"
+                                [matTooltip]="'GUESTS_CARDS.AMBASSADOR' | translate"
+                                >badge</mat-icon
+                              >
+                            </h2>
+
+                            <!-- PERSONAL INFORMATION -->
+                            <ng-container
+                              *ngIf="
+                                member.fullName ||
+                                member.birthDate ||
+                                member.prefixCode ||
+                                member.whatsapp ||
+                                member.instagram ||
+                                member.urlProfileCs ||
+                                (member.isGay !== null && member.isGay !== undefined) ||
+                                (member.didTheyReq !== null && member.didTheyReq !== undefined)
+                              "
+                            >
+                              <h4>{{ 'GUESTS_CARDS.PERSONAL_INFORMATION' | translate }}</h4>
+
+                              <ul>
+                                <li *ngIf="member.birthDate">
+                                  <strong>{{ 'GUESTS_CARDS.BIRTH_DATE' | translate }}: </strong>
+                                  {{ formatDate(member.birthDate) }}
+                                </li>
+
+                                <li *ngIf="member.isGay === true">
+                                  <strong>{{ 'GUESTS_CARDS.GAY' | translate }}: </strong>
+                                  <mat-icon
+                                    class="material-symbols-outlined"
+                                    [fontIcon]="member.isGay ? 'check' : 'close'"
+                                    [class.success]="member.isGay"
+                                    [class.danger]="!member.isGay"
+                                  ></mat-icon>
+                                </li>
+
+                                <li *ngIf="member.didTheyReq !== null && member.didTheyReq !== undefined">
+                                  <ng-container *ngIf="member.didTheyReq; else memberRequestSent">
+                                    <strong>{{ 'GUESTS_CARDS.DID_THEY_REQUEST' | translate }}</strong>
+                                    <mat-icon class="material-symbols-outlined success" fontIcon="check"></mat-icon>
+                                  </ng-container>
+
+                                  <ng-template #memberRequestSent>
+                                    <strong>{{ 'GUESTS_CARDS.I_SENT_THE_REQUEST' | translate }}</strong>
+                                  </ng-template>
+                                </li>
+                              </ul>
+                            </ng-container>
+
+                            <!-- LOCATION -->
+                            <ng-container
+                              *ngIf="
+                                member.continent ||
+                                member.region ||
+                                member.hometownCode ||
+                                member.hometownCity ||
+                                member.hometownState ||
+                                member.livingInCode ||
+                                member.livingInState ||
+                                member.livingInCity ||
+                                member.countryCodeWeMet ||
+                                member.cityWeMet ||
+                                member.stateWeMet ||
+                                member.locationWeMet
+                              "
+                            >
+                              <h4>{{ 'GUESTS_CARDS.LOCATION' | translate }}</h4>
+
+                              <ul>
+                                <li *ngIf="member.hometownCode || member.hometownState">
+                                  <strong>{{ 'GUESTS_CARDS.HOMETOWN' | translate }}: </strong>
+                                  <span class="gap-icons">
+                                    <span *ngIf="member.hometownCode" [class]="member.hometownCode | flag"></span>
+                                    {{ member.hometownCity }}, {{ member.hometownState }}
+                                  </span>
+                                </li>
+
+                                <li *ngIf="member.livingInCode || member.livingInState">
+                                  <strong>{{ 'GUESTS_CARDS.LIVING_IN' | translate }}: </strong>
+                                  <span class="gap-icons">
+                                    <span *ngIf="member.livingInCode" [class]="member.livingInCode | flag"></span>
+                                    {{ member.livingInCity }}, {{ member.livingInState }}
+                                  </span>
+                                </li>
+
+                                <li *ngIf="member.countryCodeWeMet || member.cityWeMet || member.locationWeMet">
+                                  <strong>{{ 'GUESTS_CARDS.WE_MET' | translate }}: </strong>
+
+                                  <span class="gap-icons">
+                                    <span
+                                      *ngIf="member.countryCodeWeMet"
+                                      [class]="member.countryCodeWeMet | flag"
+                                      [matTooltip]="_format.formatCountry(member.countryCodeWeMet)"
+                                    ></span>
+
+                                    <span *ngIf="member.countryCodeWeMet">
+                                      {{ _format.formatCountry(member.countryCodeWeMet) }}
+                                    </span>
+
+                                    <span *ngIf="member.cityWeMet">, {{ member.cityWeMet }}, </span>
+                                    <span *ngIf="member.stateWeMet">, {{ member.stateWeMet }} </span>
+                                    <span *ngIf="member.locationWeMet"> ({{ member.locationWeMet }}) </span>
+                                  </span>
+                                </li>
+                              </ul>
+                            </ng-container>
+                          </section>
+                        </div>
+                      </ng-container>
+                    </ng-container>
+                  </ng-template>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- BACK TO TOP -->
-  <button
-    type="button"
-    class="btn-back-to-top"
-    [class.visible]="showBackToTop"
-    [matTooltip]="'GUESTS_CARDS.BACK_TO_TOP' | translate"
-    [attr.aria-label]="'GUESTS_CARDS.BACK_TO_TOP' | translate"
-    [attr.aria-hidden]="!showBackToTop"
-    [attr.tabindex]="showBackToTop ? 0 : -1"
-    (click)="scrollToTop()"
-  >
-    <mat-icon class="material-symbols-outlined">arrow_upward</mat-icon>
-  </button>
-
-  <!-- INFINITE SCROLL LOADER -->
-  <div *ngIf="loading && data.length" class="infinite-loader">
-    <span class="infinite-spinner"></span>
-  </div>
-
-  <!-- RETRY AFTER AN ERROR -->
-  <div *ngIf="hasError && !loading" class="cards-retry">
-    <h1 class="app-error-message">{{ 'GUESTS_VIEW.LOAD_ERROR' | translate }}</h1>
-
-    <h2 *ngIf="errorMessage" class="app-error-detail">{{ errorMessage }}</h2>
-
-    <button type="button" (click)="retry.emit()" class="retry-button">
-      <mat-icon>refresh</mat-icon>
-      {{ 'GUESTS_VIEW.RETRY' | translate }}
+    <!-- BACK TO TOP -->
+    <button
+      type="button"
+      class="btn-back-to-top"
+      [class.visible]="showBackToTop"
+      [matTooltip]="'GUESTS_CARDS.BACK_TO_TOP' | translate"
+      [attr.aria-label]="'GUESTS_CARDS.BACK_TO_TOP' | translate"
+      [attr.aria-hidden]="!showBackToTop"
+      [attr.tabindex]="showBackToTop ? 0 : -1"
+      (click)="scrollToTop()"
+    >
+      <mat-icon class="material-symbols-outlined">arrow_upward</mat-icon>
     </button>
-  </div>
 
-  <!-- NO MORE GUESTS -->
-  <div *ngIf="!loading && !cardsHasMore && data.length" class="cards-end">
-    {{ endMessage.key | translate: endMessage.params }}
+    <!-- INFINITE SCROLL LOADER -->
+    <div *ngIf="loading && data.length" class="infinite-loader">
+      <span class="infinite-spinner"></span>
+    </div>
+
+    <!-- RETRY AFTER AN ERROR -->
+    <div *ngIf="hasError && !loading" class="cards-retry">
+      <h1 class="app-error-message">{{ 'GUESTS_VIEW.LOAD_ERROR' | translate }}</h1>
+
+      <h2 *ngIf="errorMessage" class="app-error-detail">{{ errorMessage }}</h2>
+
+      <button type="button" (click)="retry.emit()" class="retry-button">
+        <mat-icon>refresh</mat-icon>
+        {{ 'GUESTS_VIEW.RETRY' | translate }}
+      </button>
+    </div>
+
+    <!-- NO MORE GUESTS -->
+    <div *ngIf="!loading && !cardsHasMore && data.length" class="cards-end">
+      {{ endMessage.key | translate: endMessage.params }}
+    </div>
   </div>
 </div>

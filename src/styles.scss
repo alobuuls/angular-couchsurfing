@@ -125,6 +125,10 @@
 
   /* Map */
   --color-hover-country: #590000;
+
+  /* Menu */
+  --img-header: url('assets/images/landscape.jpg');
+  --img-sidebar: url('assets/images/mountain.jpg');
 }
 
 //  Ocean Blue — Dark
@@ -1024,5 +1028,106 @@ html.backward::view-transition-new(root) {
 @media (min-width: 600px) {
   .ctn-buttons {
     flex-direction: row;
+  }
+}
+
+/* =========================================================
+  MODERN SCROLLBAR — ADAPTIVE THEME
+  Compatible with all themes
+  ========================================================= */
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--color-primary) 75%, transparent) transparent;
+}
+
+/* Chromium, Edge, Safari */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 4px;
+}
+
+/* Thumb */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--color-primary-light) 85%, transparent), color-mix(in srgb, var(--color-primary) 90%, transparent));
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  border-radius: 20px;
+  transition:
+    background 0.3s ease,
+    border 0.3s ease;
+}
+
+/* Hover */
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--color-primary-light), var(--color-primary));
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Active */
+::-webkit-scrollbar-thumb:active {
+  background: var(--color-primary-dark);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Corner */
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Dark theme */
+.dark-theme {
+  scrollbar-color: color-mix(in srgb, var(--color-primary-light) 80%, transparent) transparent;
+
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, color-mix(in srgb, var(--color-primary-light) 90%, transparent), color-mix(in srgb, var(--color-primary) 85%, transparent));
+    border: 3px solid transparent;
+    background-clip: padding-box;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--color-primary-light), var(--color-primary));
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+}
+
+/* Compact scrollbar */
+.scrollbar-small {
+  scrollbar-width: thin;
+}
+
+.scrollbar-small::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+/* Hidden scrollbar */
+.scrollbar-hidden {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+/* Touch devices */
+@media (hover: none) and (pointer: coarse) {
+  * {
+    scrollbar-width: none;
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
   }
 }
