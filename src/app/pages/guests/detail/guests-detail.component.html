@@ -110,7 +110,7 @@
                 class="btn-cs"
                 [matTooltip]="'GUEST_DETAIL.SOCIAL.COUCHSURFING' | translate"
                 [attr.aria-label]="'GUEST_DETAIL.SOCIAL.COUCHSURFING' | translate"
-                [href]="linkBaseCouchsurfing + '/' + guest.urlProfileCs"
+                [href]="guest.urlProfileCs | socialLink: 'couchsurfing'"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -123,7 +123,7 @@
                 class="btn-instagram"
                 [matTooltip]="'GUEST_DETAIL.SOCIAL.INSTAGRAM' | translate"
                 [attr.aria-label]="'GUEST_DETAIL.SOCIAL.INSTAGRAM' | translate"
-                [href]="linkBaseInstagram + '/' + guest.instagram"
+                [href]="guest.instagram | socialLink: 'instagram'"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -136,7 +136,7 @@
                 class="btn-whatsapp"
                 [matTooltip]="'GUEST_DETAIL.SOCIAL.WHATSAPP' | translate"
                 [attr.aria-label]="'GUEST_DETAIL.SOCIAL.WHATSAPP' | translate"
-                [href]="linkBaseWhatsapp + '/' + guest.whatsapp"
+                [href]="guest.whatsapp | socialLink: 'whatsapp'"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -865,7 +865,7 @@
                   class="btn-cs"
                   [matTooltip]="'GUEST_DETAIL.SOCIAL.COUCHSURFING' | translate"
                   [attr.aria-label]="'GUEST_DETAIL.SOCIAL.COUCHSURFING' | translate"
-                  [href]="linkBaseCouchsurfing + '/' + member.urlProfileCs"
+                  [href]="member.urlProfileCs | socialLink: 'couchsurfing'"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -878,7 +878,7 @@
                   class="btn-instagram"
                   [matTooltip]="'GUEST_DETAIL.SOCIAL.INSTAGRAM' | translate"
                   [attr.aria-label]="'GUEST_DETAIL.SOCIAL.INSTAGRAM' | translate"
-                  [href]="linkBaseInstagram + '/' + member.instagram"
+                  [href]="member.instagram | socialLink: 'instagram'"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -891,7 +891,7 @@
                   class="btn-whatsapp"
                   [matTooltip]="'GUEST_DETAIL.SOCIAL.WHATSAPP' | translate"
                   [attr.aria-label]="'GUEST_DETAIL.SOCIAL.WHATSAPP' | translate"
-                  [href]="linkBaseWhatsapp + '/' + member.whatsapp"
+                  [href]="member.whatsapp | socialLink: 'whatsapp'"
                   target="_blank"
                   rel="noopener noreferrer"
                 >

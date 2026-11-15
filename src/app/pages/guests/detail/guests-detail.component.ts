@@ -5,9 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { GuestsService } from '@services/guests.service';
 import { GeonameService } from '@services/geoname.service';
 
-// Const
-import { LINK_BASE_COUCHSURFING, LINK_BASE_INSTAGRAM, LINK_BASE_WHATSAPP } from '@config/social/social-links';
-
 // Interfaces
 import { IGroupMember, IGuestDetail } from '@interfaces/guests.interface';
 import { IErrResp, ReqStatus } from '@interfaces/data-structure-api';
@@ -25,11 +22,6 @@ export class GuestsDetailComponent implements OnInit {
 
   guest?: IGuestDetail;
   group?: IGroupMember[];
-
-  // Urls Base social media
-  linkBaseCouchsurfing: string = LINK_BASE_COUCHSURFING;
-  linkBaseInstagram: string = LINK_BASE_INSTAGRAM;
-  linkBaseWhatsapp: string = LINK_BASE_WHATSAPP;
 
   _format = inject(FormatService);
   private route = inject(ActivatedRoute);
