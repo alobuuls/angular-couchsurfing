@@ -94,6 +94,26 @@
   font-size: 1.25rem;
 }
 
+/* MONTH TITLE + YEAR */
+.month-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.month-year {
+  display: none;
+  color: var(--color-secondary);
+  font-size: clamp(2rem, calc(5vw - 1rem), 2.5rem);
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+/* SHOW YEAR ONLY WHEN MONTH IS STICKY */
+.month-header.show-year .month-year {
+  display: inline-block;
+}
+
 /* CARDS GRID */
 .cards {
   display: grid;
@@ -103,7 +123,6 @@
   margin: 2rem auto;
   align-items: start;
   justify-items: center;
-  interpolate-size: allow-keywords;
 }
 
 /* CARD */

@@ -39,6 +39,13 @@ export class FormatService {
 
   formatDate(isoDate: string): string {
     const lang = this._language.currentLanguage;
+    const dateOnly = /^(\d{4})-(\d{2})-(\d{2})$/.exec(isoDate);
+
+    if (dateOnly) {
+      const [, year, month, day] = dateOnly;
+      const date = new Date(Number(year), Number(month) - 1, Number(day));
+      return this.formatWithLocale(date, this.dateFormats[lang]) ?? isoDate;
+    }
     return this.formatWithLocale(isoDate, this.dateFormats[lang]) ?? isoDate;
   }
 

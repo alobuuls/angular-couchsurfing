@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges, inject, NgZone, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges, inject, NgZone, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ElementRef } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -54,6 +54,7 @@ export class GuestsCardsComponent implements OnInit, OnDestroy {
   private readonly _errHandler = inject(ErrorHandlerService);
   private readonly _router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly _element = inject(ElementRef<HTMLElement>);
 
   private readonly _langChangeSubscription = this._translate.onLangChange.subscribe(() => this.buildCardsGroups());
   readonly skeletonCards = Array.from({ length: 10 });
@@ -127,6 +128,9 @@ export class GuestsCardsComponent implements OnInit, OnDestroy {
 
       this.scrollFrame = requestAnimationFrame(() => {
         this.scrollFrame = null;
+
+        // UPDATE STICKY MONTH YEAR
+        this.updateStickyMonthYears();
 
         // BACK TO TOP
         const shouldShowBackToTop = window.scrollY > 900;
@@ -216,6 +220,32 @@ export class GuestsCardsComponent implements OnInit, OnDestroy {
     }).format(new Date(2024, month, 1));
   }
 
+  // Show the year beside the month only when the month is sticky
+  // and its corresponding year header is no longer visible.
+  private updateStickyMonthYears(): void {
+    const container = this._element.nativeElement as HTMLElement;
+    const monthGroups = container.querySelectorAll('.month-group') as NodeListOf<HTMLElement>;
+
+    monthGroups.forEach((monthGroup: HTMLElement) => {
+      const monthHeader = monthGroup.querySelector('.month-header') as HTMLElement | null;
+
+      const yearGroup = monthGroup.closest('.year-group') as HTMLElement | null;
+      const yearHeader = yearGroup?.querySelector('.year-header') as HTMLElement | null;
+
+      if (!monthHeader || !yearHeader) return;
+
+      const stickyTop = parseFloat(getComputedStyle(monthHeader).top) || 0;
+
+      const monthRect = monthHeader.getBoundingClientRect();
+      const yearRect = yearHeader.getBoundingClientRect();
+
+      const isSticky = monthRect.top <= stickyTop + 1 && monthRect.bottom > stickyTop;
+      const isYearOutOfView = yearRect.bottom <= stickyTop;
+
+      monthHeader.classList.toggle('show-year', isSticky && isYearOutOfView);
+    });
+  }
+
   // NAVIGATE TO GUEST/GROUP DETAIL WITH VIEW TRANSITION
   async navigateWithTransition(guest: IGuestListItem): Promise<void> {
     // Get the route corresponding to the selected guest or group.
@@ -262,9 +292,12 @@ export class GuestsCardsComponent implements OnInit, OnDestroy {
 
   formatDate(value: Date | string): string {
     if (!value) return '';
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return '';
-    return this._format.formatDate(date.toISOString());
+
+    if (value instanceof Date) {
+      return this._format.formatDate(`${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}-${String(value.getDate()).padStart(2, '0')}`);
+    }
+
+    return this._format.formatDate(value);
   }
 
   toggleCard(guest: IGuestTableRow): void {
