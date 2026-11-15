@@ -81,7 +81,11 @@
     <!-- MONTHS -->
     <div *ngFor="let month of year.months; trackBy: trackByMonth" class="month-group">
       <div class="month-header">
-        <h3 class="month-title">{{ month.monthName | uppercase }}</h3>
+        <div class="month-heading">
+          <h3 class="month-title">{{ month.monthName | uppercase }}</h3>
+        </div>
+
+        <span class="month-year">{{ year.year }}</span>
 
         <div class="month-stats">
           <span>

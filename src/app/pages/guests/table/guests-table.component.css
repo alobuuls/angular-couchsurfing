@@ -12,6 +12,7 @@
 /* TABLE CONTAINER */
 .ctn-guests {
   margin-top: 2.5rem;
+  overflow: auto;
   text-align: center;
   padding: 1rem;
 }
