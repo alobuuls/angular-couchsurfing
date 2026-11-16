@@ -14,10 +14,11 @@ Chart.register(ForceDirectedGraphController, EdgeLine, LinearScale, PointElement
 import { ISameArrivalDay, ISameStay, ITimelineDistribution, ITimelineItem, ITimelineView } from '@interfaces/stats-interface';
 
 // Helpers
-import { CHART_UNKNOWN_COLOR, getRankingColors, RANKING_COLORS, TIMELINE_COLORS } from '@utils';
+import { CHART_UNKNOWN_COLOR, createExternalTooltip, destroyExternalTooltip, getRankingColors, hideExternalTooltip, RANKING_COLORS, TIMELINE_COLORS } from '@utils';
 
 // Service
 import { FormatService } from '@services/format.service';
+import { FlagPipe } from '@shared/pipes/three-code-letters-flag.pipe';
 
 @Component({
   selector: 'guest-timeline-chart',
@@ -28,6 +29,7 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges, On
   private _format = inject(FormatService);
   private _router = inject(Router);
   private _translate = inject(TranslateService);
+  private readonly _flag = inject(FlagPipe);
 
   private langChangeSubscription?: Subscription;
 
@@ -337,23 +339,39 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges, On
           },
 
           tooltip: {
-            callbacks: {
-              label: context => {
-                const node = nodes[context.dataIndex];
+            enabled: false,
+            external: context => {
+              const dataPoint = context.tooltip.dataPoints?.[0];
 
-                return [
-                  node.label,
-                  this._translate.instant('STATS.TIMELINE.LABELS.COUNTRY', {
-                    country: this._format.formatCountry(node.country),
-                  }),
-                  this._translate.instant('GENDER.LABEL', {
-                    gender: this._format.formatGender(node.gender),
-                  }),
-                  this._translate.instant('STATS.TIMELINE.LABELS.VISIT', {
-                    date: this._format.formatDate(node.visitedDate),
-                  }),
-                ];
-              },
+              if (!dataPoint) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              const node = nodes[dataPoint.dataIndex];
+
+              if (!node) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              createExternalTooltip(context.chart, context.tooltip, {
+                title: node.label,
+                rows: [
+                  {
+                    label: this._translate.instant('STATS.TIMELINE.LABELS.GENDER'),
+                    value: this._format.formatGender(node.gender),
+                  },
+                  {
+                    label: this._translate.instant('STATS.TIMELINE.LABELS.VISIT'),
+                    value: this._format.formatDate(node.visitedDate),
+                  },
+                ],
+                country: {
+                  name: this._format.formatCountry(node.country),
+                  flagClass: this._flag.transform(node.country),
+                },
+              });
             },
           },
         },
@@ -497,8 +515,13 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges, On
   }
 
   private destroyChart(): void {
-    // Destroy the current Chart.js instance.
-    this.chart?.destroy();
+    // Destroy the external tooltip before destroying the chart.
+    if (!this.chart) {
+      return;
+    }
+
+    destroyExternalTooltip(this.chart);
+    this.chart.destroy();
     this.chart = undefined;
   }
 

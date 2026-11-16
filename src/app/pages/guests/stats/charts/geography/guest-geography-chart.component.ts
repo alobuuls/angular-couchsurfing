@@ -28,6 +28,8 @@ import { WORLD } from '@config/world';
 
 // Helpers
 import { CHART_UNKNOWN_COLOR, CONTINENT_COLORS, GENDER_COLORS, getColorWithOpacity, getGenderColor, getRankingColors, RANKING_COLORS } from '@utils';
+import { FlagPipe } from '@shared/pipes/three-code-letters-flag.pipe';
+import { createExternalTooltip, destroyExternalTooltip, hideExternalTooltip } from '@utils';
 
 @Component({
   selector: 'guest-geography-chart',
@@ -39,6 +41,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
   private _router = inject(Router);
   private _translate = inject(TranslateService);
   private _geoname = inject(GeonameService);
+  private readonly _flag = inject(FlagPipe);
 
   private langChangeSubscription?: Subscription;
   @Input() geography!: IGeographyDistribution;
@@ -634,19 +637,23 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
   }
 
   private destroyChart(): void {
-    // Destroy the current Chart.js instance.
-    this.chart?.destroy();
-    this.chart = undefined;
+    // Destroy the external tooltip before destroying the chart.
+    if (this.chart) {
+      destroyExternalTooltip(this.chart);
+      this.chart.destroy();
+      this.chart = undefined;
+    }
   }
 
   // FLAG
-  getSelectedCountries(): IGeographyCountry[] {
+  getSelectedCountries(): (IGeographyCountry | IGeographyLocation)[] {
     if (this.selectedRanking === 'mostConsecutive') {
       return [];
     }
 
-    const data = this.getSelectedData(this.chartConfig.countries);
-    return data as IGeographyCountry[];
+    const config = this.chartConfig[this.selectedView];
+
+    return this.getSelectedData(config) as (IGeographyCountry | IGeographyLocation)[];
   }
 
   getCountryName(code: string) {
@@ -654,6 +661,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
   }
 
   // COUNTRY - MOST CONSECUTIVE
+
   private createMostConsecutiveChart(): void {
     const consecutive = this.geography.countries.mostConsecutive;
 
@@ -662,6 +670,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
 
     const countryName = this.getCountryName(consecutive.code);
     const guests = [...consecutive.guests].sort((a, b) => new Date(a.visitedDate).getTime() - new Date(b.visitedDate).getTime());
+
     const startDate = new Date(consecutive.firstVisit);
     const endDate = new Date(consecutive.lastVisit);
     const minDate = startDate.getTime();
@@ -783,17 +792,43 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
             },
           },
           tooltip: {
-            callbacks: {
-              label: context => {
-                const guest = guests[context.dataIndex];
+            enabled: false,
+            external: context => {
+              const dataPoint = context.tooltip.dataPoints?.[0];
 
-                return [
-                  guest.fullName,
-                  `${this._translate.instant('GENDER.TXT')}: ${this.getTranslatedGender(guest.gender)}`,
-                  `${this._translate.instant('STATS.GEOGRAPHY.LABELS.GROUP')}: ${this._translate.instant(`STATS.DEMOGRAPHICS.GROUPS.${guest.groupType.toUpperCase()}`)}`,
-                  `${this._translate.instant('STATS.GEOGRAPHY.LABELS.VISIT')}: ${this._format.formatDate(guest.visitedDate)}`,
-                ];
-              },
+              if (!dataPoint) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              const guest = guests[dataPoint.dataIndex];
+
+              if (!guest) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              createExternalTooltip(context.chart, context.tooltip, {
+                title: guest.fullName,
+                rows: [
+                  {
+                    label: this._translate.instant('GENDER.TXT'),
+                    value: this.getTranslatedGender(guest.gender),
+                  },
+                  {
+                    label: this._translate.instant('STATS.GEOGRAPHY.LABELS.GROUP'),
+                    value: this._translate.instant(`STATS.DEMOGRAPHICS.GROUPS.${guest.groupType.toUpperCase()}`),
+                  },
+                  {
+                    label: this._translate.instant('STATS.GEOGRAPHY.LABELS.VISIT'),
+                    value: this._format.formatDate(guest.visitedDate),
+                  },
+                ],
+                country: {
+                  name: countryName,
+                  flagClass: this._flag.transform(consecutive.code),
+                },
+              });
             },
           },
         },

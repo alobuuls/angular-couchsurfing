@@ -9,10 +9,11 @@ import Chart from 'chart.js/auto';
 import { IChartType, IRatingGuest, IRatingGroupType, IRatingMainView, IRatingView, IRatingsData, IRatingsDistribution } from '@interfaces/stats-interface';
 
 // Helpers
-import { RATING_DOT_COLORS, RATINGS_COLORS } from '@utils';
+import { createExternalTooltip, destroyExternalTooltip, hideExternalTooltip, RATING_DOT_COLORS, RATINGS_COLORS } from '@utils';
 
 // Services
 import { FormatService } from '@services/format.service';
+import { FlagPipe } from '@shared/pipes/three-code-letters-flag.pipe';
 
 @Component({
   selector: 'guest-rating-chart',
@@ -23,6 +24,7 @@ export class GuestRatingChartComponent implements AfterViewInit, OnChanges, OnDe
   private _format = inject(FormatService);
   private _router = inject(Router);
   private _translate = inject(TranslateService);
+  private readonly _flag = inject(FlagPipe);
 
   private langChangeSubscription?: Subscription;
 
@@ -261,26 +263,43 @@ export class GuestRatingChartComponent implements AfterViewInit, OnChanges, OnDe
           },
 
           tooltip: {
-            callbacks: {
-              label: context => {
-                const guest = orderedGuests[context.dataIndex];
+            enabled: false,
+            external: context => {
+              const dataPoint = context.tooltip.dataPoints?.[0];
 
-                return [
-                  guest.fullName,
+              if (!dataPoint) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
 
-                  this._translate.instant('STATS.RATINGS.LABELS.RATING_VALUE', { rating: guest.rating }),
+              const guest = orderedGuests[dataPoint.dataIndex];
 
-                  `${this._translate.instant('GENDER.TXT')}: ${this._format.formatGender(guest.gender)}`,
+              if (!guest) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
 
-                  this._translate.instant('STATS.RATINGS.LABELS.COUNTRY', {
-                    country: this._format.formatCountry(guest.hometownCode),
-                  }),
-
-                  this._translate.instant('STATS.RATINGS.LABELS.VISIT', {
-                    date: this._format.formatDate(guest.visitedDate),
-                  }),
-                ];
-              },
+              createExternalTooltip(context.chart, context.tooltip, {
+                title: guest.fullName,
+                rows: [
+                  {
+                    label: this._translate.instant('STATS.RATINGS.LABELS.RATING'),
+                    value: `${guest.rating} ⭐`,
+                  },
+                  {
+                    label: this._translate.instant('GENDER.TXT'),
+                    value: this._format.formatGender(guest.gender),
+                  },
+                  {
+                    label: this._translate.instant('STATS.RATINGS.LABELS.VISIT'),
+                    value: this._format.formatDate(guest.visitedDate),
+                  },
+                ],
+                country: {
+                  name: this._format.formatCountry(guest.hometownCode),
+                  flagClass: this._flag.transform(guest.hometownCode),
+                },
+              });
             },
           },
         },
@@ -359,7 +378,12 @@ export class GuestRatingChartComponent implements AfterViewInit, OnChanges, OnDe
 
   // Destroy the current Chart.js instance.
   private destroyChart(): void {
-    this.chart?.destroy();
+    if (!this.chart) {
+      return;
+    }
+
+    destroyExternalTooltip(this.chart);
+    this.chart.destroy();
     this.chart = undefined;
   }
 }

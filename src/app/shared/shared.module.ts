@@ -16,5 +16,6 @@ import { EmptyStateComponent } from '@shared/components/empty-state/empty-state.
   declarations: [FlagPipe, SocialLinkPipe, LoadingComponent, ShTitleComponent, EmptyStateComponent],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule],
   exports: [CommonModule, FormsModule, ReactiveFormsModule, FlagPipe, SocialLinkPipe, LoadingComponent, ShTitleComponent, TranslateModule, EmptyStateComponent],
+  providers: [FlagPipe],
 })
 export class SharedModule {}

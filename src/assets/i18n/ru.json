@@ -618,8 +618,9 @@
       },
       "LABELS": {
         "DATASET": "{{title}} — {{subview}}",
-        "OVERALL_RANKING": "Общий рейтинг: {{position}}",
-        "VISIT": "Посещение: {{date}}",
+        "OVERALL_RANKING": "Общий рейтинг",
+        "GENDER": "Пол",
+        "VISIT": "Посещение",
         "RANKING_POSITION": "Место в рейтинге"
       }
     },
@@ -642,7 +643,7 @@
         "RATING": "Оценка",
         "RATING_VALUE": "Оценка: {{rating}} ⭐",
         "COUNTRY": "Страна: {{country}}",
-        "VISIT": "Посещение: {{date}}"
+        "VISIT": "Посещение"
       }
     },
     "TIMELINE": {
@@ -667,7 +668,7 @@
         "OTHER": "Другие",
         "NUMBER_OF_GUESTS": "Количество гостей",
         "COUNTRY": "Страна: {{country}}",
-        "VISIT": "Посещение: {{date}}",
+        "VISIT": "Посещение",
         "GROUP_NAME": "{{name}} и {{group}}"
       },
       "GROUP_LABELS": {

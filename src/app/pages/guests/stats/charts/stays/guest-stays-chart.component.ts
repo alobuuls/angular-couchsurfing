@@ -17,7 +17,18 @@ import { ILongestView, IStaysDistribution, IStaysView } from '@interfaces/stats-
 import { FormatService } from '@services/format.service';
 
 // Helpers
-import { CHART_NEUTRAL_COLOR, CHART_UNKNOWN_COLOR, GENDER_COLORS, getGenderColor, getRankingColors, STAYS_COLORS } from '@utils';
+import {
+  CHART_NEUTRAL_COLOR,
+  CHART_UNKNOWN_COLOR,
+  createExternalTooltip,
+  destroyExternalTooltip,
+  GENDER_COLORS,
+  getGenderColor,
+  getRankingColors,
+  hideExternalTooltip,
+  STAYS_COLORS,
+} from '@utils';
+import { FlagPipe } from '@shared/pipes/three-code-letters-flag.pipe';
 
 @Component({
   selector: 'guest-stays-chart',
@@ -28,6 +39,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
   private _format = inject(FormatService);
   private _router = inject(Router);
   private _translate = inject(TranslateService);
+  private readonly _flag = inject(FlagPipe);
 
   private langChangeSubscription?: Subscription;
 
@@ -239,16 +251,54 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
             display: true,
           },
           tooltip: {
-            callbacks: {
-              title: context => {
-                const guest = people[context[0].dataIndex];
-                return this.getGuestDisplayName(guest.guest.fullName, guest.guest.groupType);
-              },
-              label: () => '',
-              afterBody: context => {
-                const guest = people[context[0].dataIndex];
-                return this.getTooltipLines(guest, selectedView);
-              },
+            enabled: false,
+            external: context => {
+              const dataPoint = context.tooltip.dataPoints?.[0];
+
+              if (!dataPoint) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              const item = people[dataPoint.dataIndex];
+
+              if (!item) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              const guest = item.guest;
+
+              const rows = [
+                {
+                  value: this.translate('STATS.STAYS.LABELS.TOTAL_NIGHTS', {
+                    count: item.nights,
+                  }),
+                },
+              ];
+
+              if (selectedView === 'overall') {
+                rows.push({
+                  value: this.translate('STATS.STAYS.LABELS.GROUP', {
+                    group: this.translateGroupType(guest.groupType),
+                  }),
+                });
+              }
+
+              rows.push({
+                value: this.translate('STATS.STAYS.LABELS.VISIT', {
+                  date: this._format.formatDate(guest.visitedDate),
+                }),
+              });
+
+              createExternalTooltip(context.chart, context.tooltip, {
+                title: this.getGuestDisplayName(guest.fullName, guest.groupType),
+                rows,
+                country: {
+                  name: this._format.formatCountry(guest.hometownCode),
+                  flagClass: this._flag.transform(guest.hometownCode),
+                },
+              });
             },
           },
         },
@@ -265,7 +315,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
   }
 
   // MAX PEOPLE TOGETHER
-  // Creates a bar chart comparing Overall and Solo.
+  // Creates the bar chart comparing Overall and Solo.
   private createMaxPeopleTogetherBarChart(): void {
     if (!this.staysChart || !this.stays) {
       return;
@@ -274,6 +324,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     const chartData = this.stays.maxPeopleTogether;
 
     if (!chartData) {
+      this.destroyChart();
       return;
     }
 
@@ -281,15 +332,23 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     const solo = chartData.solo;
 
     if (!overall || !solo) {
+      this.destroyChart();
       return;
     }
 
     this.destroyChart();
 
+    const labels = [this.translate('STATS.STAYS.LABELS.OVERALL'), this.translate('STATS.STAYS.LABELS.SOLO')];
+
+    const chartValues = [
+      { label: labels[0], data: overall },
+      { label: labels[1], data: solo },
+    ];
+
     this.chart = new Chart(this.staysChart.nativeElement, {
       type: 'bar',
       data: {
-        labels: [this.translate('STATS.STAYS.LABELS.OVERALL'), this.translate('STATS.STAYS.LABELS.SOLO')],
+        labels,
         datasets: [
           {
             label: this.translate('STATS.STAYS.TITLES.MAXIMUM_GUESTS_TOGETHER'),
@@ -322,24 +381,51 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
             display: false,
           },
           tooltip: {
-            callbacks: {
-              title: context => {
-                const index = context[0].dataIndex;
-                const selectedData = index === 0 ? overall : solo;
-                const guest = selectedData.guests[0];
+            enabled: false,
+            external: context => {
+              const dataPoint = context.tooltip.dataPoints?.[0];
 
-                return guest ? this._format.formatDate(guest.visitedDate) : '';
-              },
-              label: context =>
-                this.translate('STATS.STAYS.LABELS.GUESTS_COUNT', {
-                  count: context.parsed.y ?? 0,
-                }),
-              afterBody: context => {
-                const index = context[0].dataIndex;
-                const selectedData = index === 0 ? overall : solo;
+              if (!dataPoint) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
 
-                return ['', this.translate('STATS.STAYS.LABELS.GUESTS'), ...selectedData.guests.map(guest => `• ${guest.fullName}`)];
-              },
+              const index = dataPoint.dataIndex;
+              const selectedData = chartValues[index]?.data;
+
+              if (!selectedData) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              const guests = selectedData.guests;
+
+              const rows = [
+                {
+                  value: this.translate('STATS.STAYS.LABELS.GUESTS_COUNT', {
+                    count: selectedData.total,
+                  }),
+                },
+              ];
+
+              rows.push(
+                ...guests.map(guest => ({
+                  value: `• ${guest.fullName}`,
+                  ...(guest.hometownCode
+                    ? {
+                        country: {
+                          name: this._format.formatCountry(guest.hometownCode),
+                          flagClass: this._flag.transform(guest.hometownCode),
+                        },
+                      }
+                    : {}),
+                }))
+              );
+
+              createExternalTooltip(context.chart, context.tooltip, {
+                title: guests[0] ? this._format.formatDate(guests[0].visitedDate) : chartValues[index].label,
+                rows,
+              });
             },
           },
         },
@@ -367,6 +453,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
   }
 
   // Creates a horizontal bar chart for guests with the same arrival date.
+  // Creates a horizontal bar chart for guests with the same arrival date.
   private createSameArrivalBarChart(): void {
     if (!this.staysChart || !this.stays) {
       return;
@@ -375,6 +462,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     const chartData = this.stays.sameArrival;
 
     if (!chartData || chartData.length === 0) {
+      this.destroyChart();
       return;
     }
 
@@ -390,11 +478,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
         datasets: [
           {
             label: this.translate('STATS.STAYS.VIEWS.SAMEARRIVAL'),
-
-            // Number of guests determines bar length.
             data: chartData.map(item => item.total),
-
-            // Color bars according to their ranking.
             backgroundColor: rankingColors.background,
             borderColor: rankingColors.border,
             borderWidth: 1,
@@ -466,16 +550,45 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
             },
           },
           tooltip: {
-            callbacks: {
-              label: context =>
-                this.translate('STATS.STAYS.LABELS.GUESTS_COUNT', {
-                  count: context.parsed.x ?? 0,
-                }),
-              afterBody: context => {
-                const item = chartData[context[0].dataIndex];
+            enabled: false,
+            external: context => {
+              const dataPoint = context.tooltip.dataPoints?.[0];
 
-                return ['', this.translate('STATS.STAYS.LABELS.GUESTS'), ...item.guests.map(guest => `• ${guest.fullName}`)];
-              },
+              if (!dataPoint) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              const item = chartData[dataPoint.dataIndex];
+
+              if (!item) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              const rows = [
+                {
+                  value: this.translate('STATS.STAYS.LABELS.GUESTS_COUNT', {
+                    count: item.total,
+                  }),
+                },
+                ...item.guests.map(guest => ({
+                  value: `• ${guest.fullName}`,
+                  ...(guest.hometownCode
+                    ? {
+                        country: {
+                          name: this._format.formatCountry(guest.hometownCode),
+                          flagClass: this._flag.transform(guest.hometownCode),
+                        },
+                      }
+                    : {}),
+                })),
+              ];
+
+              createExternalTooltip(context.chart, context.tooltip, {
+                title: this._format.formatDate(item.date),
+                rows,
+              });
             },
           },
         },
@@ -604,16 +717,46 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
             },
           },
           tooltip: {
-            callbacks: {
-              title: context => {
-                const guest = nodes[context[0].dataIndex];
-                return guest.label;
-              },
-              label: () => '',
-              afterBody: context => {
-                const guest = group.guests[context[0].dataIndex];
-                return this.getNetworkTooltipLines(guest, nodes.length - 1);
-              },
+            enabled: false,
+            external: context => {
+              const dataPoint = context.tooltip.dataPoints?.[0];
+
+              if (!dataPoint) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              const guest = group.guests[dataPoint.dataIndex];
+
+              if (!guest) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              createExternalTooltip(context.chart, context.tooltip, {
+                title: this.getGuestDisplayName(guest.fullName, guest.groupType),
+                rows: [
+                  {
+                    value: this.translate('STATS.STAYS.LABELS.CONNECTIONS', {
+                      count: nodes.length - 1,
+                    }),
+                  },
+                  {
+                    value: this.translate('STATS.STAYS.LABELS.GROUP', {
+                      group: this.translateGroupType(guest.groupType),
+                    }),
+                  },
+                  {
+                    value: this.translate('STATS.STAYS.LABELS.VISIT', {
+                      date: this._format.formatDate(guest.visitedDate),
+                    }),
+                  },
+                ],
+                country: {
+                  name: this._format.formatCountry(guest.hometownCode),
+                  flagClass: this._flag.transform(guest.hometownCode),
+                },
+              });
             },
           },
         },
@@ -744,7 +887,12 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
 
   // Destroy the current chart instance.
   private destroyChart(): void {
-    this.chart?.destroy();
+    if (!this.chart) {
+      return;
+    }
+
+    destroyExternalTooltip(this.chart);
+    this.chart.destroy();
     this.chart = undefined;
   }
 

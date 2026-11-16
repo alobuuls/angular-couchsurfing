@@ -17,8 +17,8 @@ import { CHART_NEUTRAL_COLOR, CHART_UNKNOWN_COLOR, GENDER_COLORS, getColorWithOp
 // Libraries
 import Chart from 'chart.js/auto';
 import 'chartjs-adapter-date-fns';
-import { enUS, es, de, zhCN, fr, it, pt, ru, ja } from 'date-fns/locale';
-import type { Locale } from 'date-fns';
+import { FlagPipe } from '../../../../../shared/pipes/three-code-letters-flag.pipe';
+import { createExternalTooltip, destroyExternalTooltip, hideExternalTooltip } from '../../../../../utils/helpers/chart-external-tooltip';
 
 @Component({
   selector: 'guest-demographics-chart',
@@ -30,6 +30,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
   private _router = inject(Router);
   private _translate = inject(TranslateService);
   private _language = inject(LanguageService);
+  private readonly _flag = inject(FlagPipe);
 
   private langChangeSubscription?: Subscription;
 
@@ -93,15 +94,13 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
   private chart?: Chart;
 
   ngAfterViewInit(): void {
-    // Create the chart once the canvas is available.
     if (this.demographics) {
       this.createChart();
     }
 
     // Recreate the chart when the language changes.
     this.langChangeSubscription = this._translate.onLangChange.subscribe(() => {
-      this.chart?.destroy();
-      this.chart = undefined;
+      this.destroyChart();
       this.createChart();
     });
   }
@@ -109,6 +108,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
   ngOnChanges(changes: SimpleChanges): void {
     // Recreate the chart whenever new demographics data is received.
     if (changes['demographics'] && this.demographicsChart) {
+      this.destroyChart();
       this.createChart();
     }
   }
@@ -119,46 +119,30 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
   selectView(view: IDemographicsView): void {
     this.selectedView = view;
+    this.destroyChart();
 
-    this.chart?.destroy();
-    this.chart = undefined;
-
-    setTimeout(() => {
-      this.createChart();
-    });
+    setTimeout(() => this.createChart());
   }
 
   selectTotalsView(view: IDemographicsTotalsView): void {
     this.selectedTotalsView = view;
+    this.destroyChart();
 
-    this.chart?.destroy();
-    this.chart = undefined;
-
-    setTimeout(() => {
-      this.createChart();
-    });
+    setTimeout(() => this.createChart());
   }
 
   selectAgeView(view: IDemographicsOldestView): void {
     this.selectedAgeView = view;
+    this.destroyChart();
 
-    this.chart?.destroy();
-    this.chart = undefined;
-
-    setTimeout(() => {
-      this.createChart();
-    });
+    setTimeout(() => this.createChart());
   }
 
   selectFirstLastView(view: IDemographicsOldestView): void {
     this.selectedFirstLastView = view;
+    this.destroyChart();
 
-    this.chart?.destroy();
-    this.chart = undefined;
-
-    setTimeout(() => {
-      this.createChart();
-    });
+    setTimeout(() => this.createChart());
   }
 
   private createChart(): void {
@@ -167,7 +151,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
       return;
     }
 
-    this.chart?.destroy();
+    this.destroyChart();
 
     // TOTALS
     if (this.selectedView === 'totals') {
@@ -506,18 +490,43 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             },
           },
           tooltip: {
-            callbacks: {
-              label: context => {
-                const person = oldestPeople[context.dataIndex];
-                const genderLabel = this._format.formatGender(person.gender);
+            enabled: false,
+            external: context => {
+              const dataPoint = context.tooltip.dataPoints?.[0];
 
-                return [
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE')}: ${person.age}`,
-                  `${this._translate.instant('GENDER.TXT')}: ${genderLabel}`,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(person.country)}`,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(person.visitedDate)}`,
-                ];
-              },
+              if (!dataPoint) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              const person = oldestPeople[dataPoint.dataIndex];
+
+              if (!person) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              createExternalTooltip(context.chart, context.tooltip, {
+                title: person.name,
+                rows: [
+                  {
+                    label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE'),
+                    value: String(person.age),
+                  },
+                  {
+                    label: this._translate.instant('GENDER.TXT'),
+                    value: this._format.formatGender(person.gender),
+                  },
+                  {
+                    label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT'),
+                    value: this._format.formatDate(person.visitedDate),
+                  },
+                ],
+                country: {
+                  name: this._format.formatCountry(person.country),
+                  flagClass: this._flag.transform(person.country),
+                },
+              });
             },
           },
         },
@@ -531,15 +540,12 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
 
     // Start with the difference between the current year and birth year.
     let age = today.getFullYear() - birth.getFullYear();
-
     // Check whether the birthday has already happened this year.
     const hasHadBirthday = today.getMonth() > birth.getMonth() || (today.getMonth() === birth.getMonth() && today.getDate() >= birth.getDate());
-
     // If the birthday has not happened yet, subtract one year.
     if (!hasHadBirthday) {
       age--;
     }
-
     return age;
   }
 
@@ -724,25 +730,49 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             },
           },
           tooltip: {
-            callbacks: {
-              label: context => {
-                const person = oldestPeople[context.dataIndex];
+            enabled: false,
+            external: context => {
+              const dataPoint = context.tooltip.dataPoints?.[0];
 
-                const tooltip = [person.name, `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE')}: ${person.age}`];
+              if (!dataPoint) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
 
-                if (person.demographic === 'isGay' || person.demographic === 'trans') {
-                  const genderLabel = this._format.formatGender(person.gender);
+              const person = oldestPeople[dataPoint.dataIndex];
 
-                  tooltip.push(`${this._translate.instant('GENDER.TXT')}: ${genderLabel}`);
-                }
+              if (!person) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
 
-                tooltip.push(
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(person.country)}`,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(person.visitedDateLabel)}`
-                );
+              const rows = [
+                {
+                  label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE'),
+                  value: String(person.age),
+                },
+              ];
 
-                return tooltip;
-              },
+              if (person.demographic === 'isGay' || person.demographic === 'trans') {
+                rows.push({
+                  label: this._translate.instant('GENDER.TXT'),
+                  value: this._format.formatGender(person.gender),
+                });
+              }
+
+              rows.push({
+                label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT'),
+                value: this._format.formatDate(person.visitedDateLabel),
+              });
+
+              createExternalTooltip(context.chart, context.tooltip, {
+                title: person.name,
+                rows,
+                country: {
+                  name: this._format.formatCountry(person.country),
+                  flagClass: this._flag.transform(person.country),
+                },
+              });
             },
           },
         },
@@ -751,6 +781,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
   }
 
   // OLDEST - GROUPS
+
   private createGroupsOldestChart(): Chart {
     // Get all guests from couple, friends and family groups.
     const people = [
@@ -801,6 +832,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         datasets: [
           {
             label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GROUPS'),
+
             // Each bubble represents one guest.
             data: groupsPeople.map(person => ({
               x: person.age,
@@ -906,25 +938,55 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             },
           },
 
-          // Show guest information when hovering over a bubble.
+          // External HTML tooltip with country flag.
           tooltip: {
-            callbacks: {
-              label: context => {
-                const person = groupsPeople[context.dataIndex];
+            enabled: false,
+            external: context => {
+              const dataPoint = context.tooltip.dataPoints?.[0];
 
-                return [
-                  person.name,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE')}: ${person.age}`,
-                  `${this._translate.instant('GENDER.TXT')}: ${this._format.formatGender(person.gender)}`,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(person.country)}`,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(person.visitedDate)}`,
-                ];
-              },
+              if (!dataPoint) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              const person = groupsPeople[dataPoint.dataIndex];
+
+              if (!person) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              createExternalTooltip(context.chart, context.tooltip, {
+                title: person.name,
+                rows: [
+                  {
+                    label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE'),
+                    value: String(person.age),
+                  },
+                  {
+                    label: this._translate.instant('GENDER.TXT'),
+                    value: this._format.formatGender(person.gender),
+                  },
+                  {
+                    label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GROUP'),
+                    value: this._translate.instant(`STATS.DEMOGRAPHICS.GROUPS.${person.group.toUpperCase()}`),
+                  },
+                  {
+                    label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT'),
+                    value: this._format.formatDate(person.visitedDate),
+                  },
+                ],
+                country: {
+                  name: this._format.formatCountry(person.country),
+                  flagClass: this._flag.transform(person.country),
+                },
+              });
             },
           },
         },
       },
     });
+
     return chart;
   }
 
@@ -1033,18 +1095,46 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
               ],
             },
           },
-          tooltip: {
-            callbacks: {
-              label: context => {
-                const person = youngestPeople[context.dataIndex];
 
-                return [
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE')}: ${person.age}`,
-                  `${this._translate.instant('GENDER.TXT')}: ${this._format.formatGender(person.gender)}`,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(person.country)}`,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(person.visitedDate)}`,
-                ];
-              },
+          // External HTML tooltip with country flag.
+          tooltip: {
+            enabled: false,
+            external: context => {
+              const dataPoint = context.tooltip.dataPoints?.[0];
+
+              if (!dataPoint) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              const person = youngestPeople[dataPoint.dataIndex];
+
+              if (!person) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              createExternalTooltip(context.chart, context.tooltip, {
+                title: person.name,
+                rows: [
+                  {
+                    label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE'),
+                    value: String(person.age),
+                  },
+                  {
+                    label: this._translate.instant('GENDER.TXT'),
+                    value: this._format.formatGender(person.gender),
+                  },
+                  {
+                    label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT'),
+                    value: this._format.formatDate(person.visitedDate),
+                  },
+                ],
+                country: {
+                  name: this._format.formatCountry(person.country),
+                  flagClass: this._flag.transform(person.country),
+                },
+              });
             },
           },
         },
@@ -1198,18 +1288,42 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
               },
             },
           },
-          tooltip: {
-            callbacks: {
-              label: context => {
-                const person = soloPeople[context.dataIndex];
 
-                return [
-                  person.name,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE')}: ${person.age}`,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(person.country)}`,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(person.visitedDateLabel)}`,
-                ];
-              },
+          // External HTML tooltip with country flag.
+          tooltip: {
+            enabled: false,
+            external: context => {
+              const dataPoint = context.tooltip.dataPoints?.[0];
+
+              if (!dataPoint) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              const person = soloPeople[dataPoint.dataIndex];
+
+              if (!person) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              createExternalTooltip(context.chart, context.tooltip, {
+                title: person.name,
+                rows: [
+                  {
+                    label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE'),
+                    value: String(person.age),
+                  },
+                  {
+                    label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT'),
+                    value: this._format.formatDate(person.visitedDateLabel),
+                  },
+                ],
+                country: {
+                  name: this._format.formatCountry(person.country),
+                  flagClass: this._flag.transform(person.country),
+                },
+              });
             },
           },
         },
@@ -1267,12 +1381,14 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
         datasets: [
           {
             label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GROUPS'),
+
             // Each bubble represents one guest.
             data: groupsPeople.map(person => ({
               x: person.age,
               y: groupPositions[person.group],
               r: 20,
             })),
+
             // Apply the color according to the group.
             backgroundColor: groupsPeople.map(person => getColorWithOpacity(GROUP_COLORS[person.group])),
             borderColor: groupsPeople.map(person => GROUP_COLORS[person.group].border),
@@ -1370,20 +1486,49 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             },
           },
 
-          // Show guest information when hovering over a bubble.
+          // External HTML tooltip with country flag.
           tooltip: {
-            callbacks: {
-              label: context => {
-                const person = groupsPeople[context.dataIndex];
+            enabled: false,
+            external: context => {
+              const dataPoint = context.tooltip.dataPoints?.[0];
 
-                return [
-                  person.name,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE')}: ${person.age}`,
-                  `${this._translate.instant('GENDER.TXT')}: ${this._format.formatGender(person.gender)}`,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(person.country)}`,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(person.visitedDate)}`,
-                ];
-              },
+              if (!dataPoint) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              const person = groupsPeople[dataPoint.dataIndex];
+
+              if (!person) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              createExternalTooltip(context.chart, context.tooltip, {
+                title: person.name,
+                rows: [
+                  {
+                    label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.AGE'),
+                    value: String(person.age),
+                  },
+                  {
+                    label: this._translate.instant('GENDER.TXT'),
+                    value: this._format.formatGender(person.gender),
+                  },
+                  {
+                    label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GROUP'),
+                    value: this._translate.instant(`STATS.DEMOGRAPHICS.GROUPS.${person.group.toUpperCase()}`),
+                  },
+                  {
+                    label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT'),
+                    value: this._format.formatDate(person.visitedDate),
+                  },
+                ],
+                country: {
+                  name: this._format.formatCountry(person.country),
+                  flagClass: this._flag.transform(person.country),
+                },
+              });
             },
           },
         },
@@ -1392,6 +1537,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
   }
 
   // FIRST LAST - OVERALL
+
   private createOverallFirstLastChart(): Chart {
     // Get the first and last guest overall.
     const overall = this.demographics.firstLast.overall.people;
@@ -1445,6 +1591,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
           if (!element) return;
 
           const data = this.chart?.data.datasets[element.datasetIndex].data[element.index] as any;
+
           this.navigateToGuest(data.person.guestId, data.person.groupType, data.person.groupId);
         },
         scales: {
@@ -1525,31 +1672,56 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             },
           },
           tooltip: {
-            callbacks: {
-              label: context => {
-                const point = context.raw as {
-                  type: 'First' | 'Last';
-                  person: {
-                    fullName: string;
-                    guestId: string;
-                    visitedDate: string;
-                    groupType: string;
-                    gender: IDemographicGender;
-                    hometownCode: string;
-                  };
+            enabled: false,
+            external: context => {
+              const dataPoint = context.tooltip.dataPoints?.[0];
+
+              if (!dataPoint) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              const point = dataPoint.raw as {
+                type: 'First' | 'Last';
+                person: {
+                  fullName: string;
+                  guestId: string;
+                  visitedDate: string;
+                  groupType: string;
+                  gender: IDemographicGender;
+                  hometownCode: string;
                 };
+              };
 
-                const groupLabel = point.person.groupType === 'solo' ? '' : ` and ${this.groupLabels[point.person.groupType]}`;
-                const firstLastLabel = this._translate.instant(point.type === 'First' ? 'STATS.DEMOGRAPHICS.RANKING.FIRST' : 'STATS.DEMOGRAPHICS.RANKING.LAST');
-                const genderLabel = this._format.formatGender(point.person.gender);
+              if (!point?.person) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
 
-                return [
-                  `${firstLastLabel}: ${point.person.fullName}${groupLabel}`,
-                  this._translate.instant('GENDER.LABEL', { gender: genderLabel }),
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(point.person.hometownCode)}`,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(point.person.visitedDate)}`,
-                ];
-              },
+              const groupLabel = point.person.groupType === 'solo' ? '' : ` and ${this.groupLabels[point.person.groupType]}`;
+
+              const firstLastLabel = this._translate.instant(point.type === 'First' ? 'STATS.DEMOGRAPHICS.RANKING.FIRST' : 'STATS.DEMOGRAPHICS.RANKING.LAST');
+
+              const genderLabel = this._format.formatGender(point.person.gender);
+
+              createExternalTooltip(context.chart, context.tooltip, {
+                title: `${firstLastLabel}: ${point.person.fullName}${groupLabel}`,
+                rows: [
+                  {
+                    value: this._translate.instant('GENDER.LABEL', {
+                      gender: genderLabel,
+                    }),
+                  },
+                  {
+                    label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT'),
+                    value: this._format.formatDate(point.person.visitedDate),
+                  },
+                ],
+                country: {
+                  name: this._format.formatCountry(point.person.hometownCode),
+                  flagClass: this._flag.transform(point.person.hometownCode),
+                },
+              });
             },
           },
         },
@@ -1718,24 +1890,51 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             },
           },
           tooltip: {
-            callbacks: {
-              label: context => {
-                const category = chartCategories[context.datasetIndex];
-                const person = context.dataIndex === 0 ? category.first : category.last;
+            enabled: false,
+            external: context => {
+              const dataPoint = context.tooltip.dataPoints?.[0];
 
-                if (!person) {
-                  return '';
-                }
+              if (!dataPoint) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
 
-                const firstLastLabel = this._translate.instant(context.dataIndex === 0 ? 'STATS.DEMOGRAPHICS.RANKING.FIRST' : 'STATS.DEMOGRAPHICS.RANKING.LAST');
+              const category = chartCategories[dataPoint.datasetIndex];
+              const point = dataPoint.raw as {
+                person: {
+                  fullName: string;
+                  guestId: string;
+                  visitedDate: string;
+                  hometownCode: string;
+                } | null;
+              };
 
-                return [
-                  `${firstLastLabel}: ${person.fullName}`,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.CATEGORY')}: ${category.label}`,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(person.hometownCode)}`,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(person.visitedDate)}`,
-                ];
-              },
+              const person = point?.person;
+
+              if (!category || !person) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              const firstLastLabel = this._translate.instant(dataPoint.dataIndex === 0 ? 'STATS.DEMOGRAPHICS.RANKING.FIRST' : 'STATS.DEMOGRAPHICS.RANKING.LAST');
+
+              createExternalTooltip(context.chart, context.tooltip, {
+                title: `${firstLastLabel}: ${person.fullName}`,
+                rows: [
+                  {
+                    label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.CATEGORY'),
+                    value: category.label,
+                  },
+                  {
+                    label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT'),
+                    value: this._format.formatDate(person.visitedDate),
+                  },
+                ],
+                country: {
+                  name: this._format.formatCountry(person.hometownCode),
+                  flagClass: this._flag.transform(person.hometownCode),
+                },
+              });
             },
           },
         },
@@ -1807,6 +2006,7 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
           if (!element) return;
 
           const data = this.chart?.data.datasets[element.datasetIndex].data[element.index] as any;
+
           this.navigateToGuest(data.person.guestId, data.person.groupType, data.person.groupId);
         },
 
@@ -1869,34 +2069,68 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
             },
           },
           tooltip: {
-            callbacks: {
-              label: context => {
-                const category = chartCategories[context.datasetIndex];
-                const person = context.dataIndex === 0 ? category.first : category.last;
-                if (!person) return '';
+            enabled: false,
+            external: context => {
+              const dataPoint = context.tooltip.dataPoints?.[0];
 
-                const firstLastLabel = this._translate.instant(context.dataIndex === 0 ? 'STATS.DEMOGRAPHICS.RANKING.FIRST' : 'STATS.DEMOGRAPHICS.RANKING.LAST');
-                const groupLabel = person.groupType === 'solo' ? '' : ` and ${this.groupLabels[person.groupType]}`;
-                const genderLabel = this._format.formatGender(person.gender);
+              if (!dataPoint) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
 
-                return [
-                  `${firstLastLabel}: ${person.fullName} ${groupLabel}`,
-                  `${this._translate.instant('GENDER.TXT')}: ${genderLabel}`,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.COUNTRY')}: ${this._format.formatCountry(person.hometownCode)}`,
-                  `${this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT')}: ${this._format.formatDate(person.visitedDate)}`,
-                ];
-              },
+              const category = chartCategories[dataPoint.datasetIndex];
+
+              const point = dataPoint.raw as {
+                person: {
+                  fullName: string;
+                  guestId: string;
+                  visitedDate: string;
+                  groupType: string;
+                  groupId: string;
+                  gender: IDemographicGender;
+                  hometownCode: string;
+                } | null;
+              };
+
+              const person = point?.person;
+
+              if (!category || !person) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              const firstLastLabel = this._translate.instant(dataPoint.dataIndex === 0 ? 'STATS.DEMOGRAPHICS.RANKING.FIRST' : 'STATS.DEMOGRAPHICS.RANKING.LAST');
+
+              const groupLabel = person.groupType === 'solo' ? '' : ` and ${this.groupLabels[person.groupType]}`;
+
+              const genderLabel = this._format.formatGender(person.gender);
+
+              createExternalTooltip(context.chart, context.tooltip, {
+                title: `${firstLastLabel}: ${person.fullName}${groupLabel}`,
+                rows: [
+                  {
+                    label: this._translate.instant('GENDER.TXT'),
+                    value: genderLabel,
+                  },
+                  {
+                    label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.GROUP'),
+                    value: category.label,
+                  },
+                  {
+                    label: this._translate.instant('STATS.DEMOGRAPHICS.LABELS.VISIT'),
+                    value: this._format.formatDate(person.visitedDate),
+                  },
+                ],
+                country: {
+                  name: this._format.formatCountry(person.hometownCode),
+                  flagClass: this._flag.transform(person.hometownCode),
+                },
+              });
             },
           },
         },
       },
     });
-  }
-
-  ngOnDestroy(): void {
-    // Destroy the Chart.js instance when the component is removed to prevent memory leaks and duplicated charts.
-    this.langChangeSubscription?.unsubscribe();
-    this.chart?.destroy();
   }
 
   // Click on chart
@@ -1938,14 +2172,16 @@ export class GuestDemographicsChartComponent implements AfterViewInit, OnChanges
     this._router.navigate(['/guests', guestId]);
   }
 
-  private getGenderTranslationKey(gender: IDemographicGender): string {
-    const genderKeys: Record<IDemographicGender, string> = {
-      male: 'MALE',
-      female: 'FEMALE',
-      trans: 'TRANS',
-      isGay: 'GAY',
-    };
+  private destroyChart(): void {
+    if (!this.chart) return;
 
-    return genderKeys[gender];
+    destroyExternalTooltip(this.chart);
+    this.chart.destroy();
+    this.chart = undefined;
+  }
+
+  ngOnDestroy(): void {
+    this.langChangeSubscription?.unsubscribe();
+    this.destroyChart();
   }
 }

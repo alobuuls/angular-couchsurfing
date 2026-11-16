@@ -617,8 +617,8 @@
       },
       "LABELS": {
         "DATASET": "{{title}} - {{subview}}",
-        "OVERALL_RANKING": "דירוג כללי: {{position}}",
-        "VISIT": "ביקור: {{date}}",
+        "OVERALL_RANKING": "דירוג כללי",
+        "VISIT": "ביקור",
         "RANKING_POSITION": "מיקום בדירוג"
       }
     },
@@ -641,7 +641,7 @@
         "RATING": "דירוג",
         "RATING_VALUE": "דירוג: {{rating}} ⭐",
         "COUNTRY": "מדינה: {{country}}",
-        "VISIT": "ביקור: {{date}}"
+        "VISIT": "ביקור"
       }
     },
     "TIMELINE": {
@@ -666,7 +666,8 @@
         "OTHER": "אחרים",
         "NUMBER_OF_GUESTS": "מספר האורחים",
         "COUNTRY": "מדינה: {{country}}",
-        "VISIT": "ביקור: {{date}}",
+        "VISIT": "ביקור",
+        "GENDER": "מגדר",
         "GROUP_NAME": "{{name}} ו{{group}}"
       },
       "GROUP_LABELS": {

@@ -618,8 +618,9 @@
       },
       "LABELS": {
         "DATASET": "{{title}} - {{subview}}",
-        "OVERALL_RANKING": "전체 순위: {{position}}",
-        "VISIT": "방문: {{date}}",
+        "OVERALL_RANKING": "전체 순위",
+        "VISIT": "방문",
+        "GENDER": "성별",
         "RANKING_POSITION": "순위"
       }
     },
@@ -642,7 +643,7 @@
         "RATING": "평점",
         "RATING_VALUE": "평점: {{rating}} ⭐",
         "COUNTRY": "국가: {{country}}",
-        "VISIT": "방문: {{date}}"
+        "VISIT": "방문"
       }
     },
     "TIMELINE": {
@@ -667,7 +668,7 @@
         "OTHER": "기타",
         "NUMBER_OF_GUESTS": "게스트 수",
         "COUNTRY": "국가: {{country}}",
-        "VISIT": "방문: {{date}}",
+        "VISIT": "방문",
         "GROUP_NAME": "{{name}} 및 {{group}}"
       },
       "GROUP_LABELS": {

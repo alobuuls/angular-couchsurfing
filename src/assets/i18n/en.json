@@ -608,8 +608,8 @@
       },
       "LABELS": {
         "DATASET": "{{title}} - {{subview}}",
-        "OVERALL_RANKING": "Overall ranking: {{position}}",
-        "VISIT": "Visit: {{date}}",
+        "OVERALL_RANKING": "Overall ranking",
+        "VISIT": "Visit",
         "RANKING_POSITION": "Ranking Position"
       }
     },
@@ -632,7 +632,7 @@
         "RATING": "Rating",
         "RATING_VALUE": "Rating: {{rating}} ⭐",
         "COUNTRY": "Country: {{country}}",
-        "VISIT": "Visit: {{date}}"
+        "VISIT": "Visit"
       }
     },
     "TIMELINE": {
@@ -657,7 +657,8 @@
         "OTHER": "Other",
         "NUMBER_OF_GUESTS": "Number of Guests",
         "COUNTRY": "Country: {{country}}",
-        "VISIT": "Visit: {{date}}",
+        "VISIT": "Visit",
+        "GENDER": "Gender",
         "GROUP_NAME": "{{name}} and {{group}}"
       },
       "GROUP_LABELS": {

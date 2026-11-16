@@ -11,6 +11,9 @@ import { IErrResp, ReqStatus } from '@interfaces/data-structure-api';
 import { FormatService } from '@services/format.service';
 import { Continents, Regions } from '@type/word.types';
 
+// Utils
+import { formatLocation, getValidValues, hasValue } from '@utils';
+
 @Component({
   selector: 'guests-detail',
   templateUrl: './guests-detail.component.html',
@@ -22,6 +25,10 @@ export class GuestsDetailComponent implements OnInit {
 
   guest?: IGuestDetail;
   group?: IGroupMember[];
+
+  readonly hasValue = hasValue;
+  readonly getValidValues = getValidValues;
+  readonly formatLocation = formatLocation;
 
   _format = inject(FormatService);
   private route = inject(ActivatedRoute);
