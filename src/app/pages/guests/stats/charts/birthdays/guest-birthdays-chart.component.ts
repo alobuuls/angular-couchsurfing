@@ -12,10 +12,11 @@ Chart.register(MatrixController, MatrixElement);
 import { IBirthdaysDistribution, IBirthdaysView } from '@interfaces/stats-interface';
 
 // Helpers
-import { BIRTHDAYS_COLORS } from '@utils';
+import { BIRTHDAYS_COLORS, createExternalTooltip, destroyExternalTooltip, hideExternalTooltip } from '@utils';
 
 // Services
 import { FormatService } from '@services/format.service';
+import { FlagPipe } from '@shared/pipes/three-code-letters-flag.pipe';
 
 @Component({
   selector: 'guest-birthdays-chart',
@@ -26,6 +27,7 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
   private _format = inject(FormatService);
   private _router = inject(Router);
   private _translate = inject(TranslateService);
+  private readonly _flag = inject(FlagPipe);
 
   // Birthdays data received from parent
   @Input() birthdays!: IBirthdaysDistribution;
@@ -188,23 +190,43 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
           },
           // Show birthday information when hovering over a bubble
           tooltip: {
-            callbacks: {
-              title: context => {
-                const item = repeated[context[0].dataIndex];
-                return this._format.formatBirthday(item.month, item.day);
-              },
-              label: context => {
-                const item = repeated[context.dataIndex];
+            enabled: false,
+            external: context => {
+              const dataPoint = context.tooltip.dataPoints?.[0];
 
-                return this.translate('STATS.BIRTHDAYS.TOOLTIPS.GUESTS', {
-                  count: item.total,
-                });
-              },
-              afterBody: context => {
-                const item = repeated[context[0].dataIndex];
+              if (!dataPoint) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
 
-                return ['', this.translate('STATS.BIRTHDAYS.LABELS.GUESTS'), ...item.guests.map(guest => `• ${guest.fullName}`)];
-              },
+              const item = repeated[dataPoint.dataIndex];
+
+              if (!item) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              createExternalTooltip(context.chart, context.tooltip, {
+                title: this._format.formatBirthday(item.month, item.day),
+                rows: [
+                  {
+                    value: this.translate('STATS.BIRTHDAYS.TOOLTIPS.GUESTS', {
+                      count: item.total,
+                    }),
+                  },
+                  ...item.guests.map(guest => ({
+                    value: `• ${guest.fullName}`,
+                    ...(guest.hometownCode
+                      ? {
+                          country: {
+                            name: this._format.formatCountry(guest.hometownCode),
+                            flagClass: this._flag.transform(guest.hometownCode),
+                          },
+                        }
+                      : {}),
+                  })),
+                ],
+              });
             },
           },
         },
@@ -282,17 +304,11 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
       options: {
         responsive: true,
         onClick: (_event, elements) => {
-          if (!elements.length) {
-            return;
-          }
-
+          if (!elements.length) return;
           const index = elements[0].index;
           const item = unusual[index];
 
-          if (!item) {
-            return;
-          }
-
+          if (!item) return;
           this.navigateToBirthday(item.month, item.day);
         },
         maintainAspectRatio: false,
@@ -313,29 +329,48 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
             display: true,
           },
           tooltip: {
-            callbacks: {
-              title: context => {
-                const item = unusual[context[0].dataIndex];
-                return this._format.formatBirthday(item.month, item.day);
-              },
-              label: context => {
-                const item = unusual[context.dataIndex];
+            enabled: false,
+            external: context => {
+              const dataPoint = context.tooltip.dataPoints?.[0];
 
-                return this.translate('STATS.BIRTHDAYS.TOOLTIPS.REASON', {
-                  reason: item.reason,
-                });
-              },
-              afterBody: context => {
-                const item = unusual[context[0].dataIndex];
+              if (!dataPoint) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
 
-                return [
-                  this.translate('STATS.BIRTHDAYS.TOOLTIPS.GUESTS', {
-                    count: item.total,
-                  }),
-                  '',
-                  ...item.guests.map(guest => `• ${guest.fullName}`),
-                ];
-              },
+              const item = unusual[dataPoint.dataIndex];
+
+              if (!item) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              createExternalTooltip(context.chart, context.tooltip, {
+                title: this._format.formatBirthday(item.month, item.day),
+                rows: [
+                  {
+                    value: this.translate('STATS.BIRTHDAYS.TOOLTIPS.REASON', {
+                      reason: item.reason,
+                    }),
+                  },
+                  {
+                    value: this.translate('STATS.BIRTHDAYS.TOOLTIPS.GUESTS', {
+                      count: item.total,
+                    }),
+                  },
+                  ...item.guests.map(guest => ({
+                    value: `• ${guest.fullName}`,
+                    ...(guest.hometownCode
+                      ? {
+                          country: {
+                            name: this._format.formatCountry(guest.hometownCode),
+                            flagClass: this._flag.transform(guest.hometownCode),
+                          },
+                        }
+                      : {}),
+                  })),
+                ],
+              });
             },
           },
         },
@@ -504,47 +539,53 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
             display: false,
           },
           tooltip: {
-            callbacks: {
-              title: context => {
-                const value = context[0].raw as {
-                  x: string;
-                  y: string;
-                  v: number;
-                };
+            enabled: false,
+            external: context => {
+              const dataPoint = context.tooltip.dataPoints?.[0];
 
-                const monthIndex = months.indexOf(value.x) + 1;
-                const day = Number(value.y);
+              if (!dataPoint) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
 
-                return this._format.formatBirthday(monthIndex, day);
-              },
-              label: context => {
-                const value = context.raw as {
-                  x: string;
-                  y: string;
-                  v: number;
-                };
+              const value = dataPoint.raw as {
+                x: string;
+                y: string;
+                v: number;
+              };
 
-                return this.translate('STATS.BIRTHDAYS.TOOLTIPS.GUESTS', {
-                  count: value.v,
-                });
-              },
-              afterBody: context => {
-                const value = context[0].raw as {
-                  x: string;
-                  y: string;
-                  v: number;
-                };
+              const monthIndex = months.indexOf(value.x) + 1;
+              const day = Number(value.y);
+              const item = birthdayMap.get(`${monthIndex}-${day}`);
 
-                const monthIndex = months.indexOf(value.x) + 1;
-                const day = Number(value.y);
-                const item = birthdayMap.get(`${monthIndex}-${day}`);
+              const rows = [
+                {
+                  value: this.translate('STATS.BIRTHDAYS.TOOLTIPS.GUESTS', {
+                    count: value.v,
+                  }),
+                },
+              ];
 
-                if (!item) {
-                  return [];
-                }
+              if (item) {
+                rows.push(
+                  ...item.guests.map(guest => ({
+                    value: `• ${guest.fullName}`,
+                    ...(guest.hometownCode
+                      ? {
+                          country: {
+                            name: this._format.formatCountry(guest.hometownCode),
+                            flagClass: this._flag.transform(guest.hometownCode),
+                          },
+                        }
+                      : {}),
+                  }))
+                );
+              }
 
-                return ['', ...item.guests.map(guest => `• ${guest.fullName}`)];
-              },
+              createExternalTooltip(context.chart, context.tooltip, {
+                title: this._format.formatBirthday(monthIndex, day),
+                rows,
+              });
             },
           },
         },
@@ -581,7 +622,12 @@ export class GuestBirthdaysChartComponent implements AfterViewInit, OnChanges, O
 
   // Destroy the current chart instance
   private destroyChart(): void {
-    this.chart?.destroy();
+    if (!this.chart) {
+      return;
+    }
+
+    destroyExternalTooltip(this.chart);
+    this.chart.destroy();
     this.chart = undefined;
   }
 

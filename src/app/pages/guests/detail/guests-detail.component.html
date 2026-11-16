@@ -2,7 +2,6 @@
   <!-- BACK BUTTON -->
   <button mat-button type="button" class="btn-back" (click)="goBack()">
     <mat-icon class="material-symbols-outlined" fontIcon="arrow_back"></mat-icon>
-
     {{ 'GENERAL.BACK' | translate }}
   </button>
 
@@ -39,14 +38,12 @@
   <!-- SUCCESS -->
   <ng-container *ngIf="status === 'success'">
     <!-- INDIVIDUAL PASSPORT -->
-
     <ng-container *ngIf="guest">
       <article class="passport">
         <!-- PASSPORT TOP -->
         <header class="passport-header">
           <div class="passport-head">
             <mat-icon class="material-symbols-outlined" fontIcon="public"></mat-icon>
-
             <div>
               <span class="subtitle">{{ 'GUEST_DETAIL.PASSPORT.SUBTITLE' | translate }}</span>
               <h2>{{ 'GUEST_DETAIL.PASSPORT.TITLE' | translate }}</h2>
@@ -67,7 +64,7 @@
             ></mat-icon>
 
             <!-- Hometown flag -->
-            <span class="identity-country" *ngIf="guest.hometownCode">
+            <span class="identity-country" *ngIf="hasValue(guest.hometownCode)">
               <span [class]="guest.hometownCode | flag" [matTooltip]="_format.formatCountry(guest.hometownCode)"></span>
             </span>
           </div>
@@ -75,7 +72,7 @@
           <div class="identity-details">
             <span class="subtitle">{{ 'GUEST_DETAIL.IDENTITY.SUBTITLE' | translate }}</span>
 
-            <h2 class="guest-name" *ngIf="guest.fullName">
+            <h2 class="guest-name" *ngIf="hasValue(guest.fullName)">
               {{ guest.fullName }}
 
               <mat-icon
@@ -86,26 +83,29 @@
               ></mat-icon>
             </h2>
 
-            <p class="identity-subtitle" *ngIf="guest.occupation.length">
-              {{ _format.formatOccupations(guest.occupation) }}
+            <p class="identity-subtitle" *ngIf="getValidValues(guest.occupation).length">
+              {{ _format.formatOccupations(getValidValues(guest.occupation)) }}
             </p>
 
             <!-- Living in flag and location -->
-            <div class="identity-location" *ngIf="guest.livingInState || guest.livingInCode">
+            <div
+              class="identity-location"
+              *ngIf="hasValue(guest.livingInState) || hasValue(guest.livingInCity) || hasValue(guest.livingInCode)"
+            >
               <mat-icon class="material-symbols-outlined" fontIcon="location_on"></mat-icon>
 
               <span
-                *ngIf="guest.livingInCode"
+                *ngIf="hasValue(guest.livingInCode)"
                 [class]="guest.livingInCode | flag"
                 [matTooltip]="_format.formatCountry(guest.livingInCode)"
               ></span>
 
-              <span>{{ guest.livingInCity }}, {{ guest.livingInState }}</span>
+              <span>{{ formatLocation(guest.livingInCity, guest.livingInState) }}</span>
             </div>
 
             <div class="social-links">
               <a
-                *ngIf="guest.urlProfileCs"
+                *ngIf="hasValue(guest.urlProfileCs)"
                 mat-icon-button
                 class="btn-cs"
                 [matTooltip]="'GUEST_DETAIL.SOCIAL.COUCHSURFING' | translate"
@@ -118,7 +118,7 @@
               </a>
 
               <a
-                *ngIf="guest.instagram"
+                *ngIf="hasValue(guest.instagram)"
                 mat-icon-button
                 class="btn-instagram"
                 [matTooltip]="'GUEST_DETAIL.SOCIAL.INSTAGRAM' | translate"
@@ -131,7 +131,7 @@
               </a>
 
               <a
-                *ngIf="guest.whatsapp"
+                *ngIf="hasValue(guest.whatsapp)"
                 mat-icon-button
                 class="btn-whatsapp"
                 [matTooltip]="'GUEST_DETAIL.SOCIAL.WHATSAPP' | translate"
@@ -144,21 +144,19 @@
               </a>
 
               <a
-                *ngIf="guest.whatsapp"
+                *ngIf="hasValue(guest.whatsapp)"
                 mat-icon-button
                 class="btn-phone"
                 [matTooltip]="'GUEST_DETAIL.SOCIAL.PHONE' | translate"
                 [attr.aria-label]="'GUEST_DETAIL.SOCIAL.PHONE' | translate"
                 [href]="'tel:' + guest.prefixCode + guest.whatsapp"
-                [attr.aria-disabled]="!guest.whatsapp"
-                [class.disabled]="!guest.whatsapp"
-                [attr.tabindex]="guest.whatsapp ? 0 : -1"
               >
                 <mat-icon class="material-symbols-outlined">call</mat-icon>
               </a>
             </div>
           </div>
         </section>
+
         <!-- PASSPORT DIVIDER -->
         <div class="passport-divider">
           <span>{{ 'GUEST_DETAIL.DIVIDER.IDENTITY' | translate }}</span>
@@ -170,15 +168,15 @@
         <section
           class="passport-section"
           *ngIf="
-            guest.fullName ||
-            guest.gender ||
-            guest.birthDate ||
-            guest.prefixCode ||
-            guest.whatsapp ||
-            guest.instagram ||
-            guest.urlProfileCs ||
-            (guest.isGay !== null && guest.isGay !== undefined) ||
-            (guest.didTheyReq !== null && guest.didTheyReq !== undefined)
+            hasValue(guest.fullName) ||
+            hasValue(guest.gender) ||
+            hasValue(guest.birthDate) ||
+            hasValue(guest.prefixCode) ||
+            hasValue(guest.whatsapp) ||
+            hasValue(guest.instagram) ||
+            hasValue(guest.urlProfileCs) ||
+            hasValue(guest.isGay) ||
+            hasValue(guest.didTheyReq)
           "
         >
           <header class="section-head">
@@ -190,12 +188,12 @@
           </header>
 
           <div class="passport-grid">
-            <div class="passport-field" *ngIf="guest.fullName">
+            <div class="passport-field" *ngIf="hasValue(guest.fullName)">
               <span class="field-label">{{ 'GUEST_DETAIL.PERSONAL.FULL_NAME' | translate }}</span>
               <span class="field-value">{{ guest.fullName }}</span>
             </div>
 
-            <div class="passport-field" *ngIf="guest.gender">
+            <div class="passport-field" *ngIf="hasValue(guest.gender)">
               <span class="field-label">{{ 'GENDER.TXT' | translate }}</span>
               <span class="field-value">
                 <i
@@ -211,15 +209,15 @@
               </span>
             </div>
 
-            <div class="passport-field" *ngIf="guest.birthDate">
+            <div class="passport-field" *ngIf="hasValue(guest.birthDate)">
               <span class="field-label">{{ 'GUEST_DETAIL.PERSONAL.BIRTH_DATE' | translate }}</span>
               <span class="field-value">
                 <mat-icon class="material-symbols-outlined" fontIcon="calendar_month"></mat-icon>
-                {{ formatDate(guest.birthDate) }}
+                {{ formatDate(guest.birthDate!) }}
               </span>
             </div>
 
-            <div class="passport-field" *ngIf="guest.isGay !== null && guest.isGay !== undefined">
+            <div class="passport-field" *ngIf="hasValue(guest.isGay)">
               <span class="field-label">{{ 'GUEST_DETAIL.PERSONAL.GAY' | translate }}</span>
               <span class="field-value">
                 <mat-icon
@@ -232,7 +230,7 @@
               </span>
             </div>
 
-            <div class="passport-field" *ngIf="guest.didTheyReq !== null && guest.didTheyReq !== undefined">
+            <div class="passport-field" *ngIf="hasValue(guest.didTheyReq)">
               <span class="field-label">{{ 'GUEST_DETAIL.PERSONAL.STAY_REQUEST' | translate }}</span>
               <span class="field-value">
                 <mat-icon
@@ -253,12 +251,18 @@
         <section
           class="passport-section"
           *ngIf="
-            guest.continent ||
-            guest.region ||
-            guest.hometownCode ||
-            guest.hometownState ||
-            guest.livingInCode ||
-            guest.livingInState
+            hasValue(guest.continent) ||
+            hasValue(guest.region) ||
+            hasValue(guest.hometownCode) ||
+            hasValue(guest.hometownCity) ||
+            hasValue(guest.hometownState) ||
+            hasValue(guest.livingInCode) ||
+            hasValue(guest.livingInCity) ||
+            hasValue(guest.livingInState) ||
+            hasValue(guest.countryCodeWeMet) ||
+            hasValue(guest.cityWeMet) ||
+            hasValue(guest.stateWeMet) ||
+            hasValue(guest.locationWeMet)
           "
         >
           <header class="section-head">
@@ -270,49 +274,63 @@
           </header>
 
           <div class="passport-grid">
-            <div class="passport-field" *ngIf="guest.continent">
+            <div class="passport-field" *ngIf="hasValue(guest.continent)">
               <span class="field-label">{{ 'GUEST_DETAIL.LOCATION.CONTINENT' | translate }}</span>
               <span class="field-value">{{ getContinentName(guest.continent) | translate }}</span>
             </div>
 
-            <div class="passport-field" *ngIf="guest.region">
+            <div class="passport-field" *ngIf="hasValue(guest.region)">
               <span class="field-label">{{ 'GUEST_DETAIL.LOCATION.REGION' | translate }}</span>
               <span class="field-value">{{ getRegionName(guest.region) | translate }}</span>
             </div>
 
-            <div class="passport-field" *ngIf="guest.hometownCode || guest.hometownState">
+            <div
+              class="passport-field"
+              *ngIf="hasValue(guest.hometownCode) || hasValue(guest.hometownCity) || hasValue(guest.hometownState)"
+            >
               <span class="field-label">{{ 'GUEST_DETAIL.LOCATION.HOMETOWN' | translate }}</span>
               <span class="field-value">
                 <span
-                  *ngIf="guest.hometownCode"
+                  *ngIf="hasValue(guest.hometownCode)"
                   [class]="guest.hometownCode | flag"
                   [matTooltip]="_format.formatCountry(guest.hometownCode)"
                 ></span>
-                {{ guest.hometownCity }}, {{ guest.hometownState }}
+                {{ formatLocation(guest.hometownCity, guest.hometownState) }}
               </span>
             </div>
 
-            <div class="passport-field" *ngIf="guest.livingInCode || guest.livingInState">
+            <div
+              class="passport-field"
+              *ngIf="hasValue(guest.livingInCode) || hasValue(guest.livingInCity) || hasValue(guest.livingInState)"
+            >
               <span class="field-label">{{ 'GUEST_DETAIL.LOCATION.CURRENTLY_LIVING_IN' | translate }}</span>
               <span class="field-value">
                 <span
-                  *ngIf="guest.livingInCode"
+                  *ngIf="hasValue(guest.livingInCode)"
                   [class]="guest.livingInCode | flag"
                   [matTooltip]="_format.formatCountry(guest.livingInCode)"
                 ></span>
-                {{ guest.livingInCity }}, {{ guest.livingInState }}
+                {{ formatLocation(guest.livingInCity, guest.livingInState) }}
               </span>
             </div>
 
-            <div class="passport-field" *ngIf="guest.countryCodeWeMet || guest.stateWeMet">
+            <div
+              class="passport-field"
+              *ngIf="
+                hasValue(guest.countryCodeWeMet) ||
+                hasValue(guest.cityWeMet) ||
+                hasValue(guest.stateWeMet) ||
+                hasValue(guest.locationWeMet)
+              "
+            >
               <span class="field-label">{{ 'GUEST_DETAIL.LOCATION.WE_MET_IN' | translate }}</span>
               <span class="field-value">
                 <span
-                  *ngIf="guest.countryCodeWeMet"
+                  *ngIf="hasValue(guest.countryCodeWeMet)"
                   [class]="guest.countryCodeWeMet | flag"
-                  [matTooltip]="_format.formatCountry(guest.countryCodeWeMet)"
+                  [matTooltip]="_format.formatCountry(guest.countryCodeWeMet!)"
                 ></span>
-                {{ guest.cityWeMet }}, {{ guest.stateWeMet }} ({{ guest.locationWeMet }})
+                {{ formatLocation(guest.cityWeMet, guest.stateWeMet, guest.locationWeMet) }}
               </span>
             </div>
           </div>
@@ -322,12 +340,12 @@
         <section
           class="passport-section trip-section"
           *ngIf="
-            guest.visitedDate ||
-            (guest.nights !== null && guest.nights !== undefined) ||
-            (guest.stayed !== null && guest.stayed !== undefined) ||
-            (guest.hangOut !== null && guest.hangOut !== undefined) ||
-            (guest.isFirstTime !== null && guest.isFirstTime !== undefined) ||
-            guest.groupType
+            hasValue(guest.visitedDate) ||
+            hasValue(guest.nights) ||
+            hasValue(guest.stayed) ||
+            hasValue(guest.hangOut) ||
+            hasValue(guest.isFirstTime) ||
+            hasValue(guest.groupType)
           "
         >
           <header class="section-head">
@@ -338,9 +356,8 @@
             </div>
           </header>
 
-          <div class="trip-highlight" *ngIf="guest.visitedDate">
+          <div class="trip-highlight" *ngIf="hasValue(guest.visitedDate)">
             <mat-icon class="material-symbols-outlined" fontIcon="calendar_month"></mat-icon>
-
             <div>
               <span class="field-label">{{ 'GUEST_DETAIL.TRIP.DATE_OF_VISIT' | translate }}</span>
               <strong>{{ formatDate(guest.visitedDate) }}</strong>
@@ -348,7 +365,7 @@
           </div>
 
           <div class="passport-grid">
-            <div class="passport-field" *ngIf="guest.nights !== null && guest.nights !== undefined">
+            <div class="passport-field" *ngIf="hasValue(guest.nights)">
               <span class="field-label">{{ 'GUEST_DETAIL.TRIP.NIGHTS' | translate }}</span>
               <span class="field-value">
                 <mat-icon class="material-symbols-outlined" fontIcon="bed"></mat-icon>
@@ -356,7 +373,7 @@
               </span>
             </div>
 
-            <div class="passport-field" *ngIf="guest.groupType">
+            <div class="passport-field" *ngIf="hasValue(guest.groupType)">
               <span class="field-label">{{ 'GUEST_DETAIL.TRIP.GROUP_TYPE' | translate }}</span>
               <span class="field-value">
                 <mat-icon
@@ -375,7 +392,7 @@
               </span>
             </div>
 
-            <div class="passport-field" *ngIf="guest.stayed !== null && guest.stayed !== undefined">
+            <div class="passport-field" *ngIf="hasValue(guest.stayed)">
               <span class="field-label">{{ 'GUEST_DETAIL.TRIP.STAYED' | translate }}</span>
               <span class="field-value">
                 <mat-icon
@@ -388,7 +405,7 @@
               </span>
             </div>
 
-            <div class="passport-field" *ngIf="guest.hangOut !== null && guest.hangOut !== undefined">
+            <div class="passport-field" *ngIf="hasValue(guest.hangOut)">
               <span class="field-label">{{ 'GUEST_DETAIL.TRIP.HUNG_OUT' | translate }}</span>
               <span class="field-value">
                 <mat-icon
@@ -401,7 +418,7 @@
               </span>
             </div>
 
-            <div class="passport-field" *ngIf="guest.isFirstTime !== null && guest.isFirstTime !== undefined">
+            <div class="passport-field" *ngIf="hasValue(guest.isFirstTime)">
               <span class="field-label">{{ 'GUEST_DETAIL.TRIP.FIRST_VISIT' | translate }}</span>
               <span class="field-value">
                 <mat-icon
@@ -417,7 +434,7 @@
         </section>
 
         <!-- OCCUPATION -->
-        <section class="passport-section" *ngIf="guest.occupation.length">
+        <section class="passport-section" *ngIf="getValidValues(guest.occupation).length">
           <header class="section-head">
             <span class="section-number">04</span>
             <div>
@@ -427,7 +444,7 @@
           </header>
 
           <div class="list">
-            <span class="passport-tag" *ngFor="let occupation of guest.occupation">
+            <span class="passport-tag" *ngFor="let occupation of getValidValues(guest.occupation)">
               <mat-icon class="material-symbols-outlined" fontIcon="work"></mat-icon>
               {{ _format.formatOccupation(occupation) }}
             </span>
@@ -435,7 +452,7 @@
         </section>
 
         <!-- RATING -->
-        <section class="passport-section" *ngIf="guest.rating !== null && guest.rating !== undefined">
+        <section class="passport-section" *ngIf="hasValue(guest.rating)">
           <header class="section-head">
             <span class="section-number">05</span>
             <div>
@@ -449,7 +466,7 @@
               <mat-icon
                 class="material-symbols-outlined"
                 *ngFor="let s of [1, 2, 3, 4, 5]; let idx = index"
-                [class.filled]="idx < guest.rating"
+                [class.filled]="idx < (guest.rating ?? 0)"
                 fontIcon="star"
               ></mat-icon>
             </div>
@@ -459,7 +476,7 @@
         </section>
 
         <!-- GIFTS -->
-        <section class="passport-section" *ngIf="guest?.gift?.length">
+        <section class="passport-section" *ngIf="getValidValues(guest.gift).length">
           <header class="section-head">
             <span class="section-number">06</span>
             <div>
@@ -469,7 +486,7 @@
           </header>
 
           <div class="list">
-            <span class="passport-tag gift-tag" *ngFor="let gift of guest.gift">
+            <span class="passport-tag gift-tag" *ngFor="let gift of getValidValues(guest.gift)">
               <mat-icon class="material-symbols-outlined" fontIcon="card_giftcard"></mat-icon>
               {{ gift }}
             </span>
@@ -477,7 +494,7 @@
         </section>
 
         <!-- COMMENTS -->
-        <section class="passport-section" *ngIf="guest.comments">
+        <section class="passport-section" *ngIf="hasValue(guest.comments)">
           <header class="section-head">
             <span class="section-number">07</span>
             <div>
@@ -493,7 +510,7 @@
         </section>
 
         <!-- REFERENCES -->
-        <section class="passport-section" *ngIf="guest.theirReference || guest.myReference">
+        <section class="passport-section" *ngIf="hasValue(guest.theirReference) || hasValue(guest.myReference)">
           <header class="section-head">
             <span class="section-number">08</span>
             <div>
@@ -503,12 +520,12 @@
           </header>
 
           <div class="reference-grid">
-            <div class="reference-card" *ngIf="guest.theirReference">
+            <div class="reference-card" *ngIf="hasValue(guest.theirReference)">
               <span class="field-label">{{ 'GUEST_DETAIL.REFERENCES.THEIR_REFERENCE' | translate }}</span>
               <p>{{ guest.theirReference }}</p>
             </div>
 
-            <div class="reference-card" *ngIf="guest.myReference">
+            <div class="reference-card" *ngIf="hasValue(guest.myReference)">
               <span class="field-label">{{ 'GUEST_DETAIL.REFERENCES.MY_REFERENCE' | translate }}</span>
               <p>{{ guest.myReference }}</p>
             </div>
@@ -531,6 +548,7 @@
     <!-- GROUP -->
     <ng-container *ngIf="group">
       <article class="passport group-passport">
+        <!-- GROUP HEADER -->
         <header class="passport-header">
           <div class="passport-head">
             <mat-icon class="material-symbols-outlined" fontIcon="groups"></mat-icon>
@@ -550,10 +568,10 @@
         <section
           class="passport-section trip-section"
           *ngIf="
-            group[0]?.visitedDate ||
-            (group[0]?.nights !== null && group[0]?.nights !== undefined) ||
-            (group[0]?.stayed !== null && group[0]?.stayed !== undefined) ||
-            group[0]?.groupType
+            hasValue(group[0]?.visitedDate) ||
+            hasValue(group[0]?.nights) ||
+            hasValue(group[0]?.stayed) ||
+            hasValue(group[0]?.groupType)
           "
         >
           <header class="section-head">
@@ -564,7 +582,7 @@
             </div>
           </header>
 
-          <div class="trip-highlight" *ngIf="group[0]?.visitedDate">
+          <div class="trip-highlight" *ngIf="hasValue(group[0]?.visitedDate)">
             <mat-icon class="material-symbols-outlined" fontIcon="calendar_month"></mat-icon>
 
             <div>
@@ -574,7 +592,7 @@
           </div>
 
           <div class="passport-grid">
-            <div class="passport-field" *ngIf="group[0]?.nights !== null && group[0]?.nights !== undefined">
+            <div class="passport-field" *ngIf="hasValue(group[0]?.nights)">
               <span class="field-label">{{ 'GUEST_DETAIL.TRIP.NIGHTS' | translate }}</span>
               <span class="field-value">
                 <mat-icon class="material-symbols-outlined" fontIcon="bed"></mat-icon>
@@ -582,7 +600,7 @@
               </span>
             </div>
 
-            <div class="passport-field" *ngIf="group[0]?.stayed !== null && group[0]?.stayed !== undefined">
+            <div class="passport-field" *ngIf="hasValue(group[0]?.stayed)">
               <span class="field-label">{{ 'GUEST_DETAIL.TRIP.STAYED_GROUP' | translate }}</span>
               <span class="field-value">
                 <mat-icon
@@ -595,7 +613,7 @@
               </span>
             </div>
 
-            <div class="passport-field" *ngIf="group[0]?.groupType">
+            <div class="passport-field" *ngIf="hasValue(group[0]?.groupType)">
               <span class="field-label">{{ 'GUEST_DETAIL.TRIP.GROUP_TYPE' | translate }}</span>
               <span class="field-value">
                 <mat-icon
@@ -617,7 +635,7 @@
         </section>
 
         <!-- MEMBERS -->
-        <section class="passport-section members-section" *ngIf="group.length">
+        <section class="passport-section members-section" *ngIf="getValidValues(group).length">
           <header class="section-head">
             <span class="section-number">02</span>
             <div>
@@ -625,11 +643,11 @@
               <h3>{{ 'GUEST_DETAIL.GROUP.MEMBERS.TITLE' | translate }}</h3>
             </div>
 
-            <span class="member-count">{{ group.length }}</span>
+            <span class="member-count">{{ getValidValues(group).length }}</span>
           </header>
 
           <div class="member-list">
-            <article class="member-passport" *ngFor="let member of group">
+            <article class="member-passport" *ngFor="let member of getValidValues(group)">
               <!-- MEMBER IDENTITY -->
               <header class="member-header">
                 <div class="member-avatar">
@@ -641,7 +659,11 @@
 
                 <div class="member-identity">
                   <h4 class="member-name">
-                    {{ member.fullName || ('GUEST_DETAIL.GROUP.MEMBERS.GUEST_FALLBACK' | translate) }}
+                    {{
+                      hasValue(member.fullName)
+                        ? member.fullName
+                        : ('GUEST_DETAIL.GROUP.MEMBERS.GUEST_FALLBACK' | translate)
+                    }}
 
                     <mat-icon
                       *ngIf="member.ambassador"
@@ -651,17 +673,22 @@
                     ></mat-icon>
                   </h4>
 
-                  <span class="member-location" *ngIf="member.hometownState || member.hometownCode">
+                  <span
+                    class="member-location"
+                    *ngIf="
+                      hasValue(member.hometownCode) || hasValue(member.hometownCity) || hasValue(member.hometownState)
+                    "
+                  >
                     <span
-                      *ngIf="member.hometownCode"
+                      *ngIf="hasValue(member.hometownCode)"
                       [class]="member.hometownCode | flag"
-                      [matTooltip]="_format.formatCountry(member.hometownCode)"
+                      [matTooltip]="_format.formatCountry(member.hometownCode!)"
                     ></span>
-                    {{ member.hometownState }}
+                    {{ formatLocation(member.hometownCity, member.hometownState) }}
                   </span>
                 </div>
 
-                <div class="member-rating" *ngIf="member.rating !== null && member.rating !== undefined">
+                <div class="member-rating" *ngIf="hasValue(member.rating)">
                   <mat-icon class="material-symbols-outlined" fontIcon="star"></mat-icon>
                   {{ member.rating }}
                 </div>
@@ -671,17 +698,17 @@
               <section
                 class="member-section"
                 *ngIf="
-                  member.gender ||
-                  member.birthDate ||
-                  member.whatsapp ||
-                  (member.isGay !== null && member.isGay !== undefined) ||
-                  (member.didTheyReq !== null && member.didTheyReq !== undefined)
+                  hasValue(member.gender) ||
+                  hasValue(member.birthDate) ||
+                  hasValue(member.whatsapp) ||
+                  hasValue(member.isGay) ||
+                  hasValue(member.didTheyReq)
                 "
               >
                 <h5>{{ 'GUEST_DETAIL.PERSONAL.TITLE' | translate }}</h5>
 
                 <div class="passport-grid">
-                  <div class="passport-field" *ngIf="member.gender">
+                  <div class="passport-field" *ngIf="hasValue(member.gender)">
                     <span class="field-label">{{ 'GENDER.TXT' | translate }}</span>
                     <span class="field-value">
                       <i
@@ -697,14 +724,14 @@
                     </span>
                   </div>
 
-                  <div class="passport-field" *ngIf="member.birthDate">
+                  <div class="passport-field" *ngIf="hasValue(member.birthDate)">
                     <span class="field-label">{{ 'GUEST_DETAIL.PERSONAL.BIRTH_DATE' | translate }}</span>
                     <span class="field-value">
-                      {{ formatDate(member.birthDate) }}
+                      {{ formatDate(member.birthDate!) }}
                     </span>
                   </div>
 
-                  <div class="passport-field" *ngIf="member.isGay !== null && member.isGay !== undefined">
+                  <div class="passport-field" *ngIf="hasValue(member.isGay)">
                     <span class="field-label">{{ 'GUEST_DETAIL.PERSONAL.GAY' | translate }}</span>
                     <span class="field-value">
                       <mat-icon
@@ -717,7 +744,7 @@
                     </span>
                   </div>
 
-                  <div class="passport-field" *ngIf="member.didTheyReq !== null && member.didTheyReq !== undefined">
+                  <div class="passport-field" *ngIf="hasValue(member.didTheyReq)">
                     <span class="field-label">{{ 'GUEST_DETAIL.PERSONAL.STAY_REQUEST' | translate }}</span>
                     <span class="field-value">
                       {{
@@ -735,71 +762,95 @@
               <section
                 class="member-section"
                 *ngIf="
-                  member.continent ||
-                  member.region ||
-                  member.hometownCode ||
-                  member.hometownState ||
-                  member.livingInCode ||
-                  member.livingInState
+                  hasValue(member.continent) ||
+                  hasValue(member.region) ||
+                  hasValue(member.hometownCode) ||
+                  hasValue(member.hometownCity) ||
+                  hasValue(member.hometownState) ||
+                  hasValue(member.livingInCode) ||
+                  hasValue(member.livingInCity) ||
+                  hasValue(member.livingInState) ||
+                  hasValue(member.countryCodeWeMet) ||
+                  hasValue(member.cityWeMet) ||
+                  hasValue(member.stateWeMet) ||
+                  hasValue(member.locationWeMet)
                 "
               >
                 <h5>{{ 'GUEST_DETAIL.LOCATION.TITLE' | translate }}</h5>
 
                 <div class="passport-grid">
-                  <div class="passport-field" *ngIf="member.continent">
+                  <div class="passport-field" *ngIf="hasValue(member.continent)">
                     <span class="field-label">{{ 'GUEST_DETAIL.LOCATION.CONTINENT' | translate }}</span>
-                    <span class="field-value">{{ getContinentName(member.continent) }}</span>
+                    <span class="field-value">{{ getContinentName(member.continent) | translate }}</span>
                   </div>
 
-                  <div class="passport-field" *ngIf="member.region">
+                  <div class="passport-field" *ngIf="hasValue(member.region)">
                     <span class="field-label">{{ 'GUEST_DETAIL.LOCATION.REGION' | translate }}</span>
                     <span class="field-value">{{ formatRegion(member.region) | titlecase }}</span>
                   </div>
 
-                  <div class="passport-field" *ngIf="member.hometownCode || member.hometownState">
+                  <div
+                    class="passport-field"
+                    *ngIf="
+                      hasValue(member.hometownCode) || hasValue(member.hometownCity) || hasValue(member.hometownState)
+                    "
+                  >
                     <span class="field-label">{{ 'GUEST_DETAIL.LOCATION.HOMETOWN' | translate }}</span>
                     <span class="field-value">
                       <span
-                        *ngIf="member.hometownCode"
+                        *ngIf="hasValue(member.hometownCode)"
                         [class]="member.hometownCode | flag"
                         [matTooltip]="_format.formatCountry(member.hometownCode)"
                       ></span>
-                      {{ member.hometownState }}
+                      {{ formatLocation(member.hometownCity, member.hometownState) }}
                     </span>
                   </div>
 
-                  <div class="passport-field" *ngIf="member.livingInCode || member.livingInState">
+                  <div
+                    class="passport-field"
+                    *ngIf="
+                      hasValue(member.livingInCode) || hasValue(member.livingInCity) || hasValue(member.livingInState)
+                    "
+                  >
                     <span class="field-label">{{ 'GUEST_DETAIL.GROUP.MEMBERS.LIVING_IN' | translate }}</span>
                     <span class="field-value">
                       <span
-                        *ngIf="member.livingInCode"
+                        *ngIf="hasValue(member.livingInCode)"
                         [class]="member.livingInCode | flag"
                         [matTooltip]="_format.formatCountry(member.livingInCode)"
                       ></span>
-                      {{ member.livingInState }}
+                      {{ formatLocation(member.livingInCity, member.livingInState) }}
                     </span>
                   </div>
 
-                  <div class="passport-field" *ngIf="member.countryCodeWeMet">
+                  <div
+                    class="passport-field"
+                    *ngIf="
+                      hasValue(member.countryCodeWeMet) ||
+                      hasValue(member.cityWeMet) ||
+                      hasValue(member.stateWeMet) ||
+                      hasValue(member.locationWeMet)
+                    "
+                  >
                     <span class="field-label">{{ 'GUEST_DETAIL.LOCATION.WE_MET_IN' | translate }}</span>
                     <span class="field-value">
                       <span
-                        *ngIf="member.cityWeMet"
+                        *ngIf="hasValue(member.countryCodeWeMet)"
                         [class]="member.countryCodeWeMet | flag"
-                        [matTooltip]="_format.formatCountry(member.countryCodeWeMet)"
+                        [matTooltip]="_format.formatCountry(member.countryCodeWeMet!)"
                       ></span>
-                      {{ member.cityWeMet }}, {{ member.locationWeMet }}
+                      {{ formatLocation(member.cityWeMet, member.stateWeMet, member.locationWeMet) }}
                     </span>
                   </div>
                 </div>
               </section>
 
               <!-- MEMBER OCCUPATION -->
-              <section class="member-section" *ngIf="member.occupation.length">
+              <section class="member-section" *ngIf="getValidValues(member.occupation).length">
                 <h5>{{ 'GUEST_DETAIL.OCCUPATION.TITLE' | translate }}</h5>
 
                 <div class="list">
-                  <span class="passport-tag" *ngFor="let occupation of member.occupation">
+                  <span class="passport-tag" *ngFor="let occupation of getValidValues(member.occupation)">
                     <mat-icon class="material-symbols-outlined" fontIcon="work"></mat-icon>
                     {{ _format.formatOccupation(occupation) }}
                   </span>
@@ -807,25 +858,25 @@
               </section>
 
               <!-- MEMBER RATING -->
-              <section class="member-section" *ngIf="member.rating !== null && member.rating !== undefined">
+              <section class="member-section" *ngIf="hasValue(member.rating)">
                 <h5>{{ 'GUEST_DETAIL.RATING.TITLE' | translate }}</h5>
 
                 <div class="ctn-stars">
                   <mat-icon
                     class="material-symbols-outlined"
                     *ngFor="let s of [1, 2, 3, 4, 5]; let idx = index"
-                    [class.filled]="idx < member.rating"
+                    [class.filled]="idx < (member.rating ?? 0)"
                     fontIcon="star"
                   ></mat-icon>
                 </div>
               </section>
 
               <!-- MEMBER GIFTS -->
-              <section class="member-section" *ngIf="member.gift.length">
+              <section class="member-section" *ngIf="getValidValues(member.gift).length">
                 <h5>{{ 'GUEST_DETAIL.GIFTS.TITLE' | translate }}</h5>
 
                 <div class="list">
-                  <span class="passport-tag gift-tag" *ngFor="let gift of member.gift">
+                  <span class="passport-tag gift-tag" *ngFor="let gift of getValidValues(member.gift)">
                     <mat-icon class="material-symbols-outlined" fontIcon="card_giftcard"></mat-icon>
                     {{ gift }}
                   </span>
@@ -833,7 +884,7 @@
               </section>
 
               <!-- MEMBER COMMENTS -->
-              <section class="member-section" *ngIf="member.comments">
+              <section class="member-section" *ngIf="hasValue(member.comments)">
                 <h5>{{ 'GUEST_DETAIL.COMMENTS.TITLE' | translate }}</h5>
                 <blockquote class="passport-note">
                   <p>{{ member.comments }}</p>
@@ -841,16 +892,16 @@
               </section>
 
               <!-- MEMBER REFERENCES -->
-              <section class="member-section" *ngIf="member.theirReference || member.myReference">
+              <section class="member-section" *ngIf="hasValue(member.theirReference) || hasValue(member.myReference)">
                 <h5>{{ 'GUEST_DETAIL.REFERENCES.TITLE' | translate }}</h5>
 
                 <div class="reference-grid">
-                  <div class="reference-card" *ngIf="member.theirReference">
+                  <div class="reference-card" *ngIf="hasValue(member.theirReference)">
                     <span class="field-label">{{ 'GUEST_DETAIL.REFERENCES.THEIR_REFERENCE' | translate }}</span>
                     <p>{{ member.theirReference }}</p>
                   </div>
 
-                  <div class="reference-card" *ngIf="member.myReference">
+                  <div class="reference-card" *ngIf="hasValue(member.myReference)">
                     <span class="field-label">{{ 'GUEST_DETAIL.REFERENCES.MY_REFERENCE' | translate }}</span>
                     <p>{{ member.myReference }}</p>
                   </div>
@@ -860,7 +911,7 @@
               <!-- MEMBER SOCIAL LINKS -->
               <footer class="member-social-links">
                 <a
-                  *ngIf="member.urlProfileCs"
+                  *ngIf="hasValue(member.urlProfileCs)"
                   mat-icon-button
                   class="btn-cs"
                   [matTooltip]="'GUEST_DETAIL.SOCIAL.COUCHSURFING' | translate"
@@ -873,7 +924,7 @@
                 </a>
 
                 <a
-                  *ngIf="member.instagram"
+                  *ngIf="hasValue(member.instagram)"
                   mat-icon-button
                   class="btn-instagram"
                   [matTooltip]="'GUEST_DETAIL.SOCIAL.INSTAGRAM' | translate"
@@ -886,7 +937,7 @@
                 </a>
 
                 <a
-                  *ngIf="member.whatsapp"
+                  *ngIf="hasValue(member.whatsapp)"
                   mat-icon-button
                   class="btn-whatsapp"
                   [matTooltip]="'GUEST_DETAIL.SOCIAL.WHATSAPP' | translate"
@@ -900,15 +951,12 @@
 
                 <!-- PHONE -->
                 <a
+                  *ngIf="hasValue(member.whatsapp)"
                   mat-icon-button
-                  *ngIf="member.whatsapp"
                   class="btn-phone"
                   [matTooltip]="'GUEST_DETAIL.SOCIAL.PHONE' | translate"
                   [attr.aria-label]="'GUEST_DETAIL.SOCIAL.PHONE' | translate"
                   [href]="'tel:' + member.prefixCode + member.whatsapp"
-                  [attr.aria-disabled]="!member.whatsapp"
-                  [class.disabled]="!member.whatsapp"
-                  [attr.tabindex]="member.whatsapp ? 0 : -1"
                 >
                   <mat-icon class="material-symbols-outlined">call</mat-icon>
                 </a>

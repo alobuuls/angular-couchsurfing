@@ -182,9 +182,8 @@ export class GuestSummaryChartComponent implements OnInit, OnChanges, OnDestroy 
           tooltip: {
             callbacks: {
               label: context => {
-                const label = context.label;
-                const value = context.parsed.r;
-
+                const label = context.label ?? '';
+                const value = context.parsed;
                 return `${label}: ${value}`;
               },
             },

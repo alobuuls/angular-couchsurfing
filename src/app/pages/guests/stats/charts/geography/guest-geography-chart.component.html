@@ -59,7 +59,11 @@
       <canvas #geographyChart></canvas>
     </div>
     <!-- Country labels with flags -->
-    <div *ngIf="selectedView === 'countries'" class="country-labels" [class.ranking-labels]="selectedRanking !== 'all'">
+    <div
+      *ngIf="selectedView === 'countries' || selectedView === 'livingIn' || selectedView === 'hometown'"
+      class="country-labels"
+      [class.ranking-labels]="selectedRanking !== 'all' || selectedView === 'livingIn' || selectedView === 'hometown'"
+    >
       <div *ngFor="let country of getSelectedCountries()" class="country-label">
         <span [class]="country.code | flag"></span>
       </div>

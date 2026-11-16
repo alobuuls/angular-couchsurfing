@@ -9,10 +9,11 @@ import Chart from 'chart.js/auto';
 import { IGiftGuest, IGiftsDistribution, IGiftsView } from '@interfaces/stats-interface';
 
 // Helpers
-import { getColorWithOpacity, GIFTS_COLORS } from '@utils';
+import { createExternalTooltip, destroyExternalTooltip, getColorWithOpacity, GIFTS_COLORS, hideExternalTooltip } from '@utils';
 
 // Services
 import { FormatService } from '@services/format.service';
+import { FlagPipe } from '@shared/pipes/three-code-letters-flag.pipe';
 
 @Component({
   selector: 'guest-gifts-chart',
@@ -23,6 +24,7 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges, OnDes
   private _format = inject(FormatService);
   private _router = inject(Router);
   private _translate = inject(TranslateService);
+  private readonly _flag = inject(FlagPipe);
 
   private langChangeSubscription?: Subscription;
 
@@ -134,12 +136,14 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges, OnDes
           if (!elements.length) {
             return;
           }
+
           const index = elements[0].index;
           const guest = giftsData[index];
 
           if (!guest?.guestId) {
             return;
           }
+
           this.navigateToGuest(guest.guestId);
         },
         plugins: {
@@ -151,16 +155,46 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges, OnDes
             display: true,
           },
           tooltip: {
-            callbacks: {
-              label: context => {
-                const guest = giftsData[context.dataIndex];
+            enabled: false,
+            external: context => {
+              const dataPoint = context.tooltip.dataPoints?.[0];
 
-                return this._translate.instant('STATS.GIFTS.LABELS.GIFTS_COUNT', { count: guest.total });
-              },
-              afterBody: context => {
-                const guest = giftsData[context[0].dataIndex];
-                return this.getTooltipLines(guest);
-              },
+              if (!dataPoint) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              const guest = giftsData[dataPoint.dataIndex];
+
+              if (!guest) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              createExternalTooltip(context.chart, context.tooltip, {
+                title: guest.fullName,
+                rows: [
+                  {
+                    label: this._translate.instant('STATS.GIFTS.LABELS.GROUP'),
+                    value: this.formatGroupType(guest.groupType),
+                  },
+                  {
+                    label: this._translate.instant('STATS.GIFTS.LABELS.VISIT'),
+                    value: this._format.formatDate(guest.visitedDate),
+                  },
+                  {
+                    label: this._translate.instant('STATS.GIFTS.LABELS.GIFTS_RECEIVED'),
+                    value: '',
+                  },
+                  ...guest.gifts.map(gift => ({
+                    value: `• ${gift}`,
+                  })),
+                ],
+                country: {
+                  name: this._format.formatCountry(guest.hometownCode),
+                  flagClass: this._flag.transform(guest.hometownCode),
+                },
+              });
             },
           },
         },
@@ -205,7 +239,12 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges, OnDes
 
   // Destroys the current Chart.js instance.
   private destroyChart(): void {
-    this.chart?.destroy();
+    if (!this.chart) {
+      return;
+    }
+
+    destroyExternalTooltip(this.chart);
+    this.chart.destroy();
     this.chart = undefined;
   }
 

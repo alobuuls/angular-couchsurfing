@@ -617,8 +617,9 @@
       },
       "LABELS": {
         "DATASET": "{{title}} - {{subview}}",
-        "OVERALL_RANKING": "総合ランキング：{{position}}",
-        "VISIT": "訪問：{{date}}",
+        "OVERALL_RANKING": "総合ランキング",
+        "VISIT": "訪問",
+        "GENDER": "性別",
         "RANKING_POSITION": "ランキング順位"
       }
     },
@@ -641,7 +642,7 @@
         "RATING": "評価",
         "RATING_VALUE": "評価：{{rating}} ⭐",
         "COUNTRY": "国：{{country}}",
-        "VISIT": "訪問：{{date}}"
+        "VISIT": "訪問"
       }
     },
     "TIMELINE": {
@@ -666,7 +667,7 @@
         "OTHER": "その他",
         "NUMBER_OF_GUESTS": "ゲスト数",
         "COUNTRY": "国：{{country}}",
-        "VISIT": "訪問：{{date}}",
+        "VISIT": "訪問",
         "GROUP_NAME": "{{name}}と{{group}}"
       },
       "GROUP_LABELS": {

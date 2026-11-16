@@ -618,8 +618,9 @@
       },
       "LABELS": {
         "DATASET": "{{title}} - {{subview}}",
-        "OVERALL_RANKING": "Classifica generale: {{position}}",
-        "VISIT": "Visita: {{date}}",
+        "OVERALL_RANKING": "Classifica generale",
+        "VISIT": "Visita",
+        "GENDER": "מגדר",
         "RANKING_POSITION": "Posizione in classifica"
       }
     },
@@ -642,7 +643,7 @@
         "RATING": "Valutazione",
         "RATING_VALUE": "Valutazione: {{rating}} ⭐",
         "COUNTRY": "Paese: {{country}}",
-        "VISIT": "Visita: {{date}}"
+        "VISIT": "Visita"
       }
     },
     "TIMELINE": {
@@ -667,7 +668,7 @@
         "OTHER": "Altro",
         "NUMBER_OF_GUESTS": "Numero di ospiti",
         "COUNTRY": "Paese: {{country}}",
-        "VISIT": "Visita: {{date}}",
+        "VISIT": "Visita",
         "GROUP_NAME": "{{name}} e {{group}}"
       },
       "GROUP_LABELS": {

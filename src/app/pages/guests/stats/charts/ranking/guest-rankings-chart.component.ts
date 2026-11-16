@@ -9,10 +9,11 @@ import Chart from 'chart.js/auto';
 import { IRankingGenderView, IRankingGroupView, IRankingItem, IRankingView, IRankingsDistribution } from '@interfaces/stats-interface';
 
 // Helpers
-import { getColorWithOpacity, getRankingColors, RANKING_COLORS } from '@utils';
+import { createExternalTooltip, destroyExternalTooltip, getColorWithOpacity, getRankingColors, hideExternalTooltip, RANKING_COLORS } from '@utils';
 
 // Services
 import { FormatService } from '@services/format.service';
+import { FlagPipe } from '@shared/pipes/three-code-letters-flag.pipe';
 
 @Component({
   selector: 'guest-rankings-chart',
@@ -23,6 +24,7 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges, On
   private _format = inject(FormatService);
   private _router = inject(Router);
   private _translate = inject(TranslateService);
+  private readonly _flag = inject(FlagPipe);
 
   private langChangeSubscription?: Subscription;
 
@@ -167,6 +169,7 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges, On
   }
 
   // Creates the ranking chart according to the selected view.
+  // Creates the ranking chart according to the selected view.
   private createChart(): void {
     if (!this.rankingChart || !this.rankings) {
       return;
@@ -265,18 +268,41 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges, On
 
         plugins: {
           tooltip: {
-            callbacks: {
-              label: context => {
-                const item = rankingData[context.dataIndex];
+            enabled: false,
+            external: context => {
+              const dataPoint = context.tooltip.dataPoints?.[0];
 
-                return [
-                  this._translate.instant('STATS.RANKINGS.LABELS.OVERALL_RANKING', { position: item.position }),
+              if (!dataPoint) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
 
-                  this._translate.instant('STATS.RANKINGS.LABELS.VISIT', {
-                    date: this._format.formatDate(item.guest.visitedDate),
-                  }),
-                ];
-              },
+              const item = rankingData[dataPoint.dataIndex];
+
+              if (!item?.guest) {
+                hideExternalTooltip(context.chart);
+                return;
+              }
+
+              const guest = item.guest;
+
+              createExternalTooltip(context.chart, context.tooltip, {
+                title: guest.fullName,
+                rows: [
+                  {
+                    label: this._translate.instant('STATS.RANKINGS.LABELS.OVERALL_RANKING'),
+                    value: String(item.position),
+                  },
+                  {
+                    label: this._translate.instant('STATS.RANKINGS.LABELS.VISIT'),
+                    value: this._format.formatDate(guest.visitedDate),
+                  },
+                ],
+                country: {
+                  name: this._format.formatCountry(guest.hometownCode),
+                  flagClass: this._flag.transform(guest.hometownCode),
+                },
+              });
             },
           },
         },
@@ -334,7 +360,12 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges, On
 
   // Destroys the current Chart.js instance.
   private destroyChart(): void {
-    this.chart?.destroy();
+    if (!this.chart) {
+      return;
+    }
+
+    destroyExternalTooltip(this.chart);
+    this.chart.destroy();
     this.chart = undefined;
   }
 

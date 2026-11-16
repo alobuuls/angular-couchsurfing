@@ -617,8 +617,9 @@
       },
       "LABELS": {
         "DATASET": "{{title}} - {{subview}}",
-        "OVERALL_RANKING": "समग्र रैंकिंग: {{position}}",
-        "VISIT": "यात्रा: {{date}}",
+        "OVERALL_RANKING": "समग्र रैंकिंग",
+        "VISIT": "यात्रा",
+        "GENDER": "लिंग",
         "RANKING_POSITION": "रैंकिंग स्थान"
       }
     },
@@ -641,7 +642,7 @@
         "RATING": "रेटिंग",
         "RATING_VALUE": "रेटिंग: {{rating}} ⭐",
         "COUNTRY": "देश: {{country}}",
-        "VISIT": "यात्रा: {{date}}"
+        "VISIT": "यात्रा"
       }
     },
     "TIMELINE": {
@@ -666,7 +667,7 @@
         "OTHER": "अन्य",
         "NUMBER_OF_GUESTS": "मेहमानों की संख्या",
         "COUNTRY": "देश: {{country}}",
-        "VISIT": "यात्रा: {{date}}",
+        "VISIT": "यात्रा",
         "GROUP_NAME": "{{name}} और {{group}}"
       },
       "GROUP_LABELS": {
