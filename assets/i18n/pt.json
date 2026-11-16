@@ -618,8 +618,8 @@
       },
       "LABELS": {
         "DATASET": "{{title}} - {{subview}}",
-        "OVERALL_RANKING": "Classificação geral: {{position}}",
-        "VISIT": "Visita: {{date}}",
+        "OVERALL_RANKING": "Classificação geral",
+        "VISIT": "Visita",
         "RANKING_POSITION": "Posição no ranking"
       }
     },
@@ -642,7 +642,7 @@
         "RATING": "Avaliação",
         "RATING_VALUE": "Avaliação: {{rating}} ⭐",
         "COUNTRY": "País: {{country}}",
-        "VISIT": "Visita: {{date}}"
+        "VISIT": "Visita"
       }
     },
     "TIMELINE": {
@@ -667,7 +667,8 @@
         "OTHER": "Outro",
         "NUMBER_OF_GUESTS": "Número de hóspedes",
         "COUNTRY": "País: {{country}}",
-        "VISIT": "Visita: {{date}}",
+        "VISIT": "Visita",
+        "GENDER": "Gênero",
         "GROUP_NAME": "{{name}} e {{group}}"
       },
       "GROUP_LABELS": {

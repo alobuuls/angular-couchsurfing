@@ -622,8 +622,9 @@
       },
       "LABELS": {
         "DATASET": "{{title}} - {{subview}}",
-        "OVERALL_RANKING": "总体排名：{{position}}",
-        "VISIT": "到访：{{date}}",
+        "OVERALL_RANKING": "总体排名",
+        "VISIT": "到访",
+        "GENDER": "性别",
         "RANKING_POSITION": "排名位置"
       }
     },
@@ -646,7 +647,7 @@
         "RATING": "评分",
         "RATING_VALUE": "评分：{{rating}} ⭐",
         "COUNTRY": "国家：{{country}}",
-        "VISIT": "到访：{{date}}"
+        "VISIT": "到访"
       }
     },
     "TIMELINE": {
@@ -671,7 +672,7 @@
         "OTHER": "其他",
         "NUMBER_OF_GUESTS": "客人数量",
         "COUNTRY": "国家：{{country}}",
-        "VISIT": "到访：{{date}}",
+        "VISIT": "到访",
         "GROUP_NAME": "{{name}} 和 {{group}}"
       },
       "GROUP_LABELS": {
