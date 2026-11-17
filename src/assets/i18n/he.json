@@ -66,7 +66,8 @@
     "NO": "לא",
     "CLEAR": "ניקוי",
     "SEARCH": "חיפוש",
-    "SEARCHING": "מתבצע חיפוש"
+    "SEARCHING": "מתבצע חיפוש",
+    "DESELECT_ALL_COUNTRIES": "ביטול הבחירה בכל המדינות"
   },
   "GUESTS_ACTIONS": {
     "SEE_STATS": "צפייה בסטטיסטיקות",

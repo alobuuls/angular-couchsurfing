@@ -25,9 +25,11 @@
           <mat-icon class="material-symbols-outlined" matPrefix>map</mat-icon>
 
           <mat-select formControlName="region" multiple>
-            <mat-option *ngFor="let region of filteredRegions" [value]="region">
-              {{ getRegionName(region) }}
-            </mat-option>
+            <mat-optgroup *ngFor="let group of filteredRegionGroups" [label]="getContinentName(group.continent)">
+              <mat-option *ngFor="let region of group.regions" [value]="region">
+                {{ getRegionName(region) }}
+              </mat-option>
+            </mat-optgroup>
           </mat-select>
         </mat-form-field>
 
@@ -68,6 +70,17 @@
           </mat-chip-grid>
 
           <mat-autocomplete #autoCountry="matAutocomplete" (optionSelected)="onCountrySelected($event)">
+            <mat-option
+              class="clear-countries-option"
+              [disabled]="(filtersForm.get('country')?.value?.length ?? 0) <= 2"
+              (onSelectionChange)="$event.isUserInput && clearSelectedCountries()"
+            >
+              <div class="clear-countries-content">
+                <mat-icon class="material-symbols-outlined">deselect</mat-icon>
+
+                <span>{{ 'GUESTS_FILTERS.DESELECT_ALL_COUNTRIES' | translate }}</span>
+              </div>
+            </mat-option>
             <mat-option
               *ngFor="let country of filteredCountries"
               [value]="country.countryCode"

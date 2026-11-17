@@ -66,7 +66,8 @@
     "NO": "いいえ",
     "CLEAR": "クリア",
     "SEARCH": "検索",
-    "SEARCHING": "検索中"
+    "SEARCHING": "検索中",
+    "DESELECT_ALL_COUNTRIES": "すべての国の選択を解除"
   },
   "GUESTS_ACTIONS": {
     "SEE_STATS": "統計を見る",

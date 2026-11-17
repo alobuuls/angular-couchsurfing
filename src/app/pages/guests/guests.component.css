@@ -46,6 +46,12 @@
   }
 }
 
+/* Region: continent  */
+::ng-deep .mat-mdc-optgroup-label {
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
 .filters-form {
   text-align: center;
   padding: 1rem;
@@ -181,6 +187,34 @@
 
 .country-option-name {
   font-size: 0.9rem;
+}
+
+/* CLEAR SELECTED COUNTRIES */
+::ng-deep .mat-mdc-option.clear-countries-option {
+  min-height: 40px;
+  margin: 0.25rem 0.5rem 0.5rem auto;
+  width: 60%;
+  border-radius: 0.65rem;
+  background-color: color-mix(in srgb, var(--color-primary) 8%, var(--color-surface));
+  border: 1px solid color-mix(in srgb, var(--color-primary) 20%, var(--color-border));
+
+  .clear-countries-content {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    width: 100%;
+    color: var(--color-primary);
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  &:not(.mat-mdc-option-disabled):hover {
+    filter: grayscale(0.6);
+  }
+
+  &.mat-mdc-option-disabled {
+    opacity: 0.45;
+  }
 }
 
 /* CHECKBOX PRIMARY */

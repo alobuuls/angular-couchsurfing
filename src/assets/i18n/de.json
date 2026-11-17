@@ -66,7 +66,8 @@
     "NO": "Nein",
     "CLEAR": "Zurücksetzen",
     "SEARCH": "Suchen",
-    "SEARCHING": "Suche läuft"
+    "SEARCHING": "Suche läuft",
+    "DESELECT_ALL_COUNTRIES": "Alle Länder abwählen"
   },
   "GUESTS_ACTIONS": {
     "SEE_STATS": "Statistiken ansehen",
