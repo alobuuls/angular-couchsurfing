@@ -19,8 +19,6 @@ export const EUROPE = {
       he: 'דנמרק',
     },
     prefix: '+45',
-    continent: 'europe',
-    region: 'scandinavia',
   },
 
   no: {
@@ -39,8 +37,6 @@ export const EUROPE = {
       he: 'נורווגיה',
     },
     prefix: '+47',
-    continent: 'europe',
-    region: 'scandinavia',
   },
 
   se: {
@@ -59,8 +55,6 @@ export const EUROPE = {
       he: 'שוודיה',
     },
     prefix: '+46',
-    continent: 'europe',
-    region: 'scandinavia',
   },
 
   /*** WEST EUROPE ***/
@@ -81,8 +75,6 @@ export const EUROPE = {
       he: 'אוסטריה',
     },
     prefix: '+43',
-    continent: 'europe',
-    region: 'central_europe',
   },
 
   be: {
@@ -101,8 +93,6 @@ export const EUROPE = {
       he: 'בלגיה',
     },
     prefix: '+32',
-    continent: 'europe',
-    region: 'western_europe',
   },
 
   fr: {
@@ -121,8 +111,6 @@ export const EUROPE = {
       he: 'צרפת',
     },
     prefix: '+33',
-    continent: 'europe',
-    region: 'western_europe',
   },
 
   de: {
@@ -141,8 +129,6 @@ export const EUROPE = {
       he: 'גרמניה',
     },
     prefix: '+49',
-    continent: 'europe',
-    region: 'central_europe',
   },
 
   li: {
@@ -161,8 +147,6 @@ export const EUROPE = {
       he: 'ליכטנשטיין',
     },
     prefix: '+423',
-    continent: 'europe',
-    region: 'central_europe',
   },
 
   lu: {
@@ -181,8 +165,6 @@ export const EUROPE = {
       he: 'לוקסמבורג',
     },
     prefix: '+352',
-    continent: 'europe',
-    region: 'western_europe',
   },
 
   mc: {
@@ -201,8 +183,6 @@ export const EUROPE = {
       he: 'מונקו',
     },
     prefix: '+377',
-    continent: 'europe',
-    region: 'western_europe',
   },
 
   nl: {
@@ -221,8 +201,6 @@ export const EUROPE = {
       he: 'הולנד',
     },
     prefix: '+31',
-    continent: 'europe',
-    region: 'western_europe',
   },
 
   ch: {
@@ -241,8 +219,6 @@ export const EUROPE = {
       he: 'שווייץ',
     },
     prefix: '+41',
-    continent: 'europe',
-    region: 'central_europe',
   },
 
   /*** SOUTHERN EUROPE ***/
@@ -263,8 +239,6 @@ export const EUROPE = {
       he: 'אלבניה',
     },
     prefix: '+355',
-    continent: 'europe',
-    region: 'southern_europe',
   },
 
   ad: {
@@ -283,8 +257,6 @@ export const EUROPE = {
       he: 'אנדורה',
     },
     prefix: '+376',
-    continent: 'europe',
-    region: 'southern_europe',
   },
   ba: {
     name: {
@@ -302,8 +274,6 @@ export const EUROPE = {
       he: 'בוסניה והרצגובינה',
     },
     prefix: '+387',
-    continent: 'europe',
-    region: 'southern_europe',
   },
 
   hr: {
@@ -322,8 +292,24 @@ export const EUROPE = {
       he: 'קרואטיה',
     },
     prefix: '+385',
-    continent: 'europe',
-    region: 'southern_europe',
+  },
+
+  cy: {
+    name: {
+      en: 'Cyprus',
+      es: 'Chipre',
+      de: 'Zypern',
+      zh: '塞浦路斯',
+      fr: 'Chypre',
+      it: 'Cipro',
+      pt: 'Chipre',
+      ru: 'Кипр',
+      ja: 'キプロス',
+      hi: 'साइप्रस',
+      ko: '키프로스',
+      he: 'קפריסין',
+    },
+    prefix: '+357',
   },
 
   gr: {
@@ -342,8 +328,6 @@ export const EUROPE = {
       he: 'יוון',
     },
     prefix: '+30',
-    continent: 'europe',
-    region: 'southern_europe',
   },
 
   it: {
@@ -362,8 +346,24 @@ export const EUROPE = {
       he: 'איטליה',
     },
     prefix: '+39',
-    continent: 'europe',
-    region: 'southern_europe',
+  },
+
+  xk: {
+    name: {
+      en: 'Kosovo',
+      es: 'Kosovo',
+      de: 'Kosovo',
+      zh: '科索沃',
+      fr: 'Kosovo',
+      it: 'Kosovo',
+      pt: 'Kosovo',
+      ru: 'Косово',
+      ja: 'コソボ',
+      hi: 'कोसोवो',
+      ko: '코소보',
+      he: 'קוסובו',
+    },
+    prefix: '+383',
   },
 
   mt: {
@@ -382,8 +382,6 @@ export const EUROPE = {
       he: 'מלטה',
     },
     prefix: '+356',
-    continent: 'europe',
-    region: 'southern_europe',
   },
 
   me: {
@@ -402,8 +400,6 @@ export const EUROPE = {
       he: 'מונטנגרו',
     },
     prefix: '+382',
-    continent: 'europe',
-    region: 'southern_europe',
   },
 
   pt: {
@@ -422,8 +418,6 @@ export const EUROPE = {
       he: 'פורטוגל',
     },
     prefix: '+351',
-    continent: 'europe',
-    region: 'southern_europe',
   },
 
   sm: {
@@ -442,8 +436,6 @@ export const EUROPE = {
       he: 'סן מרינו',
     },
     prefix: '+378',
-    continent: 'europe',
-    region: 'southern_europe',
   },
 
   rs: {
@@ -462,8 +454,6 @@ export const EUROPE = {
       he: 'סרביה',
     },
     prefix: '+381',
-    continent: 'europe',
-    region: 'southern_europe',
   },
 
   si: {
@@ -482,8 +472,6 @@ export const EUROPE = {
       he: 'סלובניה',
     },
     prefix: '+386',
-    continent: 'europe',
-    region: 'central_europe',
   },
 
   es: {
@@ -502,8 +490,6 @@ export const EUROPE = {
       he: 'ספרד',
     },
     prefix: '+34',
-    continent: 'europe',
-    region: 'southern_europe',
   },
 
   mk: {
@@ -522,8 +508,24 @@ export const EUROPE = {
       he: 'מקדוניה הצפונית',
     },
     prefix: '+389',
-    continent: 'europe',
-    region: 'southern_europe',
+  },
+
+  va: {
+    name: {
+      en: 'Vatican City',
+      es: 'Ciudad del Vaticano',
+      de: 'Vatikanstadt',
+      zh: '梵蒂冈',
+      fr: 'Cité du Vatican',
+      it: 'Città del Vaticano',
+      pt: 'Cidade do Vaticano',
+      ru: 'Ватикан',
+      ja: 'バチカン市国',
+      hi: 'वेटिकन सिटी',
+      ko: '바티칸 시국',
+      he: 'קריית הוותיקן',
+    },
+    prefix: '+39',
   },
 
   /*** NORTHERN EUROPE ***/
@@ -544,8 +546,6 @@ export const EUROPE = {
       he: 'הממלכה המאוחדת',
     },
     prefix: '+44',
-    continent: 'europe',
-    region: 'northern_europe',
   },
 
   'gb-eng': {
@@ -564,8 +564,6 @@ export const EUROPE = {
       he: 'אנגליה',
     },
     prefix: '+44',
-    continent: 'europe',
-    region: 'northern_europe',
   },
 
   'gb-sct': {
@@ -584,8 +582,6 @@ export const EUROPE = {
       he: 'סקוטלנד',
     },
     prefix: '+44',
-    continent: 'europe',
-    region: 'northern_europe',
   },
   ee: {
     name: {
@@ -603,8 +599,6 @@ export const EUROPE = {
       he: 'אסטוניה',
     },
     prefix: '+372',
-    continent: 'europe',
-    region: 'baltics',
   },
 
   fi: {
@@ -623,8 +617,6 @@ export const EUROPE = {
       he: 'פינלנד',
     },
     prefix: '+358',
-    continent: 'europe',
-    region: 'scandinavia',
   },
 
   ie: {
@@ -643,8 +635,6 @@ export const EUROPE = {
       he: 'אירלנד',
     },
     prefix: '+353',
-    continent: 'europe',
-    region: 'northern_europe',
   },
 
   is: {
@@ -663,8 +653,6 @@ export const EUROPE = {
       he: 'איסלנד',
     },
     prefix: '+354',
-    continent: 'europe',
-    region: 'scandinavia',
   },
 
   lv: {
@@ -683,8 +671,6 @@ export const EUROPE = {
       he: 'לטביה',
     },
     prefix: '+371',
-    continent: 'europe',
-    region: 'baltics',
   },
 
   lt: {
@@ -703,8 +689,6 @@ export const EUROPE = {
       he: 'ליטא',
     },
     prefix: '+370',
-    continent: 'europe',
-    region: 'baltics',
   },
 
   'gb-nir': {
@@ -723,8 +707,6 @@ export const EUROPE = {
       he: 'צפון אירלנד',
     },
     prefix: '+44',
-    continent: 'europe',
-    region: 'northern_europe',
   },
 
   'gb-wls': {
@@ -743,8 +725,6 @@ export const EUROPE = {
       he: 'ויילס',
     },
     prefix: '+44',
-    continent: 'europe',
-    region: 'northern_europe',
   },
 
   /*** EASTERN EUROPE ***/
@@ -765,8 +745,6 @@ export const EUROPE = {
       he: 'בלארוס',
     },
     prefix: '+375',
-    continent: 'europe',
-    region: 'eastern_europe',
   },
 
   bg: {
@@ -785,8 +763,6 @@ export const EUROPE = {
       he: 'בולגריה',
     },
     prefix: '+359',
-    continent: 'europe',
-    region: 'eastern_europe',
   },
 
   cz: {
@@ -805,8 +781,6 @@ export const EUROPE = {
       he: 'צ׳כיה',
     },
     prefix: '+420',
-    continent: 'europe',
-    region: 'central_europe',
   },
 
   hu: {
@@ -825,8 +799,6 @@ export const EUROPE = {
       he: 'הונגריה',
     },
     prefix: '+36',
-    continent: 'europe',
-    region: 'central_europe',
   },
 
   md: {
@@ -845,8 +817,6 @@ export const EUROPE = {
       he: 'מולדובה',
     },
     prefix: '+373',
-    continent: 'europe',
-    region: 'eastern_europe',
   },
 
   pl: {
@@ -865,8 +835,6 @@ export const EUROPE = {
       he: 'פולין',
     },
     prefix: '+48',
-    continent: 'europe',
-    region: 'central_europe',
   },
   ro: {
     name: {
@@ -884,8 +852,6 @@ export const EUROPE = {
       he: 'רומניה',
     },
     prefix: '+40',
-    continent: 'europe',
-    region: 'eastern_europe',
   },
 
   ru: {
@@ -904,8 +870,6 @@ export const EUROPE = {
       he: 'רוסיה',
     },
     prefix: '+7',
-    continent: 'europe',
-    region: 'eastern_europe',
   },
 
   sk: {
@@ -924,8 +888,6 @@ export const EUROPE = {
       he: 'סלובקיה',
     },
     prefix: '+421',
-    continent: 'europe',
-    region: 'central_europe',
   },
 
   ua: {
@@ -944,7 +906,5 @@ export const EUROPE = {
       he: 'אוקראינה',
     },
     prefix: '+380',
-    continent: 'europe',
-    region: 'eastern_europe',
   },
 } satisfies Record<string, ICountry>;

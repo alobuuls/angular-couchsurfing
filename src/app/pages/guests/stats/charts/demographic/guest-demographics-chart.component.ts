@@ -17,7 +17,7 @@ import { CHART_NEUTRAL_COLOR, CHART_UNKNOWN_COLOR, GENDER_COLORS, getColorWithOp
 // Libraries
 import Chart from 'chart.js/auto';
 import 'chartjs-adapter-date-fns';
-import { FlagPipe } from '../../../../../shared/pipes/three-code-letters-flag.pipe';
+import { FlagPipe } from '../../../../../shared/pipes/two-code-letters-flag.pipe';
 import { createExternalTooltip, destroyExternalTooltip, hideExternalTooltip } from '../../../../../utils/helpers/chart-external-tooltip';
 
 @Component({

@@ -12,10 +12,7 @@ import { GeonameService } from '@services/geoname.service';
 // Interfaces
 import { IGuestTableMember, IGuestTableRow } from '@interfaces/data-structure-api';
 import { IAdminRegionsGeoJson, IWorldGeoJson } from '@interfaces/map-interface';
-import { REGION_NAMES } from '@config/world/regions';
-
-// Country data
-import { WORLD } from '@config/world';
+import { WORLD, REGION_NAMES, getCountryLocation } from '@config/world';
 
 // Types
 import { Continents, ICountry } from '@type/word.types';
@@ -713,13 +710,23 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     layer.openPopup();
   }
 
-  private getCountryPopupHtml(country: ICountry, count: number, iso3: string): string {
+  private getCountryPopupHtml(country: ICountry, count: number, iso2: string): string {
     const lang = this._language.currentLanguage;
-    const countryName = country.name[lang] ?? country.name.en ?? iso3.toUpperCase();
-    const region = REGION_NAMES[country.region]?.[lang] ?? REGION_NAMES[country.region]?.en ?? country.region;
-    const continent = this.getContinentName(country.continent);
+
+    const countryName = country.name[lang] ?? country.name.en ?? iso2.toUpperCase();
+
+    // Obtener continente y región mediante el índice O(1).
+    const location = getCountryLocation(iso2);
+
+    // Traducir región.
+    const regionName = location ? REGION_NAMES[location.region] : null;
+
+    const region = regionName?.[lang] ?? regionName?.en ?? '';
+
+    // Traducir continente.
+    const continent = location ? this.getContinentName(location.continent) : '';
     const txtBtnGuest = this._translate.instant(count === 1 ? 'MAP.VIEW_GUEST' : 'MAP.VIEW_GUESTS');
-    const flagClass = this.getFlagClass(iso3);
+    const flagClass = this.getFlagClass(iso2);
 
     return `
     <div class="country-popup">
@@ -748,7 +755,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
       <a
         class="view-country-guests"
-        data-country-code="${iso3.toLowerCase()}"
+        data-country-code="${iso2.toLowerCase()}"
       >
         ${txtBtnGuest}
       </a>

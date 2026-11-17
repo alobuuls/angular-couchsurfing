@@ -19,8 +19,6 @@ export const ASIA = {
       he: 'ארמניה',
     },
     prefix: '+374',
-    continent: 'asia',
-    region: 'west_asia',
   },
 
   az: {
@@ -39,8 +37,6 @@ export const ASIA = {
       he: 'אזרבייג׳ן',
     },
     prefix: '+994',
-    continent: 'asia',
-    region: 'west_asia',
   },
 
   bh: {
@@ -59,8 +55,6 @@ export const ASIA = {
       he: 'בחריין',
     },
     prefix: '+973',
-    continent: 'asia',
-    region: 'west_asia',
   },
 
   ge: {
@@ -79,8 +73,6 @@ export const ASIA = {
       he: 'גאורגיה',
     },
     prefix: '+995',
-    continent: 'asia',
-    region: 'west_asia',
   },
 
   ir: {
@@ -99,8 +91,6 @@ export const ASIA = {
       he: 'איראן',
     },
     prefix: '+98',
-    continent: 'asia',
-    region: 'west_asia',
   },
 
   iq: {
@@ -119,8 +109,6 @@ export const ASIA = {
       he: 'עיראק',
     },
     prefix: '+964',
-    continent: 'asia',
-    region: 'west_asia',
   },
 
   il: {
@@ -139,8 +127,6 @@ export const ASIA = {
       he: 'ישראל',
     },
     prefix: '+972',
-    continent: 'asia',
-    region: 'west_asia',
   },
 
   jo: {
@@ -159,8 +145,6 @@ export const ASIA = {
       he: 'ירדן',
     },
     prefix: '+962',
-    continent: 'asia',
-    region: 'west_asia',
   },
 
   kw: {
@@ -179,8 +163,6 @@ export const ASIA = {
       he: 'כווית',
     },
     prefix: '+965',
-    continent: 'asia',
-    region: 'west_asia',
   },
 
   lb: {
@@ -199,8 +181,6 @@ export const ASIA = {
       he: 'לבנון',
     },
     prefix: '+961',
-    continent: 'asia',
-    region: 'west_asia',
   },
 
   om: {
@@ -219,8 +199,6 @@ export const ASIA = {
       he: 'עומאן',
     },
     prefix: '+968',
-    continent: 'asia',
-    region: 'west_asia',
   },
 
   ps: {
@@ -239,8 +217,6 @@ export const ASIA = {
       he: 'פלסטין',
     },
     prefix: '+970',
-    continent: 'asia',
-    region: 'west_asia',
   },
 
   qa: {
@@ -259,8 +235,6 @@ export const ASIA = {
       he: 'קטר',
     },
     prefix: '+974',
-    continent: 'asia',
-    region: 'west_asia',
   },
 
   sa: {
@@ -279,8 +253,6 @@ export const ASIA = {
       he: 'ערב הסעודית',
     },
     prefix: '+966',
-    continent: 'asia',
-    region: 'west_asia',
   },
 
   sy: {
@@ -299,8 +271,6 @@ export const ASIA = {
       he: 'סוריה',
     },
     prefix: '+963',
-    continent: 'asia',
-    region: 'west_asia',
   },
 
   tr: {
@@ -319,8 +289,6 @@ export const ASIA = {
       he: 'טורקיה',
     },
     prefix: '+90',
-    continent: 'asia',
-    region: 'west_asia',
   },
 
   ae: {
@@ -339,8 +307,6 @@ export const ASIA = {
       he: 'איחוד האמירויות הערביות',
     },
     prefix: '+971',
-    continent: 'asia',
-    region: 'west_asia',
   },
 
   ye: {
@@ -359,8 +325,6 @@ export const ASIA = {
       he: 'תימן',
     },
     prefix: '+967',
-    continent: 'asia',
-    region: 'west_asia',
   },
 
   /*** SOUTHEAST ASIA ***/
@@ -381,8 +345,6 @@ export const ASIA = {
       he: 'ברוניי',
     },
     prefix: '+673',
-    continent: 'asia',
-    region: 'southeast_asia',
   },
 
   kh: {
@@ -401,8 +363,6 @@ export const ASIA = {
       he: 'קמבודיה',
     },
     prefix: '+855',
-    continent: 'asia',
-    region: 'southeast_asia',
   },
 
   id: {
@@ -421,8 +381,6 @@ export const ASIA = {
       he: 'אינדונזיה',
     },
     prefix: '+62',
-    continent: 'asia',
-    region: 'southeast_asia',
   },
   la: {
     name: {
@@ -440,8 +398,6 @@ export const ASIA = {
       he: 'לאוס',
     },
     prefix: '+856',
-    continent: 'asia',
-    region: 'southeast_asia',
   },
 
   my: {
@@ -460,8 +416,6 @@ export const ASIA = {
       he: 'מלזיה',
     },
     prefix: '+60',
-    continent: 'asia',
-    region: 'southeast_asia',
   },
 
   mm: {
@@ -480,8 +434,6 @@ export const ASIA = {
       he: 'מיאנמר',
     },
     prefix: '+95',
-    continent: 'asia',
-    region: 'southeast_asia',
   },
 
   ph: {
@@ -500,8 +452,6 @@ export const ASIA = {
       he: 'הפיליפינים',
     },
     prefix: '+63',
-    continent: 'asia',
-    region: 'southeast_asia',
   },
 
   sg: {
@@ -520,8 +470,6 @@ export const ASIA = {
       he: 'סינגפור',
     },
     prefix: '+65',
-    continent: 'asia',
-    region: 'southeast_asia',
   },
 
   th: {
@@ -540,8 +488,6 @@ export const ASIA = {
       he: 'תאילנד',
     },
     prefix: '+66',
-    continent: 'asia',
-    region: 'southeast_asia',
   },
 
   tl: {
@@ -560,8 +506,6 @@ export const ASIA = {
       he: 'מזרח טימור',
     },
     prefix: '+670',
-    continent: 'asia',
-    region: 'southeast_asia',
   },
 
   vn: {
@@ -580,8 +524,6 @@ export const ASIA = {
       he: 'וייטנאם',
     },
     prefix: '+84',
-    continent: 'asia',
-    region: 'southeast_asia',
   },
 
   /*** EAST ASIA ***/
@@ -602,8 +544,6 @@ export const ASIA = {
       he: 'סין',
     },
     prefix: '+86',
-    continent: 'asia',
-    region: 'east_asia',
   },
 
   hk: {
@@ -622,8 +562,6 @@ export const ASIA = {
       he: 'הונג קונג',
     },
     prefix: '+852',
-    continent: 'asia',
-    region: 'east_asia',
   },
 
   jp: {
@@ -642,8 +580,6 @@ export const ASIA = {
       he: 'יפן',
     },
     prefix: '+81',
-    continent: 'asia',
-    region: 'east_asia',
   },
 
   kr: {
@@ -662,8 +598,6 @@ export const ASIA = {
       he: 'קוריאה הדרומית',
     },
     prefix: '+82',
-    continent: 'asia',
-    region: 'east_asia',
   },
 
   kp: {
@@ -682,8 +616,6 @@ export const ASIA = {
       he: 'קוריאה הצפונית',
     },
     prefix: '+850',
-    continent: 'asia',
-    region: 'east_asia',
   },
 
   mo: {
@@ -702,8 +634,6 @@ export const ASIA = {
       he: 'מקאו',
     },
     prefix: '+853',
-    continent: 'asia',
-    region: 'east_asia',
   },
 
   mn: {
@@ -722,8 +652,6 @@ export const ASIA = {
       he: 'מונגוליה',
     },
     prefix: '+976',
-    continent: 'asia',
-    region: 'east_asia',
   },
 
   tw: {
@@ -742,8 +670,6 @@ export const ASIA = {
       he: 'טאיוואן',
     },
     prefix: '+886',
-    continent: 'asia',
-    region: 'east_asia',
   },
 
   /*** SOUTH ASIA ***/
@@ -764,8 +690,6 @@ export const ASIA = {
       he: 'אפגניסטן',
     },
     prefix: '+93',
-    continent: 'asia',
-    region: 'south_asia',
   },
 
   bd: {
@@ -784,8 +708,6 @@ export const ASIA = {
       he: 'בנגלדש',
     },
     prefix: '+880',
-    continent: 'asia',
-    region: 'south_asia',
   },
 
   bt: {
@@ -804,8 +726,6 @@ export const ASIA = {
       he: 'בהוטן',
     },
     prefix: '+975',
-    continent: 'asia',
-    region: 'south_asia',
   },
 
   in: {
@@ -824,8 +744,6 @@ export const ASIA = {
       he: 'הודו',
     },
     prefix: '+91',
-    continent: 'asia',
-    region: 'south_asia',
   },
 
   mv: {
@@ -844,8 +762,6 @@ export const ASIA = {
       he: 'האיים המלדיביים',
     },
     prefix: '+960',
-    continent: 'asia',
-    region: 'south_asia',
   },
 
   np: {
@@ -864,8 +780,6 @@ export const ASIA = {
       he: 'נפאל',
     },
     prefix: '+977',
-    continent: 'asia',
-    region: 'south_asia',
   },
 
   pk: {
@@ -884,8 +798,6 @@ export const ASIA = {
       he: 'פקיסטן',
     },
     prefix: '+92',
-    continent: 'asia',
-    region: 'south_asia',
   },
   lk: {
     name: {
@@ -903,8 +815,6 @@ export const ASIA = {
       he: 'סרי לנקה',
     },
     prefix: '+94',
-    continent: 'asia',
-    region: 'south_asia',
   },
 
   /*** CENTRAL ASIA ***/
@@ -925,8 +835,6 @@ export const ASIA = {
       he: 'קזחסטן',
     },
     prefix: '+7',
-    continent: 'asia',
-    region: 'central_asia',
   },
 
   kg: {
@@ -945,8 +853,6 @@ export const ASIA = {
       he: 'קירגיזסטן',
     },
     prefix: '+996',
-    continent: 'asia',
-    region: 'central_asia',
   },
 
   tm: {
@@ -965,8 +871,6 @@ export const ASIA = {
       he: 'טורקמניסטן',
     },
     prefix: '+993',
-    continent: 'asia',
-    region: 'central_asia',
   },
 
   uz: {
@@ -985,8 +889,6 @@ export const ASIA = {
       he: 'אוזבקיסטן',
     },
     prefix: '+998',
-    continent: 'asia',
-    region: 'central_asia',
   },
 
   tj: {
@@ -1005,7 +907,5 @@ export const ASIA = {
       he: 'טג׳יקיסטן',
     },
     prefix: '+992',
-    continent: 'asia',
-    region: 'central_asia',
   },
 } satisfies Record<string, ICountry>;

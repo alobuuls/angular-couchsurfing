@@ -361,3 +361,51 @@ export const REGION_NAMES: Record<Regions, Record<Language, string>> = {
     he: 'אוקיאניה',
   },
 };
+
+export const OCEANIA_REGIONS = {
+  oceania: ['au', 'nz'],
+  melanesia: ['fj', 'pg', 'sb', 'vu'],
+  micronesia: ['ki', 'mh', 'fm', 'nr', 'pw'],
+  polynesia: ['to', 'tv', 'ws'],
+} as const;
+
+export const EUROPE_REGIONS = {
+  scandinavia: ['dk', 'no', 'se', 'fi', 'is'],
+  western_europe: ['be', 'fr', 'lu', 'mc', 'nl'],
+  central_europe: ['at', 'de', 'li', 'ch', 'si', 'cz', 'hu', 'pl', 'sk'],
+  southern_europe: ['al', 'ad', 'ba', 'hr', 'cy', 'gr', 'it', 'xk', 'mt', 'me', 'pt', 'sm', 'rs', 'es', 'mk', 'va'],
+  northern_europe: ['gb', 'gb-eng', 'gb-sct', 'ie', 'gb-nir', 'gb-wls'],
+  baltics: ['ee', 'lv', 'lt'],
+  eastern_europe: ['by', 'bg', 'md', 'ro', 'ru', 'ua'],
+} as const;
+
+export const ASIA_REGIONS = {
+  west_asia: ['am', 'az', 'bh', 'ge', 'ir', 'iq', 'il', 'jo', 'kw', 'lb', 'om', 'ps', 'qa', 'sa', 'sy', 'tr', 'ae', 'ye'],
+  southeast_asia: ['bn', 'kh', 'id', 'la', 'my', 'mm', 'ph', 'sg', 'th', 'tl', 'vn'],
+  east_asia: ['cn', 'hk', 'jp', 'kr', 'kp', 'mo', 'mn', 'tw'],
+  south_asia: ['af', 'bd', 'bt', 'in', 'mv', 'np', 'pk', 'lk'],
+  central_asia: ['kz', 'kg', 'tm', 'uz', 'tj'],
+};
+
+export const AFRICA_REGIONS = {
+  northern_africa: ['dz', 'eg', 'ly', 'mr', 'ma', 'sd', 'tn'],
+  western_africa: ['bj', 'bf', 'cv', 'ci', 'gm', 'gh', 'gn', 'gw', 'lr', 'ml', 'ne', 'ng', 'sn', 'sl', 'tg', 'eh'],
+  central_africa: ['ao', 'bi', 'cm', 'cf', 'td', 'cd', 'cg', 'gq', 'ga', 'st'],
+  eastern_africa: ['km', 'dj', 'er', 'et', 'ke', 'mg', 'mu', 'yt', 'mz', 'rw', 'sc', 'so', 'ss', 'tz', 'ug'],
+  southern_africa: ['bw', 'sz', 'ls', 'mw', 'na', 'za', 'zm', 'zw'],
+} as const;
+
+export const AMERICA_REGIONS = {
+  north_america: ['ca', 'gl', 'mx', 'pm', 'us', 'bm'],
+  caribbean: ['aw', 'ai', 'ag', 'bq', 'bs', 'bb', 'vg', 'cu', 'cw', 'ky', 'dm', 'do', 'gp', 'gd', 'ht', 'jm', 'ms', 'mq', 'pr', 'kn', 'lc', 'sx', 'tc', 'tt', 'vc', 'vi'],
+  central_america: ['bz', 'cr', 'sv', 'gt', 'hn', 'ni', 'pa'],
+  south_america: ['ar', 'bo', 'br', 'cl', 'co', 'ec', 'fk', 'gf', 'gy', 'pe', 'py', 'sr', 'uy', 've'],
+} as const;
+
+export const REGIONS = {
+  africa: AFRICA_REGIONS,
+  america: AMERICA_REGIONS,
+  asia: ASIA_REGIONS,
+  europe: EUROPE_REGIONS,
+  oceania: OCEANIA_REGIONS,
+} as const;

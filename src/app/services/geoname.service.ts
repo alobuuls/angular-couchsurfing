@@ -1,8 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 
 import { Continents, Regions } from '@type/word.types';
-import { REGION_NAMES } from '@config/world/regions';
-import { CONTINENT_NAMES } from '@config/world/continents';
+import { REGION_NAMES, CONTINENT_NAMES } from '@config/world';
 import { LanguageService } from '@core/services/language.service';
 
 @Injectable()

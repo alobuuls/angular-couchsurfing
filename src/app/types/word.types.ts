@@ -47,6 +47,9 @@ export type Regions =
 export interface ICountry {
   name: Record<Language, string>;
   prefix: string;
+}
+
+export interface ICountryLocation {
   continent: Continents;
   region: Regions;
 }

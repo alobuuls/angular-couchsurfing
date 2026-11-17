@@ -27,6 +27,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { GuestsService } from '@services/guests.service';
 import { GeonameService } from '@services/geoname.service';
 import { FormatService } from '@services/format.service';
+import { CountrySearchService } from '@services/country-search.service';
 
 // Components
 import { GuestsComponent } from '@pages/guests/guests.component';
@@ -92,6 +93,6 @@ const MATERIAL_MODULES = [
     GuestBirthdaysChartComponent,
   ],
   imports: [GuestsRoutingModule, SharedModule, MaterialModule, NgxSkeletonLoaderModule, ...MATERIAL_MODULES],
-  providers: [GuestsService, GeonameService, FormatService],
+  providers: [GuestsService, CountrySearchService, GeonameService, FormatService],
 })
 export class GuestsModule {}

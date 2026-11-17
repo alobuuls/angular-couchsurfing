@@ -16,6 +16,7 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { AlertsService } from '@core/services/alerts.service';
 import { CityService } from '@services/city.service';
 import { FormatService } from '@services/format.service';
+import { CountrySearchService } from '@services/country-search.service';
 
 // Interfaces
 import { IBodyGuest, IGuestDetail, IGuestFormPayload } from '@interfaces/guests.interface';
@@ -28,7 +29,7 @@ import { parseDate } from '@utils';
 import { ICountry, CountriesCodes, LANG, Language } from '@type/word.types';
 
 // Const
-import { WORLD } from '@config/world';
+import { getCountryLocation, WORLD } from '@config/world';
 import { OCCUPATIONS_BY_AREA, OCCUPATION_AREA_TRANSLATIONS, OCCUPATION_TRANSLATIONS } from '@config/occupations/occupations';
 
 @Component({
@@ -153,6 +154,7 @@ export class GuestFormComponent implements OnInit {
   private readonly _city = inject(CityService);
   private _translate = inject(TranslateService);
   private readonly _format = inject(FormatService);
+  private readonly _countrySearch = inject(CountrySearchService);
 
   // Getters
   get f() {
@@ -261,7 +263,7 @@ export class GuestFormComponent implements OnInit {
         const country = this.findCountry(countryCode);
         if (!country) return;
 
-        this.updateCountryInfo(country);
+        this.updateCountryInfo(country.countryCode);
         this.setDefaultPrefix(country.prefix);
       }
 
@@ -290,14 +292,7 @@ export class GuestFormComponent implements OnInit {
   }
 
   private filterCountries(value: string): typeof this.countries {
-    const normalizedValue = value.toLowerCase().trim();
-
-    return this.countries.filter(
-      country =>
-        this.getCountryName(country.countryCode).toLowerCase().includes(normalizedValue) ||
-        country.name.en.toLowerCase().includes(normalizedValue) ||
-        country.countryCode.toLowerCase().includes(normalizedValue)
-    );
+    return this._countrySearch.filter(this.countries, value);
   }
 
   private initializeLocationEdit(): void {
@@ -822,10 +817,12 @@ export class GuestFormComponent implements OnInit {
     return this.countries.find(country => country.countryCode.toLowerCase() === countryCode.toLowerCase());
   }
 
-  private updateCountryInfo(country: ICountry): void {
+  private updateCountryInfo(countryCode: CountriesCodes): void {
+    const location = getCountryLocation(countryCode);
+
     this.formCreateGuest.patchValue({
-      continent: country.continent,
-      region: country.region,
+      continent: location?.continent ?? '',
+      region: location?.region ?? '',
     });
   }
 
