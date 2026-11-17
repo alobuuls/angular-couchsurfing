@@ -26,9 +26,12 @@
   </div>
 
   <!-- Chart + type buttons -->
-  <div class="chart-row">
+  <div class="chart-row" [class.pie-chart-row]="selectedChart === 'doughnut' && selectedMainView === 'distribution'">
     <!-- Rating chart -->
-    <div class="rating-charts-ctn">
+    <div
+      class="rating-charts-ctn"
+      [class.pie-chart]="selectedChart === 'doughnut' && selectedMainView === 'distribution'"
+    >
       <canvas #ratingsChart></canvas>
     </div>
 

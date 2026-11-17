@@ -143,7 +143,11 @@ export class GuestRatingChartComponent implements AfterViewInit, OnChanges, OnDe
       options: {
         responsive: true,
         maintainAspectRatio: false,
-
+        ...(this.selectedChart === 'doughnut' && {
+          layout: {
+            padding: 20,
+          },
+        }),
         onClick: (_event, elements) => {
           if (!elements.length) {
             return;

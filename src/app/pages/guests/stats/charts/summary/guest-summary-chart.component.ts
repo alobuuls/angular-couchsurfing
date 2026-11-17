@@ -183,7 +183,8 @@ export class GuestSummaryChartComponent implements OnInit, OnChanges, OnDestroy 
             callbacks: {
               label: context => {
                 const label = context.label ?? '';
-                const value = context.parsed;
+                const value = context.formattedValue;
+
                 return `${label}: ${value}`;
               },
             },
