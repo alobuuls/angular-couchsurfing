@@ -45,7 +45,6 @@ export type Regions =
   | 'oceania';
 
 export interface ICountry {
-  flag: string;
   name: Record<Language, string>;
   prefix: string;
   continent: Continents;

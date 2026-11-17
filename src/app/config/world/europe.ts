@@ -3,8 +3,7 @@ import { ICountry } from '@type/word.types';
 export const EUROPE = {
   /*** SCANDINAVIA ***/
 
-  dnk: {
-    flag: 'dk',
+  dk: {
     name: {
       en: 'Denmark',
       es: 'Dinamarca',
@@ -24,8 +23,7 @@ export const EUROPE = {
     region: 'scandinavia',
   },
 
-  nor: {
-    flag: 'no',
+  no: {
     name: {
       en: 'Norway',
       es: 'Noruega',
@@ -45,8 +43,7 @@ export const EUROPE = {
     region: 'scandinavia',
   },
 
-  swe: {
-    flag: 'se',
+  se: {
     name: {
       en: 'Sweden',
       es: 'Suecia',
@@ -68,8 +65,7 @@ export const EUROPE = {
 
   /*** WEST EUROPE ***/
 
-  aut: {
-    flag: 'at',
+  at: {
     name: {
       en: 'Austria',
       es: 'Austria',
@@ -89,8 +85,7 @@ export const EUROPE = {
     region: 'central_europe',
   },
 
-  bel: {
-    flag: 'be',
+  be: {
     name: {
       en: 'Belgium',
       es: 'Bélgica',
@@ -110,8 +105,7 @@ export const EUROPE = {
     region: 'western_europe',
   },
 
-  fra: {
-    flag: 'fr',
+  fr: {
     name: {
       en: 'France',
       es: 'Francia',
@@ -131,8 +125,7 @@ export const EUROPE = {
     region: 'western_europe',
   },
 
-  deu: {
-    flag: 'de',
+  de: {
     name: {
       en: 'Germany',
       es: 'Alemania',
@@ -152,8 +145,7 @@ export const EUROPE = {
     region: 'central_europe',
   },
 
-  lie: {
-    flag: 'li',
+  li: {
     name: {
       en: 'Liechtenstein',
       es: 'Liechtenstein',
@@ -173,8 +165,7 @@ export const EUROPE = {
     region: 'central_europe',
   },
 
-  lux: {
-    flag: 'lu',
+  lu: {
     name: {
       en: 'Luxembourg',
       es: 'Luxemburgo',
@@ -194,8 +185,7 @@ export const EUROPE = {
     region: 'western_europe',
   },
 
-  mco: {
-    flag: 'mc',
+  mc: {
     name: {
       en: 'Monaco',
       es: 'Mónaco',
@@ -215,8 +205,7 @@ export const EUROPE = {
     region: 'western_europe',
   },
 
-  nld: {
-    flag: 'nl',
+  nl: {
     name: {
       en: 'Netherlands',
       es: 'Países Bajos',
@@ -236,8 +225,7 @@ export const EUROPE = {
     region: 'western_europe',
   },
 
-  che: {
-    flag: 'ch',
+  ch: {
     name: {
       en: 'Switzerland',
       es: 'Suiza',
@@ -259,8 +247,7 @@ export const EUROPE = {
 
   /*** SOUTHERN EUROPE ***/
 
-  alb: {
-    flag: 'al',
+  al: {
     name: {
       en: 'Albania',
       es: 'Albania',
@@ -280,8 +267,7 @@ export const EUROPE = {
     region: 'southern_europe',
   },
 
-  and: {
-    flag: 'ad',
+  ad: {
     name: {
       en: 'Andorra',
       es: 'Andorra',
@@ -300,8 +286,7 @@ export const EUROPE = {
     continent: 'europe',
     region: 'southern_europe',
   },
-  bih: {
-    flag: 'ba',
+  ba: {
     name: {
       en: 'Bosnia and Herzegovina',
       es: 'Bosnia y Herzegovina',
@@ -321,8 +306,7 @@ export const EUROPE = {
     region: 'southern_europe',
   },
 
-  hrv: {
-    flag: 'hr',
+  hr: {
     name: {
       en: 'Croatia',
       es: 'Croacia',
@@ -342,8 +326,7 @@ export const EUROPE = {
     region: 'southern_europe',
   },
 
-  grc: {
-    flag: 'gr',
+  gr: {
     name: {
       en: 'Greece',
       es: 'Grecia',
@@ -363,8 +346,7 @@ export const EUROPE = {
     region: 'southern_europe',
   },
 
-  ita: {
-    flag: 'it',
+  it: {
     name: {
       en: 'Italy',
       es: 'Italia',
@@ -384,8 +366,7 @@ export const EUROPE = {
     region: 'southern_europe',
   },
 
-  mlt: {
-    flag: 'mt',
+  mt: {
     name: {
       en: 'Malta',
       es: 'Malta',
@@ -405,8 +386,7 @@ export const EUROPE = {
     region: 'southern_europe',
   },
 
-  mne: {
-    flag: 'me',
+  me: {
     name: {
       en: 'Montenegro',
       es: 'Montenegro',
@@ -426,8 +406,7 @@ export const EUROPE = {
     region: 'southern_europe',
   },
 
-  prt: {
-    flag: 'pt',
+  pt: {
     name: {
       en: 'Portugal',
       es: 'Portugal',
@@ -447,8 +426,7 @@ export const EUROPE = {
     region: 'southern_europe',
   },
 
-  smr: {
-    flag: 'sm',
+  sm: {
     name: {
       en: 'San Marino',
       es: 'San Marino',
@@ -468,8 +446,7 @@ export const EUROPE = {
     region: 'southern_europe',
   },
 
-  srb: {
-    flag: 'rs',
+  rs: {
     name: {
       en: 'Serbia',
       es: 'Serbia',
@@ -489,8 +466,7 @@ export const EUROPE = {
     region: 'southern_europe',
   },
 
-  svn: {
-    flag: 'si',
+  si: {
     name: {
       en: 'Slovenia',
       es: 'Eslovenia',
@@ -510,8 +486,7 @@ export const EUROPE = {
     region: 'central_europe',
   },
 
-  esp: {
-    flag: 'es',
+  es: {
     name: {
       en: 'Spain',
       es: 'España',
@@ -531,8 +506,7 @@ export const EUROPE = {
     region: 'southern_europe',
   },
 
-  mkd: {
-    flag: 'mk',
+  mk: {
     name: {
       en: 'North Macedonia',
       es: 'Macedonia del Norte',
@@ -554,8 +528,7 @@ export const EUROPE = {
 
   /*** NORTHERN EUROPE ***/
 
-  gbr: {
-    flag: 'gb',
+  gb: {
     name: {
       en: 'United Kingdom',
       es: 'Reino Unido',
@@ -575,8 +548,7 @@ export const EUROPE = {
     region: 'northern_europe',
   },
 
-  eng: {
-    flag: 'gb-eng',
+  'gb-eng': {
     name: {
       en: 'England',
       es: 'Inglaterra',
@@ -596,8 +568,7 @@ export const EUROPE = {
     region: 'northern_europe',
   },
 
-  sct: {
-    flag: 'gb-sct',
+  'gb-sct': {
     name: {
       en: 'Scotland',
       es: 'Escocia',
@@ -616,8 +587,7 @@ export const EUROPE = {
     continent: 'europe',
     region: 'northern_europe',
   },
-  est: {
-    flag: 'ee',
+  ee: {
     name: {
       en: 'Estonia',
       es: 'Estonia',
@@ -637,8 +607,7 @@ export const EUROPE = {
     region: 'baltics',
   },
 
-  fin: {
-    flag: 'fi',
+  fi: {
     name: {
       en: 'Finland',
       es: 'Finlandia',
@@ -658,8 +627,7 @@ export const EUROPE = {
     region: 'scandinavia',
   },
 
-  irl: {
-    flag: 'ie',
+  ie: {
     name: {
       en: 'Ireland',
       es: 'Irlanda',
@@ -679,8 +647,7 @@ export const EUROPE = {
     region: 'northern_europe',
   },
 
-  isl: {
-    flag: 'is',
+  is: {
     name: {
       en: 'Iceland',
       es: 'Islandia',
@@ -700,8 +667,7 @@ export const EUROPE = {
     region: 'scandinavia',
   },
 
-  lva: {
-    flag: 'lv',
+  lv: {
     name: {
       en: 'Latvia',
       es: 'Letonia',
@@ -721,8 +687,7 @@ export const EUROPE = {
     region: 'baltics',
   },
 
-  ltu: {
-    flag: 'lt',
+  lt: {
     name: {
       en: 'Lithuania',
       es: 'Lituania',
@@ -742,8 +707,7 @@ export const EUROPE = {
     region: 'baltics',
   },
 
-  nir: {
-    flag: 'gb-nir',
+  'gb-nir': {
     name: {
       en: 'Northern Ireland',
       es: 'Irlanda del Norte',
@@ -763,8 +727,7 @@ export const EUROPE = {
     region: 'northern_europe',
   },
 
-  wls: {
-    flag: 'gb-wls',
+  'gb-wls': {
     name: {
       en: 'Wales',
       es: 'Gales',
@@ -786,8 +749,7 @@ export const EUROPE = {
 
   /*** EASTERN EUROPE ***/
 
-  blr: {
-    flag: 'by',
+  by: {
     name: {
       en: 'Belarus',
       es: 'Bielorrusia',
@@ -807,8 +769,7 @@ export const EUROPE = {
     region: 'eastern_europe',
   },
 
-  bgr: {
-    flag: 'bg',
+  bg: {
     name: {
       en: 'Bulgaria',
       es: 'Bulgaria',
@@ -828,8 +789,7 @@ export const EUROPE = {
     region: 'eastern_europe',
   },
 
-  cze: {
-    flag: 'cz',
+  cz: {
     name: {
       en: 'Czech Republic',
       es: 'República Checa',
@@ -849,8 +809,7 @@ export const EUROPE = {
     region: 'central_europe',
   },
 
-  hun: {
-    flag: 'hu',
+  hu: {
     name: {
       en: 'Hungary',
       es: 'Hungría',
@@ -870,8 +829,7 @@ export const EUROPE = {
     region: 'central_europe',
   },
 
-  mda: {
-    flag: 'md',
+  md: {
     name: {
       en: 'Moldova',
       es: 'Moldavia',
@@ -891,8 +849,7 @@ export const EUROPE = {
     region: 'eastern_europe',
   },
 
-  pol: {
-    flag: 'pl',
+  pl: {
     name: {
       en: 'Poland',
       es: 'Polonia',
@@ -911,8 +868,7 @@ export const EUROPE = {
     continent: 'europe',
     region: 'central_europe',
   },
-  rou: {
-    flag: 'ro',
+  ro: {
     name: {
       en: 'Romania',
       es: 'Rumanía',
@@ -932,8 +888,7 @@ export const EUROPE = {
     region: 'eastern_europe',
   },
 
-  rus: {
-    flag: 'ru',
+  ru: {
     name: {
       en: 'Russia',
       es: 'Rusia',
@@ -953,8 +908,7 @@ export const EUROPE = {
     region: 'eastern_europe',
   },
 
-  svk: {
-    flag: 'sk',
+  sk: {
     name: {
       en: 'Slovakia',
       es: 'Eslovaquia',
@@ -974,8 +928,7 @@ export const EUROPE = {
     region: 'central_europe',
   },
 
-  ukr: {
-    flag: 'ua',
+  ua: {
     name: {
       en: 'Ukraine',
       es: 'Ucrania',

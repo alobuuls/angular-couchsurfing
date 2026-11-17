@@ -3,8 +3,7 @@ import { ICountry } from '@type/word.types';
 export const AFRICA = {
   /*** NORTHERN AFRICA ***/
 
-  dza: {
-    flag: 'dz',
+  dz: {
     name: {
       en: 'Algeria',
       es: 'Argelia',
@@ -24,8 +23,7 @@ export const AFRICA = {
     region: 'northern_africa',
   },
 
-  egy: {
-    flag: 'eg',
+  eg: {
     name: {
       en: 'Egypt',
       es: 'Egipto',
@@ -45,8 +43,7 @@ export const AFRICA = {
     region: 'northern_africa',
   },
 
-  lby: {
-    flag: 'ly',
+  ly: {
     name: {
       en: 'Libya',
       es: 'Libia',
@@ -66,8 +63,7 @@ export const AFRICA = {
     region: 'northern_africa',
   },
 
-  mrt: {
-    flag: 'mr',
+  mr: {
     name: {
       en: 'Mauritania',
       es: 'Mauritania',
@@ -87,8 +83,7 @@ export const AFRICA = {
     region: 'northern_africa',
   },
 
-  mar: {
-    flag: 'ma',
+  ma: {
     name: {
       en: 'Morocco',
       es: 'Marruecos',
@@ -108,8 +103,7 @@ export const AFRICA = {
     region: 'northern_africa',
   },
 
-  sdn: {
-    flag: 'sd',
+  sd: {
     name: {
       en: 'Sudan',
       es: 'Sudán',
@@ -129,8 +123,7 @@ export const AFRICA = {
     region: 'northern_africa',
   },
 
-  tun: {
-    flag: 'tn',
+  tn: {
     name: {
       en: 'Tunisia',
       es: 'Túnez',
@@ -152,8 +145,7 @@ export const AFRICA = {
 
   /*** WESTERN AFRICA ***/
 
-  ben: {
-    flag: 'bj',
+  bj: {
     name: {
       en: 'Benin',
       es: 'Benín',
@@ -173,8 +165,7 @@ export const AFRICA = {
     region: 'western_africa',
   },
 
-  bfa: {
-    flag: 'bf',
+  bf: {
     name: {
       en: 'Burkina Faso',
       es: 'Burkina Faso',
@@ -194,8 +185,7 @@ export const AFRICA = {
     region: 'western_africa',
   },
 
-  cpv: {
-    flag: 'cv',
+  cv: {
     name: {
       en: 'Cabo Verde',
       es: 'Cabo Verde',
@@ -215,8 +205,7 @@ export const AFRICA = {
     region: 'western_africa',
   },
 
-  civ: {
-    flag: 'ci',
+  ci: {
     name: {
       en: "Côte d'Ivoire",
       es: 'Costa de Marfil',
@@ -236,8 +225,7 @@ export const AFRICA = {
     region: 'western_africa',
   },
 
-  gmb: {
-    flag: 'gm',
+  gm: {
     name: {
       en: 'The Gambia',
       es: 'Gambia',
@@ -257,8 +245,7 @@ export const AFRICA = {
     region: 'western_africa',
   },
 
-  gha: {
-    flag: 'gh',
+  gh: {
     name: {
       en: 'Ghana',
       es: 'Ghana',
@@ -278,8 +265,7 @@ export const AFRICA = {
     region: 'western_africa',
   },
 
-  gin: {
-    flag: 'gn',
+  gn: {
     name: {
       en: 'Guinea',
       es: 'Guinea',
@@ -299,8 +285,7 @@ export const AFRICA = {
     region: 'western_africa',
   },
 
-  gnb: {
-    flag: 'gw',
+  gw: {
     name: {
       en: 'Guinea-Bissau',
       es: 'Guinea-Bisáu',
@@ -320,8 +305,7 @@ export const AFRICA = {
     region: 'western_africa',
   },
 
-  lbr: {
-    flag: 'lr',
+  lr: {
     name: {
       en: 'Liberia',
       es: 'Liberia',
@@ -341,8 +325,7 @@ export const AFRICA = {
     region: 'western_africa',
   },
 
-  mli: {
-    flag: 'ml',
+  ml: {
     name: {
       en: 'Mali',
       es: 'Malí',
@@ -362,8 +345,7 @@ export const AFRICA = {
     region: 'western_africa',
   },
 
-  ner: {
-    flag: 'ne',
+  ne: {
     name: {
       en: 'Niger',
       es: 'Níger',
@@ -383,8 +365,7 @@ export const AFRICA = {
     region: 'western_africa',
   },
 
-  nga: {
-    flag: 'ng',
+  ng: {
     name: {
       en: 'Nigeria',
       es: 'Nigeria',
@@ -404,8 +385,7 @@ export const AFRICA = {
     region: 'western_africa',
   },
 
-  sen: {
-    flag: 'sn',
+  sn: {
     name: {
       en: 'Senegal',
       es: 'Senegal',
@@ -425,8 +405,7 @@ export const AFRICA = {
     region: 'western_africa',
   },
 
-  sle: {
-    flag: 'sl',
+  sl: {
     name: {
       en: 'Sierra Leone',
       es: 'Sierra Leona',
@@ -446,8 +425,7 @@ export const AFRICA = {
     region: 'western_africa',
   },
 
-  tgo: {
-    flag: 'tg',
+  tg: {
     name: {
       en: 'Togo',
       es: 'Togo',
@@ -467,8 +445,7 @@ export const AFRICA = {
     region: 'western_africa',
   },
 
-  esh: {
-    flag: 'eh',
+  eh: {
     name: {
       en: 'Western Sahara',
       es: 'Sahara Occidental',
@@ -489,8 +466,7 @@ export const AFRICA = {
   },
   /*** CENTRAL AFRICA ***/
 
-  ago: {
-    flag: 'ao',
+  ao: {
     name: {
       en: 'Angola',
       es: 'Angola',
@@ -510,8 +486,7 @@ export const AFRICA = {
     region: 'central_africa',
   },
 
-  bdi: {
-    flag: 'bi',
+  bi: {
     name: {
       en: 'Burundi',
       es: 'Burundi',
@@ -531,8 +506,7 @@ export const AFRICA = {
     region: 'central_africa',
   },
 
-  cmr: {
-    flag: 'cm',
+  cm: {
     name: {
       en: 'Cameroon',
       es: 'Camerún',
@@ -552,8 +526,7 @@ export const AFRICA = {
     region: 'central_africa',
   },
 
-  caf: {
-    flag: 'cf',
+  cf: {
     name: {
       en: 'Central African Republic',
       es: 'República Centroafricana',
@@ -573,8 +546,7 @@ export const AFRICA = {
     region: 'central_africa',
   },
 
-  tcd: {
-    flag: 'td',
+  td: {
     name: {
       en: 'Chad',
       es: 'Chad',
@@ -594,8 +566,7 @@ export const AFRICA = {
     region: 'central_africa',
   },
 
-  cod: {
-    flag: 'cd',
+  cd: {
     name: {
       en: 'Democratic Republic of the Congo',
       es: 'República Democrática del Congo',
@@ -615,8 +586,7 @@ export const AFRICA = {
     region: 'central_africa',
   },
 
-  cog: {
-    flag: 'cg',
+  cg: {
     name: {
       en: 'Republic of the Congo',
       es: 'República del Congo',
@@ -636,8 +606,7 @@ export const AFRICA = {
     region: 'central_africa',
   },
 
-  gnq: {
-    flag: 'gq',
+  gq: {
     name: {
       en: 'Equatorial Guinea',
       es: 'Guinea Ecuatorial',
@@ -657,8 +626,7 @@ export const AFRICA = {
     region: 'central_africa',
   },
 
-  gab: {
-    flag: 'ga',
+  ga: {
     name: {
       en: 'Gabon',
       es: 'Gabón',
@@ -678,8 +646,7 @@ export const AFRICA = {
     region: 'central_africa',
   },
 
-  stp: {
-    flag: 'st',
+  st: {
     name: {
       en: 'São Tomé and Príncipe',
       es: 'Santo Tomé y Príncipe',
@@ -701,8 +668,7 @@ export const AFRICA = {
 
   /*** EASTERN AFRICA ***/
 
-  com: {
-    flag: 'km',
+  km: {
     name: {
       en: 'Comoros',
       es: 'Comoras',
@@ -722,8 +688,7 @@ export const AFRICA = {
     region: 'eastern_africa',
   },
 
-  dji: {
-    flag: 'dj',
+  dj: {
     name: {
       en: 'Djibouti',
       es: 'Yibuti',
@@ -743,8 +708,7 @@ export const AFRICA = {
     region: 'eastern_africa',
   },
 
-  eri: {
-    flag: 'er',
+  er: {
     name: {
       en: 'Eritrea',
       es: 'Eritrea',
@@ -764,8 +728,7 @@ export const AFRICA = {
     region: 'eastern_africa',
   },
 
-  eth: {
-    flag: 'et',
+  et: {
     name: {
       en: 'Ethiopia',
       es: 'Etiopía',
@@ -785,8 +748,7 @@ export const AFRICA = {
     region: 'eastern_africa',
   },
 
-  ken: {
-    flag: 'ke',
+  ke: {
     name: {
       en: 'Kenya',
       es: 'Kenia',
@@ -806,8 +768,7 @@ export const AFRICA = {
     region: 'eastern_africa',
   },
 
-  mdg: {
-    flag: 'mg',
+  mg: {
     name: {
       en: 'Madagascar',
       es: 'Madagascar',
@@ -827,8 +788,7 @@ export const AFRICA = {
     region: 'eastern_africa',
   },
 
-  mus: {
-    flag: 'mu',
+  mu: {
     name: {
       en: 'Mauritius',
       es: 'Mauricio',
@@ -848,8 +808,7 @@ export const AFRICA = {
     region: 'eastern_africa',
   },
 
-  myt: {
-    flag: 'yt',
+  yt: {
     name: {
       en: 'Mayotte',
       es: 'Mayotte',
@@ -869,8 +828,7 @@ export const AFRICA = {
     region: 'eastern_africa',
   },
 
-  moz: {
-    flag: 'mz',
+  mz: {
     name: {
       en: 'Mozambique',
       es: 'Mozambique',
@@ -890,8 +848,7 @@ export const AFRICA = {
     region: 'eastern_africa',
   },
 
-  rwa: {
-    flag: 'rw',
+  rw: {
     name: {
       en: 'Rwanda',
       es: 'Ruanda',
@@ -911,8 +868,7 @@ export const AFRICA = {
     region: 'eastern_africa',
   },
 
-  syc: {
-    flag: 'sc',
+  sc: {
     name: {
       en: 'Seychelles',
       es: 'Seychelles',
@@ -932,8 +888,7 @@ export const AFRICA = {
     region: 'eastern_africa',
   },
 
-  som: {
-    flag: 'so',
+  so: {
     name: {
       en: 'Somalia',
       es: 'Somalia',
@@ -953,8 +908,7 @@ export const AFRICA = {
     region: 'eastern_africa',
   },
 
-  ssd: {
-    flag: 'ss',
+  ss: {
     name: {
       en: 'South Sudan',
       es: 'Sudán del Sur',
@@ -974,8 +928,7 @@ export const AFRICA = {
     region: 'eastern_africa',
   },
 
-  tza: {
-    flag: 'tz',
+  tz: {
     name: {
       en: 'Tanzania',
       es: 'Tanzania',
@@ -995,8 +948,7 @@ export const AFRICA = {
     region: 'eastern_africa',
   },
 
-  uga: {
-    flag: 'ug',
+  ug: {
     name: {
       en: 'Uganda',
       es: 'Uganda',
@@ -1017,8 +969,7 @@ export const AFRICA = {
   },
   /*** SOUTHERN AFRICA ***/
 
-  bwa: {
-    flag: 'bw',
+  bw: {
     name: {
       en: 'Botswana',
       es: 'Botsuana',
@@ -1038,8 +989,7 @@ export const AFRICA = {
     region: 'southern_africa',
   },
 
-  swz: {
-    flag: 'sz',
+  sz: {
     name: {
       en: 'Eswatini',
       es: 'Esuatini',
@@ -1059,8 +1009,7 @@ export const AFRICA = {
     region: 'southern_africa',
   },
 
-  lso: {
-    flag: 'ls',
+  ls: {
     name: {
       en: 'Lesotho',
       es: 'Lesoto',
@@ -1080,8 +1029,7 @@ export const AFRICA = {
     region: 'southern_africa',
   },
 
-  mwi: {
-    flag: 'mw',
+  mw: {
     name: {
       en: 'Malawi',
       es: 'Malaui',
@@ -1101,8 +1049,7 @@ export const AFRICA = {
     region: 'southern_africa',
   },
 
-  nam: {
-    flag: 'na',
+  na: {
     name: {
       en: 'Namibia',
       es: 'Namibia',
@@ -1122,8 +1069,7 @@ export const AFRICA = {
     region: 'southern_africa',
   },
 
-  zaf: {
-    flag: 'za',
+  za: {
     name: {
       en: 'South Africa',
       es: 'Sudáfrica',
@@ -1143,8 +1089,7 @@ export const AFRICA = {
     region: 'southern_africa',
   },
 
-  zmb: {
-    flag: 'zm',
+  zm: {
     name: {
       en: 'Zambia',
       es: 'Zambia',
@@ -1164,8 +1109,7 @@ export const AFRICA = {
     region: 'southern_africa',
   },
 
-  zwe: {
-    flag: 'zw',
+  zw: {
     name: {
       en: 'Zimbabwe',
       es: 'Zimbabue',
