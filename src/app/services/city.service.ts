@@ -88,7 +88,7 @@ export class CityService {
     if (!countryCode) return null;
     const normalizedCode = countryCode.trim().toLowerCase();
     const country = WORLD[normalizedCode as keyof typeof WORLD];
-    return country?.flag ?? null;
+    return country ? normalizedCode : null;
   }
 
   // Normalizes location names for comparison, ignoring case and accent differences.

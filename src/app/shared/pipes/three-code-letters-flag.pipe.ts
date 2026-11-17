@@ -6,10 +6,9 @@ import { WORLD } from '@config/world';
 @Pipe({ name: 'flag' })
 export class FlagPipe implements PipeTransform {
   transform(countryCode?: string | null): string {
+    console.log(countryCode);
     if (!countryCode) return 'fi fi-xx';
-
-    const key = countryCode.toLowerCase() as keyof typeof WORLD;
-
-    return WORLD[key] ? `fi fi-${WORLD[key].flag}` : 'fi fi-xx';
+    const key = countryCode.trim().toLowerCase() as keyof typeof WORLD;
+    return WORLD[key] ? `fi fi-${key}` : 'fi fi-xx';
   }
 }

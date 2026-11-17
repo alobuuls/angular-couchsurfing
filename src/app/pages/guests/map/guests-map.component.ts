@@ -245,15 +245,9 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
   // COUNTRY LOOKUPS
   private buildCountryLookups(): void {
     Object.entries(WORLD).forEach(([iso3, country]) => {
-      const normalizedIso3 = iso3.toLowerCase().trim();
-
-      this.countriesByIso3[normalizedIso3] = country;
-      this.iso3ByCountry.set(country, normalizedIso3);
-
-      // ISO2
-      if (country.flag) {
-        this.countriesByIso2[country.flag.toLowerCase().trim()] = country;
-      }
+      const normalizedIso2 = iso3.toLowerCase().trim();
+      this.countriesByIso2[normalizedIso2] = country;
+      this.iso3ByCountry.set(country, normalizedIso2);
       if (country.name) {
         this.countriesByName[this.normalizeCountryName(country.name.en)] = country;
       }
@@ -1389,7 +1383,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
   private getFlagClass(countryCode?: string | null): string {
     if (!countryCode) return 'fi fi-xx';
-    const key = countryCode.toLowerCase() as keyof typeof WORLD;
-    return WORLD[key] ? `fi fi-${WORLD[key].flag}` : 'fi fi-xx';
+    const key = countryCode.trim().toLowerCase() as keyof typeof WORLD;
+    return WORLD[key] ? `fi fi-${key}` : 'fi fi-xx';
   }
 }

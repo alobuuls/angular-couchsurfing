@@ -1,8 +1,7 @@
 import { ICountry } from '@type/word.types';
 
 export const OCEANIA = {
-  aus: {
-    flag: 'au',
+  au: {
     name: {
       en: 'Australia',
       es: 'Australia',
@@ -22,8 +21,7 @@ export const OCEANIA = {
     region: 'oceania',
   },
 
-  fji: {
-    flag: 'fj',
+  fj: {
     name: {
       en: 'Fiji',
       es: 'Fiyi',
@@ -43,8 +41,7 @@ export const OCEANIA = {
     region: 'melanesia',
   },
 
-  kir: {
-    flag: 'ki',
+  ki: {
     name: {
       en: 'Kiribati',
       es: 'Kiribati',
@@ -64,8 +61,7 @@ export const OCEANIA = {
     region: 'micronesia',
   },
 
-  mhl: {
-    flag: 'mh',
+  mh: {
     name: {
       en: 'Marshall Islands',
       es: 'Islas Marshall',
@@ -85,8 +81,7 @@ export const OCEANIA = {
     region: 'micronesia',
   },
 
-  fsm: {
-    flag: 'fm',
+  fm: {
     name: {
       en: 'Federated States of Micronesia',
       es: 'Estados Federados de Micronesia',
@@ -106,8 +101,7 @@ export const OCEANIA = {
     region: 'micronesia',
   },
 
-  nru: {
-    flag: 'nr',
+  nr: {
     name: {
       en: 'Nauru',
       es: 'Nauru',
@@ -127,8 +121,7 @@ export const OCEANIA = {
     region: 'micronesia',
   },
 
-  nzl: {
-    flag: 'nz',
+  nz: {
     name: {
       en: 'New Zealand',
       es: 'Nueva Zelanda',
@@ -148,8 +141,7 @@ export const OCEANIA = {
     region: 'oceania',
   },
 
-  plw: {
-    flag: 'pw',
+  pw: {
     name: {
       en: 'Palau',
       es: 'Palaos',
@@ -169,8 +161,7 @@ export const OCEANIA = {
     region: 'micronesia',
   },
 
-  png: {
-    flag: 'pg',
+  pg: {
     name: {
       en: 'Papua New Guinea',
       es: 'Papúa Nueva Guinea',
@@ -190,8 +181,7 @@ export const OCEANIA = {
     region: 'melanesia',
   },
 
-  slb: {
-    flag: 'sb',
+  sb: {
     name: {
       en: 'Solomon Islands',
       es: 'Islas Salomón',
@@ -211,8 +201,7 @@ export const OCEANIA = {
     region: 'melanesia',
   },
 
-  ton: {
-    flag: 'to',
+  to: {
     name: {
       en: 'Tonga',
       es: 'Tonga',
@@ -232,8 +221,7 @@ export const OCEANIA = {
     region: 'polynesia',
   },
 
-  tuv: {
-    flag: 'tv',
+  tv: {
     name: {
       en: 'Tuvalu',
       es: 'Tuvalu',
@@ -253,8 +241,7 @@ export const OCEANIA = {
     region: 'polynesia',
   },
 
-  vut: {
-    flag: 'vu',
+  vu: {
     name: {
       en: 'Vanuatu',
       es: 'Vanuatu',
