@@ -920,7 +920,7 @@ export class GuestsComponent implements OnInit {
     this.filteredRegionGroups = this.continents
       .map(continent => ({
         continent,
-        regions: this.filteredRegions.filter(region => this.countries.some(country => country.region === region && country.continent === continent)),
+        regions: this.filteredRegions.filter(region => REGION_CONTINENT_INDEX[region] === continent),
       }))
       .filter(group => group.regions.length > 0);
   }
