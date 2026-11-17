@@ -66,7 +66,8 @@
     "NO": "否",
     "CLEAR": "清除",
     "SEARCH": "搜索",
-    "SEARCHING": "正在搜索"
+    "SEARCHING": "正在搜索",
+    "DESELECT_ALL_COUNTRIES": "取消选择所有国家"
   },
   "GUESTS_ACTIONS": {
     "SEE_STATS": "查看统计数据",

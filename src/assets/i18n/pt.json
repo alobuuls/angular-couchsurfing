@@ -66,7 +66,8 @@
     "NO": "Não",
     "CLEAR": "Limpar",
     "SEARCH": "Pesquisar",
-    "SEARCHING": "Pesquisando"
+    "SEARCHING": "Pesquisando",
+    "DESELECT_ALL_COUNTRIES": "Desmarcar todos os países"
   },
   "GUESTS_ACTIONS": {
     "SEE_STATS": "Ver estatísticas",

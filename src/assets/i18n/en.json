@@ -66,7 +66,8 @@
     "NO": "No",
     "CLEAR": "Clear",
     "SEARCH": "Search",
-    "SEARCHING": "Searching..."
+    "SEARCHING": "Searching",
+    "DESELECT_ALL_COUNTRIES": "Deselect all countries"
   },
   "GUESTS_ACTIONS": {
     "SEE_STATS": "See stats",

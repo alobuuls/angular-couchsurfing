@@ -23,6 +23,7 @@ import { StatsService } from '@services/stats.service';
 // Interfaces
 import { IGuestListItem, IQueryParamsGuests, IYearlyStat } from '@interfaces/guests.interface';
 import { ICurrentView, IGuestsTableVM, IGuestTableRow, IGuestTableRowWithIndex, VIEW_CONFIG, IErrResp } from '@interfaces/data-structure-api';
+import { IContinentRegionGroup } from '@interfaces/guest-form.interface';
 
 // Types
 import { CONTINENTS, Continents, CountriesCodes, ICountry, LANG, Language, Regions } from '@type/word.types';
@@ -77,6 +78,8 @@ export class GuestsComponent implements OnInit {
 
   // Current Filters
   private filters$ = new BehaviorSubject<IQueryParamsGuests>({});
+
+  filteredRegionGroups: IContinentRegionGroup[] = [];
 
   private readonly cardsEndMessageConfig: Record<
     LocationFilter,
@@ -283,8 +286,7 @@ export class GuestsComponent implements OnInit {
     // Show all countries again to autocomplete
     this.filteredCountries = [...this.countries];
     // Show all regions again to autocomplete
-    this.filteredRegions = [...this.regions];
-
+    this.updateFilteredRegions();
     this.onFiltersSubmit();
   }
 
@@ -426,7 +428,6 @@ export class GuestsComponent implements OnInit {
   }
 
   // COUNTRIES
-
   private loadDataCountries(): void {
     this.countries = (Object.entries(WORLD) as [CountriesCodes, ICountry][]).map(([countryCode, country]) => ({
       countryCode,
@@ -440,7 +441,7 @@ export class GuestsComponent implements OnInit {
     this.regions = [...new Set(this.countries.map(country => country.region))];
 
     // Initially show all regions and countries
-    this.filteredRegions = [...this.regions];
+    this.updateFilteredRegions();
     this.filteredCountries = [...this.countries];
   }
 
@@ -502,14 +503,12 @@ export class GuestsComponent implements OnInit {
   toggleCountry(countryCode: CountriesCodes): void {
     const countryCtrl = this.filtersForm.get('country');
     const selectedCountries = (countryCtrl?.value ?? []) as CountriesCodes[];
-
     const updatedCountries = selectedCountries.includes(countryCode) ? selectedCountries.filter(code => code !== countryCode) : [...selectedCountries, countryCode];
 
     countryCtrl?.setValue(updatedCountries);
 
     this.countrySearchCtrl.setValue('', { emitEvent: false });
     this.countryInput.nativeElement.value = '';
-
     this.updateFilteredCountries();
   }
 
@@ -529,6 +528,18 @@ export class GuestsComponent implements OnInit {
     const selectedCountries = (countryCtrl?.value ?? []) as CountriesCodes[];
 
     countryCtrl?.setValue(selectedCountries.filter(code => code !== countryCode));
+  }
+
+  clearSelectedCountries(): void {
+    this.filtersForm.get('country')?.setValue([]);
+    this.countrySearchCtrl.setValue('', { emitEvent: false });
+
+    if (this.countryInput) {
+      this.countryInput.nativeElement.value = '';
+      this.countryInput.nativeElement.focus();
+    }
+
+    this.updateFilteredCountries();
   }
 
   // UPDATE VIEW IN URL
@@ -943,6 +954,16 @@ export class GuestsComponent implements OnInit {
       : [...this.regions];
 
     this.sortRegionsByLanguage();
+    this.groupFilteredRegionsByContinent();
+  }
+
+  private groupFilteredRegionsByContinent(): void {
+    this.filteredRegionGroups = this.continents
+      .map(continent => ({
+        continent,
+        regions: this.filteredRegions.filter(region => this.countries.some(country => country.region === region && country.continent === continent)),
+      }))
+      .filter(group => group.regions.length > 0);
   }
 
   private updateFilteredCountries(): void {

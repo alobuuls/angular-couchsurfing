@@ -1,3 +1,4 @@
+import { Continents, Regions } from '../types/word.types';
 import { IGroupDetail, IGuestDetail, IGuestFormPayload, ITripDetail } from './guests.interface';
 
 export interface LocationConfig {
@@ -9,6 +10,11 @@ export interface LocationConfig {
   setCities: (cities: ICity[]) => void;
   setLoadingStates: (loading: boolean) => void;
   setLoadingCities: (loading: boolean) => void;
+}
+
+export interface IContinentRegionGroup {
+  continent: Continents;
+  regions: Regions[];
 }
 
 export interface IState {
