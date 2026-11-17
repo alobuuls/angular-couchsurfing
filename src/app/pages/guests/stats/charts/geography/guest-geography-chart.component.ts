@@ -22,13 +22,12 @@ import { FormatService } from '@services/format.service';
 import { GeonameService } from '@services/geoname.service';
 
 // Constants
-import { REGION_NAMES } from '@config/world/regions';
+import { getCountryLocation, REGION_CONTINENT_INDEX, REGION_NAMES, WORLD } from '@config/world';
 import { Continents, CountriesCodes, Language, Regions } from '@type/word.types';
-import { WORLD } from '@config/world';
 
 // Helpers
 import { CHART_UNKNOWN_COLOR, CONTINENT_COLORS, GENDER_COLORS, getColorWithOpacity, getGenderColor, getRankingColors, RANKING_COLORS } from '@utils';
-import { FlagPipe } from '@shared/pipes/three-code-letters-flag.pipe';
+import { FlagPipe } from '@shared/pipes/two-code-letters-flag.pipe';
 import { createExternalTooltip, destroyExternalTooltip, hideExternalTooltip } from '@utils';
 
 @Component({
@@ -75,19 +74,12 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
 
   private getContinent(item: IGeographyContinent | IGeographyRegion | IGeographyCountry | IGeographyLocation): string {
     const code = item.code.toLowerCase();
-
     // When the item is already a continent.
     if (this.selectedView === 'continents') return code;
-
     // When the item is a region.
-    if (this.selectedView === 'regions') {
-      const country = Object.values(WORLD).find(country => country.region.toLowerCase() === code);
-      return country?.continent?.toLowerCase() ?? '';
-    }
-
+    if (this.selectedView === 'regions') return REGION_CONTINENT_INDEX[code as Regions] ?? '';
     // When the item is a country, livingIn or hometown location.
-    const country = WORLD[code as CountriesCodes];
-    return country?.continent?.toLowerCase() ?? '';
+    return getCountryLocation(code)?.continent ?? '';
   }
 
   // Configuration for each geography view.

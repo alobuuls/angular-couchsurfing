@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
 // Pipes
-import { FlagPipe } from '@shared/pipes/three-code-letters-flag.pipe';
+import { FlagPipe } from '@shared/pipes/two-code-letters-flag.pipe';
 import { SocialLinkPipe } from '@shared/pipes/social-link.pipe';
 
 // Components

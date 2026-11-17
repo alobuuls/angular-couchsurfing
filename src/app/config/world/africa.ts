@@ -19,8 +19,6 @@ export const AFRICA = {
       he: 'אלג׳יריה',
     },
     prefix: '+213',
-    continent: 'africa',
-    region: 'northern_africa',
   },
 
   eg: {
@@ -39,8 +37,6 @@ export const AFRICA = {
       he: 'מצרים',
     },
     prefix: '+20',
-    continent: 'africa',
-    region: 'northern_africa',
   },
 
   ly: {
@@ -59,8 +55,6 @@ export const AFRICA = {
       he: 'לוב',
     },
     prefix: '+218',
-    continent: 'africa',
-    region: 'northern_africa',
   },
 
   mr: {
@@ -79,8 +73,6 @@ export const AFRICA = {
       he: 'מאוריטניה',
     },
     prefix: '+222',
-    continent: 'africa',
-    region: 'northern_africa',
   },
 
   ma: {
@@ -99,8 +91,6 @@ export const AFRICA = {
       he: 'מרוקו',
     },
     prefix: '+212',
-    continent: 'africa',
-    region: 'northern_africa',
   },
 
   sd: {
@@ -119,8 +109,6 @@ export const AFRICA = {
       he: 'סודאן',
     },
     prefix: '+249',
-    continent: 'africa',
-    region: 'northern_africa',
   },
 
   tn: {
@@ -139,8 +127,6 @@ export const AFRICA = {
       he: 'תוניסיה',
     },
     prefix: '+216',
-    continent: 'africa',
-    region: 'northern_africa',
   },
 
   /*** WESTERN AFRICA ***/
@@ -161,8 +147,6 @@ export const AFRICA = {
       he: 'בנין',
     },
     prefix: '+229',
-    continent: 'africa',
-    region: 'western_africa',
   },
 
   bf: {
@@ -181,8 +165,6 @@ export const AFRICA = {
       he: 'בורקינה פאסו',
     },
     prefix: '+226',
-    continent: 'africa',
-    region: 'western_africa',
   },
 
   cv: {
@@ -201,8 +183,6 @@ export const AFRICA = {
       he: 'כף ורדה',
     },
     prefix: '+238',
-    continent: 'africa',
-    region: 'western_africa',
   },
 
   ci: {
@@ -221,8 +201,6 @@ export const AFRICA = {
       he: 'חוף השנהב',
     },
     prefix: '+225',
-    continent: 'africa',
-    region: 'western_africa',
   },
 
   gm: {
@@ -241,8 +219,6 @@ export const AFRICA = {
       he: 'גמביה',
     },
     prefix: '+220',
-    continent: 'africa',
-    region: 'western_africa',
   },
 
   gh: {
@@ -261,8 +237,6 @@ export const AFRICA = {
       he: 'גאנה',
     },
     prefix: '+233',
-    continent: 'africa',
-    region: 'western_africa',
   },
 
   gn: {
@@ -281,8 +255,6 @@ export const AFRICA = {
       he: 'גינאה',
     },
     prefix: '+224',
-    continent: 'africa',
-    region: 'western_africa',
   },
 
   gw: {
@@ -301,8 +273,6 @@ export const AFRICA = {
       he: 'גינאה-ביסאו',
     },
     prefix: '+245',
-    continent: 'africa',
-    region: 'western_africa',
   },
 
   lr: {
@@ -321,8 +291,6 @@ export const AFRICA = {
       he: 'ליבריה',
     },
     prefix: '+231',
-    continent: 'africa',
-    region: 'western_africa',
   },
 
   ml: {
@@ -341,8 +309,6 @@ export const AFRICA = {
       he: 'מאלי',
     },
     prefix: '+223',
-    continent: 'africa',
-    region: 'western_africa',
   },
 
   ne: {
@@ -361,8 +327,6 @@ export const AFRICA = {
       he: 'ניז׳ר',
     },
     prefix: '+227',
-    continent: 'africa',
-    region: 'western_africa',
   },
 
   ng: {
@@ -381,8 +345,6 @@ export const AFRICA = {
       he: 'ניגריה',
     },
     prefix: '+234',
-    continent: 'africa',
-    region: 'western_africa',
   },
 
   sn: {
@@ -401,8 +363,6 @@ export const AFRICA = {
       he: 'סנגל',
     },
     prefix: '+221',
-    continent: 'africa',
-    region: 'western_africa',
   },
 
   sl: {
@@ -421,8 +381,6 @@ export const AFRICA = {
       he: 'סיירה לאון',
     },
     prefix: '+232',
-    continent: 'africa',
-    region: 'western_africa',
   },
 
   tg: {
@@ -441,8 +399,6 @@ export const AFRICA = {
       he: 'טוגו',
     },
     prefix: '+228',
-    continent: 'africa',
-    region: 'western_africa',
   },
 
   eh: {
@@ -461,8 +417,6 @@ export const AFRICA = {
       he: 'סהרה המערבית',
     },
     prefix: '+212',
-    continent: 'africa',
-    region: 'western_africa',
   },
   /*** CENTRAL AFRICA ***/
 
@@ -482,8 +436,6 @@ export const AFRICA = {
       he: 'אנגולה',
     },
     prefix: '+244',
-    continent: 'africa',
-    region: 'central_africa',
   },
 
   bi: {
@@ -502,8 +454,6 @@ export const AFRICA = {
       he: 'בורונדי',
     },
     prefix: '+257',
-    continent: 'africa',
-    region: 'central_africa',
   },
 
   cm: {
@@ -522,8 +472,6 @@ export const AFRICA = {
       he: 'קמרון',
     },
     prefix: '+237',
-    continent: 'africa',
-    region: 'central_africa',
   },
 
   cf: {
@@ -542,8 +490,6 @@ export const AFRICA = {
       he: 'הרפובליקה המרכז-אפריקאית',
     },
     prefix: '+236',
-    continent: 'africa',
-    region: 'central_africa',
   },
 
   td: {
@@ -562,8 +508,6 @@ export const AFRICA = {
       he: 'צ׳אד',
     },
     prefix: '+235',
-    continent: 'africa',
-    region: 'central_africa',
   },
 
   cd: {
@@ -582,8 +526,6 @@ export const AFRICA = {
       he: 'הרפובליקה הדמוקרטית של קונגו',
     },
     prefix: '+243',
-    continent: 'africa',
-    region: 'central_africa',
   },
 
   cg: {
@@ -602,8 +544,6 @@ export const AFRICA = {
       he: 'הרפובליקה של קונגו',
     },
     prefix: '+242',
-    continent: 'africa',
-    region: 'central_africa',
   },
 
   gq: {
@@ -622,8 +562,6 @@ export const AFRICA = {
       he: 'גינאה המשוונית',
     },
     prefix: '+240',
-    continent: 'africa',
-    region: 'central_africa',
   },
 
   ga: {
@@ -642,8 +580,6 @@ export const AFRICA = {
       he: 'גבון',
     },
     prefix: '+241',
-    continent: 'africa',
-    region: 'central_africa',
   },
 
   st: {
@@ -662,8 +598,6 @@ export const AFRICA = {
       he: 'סאו טומה ופרינסיפה',
     },
     prefix: '+239',
-    continent: 'africa',
-    region: 'central_africa',
   },
 
   /*** EASTERN AFRICA ***/
@@ -684,8 +618,6 @@ export const AFRICA = {
       he: 'קומורו',
     },
     prefix: '+269',
-    continent: 'africa',
-    region: 'eastern_africa',
   },
 
   dj: {
@@ -704,8 +636,6 @@ export const AFRICA = {
       he: 'ג׳יבוטי',
     },
     prefix: '+253',
-    continent: 'africa',
-    region: 'eastern_africa',
   },
 
   er: {
@@ -724,8 +654,6 @@ export const AFRICA = {
       he: 'אריתריאה',
     },
     prefix: '+291',
-    continent: 'africa',
-    region: 'eastern_africa',
   },
 
   et: {
@@ -744,8 +672,6 @@ export const AFRICA = {
       he: 'אתיופיה',
     },
     prefix: '+251',
-    continent: 'africa',
-    region: 'eastern_africa',
   },
 
   ke: {
@@ -764,8 +690,6 @@ export const AFRICA = {
       he: 'קניה',
     },
     prefix: '+254',
-    continent: 'africa',
-    region: 'eastern_africa',
   },
 
   mg: {
@@ -784,8 +708,6 @@ export const AFRICA = {
       he: 'מדגסקר',
     },
     prefix: '+261',
-    continent: 'africa',
-    region: 'eastern_africa',
   },
 
   mu: {
@@ -804,8 +726,6 @@ export const AFRICA = {
       he: 'מאוריציוס',
     },
     prefix: '+230',
-    continent: 'africa',
-    region: 'eastern_africa',
   },
 
   yt: {
@@ -824,8 +744,6 @@ export const AFRICA = {
       he: 'מיוט',
     },
     prefix: '+262',
-    continent: 'africa',
-    region: 'eastern_africa',
   },
 
   mz: {
@@ -844,8 +762,6 @@ export const AFRICA = {
       he: 'מוזמביק',
     },
     prefix: '+258',
-    continent: 'africa',
-    region: 'eastern_africa',
   },
 
   rw: {
@@ -864,8 +780,6 @@ export const AFRICA = {
       he: 'רואנדה',
     },
     prefix: '+250',
-    continent: 'africa',
-    region: 'eastern_africa',
   },
 
   sc: {
@@ -884,8 +798,6 @@ export const AFRICA = {
       he: 'סיישל',
     },
     prefix: '+248',
-    continent: 'africa',
-    region: 'eastern_africa',
   },
 
   so: {
@@ -904,8 +816,6 @@ export const AFRICA = {
       he: 'סומליה',
     },
     prefix: '+252',
-    continent: 'africa',
-    region: 'eastern_africa',
   },
 
   ss: {
@@ -924,8 +834,6 @@ export const AFRICA = {
       he: 'דרום סודאן',
     },
     prefix: '+211',
-    continent: 'africa',
-    region: 'eastern_africa',
   },
 
   tz: {
@@ -944,8 +852,6 @@ export const AFRICA = {
       he: 'טנזניה',
     },
     prefix: '+255',
-    continent: 'africa',
-    region: 'eastern_africa',
   },
 
   ug: {
@@ -964,8 +870,6 @@ export const AFRICA = {
       he: 'אוגנדה',
     },
     prefix: '+256',
-    continent: 'africa',
-    region: 'eastern_africa',
   },
   /*** SOUTHERN AFRICA ***/
 
@@ -985,8 +889,6 @@ export const AFRICA = {
       he: 'בוצואנה',
     },
     prefix: '+267',
-    continent: 'africa',
-    region: 'southern_africa',
   },
 
   sz: {
@@ -1005,8 +907,6 @@ export const AFRICA = {
       he: 'אסווטיני',
     },
     prefix: '+268',
-    continent: 'africa',
-    region: 'southern_africa',
   },
 
   ls: {
@@ -1025,8 +925,6 @@ export const AFRICA = {
       he: 'לסוטו',
     },
     prefix: '+266',
-    continent: 'africa',
-    region: 'southern_africa',
   },
 
   mw: {
@@ -1045,8 +943,6 @@ export const AFRICA = {
       he: 'מלאווי',
     },
     prefix: '+265',
-    continent: 'africa',
-    region: 'southern_africa',
   },
 
   na: {
@@ -1065,8 +961,6 @@ export const AFRICA = {
       he: 'נמיביה',
     },
     prefix: '+264',
-    continent: 'africa',
-    region: 'southern_africa',
   },
 
   za: {
@@ -1085,8 +979,6 @@ export const AFRICA = {
       he: 'דרום אפריקה',
     },
     prefix: '+27',
-    continent: 'africa',
-    region: 'southern_africa',
   },
 
   zm: {
@@ -1105,8 +997,6 @@ export const AFRICA = {
       he: 'זמביה',
     },
     prefix: '+260',
-    continent: 'africa',
-    region: 'southern_africa',
   },
 
   zw: {
@@ -1125,7 +1015,5 @@ export const AFRICA = {
       he: 'זימבבואה',
     },
     prefix: '+263',
-    continent: 'africa',
-    region: 'southern_africa',
   },
 } satisfies Record<string, ICountry>;

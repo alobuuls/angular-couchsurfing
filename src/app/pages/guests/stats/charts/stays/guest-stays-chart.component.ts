@@ -28,7 +28,7 @@ import {
   hideExternalTooltip,
   STAYS_COLORS,
 } from '@utils';
-import { FlagPipe } from '@shared/pipes/three-code-letters-flag.pipe';
+import { FlagPipe } from '@shared/pipes/two-code-letters-flag.pipe';
 
 @Component({
   selector: 'guest-stays-chart',

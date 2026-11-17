@@ -17,8 +17,6 @@ export const OCEANIA = {
       he: 'אוסטרליה',
     },
     prefix: '+61',
-    continent: 'oceania',
-    region: 'oceania',
   },
 
   fj: {
@@ -37,8 +35,6 @@ export const OCEANIA = {
       he: 'פיג׳י',
     },
     prefix: '+679',
-    continent: 'oceania',
-    region: 'melanesia',
   },
 
   ki: {
@@ -57,8 +53,6 @@ export const OCEANIA = {
       he: 'קיריבטי',
     },
     prefix: '+686',
-    continent: 'oceania',
-    region: 'micronesia',
   },
 
   mh: {
@@ -77,8 +71,6 @@ export const OCEANIA = {
       he: 'איי מרשל',
     },
     prefix: '+692',
-    continent: 'oceania',
-    region: 'micronesia',
   },
 
   fm: {
@@ -97,8 +89,6 @@ export const OCEANIA = {
       he: 'מדינות מיקרונזיה המאוחדות',
     },
     prefix: '+691',
-    continent: 'oceania',
-    region: 'micronesia',
   },
 
   nr: {
@@ -117,8 +107,6 @@ export const OCEANIA = {
       he: 'נאורו',
     },
     prefix: '+674',
-    continent: 'oceania',
-    region: 'micronesia',
   },
 
   nz: {
@@ -137,8 +125,6 @@ export const OCEANIA = {
       he: 'ניו זילנד',
     },
     prefix: '+64',
-    continent: 'oceania',
-    region: 'oceania',
   },
 
   pw: {
@@ -157,8 +143,6 @@ export const OCEANIA = {
       he: 'פלאו',
     },
     prefix: '+680',
-    continent: 'oceania',
-    region: 'micronesia',
   },
 
   pg: {
@@ -177,8 +161,6 @@ export const OCEANIA = {
       he: 'פפואה גינאה החדשה',
     },
     prefix: '+675',
-    continent: 'oceania',
-    region: 'melanesia',
   },
 
   sb: {
@@ -197,8 +179,6 @@ export const OCEANIA = {
       he: 'איי שלמה',
     },
     prefix: '+677',
-    continent: 'oceania',
-    region: 'melanesia',
   },
 
   to: {
@@ -217,8 +197,6 @@ export const OCEANIA = {
       he: 'טונגה',
     },
     prefix: '+676',
-    continent: 'oceania',
-    region: 'polynesia',
   },
 
   tv: {
@@ -237,8 +215,24 @@ export const OCEANIA = {
       he: 'טובאלו',
     },
     prefix: '+688',
-    continent: 'oceania',
-    region: 'polynesia',
+  },
+
+  ws: {
+    name: {
+      en: 'Samoa',
+      es: 'Samoa',
+      de: 'Samoa',
+      zh: '萨摩亚',
+      fr: 'Samoa',
+      it: 'Samoa',
+      pt: 'Samoa',
+      ru: 'Самоа',
+      ja: 'サモア',
+      hi: 'समोआ',
+      ko: '사모아',
+      he: 'סמואה',
+    },
+    prefix: '+685',
   },
 
   vu: {
@@ -257,7 +251,5 @@ export const OCEANIA = {
       he: 'ונואטו',
     },
     prefix: '+678',
-    continent: 'oceania',
-    region: 'melanesia',
   },
 } satisfies Record<string, ICountry>;

@@ -19,6 +19,7 @@ import { GuestSortService } from '@services/guest-sort.service';
 import { GeonameService } from '@services/geoname.service';
 import { FormatService } from '@services/format.service';
 import { StatsService } from '@services/stats.service';
+import { CountrySearchService } from '@services/country-search.service';
 
 // Interfaces
 import { IGuestListItem, IQueryParamsGuests, IYearlyStat } from '@interfaces/guests.interface';
@@ -30,8 +31,7 @@ import { CONTINENTS, Continents, CountriesCodes, ICountry, LANG, Language, Regio
 import { LocationFilter } from '@type/guest.types';
 
 // Constants
-import { WORLD } from '@config/world';
-import { REGION_NAMES } from '@config/world/regions';
+import { WORLD, REGION_NAMES, ISO_CODES, COUNTRY_REGION_INDEX, REGION_CONTINENT_INDEX, getCountryLocation } from '@config/world';
 
 // Utils
 import { withReqState, isGroup, mapGuestTable, parseBooleanParam, parseMultiParam } from '@utils';
@@ -155,6 +155,7 @@ export class GuestsComponent implements OnInit {
   private _deleteService = inject(DeleteConfirmationService);
   private _errH = inject(ErrorHandlerService);
   private _alerts = inject(AlertsService);
+  private readonly _countrySearch = inject(CountrySearchService);
   private readonly _geoname = inject(GeonameService);
   private readonly _format = inject(FormatService);
   private _translate = inject(TranslateService);
@@ -185,45 +186,6 @@ export class GuestsComponent implements OnInit {
       ambassador: [''],
       didTheyReq: [''],
     });
-  }
-
-  private normalizeSearchText(value: string): string {
-    return value
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase()
-      .replace(/[\s_-]/g, '')
-      .trim();
-  }
-
-  private matchesCountrySearch(search: string, country: ICountry & { countryCode: CountriesCodes }): boolean {
-    const names = [this.getCountryName(country.countryCode), country.name.en].map(name => this.normalizeSearchText(name));
-    return names.some(name => {
-      if (this.fuzzyMatch(search, name)) return true;
-      return name.split(/[\s_-]+/).some(word => this.fuzzyMatch(search, word));
-    });
-  }
-
-  private fuzzyMatch(search: string, target: string): boolean {
-    if (target.includes(search)) return true;
-    if (search.length < 4) return false;
-    const maxErrors = search.length >= 8 ? 2 : 1;
-    return this.levenshteinDistance(search, target) <= maxErrors;
-  }
-
-  private levenshteinDistance(a: string, b: string): number {
-    if (a.length < b.length) [a, b] = [b, a];
-    let previous = Array.from({ length: b.length + 1 }, (_, i) => i);
-
-    for (let i = 1; i <= a.length; i++) {
-      const current = [i];
-      for (let j = 1; j <= b.length; j++) {
-        current[j] = Math.min(current[j - 1] + 1, previous[j] + 1, previous[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
-      }
-      previous = current;
-    }
-
-    return previous[b.length];
   }
 
   onFiltersSubmit(): void {
@@ -437,8 +399,8 @@ export class GuestsComponent implements OnInit {
     // Sort countries using the current language
     this.sortCountriesByLanguage();
 
-    // Get regions from data countries
-    this.regions = [...new Set(this.countries.map(country => country.region))];
+    // Get unique regions from COUNTRY_REGION_INDEX
+    this.regions = [...new Set(Object.values(COUNTRY_REGION_INDEX).map(location => location.region))];
 
     // Initially show all regions and countries
     this.updateFilteredRegions();
@@ -898,15 +860,15 @@ export class GuestsComponent implements OnInit {
       const selectedCountries = (countryCtrl?.value ?? []) as CountriesCodes[];
 
       // Keep only regions that belong to the selected continents
-      const validRegions = selectedRegions.filter(region =>
-        this.countries.some(country => country.region === region && (!selectedContinents.length || selectedContinents.includes(country.continent)))
-      );
+      const validRegions = selectedRegions.filter(region => !selectedContinents.length || selectedContinents.includes(REGION_CONTINENT_INDEX[region]));
 
       // Keep only countries compatible with the selected continents and regions
       const validCountries = selectedCountries.filter(code => {
-        const country = this.countries.find(item => item.countryCode === code);
+        const location = getCountryLocation(code);
 
-        return !!country && (!selectedContinents.length || selectedContinents.includes(country.continent)) && (!selectedRegions.length || validRegions.includes(country.region));
+        return (
+          !!location && (!selectedContinents.length || selectedContinents.includes(location.continent)) && (!selectedRegions.length || validRegions.includes(location.region))
+        );
       });
 
       if (validRegions.length !== selectedRegions.length) {
@@ -927,10 +889,10 @@ export class GuestsComponent implements OnInit {
       const selectedCountries = (countryCtrl?.value ?? []) as CountriesCodes[];
 
       const validCountries = selectedCountries.filter(code => {
-        const country = this.countries.find(item => item.countryCode === code);
+        const location = getCountryLocation(code);
 
         return (
-          !!country && (!selectedContinents.length || selectedContinents.includes(country.continent)) && (!selectedRegions.length || selectedRegions.includes(country.region))
+          !!location && (!selectedContinents.length || selectedContinents.includes(location.continent)) && (!selectedRegions.length || selectedRegions.includes(location.region))
         );
       });
 
@@ -948,10 +910,7 @@ export class GuestsComponent implements OnInit {
 
   private updateFilteredRegions(): void {
     const selectedContinents = (this.filtersForm.get('continent')?.value ?? []) as Continents[];
-
-    this.filteredRegions = selectedContinents.length
-      ? this.regions.filter(region => this.countries.some(country => country.region === region && selectedContinents.includes(country.continent)))
-      : [...this.regions];
+    this.filteredRegions = selectedContinents.length ? this.regions.filter(region => selectedContinents.includes(REGION_CONTINENT_INDEX[region])) : [...this.regions];
 
     this.sortRegionsByLanguage();
     this.groupFilteredRegionsByContinent();
@@ -970,16 +929,20 @@ export class GuestsComponent implements OnInit {
     const selectedContinents = (this.filtersForm.get('continent')?.value ?? []) as Continents[];
     const selectedRegions = (this.filtersForm.get('region')?.value ?? []) as Regions[];
     const selectedCountries = (this.filtersForm.get('country')?.value ?? []) as CountriesCodes[];
-    const search = this.normalizeSearchText(this.countrySearchCtrl.value ?? '');
 
-    const filtered = this.countries.filter(country => {
-      const matchesContinent = !selectedContinents.length || selectedContinents.includes(country.continent);
-      const matchesRegion = !selectedRegions.length || selectedRegions.includes(country.region);
-      const matchesSearch = !search || this.matchesCountrySearch(search, country);
-      return matchesContinent && matchesRegion && matchesSearch;
+    const search = this.countrySearchCtrl.value ?? '';
+    const availableCountries = this.countries.filter(country => {
+      const location = getCountryLocation(country.countryCode);
+
+      if (!location) return false;
+      const matchesContinent = !selectedContinents.length || selectedContinents.includes(location.continent);
+      const matchesRegion = !selectedRegions.length || selectedRegions.includes(location.region);
+      return matchesContinent && matchesRegion;
     });
 
-    // Show selected countries first
+    const filtered = this._countrySearch.filter(availableCountries, search);
+
+    // Selected countries first.
     this.filteredCountries = [
       ...filtered.filter(country => selectedCountries.includes(country.countryCode)),
       ...filtered.filter(country => !selectedCountries.includes(country.countryCode)),

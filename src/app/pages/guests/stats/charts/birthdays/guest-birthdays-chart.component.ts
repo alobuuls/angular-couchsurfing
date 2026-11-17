@@ -16,7 +16,7 @@ import { BIRTHDAYS_COLORS, createExternalTooltip, destroyExternalTooltip, hideEx
 
 // Services
 import { FormatService } from '@services/format.service';
-import { FlagPipe } from '@shared/pipes/three-code-letters-flag.pipe';
+import { FlagPipe } from '@shared/pipes/two-code-letters-flag.pipe';
 
 @Component({
   selector: 'guest-birthdays-chart',

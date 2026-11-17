@@ -19,8 +19,6 @@ export const AMERICA = {
       he: 'קנדה',
     },
     prefix: '+1',
-    continent: 'america',
-    region: 'north_america',
   },
 
   gl: {
@@ -39,8 +37,6 @@ export const AMERICA = {
       he: 'גרינלנד',
     },
     prefix: '+299',
-    continent: 'america',
-    region: 'north_america',
   },
 
   mx: {
@@ -59,8 +55,6 @@ export const AMERICA = {
       he: 'מקסיקו',
     },
     prefix: '+52',
-    continent: 'america',
-    region: 'north_america',
   },
 
   pm: {
@@ -79,8 +73,6 @@ export const AMERICA = {
       he: 'סן-פייר ומיקלון',
     },
     prefix: '+508',
-    continent: 'america',
-    region: 'north_america',
   },
 
   us: {
@@ -99,8 +91,6 @@ export const AMERICA = {
       he: 'ארצות הברית',
     },
     prefix: '+1',
-    continent: 'america',
-    region: 'north_america',
   },
 
   /*** CARIBBEAN ***/
@@ -121,8 +111,6 @@ export const AMERICA = {
       he: 'ארובה',
     },
     prefix: '+297',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   ai: {
@@ -141,8 +129,6 @@ export const AMERICA = {
       he: 'אנגווילה',
     },
     prefix: '+1-264',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   ag: {
@@ -161,8 +147,6 @@ export const AMERICA = {
       he: 'אנטיגואה וברבודה',
     },
     prefix: '+1-268',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   bq: {
@@ -181,8 +165,6 @@ export const AMERICA = {
       he: 'האיים הקריביים ההולנדיים',
     },
     prefix: '+599',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   bs: {
@@ -201,8 +183,6 @@ export const AMERICA = {
       he: 'איי בהאמה',
     },
     prefix: '+1-242',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   bm: {
@@ -221,8 +201,6 @@ export const AMERICA = {
       he: 'ברמודה',
     },
     prefix: '+1-441',
-    continent: 'america',
-    region: 'north_america',
   },
 
   bb: {
@@ -241,8 +219,6 @@ export const AMERICA = {
       he: 'ברבדוס',
     },
     prefix: '+1-246',
-    continent: 'america',
-    region: 'caribbean',
   },
   vg: {
     name: {
@@ -260,8 +236,6 @@ export const AMERICA = {
       he: 'איי הבתולה הבריטיים',
     },
     prefix: '+1-284',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   cu: {
@@ -280,8 +254,6 @@ export const AMERICA = {
       he: 'קובה',
     },
     prefix: '+53',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   cw: {
@@ -300,8 +272,6 @@ export const AMERICA = {
       he: 'קוראסאו',
     },
     prefix: '+599',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   ky: {
@@ -320,8 +290,6 @@ export const AMERICA = {
       he: 'איי קיימן',
     },
     prefix: '+1-345',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   dm: {
@@ -340,8 +308,6 @@ export const AMERICA = {
       he: 'דומיניקה',
     },
     prefix: '+1-767',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   do: {
@@ -360,8 +326,6 @@ export const AMERICA = {
       he: 'הרפובליקה הדומיניקנית',
     },
     prefix: '+1-809',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   gp: {
@@ -380,8 +344,6 @@ export const AMERICA = {
       he: 'גוואדלופ',
     },
     prefix: '+590',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   gd: {
@@ -400,8 +362,6 @@ export const AMERICA = {
       he: 'גרנדה',
     },
     prefix: '+1-473',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   ht: {
@@ -420,8 +380,6 @@ export const AMERICA = {
       he: 'האיטי',
     },
     prefix: '+509',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   jm: {
@@ -440,8 +398,6 @@ export const AMERICA = {
       he: 'ג׳מייקה',
     },
     prefix: '+1-876', // También existe +1-658.
-    continent: 'america',
-    region: 'caribbean',
   },
 
   ms: {
@@ -460,8 +416,6 @@ export const AMERICA = {
       he: 'מונטסראט',
     },
     prefix: '+1-664',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   mq: {
@@ -480,8 +434,6 @@ export const AMERICA = {
       he: 'מרטיניק',
     },
     prefix: '+596',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   pr: {
@@ -500,8 +452,6 @@ export const AMERICA = {
       he: 'פוארטו ריקו',
     },
     prefix: '+1-787',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   kn: {
@@ -520,8 +470,6 @@ export const AMERICA = {
       he: 'סנט קיטס ונוויס',
     },
     prefix: '+1-869',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   lc: {
@@ -540,8 +488,6 @@ export const AMERICA = {
       he: 'סנט לוסיה',
     },
     prefix: '+1-758',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   sx: {
@@ -560,8 +506,6 @@ export const AMERICA = {
       he: 'סנט מארטן',
     },
     prefix: '+1-721',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   tc: {
@@ -580,8 +524,6 @@ export const AMERICA = {
       he: 'איי טרקס וקייקוס',
     },
     prefix: '+1-649',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   tt: {
@@ -600,8 +542,6 @@ export const AMERICA = {
       he: 'טרינידד וטובגו',
     },
     prefix: '+1-868',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   vc: {
@@ -620,8 +560,6 @@ export const AMERICA = {
       he: 'סנט וינסנט והגרנדינים',
     },
     prefix: '+1-784',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   vi: {
@@ -640,8 +578,6 @@ export const AMERICA = {
       he: 'איי הבתולה של ארצות הברית',
     },
     prefix: '+1-340',
-    continent: 'america',
-    region: 'caribbean',
   },
 
   /*** CENTRAL AMERICA ***/
@@ -661,8 +597,6 @@ export const AMERICA = {
       he: 'בליז',
     },
     prefix: '+501',
-    continent: 'america',
-    region: 'central_america',
   },
 
   cr: {
@@ -681,8 +615,6 @@ export const AMERICA = {
       he: 'קוסטה ריקה',
     },
     prefix: '+506',
-    continent: 'america',
-    region: 'central_america',
   },
 
   sv: {
@@ -701,8 +633,6 @@ export const AMERICA = {
       he: 'אל סלבדור',
     },
     prefix: '+503',
-    continent: 'america',
-    region: 'central_america',
   },
 
   gt: {
@@ -721,8 +651,6 @@ export const AMERICA = {
       he: 'גואטמלה',
     },
     prefix: '+502',
-    continent: 'america',
-    region: 'central_america',
   },
 
   hn: {
@@ -741,8 +669,6 @@ export const AMERICA = {
       he: 'הונדורס',
     },
     prefix: '+504',
-    continent: 'america',
-    region: 'central_america',
   },
 
   ni: {
@@ -761,8 +687,6 @@ export const AMERICA = {
       he: 'ניקרגואה',
     },
     prefix: '+505',
-    continent: 'america',
-    region: 'central_america',
   },
 
   pa: {
@@ -781,8 +705,6 @@ export const AMERICA = {
       he: 'פנמה',
     },
     prefix: '+507',
-    continent: 'america',
-    region: 'central_america',
   },
 
   /*** SOUTH AMERICA ***/
@@ -803,8 +725,6 @@ export const AMERICA = {
       he: 'ארגנטינה',
     },
     prefix: '+54',
-    continent: 'america',
-    region: 'south_america',
   },
 
   bo: {
@@ -823,8 +743,6 @@ export const AMERICA = {
       he: 'בוליביה',
     },
     prefix: '+591',
-    continent: 'america',
-    region: 'south_america',
   },
 
   br: {
@@ -843,8 +761,6 @@ export const AMERICA = {
       he: 'ברזיל',
     },
     prefix: '+55',
-    continent: 'america',
-    region: 'south_america',
   },
 
   cl: {
@@ -863,8 +779,6 @@ export const AMERICA = {
       he: 'צ׳ילה',
     },
     prefix: '+56',
-    continent: 'america',
-    region: 'south_america',
   },
 
   co: {
@@ -883,8 +797,6 @@ export const AMERICA = {
       he: 'קולומביה',
     },
     prefix: '+57',
-    continent: 'america',
-    region: 'south_america',
   },
 
   ec: {
@@ -903,8 +815,6 @@ export const AMERICA = {
       he: 'אקוודור',
     },
     prefix: '+593',
-    continent: 'america',
-    region: 'south_america',
   },
   fk: {
     name: {
@@ -922,8 +832,6 @@ export const AMERICA = {
       he: 'איי פוקלנד',
     },
     prefix: '+500',
-    continent: 'america',
-    region: 'south_america',
   },
 
   gf: {
@@ -942,8 +850,6 @@ export const AMERICA = {
       he: 'גיאנה הצרפתית',
     },
     prefix: '+594',
-    continent: 'america',
-    region: 'south_america',
   },
 
   gy: {
@@ -962,8 +868,6 @@ export const AMERICA = {
       he: 'גיאנה',
     },
     prefix: '+592',
-    continent: 'america',
-    region: 'south_america',
   },
 
   pe: {
@@ -982,8 +886,6 @@ export const AMERICA = {
       he: 'פרו',
     },
     prefix: '+51',
-    continent: 'america',
-    region: 'south_america',
   },
 
   py: {
@@ -1002,8 +904,6 @@ export const AMERICA = {
       he: 'פרגוואי',
     },
     prefix: '+595',
-    continent: 'america',
-    region: 'south_america',
   },
 
   sr: {
@@ -1022,8 +922,6 @@ export const AMERICA = {
       he: 'סורינאם',
     },
     prefix: '+597',
-    continent: 'america',
-    region: 'south_america',
   },
 
   uy: {
@@ -1042,8 +940,6 @@ export const AMERICA = {
       he: 'אורוגוואי',
     },
     prefix: '+598',
-    continent: 'america',
-    region: 'south_america',
   },
 
   ve: {
@@ -1062,7 +958,5 @@ export const AMERICA = {
       he: 'ונצואלה',
     },
     prefix: '+58',
-    continent: 'america',
-    region: 'south_america',
   },
 } satisfies Record<string, ICountry>;
