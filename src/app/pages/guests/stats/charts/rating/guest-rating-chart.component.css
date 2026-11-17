@@ -43,3 +43,40 @@
   box-shadow: 0 0.5rem 0.5rem -0.4rem var(--color-accent);
   transform: translateY(-0.25rem);
 }
+
+/* Doughnut chart layout */
+.chart-row.pie-chart-row {
+  position: relative;
+  justify-content: center;
+  width: 100%;
+}
+
+.rating-charts-ctn.pie-chart {
+  flex: 0 1 450px;
+  width: 450px;
+  max-width: 100%;
+  height: 450px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rating-charts-ctn.pie-chart canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* Keep chart type buttons on the right */
+.pie-chart-row .ctn-chart-types {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@media (max-width: 600px) {
+  .rating-charts-ctn.pie-chart {
+    height: 350px;
+  }
+}
