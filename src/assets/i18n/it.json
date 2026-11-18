@@ -369,8 +369,10 @@
       "THEIR_REFERENCE": "La loro referenza",
       "MY_REFERENCE": "La mia referenza",
       "COMMENTS": "Lascia un commento",
-      "LOADING_STATES": "Caricamento degli stati...",
-      "LOADING_CITIES": "Caricamento delle città..."
+      "LOADING_STATES": "טוען מדינות...",
+      "LOADING_CITIES": "טוען ערים...",
+      "RESIDES_IN_HOMETOWN": "האם אתה גר שם?",
+      "PLATFORM": "פלטפורמה"
     },
     "CHECKBOXES": {
       "FIRST_TIME": "Prima volta",

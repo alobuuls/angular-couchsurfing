@@ -369,7 +369,9 @@
       "MY_REFERENCE": "Ma référence",
       "COMMENTS": "Laisser un commentaire",
       "LOADING_STATES": "Chargement des États...",
-      "LOADING_CITIES": "Chargement des villes..."
+      "LOADING_CITIES": "Chargement des villes...",
+      "RESIDES_IN_HOMETOWN": "Habitez-vous là-bas ?",
+      "PLATFORM": "Plateforme"
     },
     "CHECKBOXES": {
       "FIRST_TIME": "Première fois",

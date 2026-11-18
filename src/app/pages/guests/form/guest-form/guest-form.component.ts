@@ -146,6 +146,13 @@ export class GuestFormComponent implements OnInit {
     myReference: 1500,
   } as const;
 
+  readonly platforms = [
+    { value: 'couchsurfing', label: 'Couchsurfing' },
+    { value: 'couchers', label: 'Couchers.org' },
+    { value: 'booking', label: 'Booking.com' },
+    { value: 'airbnb', label: 'Airbnb' },
+  ];
+
   // Injects
   private readonly destroyRef = inject(DestroyRef);
   private fb = inject(FormBuilder);
@@ -202,6 +209,7 @@ export class GuestFormComponent implements OnInit {
 
     this.listenLocationCountry('weMet');
     this.listenLocationState('weMet');
+    this.listenResidesInHometown();
 
     if (this.guest) {
       this.patchGuestForm();
@@ -474,8 +482,14 @@ export class GuestFormComponent implements OnInit {
   private patchGuestForm(): void {
     if (!this.guest) return;
 
+    const residesInHometown =
+      this.guest.livingInCode === this.guest.hometownCode &&
+      (this.guest.livingInState ?? '') === (this.guest.hometownState ?? '') &&
+      (this.guest.livingInCity ?? '') === (this.guest.hometownCity ?? '');
+
     this.formCreateGuest.patchValue(
       {
+        platform: this.guest.platform ?? 'cs',
         fullName: this.guest.fullName,
         instagram: this.guest.instagram,
         urlProfileCs: this.guest.urlProfileCs,
@@ -487,6 +501,8 @@ export class GuestFormComponent implements OnInit {
         hometownCode: this.guest.hometownCode,
         hometownState: this.guest.hometownState,
         hometownCity: this.guest.hometownCity,
+
+        residesInHometown,
 
         livingInCode: this.guest.livingInCode,
         livingInState: this.guest.livingInState,
@@ -593,6 +609,7 @@ export class GuestFormComponent implements OnInit {
 
   initForm(): void {
     this.formCreateGuest = this.fb.group({
+      platform: ['cs'],
       fullName: ['', [Validators.required, Validators.maxLength(this.maxLengths.fullName)]],
       instagram: ['', [Validators.maxLength(this.maxLengths.instagram)]],
       urlProfileCs: ['', [Validators.maxLength(this.maxLengths.urlProfileCs)]],
@@ -605,6 +622,7 @@ export class GuestFormComponent implements OnInit {
       hometownCode: ['', [Validators.required]],
       hometownState: [''],
       hometownCity: [''],
+      residesInHometown: [true],
 
       livingInCode: [''],
       livingInState: [''],
@@ -644,12 +662,17 @@ export class GuestFormComponent implements OnInit {
 
     setTimeout(() => {
       const firstInvalidControl = this.guestForm.nativeElement.querySelector(
-        'input.ng-invalid, textarea.ng-invalid, mat-select.ng-invalid, mat-radio-group.ng-invalid'
+        'input.ng-invalid, textarea.ng-invalid, mat-select.ng-invalid, mat-radio-group.ng-invalid, .mat-mdc-form-field:has(.ng-invalid)'
       ) as HTMLElement;
 
       if (!firstInvalidControl) return;
 
-      firstInvalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const formField = firstInvalidControl.closest('.mat-mdc-form-field') as HTMLElement;
+
+      (formField ?? firstInvalidControl).scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
     });
   }
 
@@ -673,7 +696,8 @@ export class GuestFormComponent implements OnInit {
   }
 
   private buildGuestPayload(): IGuestFormPayload {
-    const { otherOccupation, groupType, hometownState, hometownCity, livingInState, livingInCity, stateWeMet, cityWeMet, ...guest } = this.formCreateGuest.getRawValue();
+    const { otherOccupation, groupType, residesInHometown, hometownState, hometownCity, livingInState, livingInCity, stateWeMet, cityWeMet, ...guest } =
+      this.formCreateGuest.getRawValue();
 
     // Normalize occupations and remove duplicates.
     const occupation = this.normalizeOccupations(guest.occupation, otherOccupation);
@@ -692,10 +716,14 @@ export class GuestFormComponent implements OnInit {
       occupation,
       occupationArea,
       birthDate: this.formatDate(guest.birthDate),
+
       hometownCity: hometownCityName,
       hometownState: hometownStateName,
-      livingInCity: livingInCityName,
-      livingInState: livingInStateName,
+
+      livingInCode: residesInHometown ? guest.hometownCode : guest.livingInCode,
+      livingInState: residesInHometown ? hometownStateName : livingInStateName,
+      livingInCity: residesInHometown ? hometownCityName : livingInCityName,
+
       cityWeMet: cityWeMetName,
       stateWeMet: stateWeMetName,
     };
@@ -826,6 +854,22 @@ export class GuestFormComponent implements OnInit {
     });
   }
 
+  private listenResidesInHometown(): void {
+    const hometownCountryCtrl = this.formCreateGuest.get('hometownCode');
+    const residesCtrl = this.formCreateGuest.get('residesInHometown');
+
+    if (!hometownCountryCtrl || !residesCtrl) return;
+
+    let previousCountry = hometownCountryCtrl.value;
+
+    hometownCountryCtrl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(country => {
+      // Si se limpia el país y después se selecciona otro, la opción vuelve a su estado predeterminado.
+      if (!previousCountry && country) residesCtrl.setValue(true);
+
+      previousCountry = country;
+    });
+  }
+
   // PREFIX
   private setDefaultPrefix(prefix: string): void {
     if (this.prefixCodeCtrl?.value) return;
@@ -854,12 +898,6 @@ export class GuestFormComponent implements OnInit {
     this.formCreateGuest.patchValue({
       prefixCode: country.prefix,
     });
-  }
-
-  private resetHometownLocation(): void {
-    this.hometownStates = [];
-    this.hometownCities = [];
-    this.formCreateGuest.patchValue({ continent: '', region: '', hometownState: '', hometownCity: '' });
   }
 
   getCountryName(code: string): string {
@@ -976,12 +1014,11 @@ export class GuestFormComponent implements OnInit {
     if (!this.formCreateGuest) return false;
 
     const values = this.formCreateGuest.getRawValue();
+    const ignoredFields = ['groupType', 'platform', 'residesInHometown'];
 
     return Object.entries(values).some(([key, value]) => {
-      // Ignore default group type value
-      if (key === 'groupType') return false;
+      if (ignoredFields.includes(key)) return false;
 
-      // Ignore empty values and default false booleans
       if (value === null || value === undefined || value === false) return false;
       if (typeof value === 'string') return value.trim().length > 0;
       if (Array.isArray(value)) return value.length > 0;

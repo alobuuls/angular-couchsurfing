@@ -36,6 +36,29 @@
   min-width: 0;
 }
 
+/* STAYED RADIO GROUP */
+.stayed-field {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.stayed-label {
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.stayed-options {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stayed-options mat-radio-button {
+  color: var(--color-text);
+}
+
 /* SECTION TITLE */
 .title-form {
   position: relative;

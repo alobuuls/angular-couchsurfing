@@ -372,8 +372,10 @@
       "THEIR_REFERENCE": "他们的评价",
       "MY_REFERENCE": "我的评价",
       "COMMENTS": "留下评论",
-      "LOADING_STATES": "正在加载州和地区...",
-      "LOADING_CITIES": "正在加载城市..."
+      "LOADING_STATES": "正在加载州...",
+      "LOADING_CITIES": "正在加载城市...",
+      "RESIDES_IN_HOMETOWN": "你住在那里吗？",
+      "PLATFORM": "平台"
     },
     "CHECKBOXES": {
       "FIRST_TIME": "首次访问",

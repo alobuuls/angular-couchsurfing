@@ -29,12 +29,24 @@
         </button>
 
         <!-- STAYED -->
-        <mat-checkbox formControlName="stayed">
-          {{ 'TRIP_FORM.STAYED' | translate }}
-        </mat-checkbox>
+        <div class="stayed-field">
+          <label class="stayed-label">
+            {{ 'TRIP_FORM.STAYED' | translate }}
+          </label>
+
+          <mat-radio-group formControlName="stayed" class="stayed-options">
+            <mat-radio-button [value]="true">
+              {{ 'GENERAL.YES' | translate }}
+            </mat-radio-button>
+
+            <mat-radio-button [value]="false">
+              {{ 'GENERAL.NO' | translate }}
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
 
         <!-- NIGHTS -->
-        <mat-form-field appearance="outline" class="nights-field" *ngIf="f['stayed'].value">
+        <mat-form-field appearance="outline" class="nights-field" *ngIf="f['stayed'].value === true">
           <mat-label>{{ 'TRIP_FORM.NIGHTS' | translate }}</mat-label>
 
           <mat-select formControlName="nights">

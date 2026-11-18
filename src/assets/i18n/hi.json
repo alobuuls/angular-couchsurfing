@@ -368,8 +368,10 @@
       "THEIR_REFERENCE": "उनका संदर्भ",
       "MY_REFERENCE": "मेरा संदर्भ",
       "COMMENTS": "टिप्पणी लिखें",
-      "LOADING_STATES": "राज्य लोड हो रहे हैं...",
-      "LOADING_CITIES": "शहर लोड हो रहे हैं..."
+      "LOADING_STATES": "राज्यों को लोड किया जा रहा है...",
+      "LOADING_CITIES": "शहरों को लोड किया जा रहा है...",
+      "RESIDES_IN_HOMETOWN": "क्या आप वहाँ रहते हैं?",
+      "PLATFORM": "प्लेटफ़ॉर्म"
     },
     "CHECKBOXES": {
       "FIRST_TIME": "पहली बार",
