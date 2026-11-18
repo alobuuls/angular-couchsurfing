@@ -117,7 +117,8 @@
     "UNITED_KINGDOM": "הממלכה המאוחדת",
     "UNKNOWN_COUNTRY": "מדינה לא ידועה",
     "VIEW_GUESTS": "צפייה באורחים",
-    "VIEW_GUEST": "צפייה באורח"
+    "VIEW_GUEST": "הצגת אורח",
+    "COUNTRIES_VISITED": "מדינות שבהן ביקר"
   },
   "GUESTS_CARDS": {
     "GUEST": "אורח",

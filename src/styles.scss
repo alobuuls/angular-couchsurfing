@@ -122,6 +122,7 @@
   --color-rating: #e7ad00;
   --color-female: #bd6db1;
   --color-male: #4e90b6;
+  --color-trans: #9670c9;
 
   /* Map */
   --color-hover-country: #590000;
@@ -1008,33 +1009,49 @@ html.backward::view-transition-new(root) {
   15. GUEST MARKER POINT
    ========================================================= */
 
+/* GUEST MARKERS */
 .guest-marker-wrapper {
-  background-color: transparent;
-  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .guest-marker {
   display: block;
-  width: 7px;
-  height: 7px;
+  width: 4px;
+  height: 4px;
+  box-sizing: content-box;
   background-color: var(--color-accent);
-  border: 2px solid color-mix(in srgb, var(--color-accent) 40%, #000000);
+  border: 2px solid color-mix(in srgb, var(--color-accent) 45%, var(--color-text));
   border-radius: 50%;
   box-shadow:
-    0 0 0 2px color-mix(in srgb, var(--color-primary) 25%, transparent),
-    0 2px 6px rgba(0, 0, 0, 0.3);
+    0 0 0 2px color-mix(in srgb, var(--color-primary) 20%, transparent),
+    0 2px 5px rgba(0, 0, 0, 0.25);
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
+/* HOVER */
 .guest-marker-wrapper:hover .guest-marker {
-  transform: scale(1.4);
-}
-
-// HOVER
-.guest-marker-wrapper:hover .guest-marker {
+  transform: scale(1.35);
   background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
   box-shadow:
-    0 0 0 5px color-mix(in srgb, var(--color-primary-dark) 30%, transparent),
-    0 2px 8px rgba(0, 0, 0, 0.35);
+    0 0 0 5px color-mix(in srgb, var(--color-primary) 25%, transparent),
+    0 2px 7px rgba(0, 0, 0, 0.3);
+}
+
+/* FOCUS */
+.guest-marker-wrapper:focus .guest-marker,
+.guest-marker-wrapper:focus-visible .guest-marker {
+  background-color: var(--color-secondary);
+  border-color: var(--color-primary);
+  box-shadow:
+    0 0 0 5px color-mix(in srgb, var(--color-primary) 35%, transparent),
+    0 2px 7px rgba(0, 0, 0, 0.3);
 }
 
 /* =========================================================

@@ -117,7 +117,8 @@
     "UNITED_KINGDOM": "यूनाइटेड किंगडम",
     "UNKNOWN_COUNTRY": "अज्ञात देश",
     "VIEW_GUESTS": "मेहमान देखें",
-    "VIEW_GUEST": "मेहमान देखें"
+    "VIEW_GUEST": "मेहमान देखें",
+    "COUNTRIES_VISITED": "देखे गए देश"
   },
   "GUESTS_CARDS": {
     "GUEST": "मेहमान",

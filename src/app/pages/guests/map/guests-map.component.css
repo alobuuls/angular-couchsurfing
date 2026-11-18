@@ -10,8 +10,9 @@
 :host ::ng-deep .guest-map-popup {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  background-color: inherit;
+  gap: 12px;
+  min-width: 180px;
+  color: var(--color-text);
 }
 
 :host ::ng-deep .leaflet-popup-content-wrapper,
@@ -19,25 +20,61 @@
   background-color: color-mix(in srgb, var(--color-primary) 20%, var(--color-surface));
 }
 
-/* POPUP CONTENT */
-:host ::ng-deep .guest-map-popup strong {
+/* POPUP HEADER */
+:host ::ng-deep .guest-map-popup-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+:host ::ng-deep .guest-map-popup-name {
   color: var(--color-text);
   font-size: 15px;
   font-weight: 600;
-  letter-spacing: 0.3px;
 }
 
-:host ::ng-deep .guest-map-popup p {
-  margin: 0;
+:host ::ng-deep .guest-map-popup-rating {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: auto;
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+:host ::ng-deep .guest-map-popup-rating .material-symbols-outlined {
+  color: var(--color-rating);
+  font-size: 18px;
+}
+
+/* HOMETOWN */
+:host ::ng-deep .guest-map-popup-location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   color: var(--color-text-secondary);
   font-size: 12px;
+}
+
+/* AGE */
+:host ::ng-deep .guest-map-popup-info-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--color-text-secondary) !important;
+  font-size: 12px;
+}
+
+:host ::ng-deep .guest-map-popup-info-item .material-symbols-outlined {
+  color: var(--color-primary);
+  font-size: 19px;
 }
 
 /* POPUP BUTTON */
 :host ::ng-deep .guest-map-popup-btn {
   width: 100%;
   padding: 0.5rem 0.75rem;
-  border: none;
   border-radius: 0.25rem;
   background-color: var(--color-secondary);
   color: var(--color-surface);
@@ -323,4 +360,63 @@
     height: 420px;
     min-height: 420px;
   }
+}
+
+/* COUNTRIES PROGRESS */
+
+.map-progress {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1000;
+  width: 190px;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background-color: color-mix(in srgb, var(--color-primary-dark) 30%, transparent);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--color-primary-light) 15%, transparent);
+}
+
+.map-progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 9px;
+}
+
+.map-progress-label {
+  color: var(--color-text);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.map-progress-count {
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.map-progress-track {
+  width: 100%;
+  height: 7px;
+  border-radius: 10px;
+  background-color: var(--color-border);
+}
+
+.map-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background-color: var(--color-primary);
+  transition: width 0.4s ease;
+}
+
+.map-progress-percentage {
+  margin-top: 6px;
+  color: color-mix(in srgb, var(--color-secondary) 80%, var(--color-text));
+  font-size: 14px;
+  font-weight: 700;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }

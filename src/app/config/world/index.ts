@@ -17,6 +17,7 @@ export * from '@config/world/continents';
 export * from '@config/world/regions';
 export * from '@config/world/country-region-index';
 export * from '@config/world/iso3';
+export * from '@config/world/country-aliases';
 
 export const WORLD: Record<string, ICountry> = {
   ...AFRICA,
