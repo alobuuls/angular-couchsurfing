@@ -368,8 +368,10 @@
       "THEIR_REFERENCE": "상대방의 추천글",
       "MY_REFERENCE": "내 추천글",
       "COMMENTS": "댓글 남기기",
-      "LOADING_STATES": "주 및 지역을 불러오는 중...",
-      "LOADING_CITIES": "도시를 불러오는 중..."
+      "LOADING_STATES": "주를 불러오는 중...",
+      "LOADING_CITIES": "도시를 불러오는 중...",
+      "RESIDES_IN_HOMETOWN": "그곳에 거주하시나요?",
+      "PLATFORM": "플랫폼"
     },
     "CHECKBOXES": {
       "FIRST_TIME": "첫 방문",

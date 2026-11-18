@@ -124,6 +124,21 @@
         </mat-form-field>
       </div>
 
+      <!-- PLATFORM -->
+      <mat-form-field appearance="outline">
+        <mat-label>
+          {{ 'GUEST_FORM.FIELDS.PLATFORM' | translate }}
+        </mat-label>
+
+        <mat-icon class="material-symbols-outlined" matPrefix> language </mat-icon>
+
+        <mat-select formControlName="platform">
+          <mat-option *ngFor="let platform of platforms" [value]="platform.value">
+            {{ platform.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
       <div class="fields-grid birth-grid">
         <!-- BIRTH DATE -->
         <mat-form-field appearance="outline">
@@ -296,6 +311,13 @@
           </ng-template>
         </mat-form-field>
 
+        <!-- RESIDES IN HOMETOWN -->
+        <div class="resides-hometown-field" *ngIf="f['hometownCity'].value && !loadingHometownCities">
+          <mat-checkbox formControlName="residesInHometown">
+            {{ 'GUEST_FORM.FIELDS.RESIDES_IN_HOMETOWN' | translate }}
+          </mat-checkbox>
+        </div>
+
         <!-- LOADING CITIES -->
         <mat-form-field
           appearance="outline"
@@ -312,7 +334,7 @@
         </mat-form-field>
       </div>
 
-      <div class="fields-grid location-grid">
+      <div class="fields-grid location-grid" *ngIf="!f['residesInHometown'].value">
         <!-- LIVING COUNTRY -->
         <mat-form-field appearance="outline" class="country-field">
           <mat-label>

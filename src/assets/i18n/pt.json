@@ -369,7 +369,9 @@
       "MY_REFERENCE": "Minha referência",
       "COMMENTS": "Deixe um comentário",
       "LOADING_STATES": "Carregando estados...",
-      "LOADING_CITIES": "Carregando cidades..."
+      "LOADING_CITIES": "Carregando cidades...",
+      "RESIDES_IN_HOMETOWN": "Você mora lá?",
+      "PLATFORM": "Plataforma"
     },
     "CHECKBOXES": {
       "FIRST_TIME": "Primeira vez",

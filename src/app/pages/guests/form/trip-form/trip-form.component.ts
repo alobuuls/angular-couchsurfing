@@ -42,7 +42,7 @@ export class TripFormComponent implements OnInit {
   initForm(): void {
     this.formTrip = this.fb.group({
       visitedDate: ['', Validators.required],
-      stayed: [false],
+      stayed: [null],
       nights: [
         {
           value: '',
@@ -89,11 +89,17 @@ export class TripFormComponent implements OnInit {
 
     if (!stayedCtrl || !nightsCtrl) return;
 
-    stayedCtrl.value ? nightsCtrl.enable() : nightsCtrl.disable();
+    const updateNightsState = (stayed: boolean | null) => {
+      if (stayed === true) {
+        nightsCtrl.enable();
+      } else {
+        nightsCtrl.disable();
+        nightsCtrl.reset('', { emitEvent: false });
+      }
+    };
 
-    stayedCtrl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(stayed => {
-      stayed ? nightsCtrl?.enable() : nightsCtrl?.disable();
-    });
+    updateNightsState(stayedCtrl.value);
+    stayedCtrl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(updateNightsState);
   }
 
   btnSetToday(): void {

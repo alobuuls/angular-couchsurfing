@@ -3,7 +3,9 @@
     "LOADING": "Loading",
     "BACK": "Back",
     "ERROR": "Error",
-    "CLOSE": "Close"
+    "CLOSE": "Close",
+    "YES": "Yes",
+    "NO": "No"
   },
   "MENU": {
     "HOME": "Home",
@@ -359,7 +361,9 @@
       "MY_REFERENCE": "My Reference",
       "COMMENTS": "Leave a comment",
       "LOADING_STATES": "Loading states...",
-      "LOADING_CITIES": "Loading cities..."
+      "LOADING_CITIES": "Loading cities...",
+      "RESIDES_IN_HOMETOWN": "Do you live there?",
+      "PLATFORM": "Platform"
     },
     "CHECKBOXES": {
       "FIRST_TIME": "First Time",
@@ -389,7 +393,8 @@
       "PHONE_INVALID": "Invalid phone number",
       "WHATSAPP_MAX": "Maximum 16 characters",
       "REFERENCE_MAX": "Maximum 500 characters",
-      "COMMENTS_MAX": "Maximum 500 characters"
+      "COMMENTS_MAX": "Maximum 500 characters",
+      "PLATFORM_REQUIRED": "Platform is required"
     },
     "RATING": {
       "1": "Super Bad",

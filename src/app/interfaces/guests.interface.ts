@@ -4,6 +4,7 @@ import { IGuestTableRow } from '@interfaces/data-structure-api';
 
 // Guest with all information
 export interface IGuestDetail extends ITripDetail {
+  platform: string;
   _id: string;
   groupType: TGuestGroupType;
   birthDate?: string;
