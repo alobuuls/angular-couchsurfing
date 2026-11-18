@@ -114,7 +114,6 @@
     "GUESTS": "huéspedes",
     "REGION": "Región",
     "CONTINENT": "Continente",
-    "UNITED_KINGDOM": "Reino Unido",
     "UNKNOWN_COUNTRY": "País desconocido",
     "VIEW_GUESTS": "Ver huéspedes",
     "VIEW_GUEST": "Ver huésped",
@@ -402,7 +401,8 @@
       "PHONE_INVALID": "Número de teléfono no válido",
       "WHATSAPP_MAX": "Máximo 16 caracteres",
       "REFERENCE_MAX": "Máximo 500 caracteres",
-      "COMMENTS_MAX": "Máximo 500 caracteres"
+      "COMMENTS_MAX": "Máximo 500 caracteres",
+      "PLATFORM_REQUIRED": "La plataforma es obligatoria"
     },
     "RATING": {
       "1": "Muy mala",

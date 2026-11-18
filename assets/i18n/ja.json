@@ -114,7 +114,6 @@
     "GUESTS": "ゲスト",
     "REGION": "地域",
     "CONTINENT": "大陸",
-    "UNITED_KINGDOM": "イギリス",
     "UNKNOWN_COUNTRY": "不明な国",
     "VIEW_GUESTS": "ゲストを表示",
     "VIEW_GUEST": "ゲストを表示",
@@ -401,7 +400,8 @@
       "PHONE_INVALID": "無効な電話番号です",
       "WHATSAPP_MAX": "最大16文字です",
       "REFERENCE_MAX": "最大500文字です",
-      "COMMENTS_MAX": "最大500文字です"
+      "COMMENTS_MAX": "最大500文字",
+      "PLATFORM_REQUIRED": "プラットフォームは必須です"
     },
     "RATING": {
       "1": "非常に悪い",

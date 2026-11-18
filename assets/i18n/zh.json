@@ -118,7 +118,6 @@
     "GUESTS": "客人",
     "REGION": "地区",
     "CONTINENT": "洲",
-    "UNITED_KINGDOM": "英国",
     "UNKNOWN_COUNTRY": "未知国家",
     "VIEW_GUESTS": "查看客人",
     "VIEW_GUEST": "查看客人",
@@ -405,7 +404,8 @@
       "PHONE_INVALID": "电话号码无效",
       "WHATSAPP_MAX": "最多 16 个字符",
       "REFERENCE_MAX": "最多 500 个字符",
-      "COMMENTS_MAX": "最多 500 个字符"
+      "COMMENTS_MAX": "最多500个字符",
+      "PLATFORM_REQUIRED": "平台为必填项"
     },
     "RATING": {
       "1": "非常差",
