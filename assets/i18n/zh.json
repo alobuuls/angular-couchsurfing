@@ -121,7 +121,8 @@
     "UNITED_KINGDOM": "英国",
     "UNKNOWN_COUNTRY": "未知国家",
     "VIEW_GUESTS": "查看客人",
-    "VIEW_GUEST": "查看客人"
+    "VIEW_GUEST": "查看客人",
+    "COUNTRIES_VISITED": "访问过的国家"
   },
   "GUESTS_CARDS": {
     "GUEST": "位客人",

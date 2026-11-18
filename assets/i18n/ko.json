@@ -117,7 +117,8 @@
     "UNITED_KINGDOM": "영국",
     "UNKNOWN_COUNTRY": "알 수 없는 국가",
     "VIEW_GUESTS": "게스트 보기",
-    "VIEW_GUEST": "게스트 보기"
+    "VIEW_GUEST": "게스트 보기",
+    "COUNTRIES_VISITED": "방문한 국가"
   },
   "GUESTS_CARDS": {
     "GUEST": "명",

@@ -117,7 +117,8 @@
     "UNITED_KINGDOM": "Regno Unito",
     "UNKNOWN_COUNTRY": "Paese sconosciuto",
     "VIEW_GUESTS": "Visualizza ospiti",
-    "VIEW_GUEST": "Visualizza ospite"
+    "VIEW_GUEST": "Visualizza ospite",
+    "COUNTRIES_VISITED": "Paesi visitati"
   },
   "GUESTS_CARDS": {
     "GUEST": "ospite",
