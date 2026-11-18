@@ -114,7 +114,6 @@
     "GUESTS": "אורחים",
     "REGION": "אזור",
     "CONTINENT": "יבשת",
-    "UNITED_KINGDOM": "הממלכה המאוחדת",
     "UNKNOWN_COUNTRY": "מדינה לא ידועה",
     "VIEW_GUESTS": "צפייה באורחים",
     "VIEW_GUEST": "הצגת אורח",
@@ -400,7 +399,8 @@
       "PHONE_INVALID": "מספר טלפון לא תקין",
       "WHATSAPP_MAX": "עד 16 תווים",
       "REFERENCE_MAX": "עד 500 תווים",
-      "COMMENTS_MAX": "עד 500 תווים"
+      "COMMENTS_MAX": "עד 500 תווים",
+      "PLATFORM_REQUIRED": "יש לבחור פלטפורמה"
     },
     "RATING": {
       "1": "גרוע מאוד",

@@ -374,7 +374,7 @@ export const EUROPE_REGIONS = {
   western_europe: ['be', 'fr', 'lu', 'mc', 'nl'],
   central_europe: ['at', 'de', 'li', 'ch', 'si', 'cz', 'hu', 'pl', 'sk'],
   southern_europe: ['al', 'ad', 'ba', 'hr', 'cy', 'gr', 'it', 'xk', 'mt', 'me', 'pt', 'sm', 'rs', 'es', 'mk', 'va'],
-  northern_europe: ['gb', 'gb-eng', 'gb-sct', 'ie', 'gb-nir', 'gb-wls'],
+  northern_europe: ['gb-eng', 'gb-sct', 'gb-nir', 'gb-wls', 'sct', 'eng', 'wls', 'nir', 'ie'],
   baltics: ['ee', 'lv', 'lt'],
   eastern_europe: ['by', 'bg', 'md', 'ro', 'ru', 'ua'],
 } as const;

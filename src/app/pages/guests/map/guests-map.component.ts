@@ -122,7 +122,9 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
   // Countries count
   get visitedCountriesCount(): number {
-    return Object.keys(this.guestCounts).filter(code => !this.ukRegionCodes.includes(code) && (this.guestCounts[code] ?? 0) > 0 && !!this.countriesByIso2[code]).length;
+    return Object.keys(this.guestCounts).filter(
+      code => (this.guestCounts[code] ?? 0) > 0 && (this.ukRegionCodes.some(region => code === `gb-${region}`) || !!this.countriesByIso2[code])
+    ).length;
   }
 
   get totalCountriesCount(): number {
@@ -131,7 +133,6 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
   get visitedCountriesPercentage(): number {
     if (!this.totalCountriesCount) return 0;
-
     return Number(((this.visitedCountriesCount / this.totalCountriesCount) * 100).toFixed(1));
   }
 
@@ -688,10 +689,27 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private getAdminRegionPopupHtml(countryName: string, code: string, count: number): string {
+    const lang = this._language.currentLanguage;
+    const location = getCountryLocation(code);
+
+    const regionName = location ? REGION_NAMES[location.region] : null;
+    const region = regionName?.[lang] ?? regionName?.en ?? '';
+
+    const continent = location ? this.getContinentName(location.continent) : '';
+    const normalizationCodeGB = `gb-${code.toLowerCase()}`;
+
+    const flagClass = this.getFlagClass(normalizationCodeGB);
+
+    const txtBtnGuest = this._translate.instant(count === 1 ? 'MAP.VIEW_GUEST' : 'MAP.VIEW_GUESTS');
+
     return `
     <div class="country-popup">
       <div class="country-popup-title">${countryName}</div>
-      <div class="country-popup-code">${code.toUpperCase()}</div>
+
+      <div class="country-popup-code">
+        <span class="${flagClass}" aria-label="${countryName}"></span>
+      </div>
+
       <div class="country-popup-divider"></div>
 
       <div class="country-popup-row">
@@ -701,13 +719,20 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
       <div class="country-popup-row">
         <span>${this._translate.instant('MAP.REGION')}</span>
-        <strong>${this._translate.instant('MAP.UNITED_KINGDOM')}</strong>
+        <strong>${region}</strong>
       </div>
 
       <div class="country-popup-row">
         <span>${this._translate.instant('MAP.CONTINENT')}</span>
-        <strong>${this._translate.instant('CONTINENTS.europe')}</strong>
+        <strong>${continent}</strong>
       </div>
+
+      <a
+        class="view-country-guests"
+        data-country-code="${normalizationCodeGB}"
+      >
+        ${txtBtnGuest}
+      </a>
     </div>
   `;
   }
@@ -718,7 +743,6 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     if (!popupElement) return;
 
     const button = popupElement.querySelector('.view-country-guests') as HTMLAnchorElement | null;
-
     if (!button) return;
 
     button.addEventListener(
@@ -745,11 +769,6 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     );
   }
 
-  // FORMAT LABEL
-  private formatLabel(value: string): string {
-    return value.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
-  }
-
   // GUEST COUNTS
   private getGuestCounts(): Record<string, number> {
     const counts: Record<string, number> = {};
@@ -764,23 +783,17 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
       for (const person of row.people) {
         const rawCode = person.hometown?.code?.toLowerCase().trim();
-
         if (!rawCode) continue;
-
         let iso2 = '';
 
         // Keep individual UK region counts and group them under Great Britain.
         const ukRegionCode = rawCode.startsWith('gb-') ? rawCode.split('-')[1] : rawCode;
 
         if (this.ukRegionCodes.includes(ukRegionCode)) {
-          counts[ukRegionCode] = (counts[ukRegionCode] ?? 0) + 1;
-          iso2 = 'gb';
+          iso2 = `gb-${ukRegionCode}`;
         } else if (rawCode.length === 2) {
           const country = this.countriesByIso2[rawCode];
-
-          if (country) {
-            iso2 = rawCode;
-          }
+          if (country) iso2 = rawCode;
         }
 
         if (!iso2) continue;
@@ -788,17 +801,10 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
         // Count guests and keep their IDs for country navigation.
         counts[iso2] = (counts[iso2] ?? 0) + 1;
 
-        if (person.guestId) {
-          (this.guestIdsByCountry[iso2] ??= []).push(person.guestId);
-        }
+        if (person.guestId) (this.guestIdsByCountry[iso2] ??= []).push(person.guestId);
 
         // Store valid arrival dates to determine when each country reached its current total.
-        if (Number.isFinite(timestamp)) {
-          arrivals.push({
-            country: iso2,
-            timestamp,
-          });
-        }
+        if (Number.isFinite(timestamp)) arrivals.push({ country: iso2, timestamp });
       }
     }
 
@@ -1001,6 +1007,10 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
       maxWidth: 280,
     });
 
+    layer.once('popupopen', (event: L.PopupEvent) => {
+      this.bindCountryPopupButton(event.popup, count);
+    });
+
     layer.openPopup();
   }
 
@@ -1048,12 +1058,8 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private getMapColor(variable: string, fallback: string): string {
-    if (!this.mapContainer) {
-      return fallback;
-    }
-
+    if (!this.mapContainer) return fallback;
     const color = getComputedStyle(this.mapContainer).getPropertyValue(variable).trim();
-
     return color || fallback;
   }
 
@@ -1120,24 +1126,16 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
   // Finds the country polygon when the hometown region cannot be matched.
   private getCountryPolygon(countryCode: string): Feature<Polygon | MultiPolygon> | null {
-    if (!this.geoJsonData || !countryCode) {
-      return null;
-    }
+    if (!this.geoJsonData || !countryCode) return null;
 
     const rawCode = countryCode.toLowerCase().trim();
     const country = this.countriesByIso2[rawCode];
     const iso2 = country ? (this.iso2ByCountry.get(country) ?? '') : rawCode;
     const resolvedIso2 = COUNTRY_POLYGON_ALIASES[iso2] ?? iso2;
-
     if (!resolvedIso2) return null;
 
-    const countryFeature = this.geoJsonData.features.find(feature => {
-      return this.getCountryConfig(feature).iso2 === resolvedIso2;
-    });
-
-    if (!countryFeature || !['Polygon', 'MultiPolygon'].includes(countryFeature.geometry.type)) {
-      return null;
-    }
+    const countryFeature = this.geoJsonData.features.find(feature => this.getCountryConfig(feature).iso2 === resolvedIso2);
+    if (!countryFeature || !['Polygon', 'MultiPolygon'].includes(countryFeature.geometry.type)) return null;
     return countryFeature as Feature<Polygon | MultiPolygon>;
   }
 
