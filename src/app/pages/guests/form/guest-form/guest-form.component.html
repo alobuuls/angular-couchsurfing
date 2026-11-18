@@ -137,6 +137,10 @@
             {{ platform.label }}
           </mat-option>
         </mat-select>
+
+        <mat-error *ngIf="f['platform'].hasError('required')">
+          {{ 'GUEST_FORM.ERRORS.PLATFORM_REQUIRED' | translate }}
+        </mat-error>
       </mat-form-field>
 
       <div class="fields-grid birth-grid">

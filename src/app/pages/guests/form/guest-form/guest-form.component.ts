@@ -168,32 +168,8 @@ export class GuestFormComponent implements OnInit {
     return this.formCreateGuest.controls;
   }
 
-  private get hometownCodeCtrl() {
-    return this.formCreateGuest.get('hometownCode');
-  }
-
-  private get hometownStateCtrl() {
-    return this.formCreateGuest.get('hometownState');
-  }
-
-  private get livingInCodeCtrl() {
-    return this.formCreateGuest.get('livingInCode');
-  }
-
-  private get livingInStateCtrl() {
-    return this.formCreateGuest.get('livingInState');
-  }
-
   private get prefixCodeCtrl() {
     return this.formCreateGuest.get('prefixCode');
-  }
-
-  private get weMetCountryCtrl() {
-    return this.formCreateGuest.get('countryCodeWeMet');
-  }
-
-  private get weMetStateCtrl() {
-    return this.formCreateGuest.get('stateWeMet');
   }
 
   ngOnInit(): void {
@@ -609,7 +585,7 @@ export class GuestFormComponent implements OnInit {
 
   initForm(): void {
     this.formCreateGuest = this.fb.group({
-      platform: ['cs'],
+      platform: ['', Validators.required],
       fullName: ['', [Validators.required, Validators.maxLength(this.maxLengths.fullName)]],
       instagram: ['', [Validators.maxLength(this.maxLengths.instagram)]],
       urlProfileCs: ['', [Validators.maxLength(this.maxLengths.urlProfileCs)]],

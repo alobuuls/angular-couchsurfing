@@ -728,24 +728,6 @@ export const AFRICA = {
     prefix: '+230',
   },
 
-  yt: {
-    name: {
-      en: 'Mayotte',
-      es: 'Mayotte',
-      de: 'Mayotte',
-      zh: '马约特',
-      fr: 'Mayotte',
-      it: 'Mayotte',
-      pt: 'Maiote',
-      ru: 'Майотта',
-      ja: 'マヨット',
-      hi: 'मायोट',
-      ko: '마요트',
-      he: 'מיוט',
-    },
-    prefix: '+262',
-  },
-
   mz: {
     name: {
       en: 'Mozambique',

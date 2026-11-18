@@ -114,7 +114,6 @@
     "GUESTS": "Hóspedes",
     "REGION": "Região",
     "CONTINENT": "Continente",
-    "UNITED_KINGDOM": "Reino Unido",
     "UNKNOWN_COUNTRY": "País desconhecido",
     "VIEW_GUESTS": "Ver hóspedes",
     "VIEW_GUEST": "Ver hóspede",
@@ -401,7 +400,8 @@
       "PHONE_INVALID": "Número de telefone inválido",
       "WHATSAPP_MAX": "Máximo de 16 caracteres",
       "REFERENCE_MAX": "Máximo de 500 caracteres",
-      "COMMENTS_MAX": "Máximo de 500 caracteres"
+      "COMMENTS_MAX": "अधिकतम 500 अक्षर",
+      "PLATFORM_REQUIRED": "प्लेटफ़ॉर्म चुनना आवश्यक है"
     },
     "RATING": {
       "1": "Péssimo",

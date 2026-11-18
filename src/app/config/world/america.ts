@@ -57,24 +57,6 @@ export const AMERICA = {
     prefix: '+52',
   },
 
-  pm: {
-    name: {
-      en: 'Saint Pierre and Miquelon',
-      es: 'San Pedro y Miquelón',
-      de: 'Saint-Pierre und Miquelon',
-      zh: '圣皮埃尔和密克隆',
-      fr: 'Saint-Pierre-et-Miquelon',
-      it: 'Saint-Pierre e Miquelon',
-      pt: 'Saint-Pierre e Miquelon',
-      ru: 'Сен-Пьер и Микелон',
-      ja: 'サンピエール島・ミクロン島',
-      hi: 'सेंट पियरे और मिकेलॉन',
-      ko: '생피에르 미클롱',
-      he: 'סן-פייר ומיקלון',
-    },
-    prefix: '+508',
-  },
-
   us: {
     name: {
       en: 'United States',
@@ -113,24 +95,6 @@ export const AMERICA = {
     prefix: '+297',
   },
 
-  ai: {
-    name: {
-      en: 'Anguilla',
-      es: 'Anguila',
-      de: 'Anguilla',
-      zh: '安圭拉',
-      fr: 'Anguilla',
-      it: 'Anguilla',
-      pt: 'Anguila',
-      ru: 'Ангилья',
-      ja: 'アンギラ',
-      hi: 'एंगुइला',
-      ko: '앵귈라',
-      he: 'אנגווילה',
-    },
-    prefix: '+1-264',
-  },
-
   ag: {
     name: {
       en: 'Antigua and Barbuda',
@@ -147,24 +111,6 @@ export const AMERICA = {
       he: 'אנטיגואה וברבודה',
     },
     prefix: '+1-268',
-  },
-
-  bq: {
-    name: {
-      en: 'Caribbean Netherlands',
-      es: 'Caribe Neerlandés',
-      de: 'Karibische Niederlande',
-      zh: '荷属加勒比区',
-      fr: 'Pays-Bas caribéens',
-      it: 'Caraibi olandesi',
-      pt: 'Caraíbas Neerlandesas',
-      ru: 'Карибские Нидерланды',
-      ja: 'カリブ海オランダ',
-      hi: 'कैरिबियाई नीदरलैंड',
-      ko: '카리브 네덜란드',
-      he: 'האיים הקריביים ההולנדיים',
-    },
-    prefix: '+599',
   },
 
   bs: {
@@ -185,24 +131,6 @@ export const AMERICA = {
     prefix: '+1-242',
   },
 
-  bm: {
-    name: {
-      en: 'Bermuda',
-      es: 'Bermudas',
-      de: 'Bermuda',
-      zh: '百慕大',
-      fr: 'Bermudes',
-      it: 'Bermuda',
-      pt: 'Bermudas',
-      ru: 'Бермуды',
-      ja: 'バミューダ',
-      hi: 'बरमूडा',
-      ko: '버뮤다',
-      he: 'ברמודה',
-    },
-    prefix: '+1-441',
-  },
-
   bb: {
     name: {
       en: 'Barbados',
@@ -219,23 +147,6 @@ export const AMERICA = {
       he: 'ברבדוס',
     },
     prefix: '+1-246',
-  },
-  vg: {
-    name: {
-      en: 'British Virgin Islands',
-      es: 'Islas Vírgenes Británicas',
-      de: 'Britische Jungferninseln',
-      zh: '英属维尔京群岛',
-      fr: 'Îles Vierges britanniques',
-      it: 'Isole Vergini britanniche',
-      pt: 'Ilhas Virgens Britânicas',
-      ru: 'Британские Виргинские острова',
-      ja: 'イギリス領ヴァージン諸島',
-      hi: 'ब्रिटिश वर्जिन द्वीपसमूह',
-      ko: '영국령 버진아일랜드',
-      he: 'איי הבתולה הבריטיים',
-    },
-    prefix: '+1-284',
   },
 
   cu: {
@@ -274,24 +185,6 @@ export const AMERICA = {
     prefix: '+599',
   },
 
-  ky: {
-    name: {
-      en: 'Cayman Islands',
-      es: 'Islas Caimán',
-      de: 'Kaimaninseln',
-      zh: '开曼群岛',
-      fr: 'Îles Caïmans',
-      it: 'Isole Cayman',
-      pt: 'Ilhas Caimão',
-      ru: 'Каймановы острова',
-      ja: 'ケイマン諸島',
-      hi: 'केमैन द्वीपसमूह',
-      ko: '케이맨 제도',
-      he: 'איי קיימן',
-    },
-    prefix: '+1-345',
-  },
-
   dm: {
     name: {
       en: 'Dominica',
@@ -326,24 +219,6 @@ export const AMERICA = {
       he: 'הרפובליקה הדומיניקנית',
     },
     prefix: '+1-809',
-  },
-
-  gp: {
-    name: {
-      en: 'Guadeloupe',
-      es: 'Guadalupe',
-      de: 'Guadeloupe',
-      zh: '瓜德罗普',
-      fr: 'Guadeloupe',
-      it: 'Guadalupa',
-      pt: 'Guadalupe',
-      ru: 'Гваделупа',
-      ja: 'グアドループ',
-      hi: 'ग्वाडेलूप',
-      ko: '과들루프',
-      he: 'גוואדלופ',
-    },
-    prefix: '+590',
   },
 
   gd: {
@@ -398,24 +273,6 @@ export const AMERICA = {
       he: 'ג׳מייקה',
     },
     prefix: '+1-876', // También existe +1-658.
-  },
-
-  ms: {
-    name: {
-      en: 'Montserrat',
-      es: 'Montserrat',
-      de: 'Montserrat',
-      zh: '蒙特塞拉特',
-      fr: 'Montserrat',
-      it: 'Montserrat',
-      pt: 'Montserrat',
-      ru: 'Монтсеррат',
-      ja: 'モントセラト',
-      hi: 'मोंटसेराट',
-      ko: '몬트세랫',
-      he: 'מונטסראט',
-    },
-    prefix: '+1-664',
   },
 
   mq: {
@@ -490,42 +347,6 @@ export const AMERICA = {
     prefix: '+1-758',
   },
 
-  sx: {
-    name: {
-      en: 'Sint Maarten',
-      es: 'Sint Maarten',
-      de: 'Sint Maarten',
-      zh: '荷属圣马丁',
-      fr: 'Saint-Martin (partie néerlandaise)',
-      it: 'Sint Maarten',
-      pt: 'São Martinho',
-      ru: 'Синт-Мартен',
-      ja: 'シント・マールテン',
-      hi: 'सिंट मार्टेन',
-      ko: '신트마르턴',
-      he: 'סנט מארטן',
-    },
-    prefix: '+1-721',
-  },
-
-  tc: {
-    name: {
-      en: 'Turks and Caicos Islands',
-      es: 'Islas Turcas y Caicos',
-      de: 'Turks- und Caicosinseln',
-      zh: '特克斯和凯科斯群岛',
-      fr: 'Îles Turques-et-Caïques',
-      it: 'Isole Turks e Caicos',
-      pt: 'Ilhas Turcas e Caicos',
-      ru: 'Теркс и Кайкос',
-      ja: 'タークス・カイコス諸島',
-      hi: 'तुर्क और कैकोस द्वीपसमूह',
-      ko: '터크스 케이커스 제도',
-      he: 'איי טרקס וקייקוס',
-    },
-    prefix: '+1-649',
-  },
-
   tt: {
     name: {
       en: 'Trinidad and Tobago',
@@ -560,24 +381,6 @@ export const AMERICA = {
       he: 'סנט וינסנט והגרנדינים',
     },
     prefix: '+1-784',
-  },
-
-  vi: {
-    name: {
-      en: 'U.S. Virgin Islands',
-      es: 'Islas Vírgenes de los Estados Unidos',
-      de: 'Amerikanische Jungferninseln',
-      zh: '美属维尔京群岛',
-      fr: 'Îles Vierges des États-Unis',
-      it: 'Isole Vergini Americane',
-      pt: 'Ilhas Virgens Americanas',
-      ru: 'Американские Виргинские острова',
-      ja: 'アメリカ領ヴァージン諸島',
-      hi: 'अमेरिकी वर्जिन द्वीपसमूह',
-      ko: '미국령 버진아일랜드',
-      he: 'איי הבתולה של ארצות הברית',
-    },
-    prefix: '+1-340',
   },
 
   /*** CENTRAL AMERICA ***/
@@ -815,23 +618,6 @@ export const AMERICA = {
       he: 'אקוודור',
     },
     prefix: '+593',
-  },
-  fk: {
-    name: {
-      en: 'Falkland Islands',
-      es: 'Islas Malvinas',
-      de: 'Falklandinseln',
-      zh: '福克兰群岛',
-      fr: 'Îles Malouines',
-      it: 'Isole Falkland',
-      pt: 'Ilhas Malvinas',
-      ru: 'Фолклендские острова',
-      ja: 'フォークランド諸島',
-      hi: 'फ़ॉकलैंड द्वीपसमूह',
-      ko: '포클랜드 제도',
-      he: 'איי פוקלנד',
-    },
-    prefix: '+500',
   },
 
   gf: {

@@ -114,7 +114,6 @@
     "GUESTS": "मेहमान",
     "REGION": "क्षेत्र",
     "CONTINENT": "महाद्वीप",
-    "UNITED_KINGDOM": "यूनाइटेड किंगडम",
     "UNKNOWN_COUNTRY": "अज्ञात देश",
     "VIEW_GUESTS": "मेहमान देखें",
     "VIEW_GUEST": "मेहमान देखें",
@@ -401,7 +400,8 @@
       "PHONE_INVALID": "अमान्य फ़ोन नंबर",
       "WHATSAPP_MAX": "अधिकतम 16 अक्षर",
       "REFERENCE_MAX": "अधिकतम 500 अक्षर",
-      "COMMENTS_MAX": "अधिकतम 500 अक्षर"
+      "COMMENTS_MAX": "अधिकतम 500 अक्षर",
+      "PLATFORM_REQUIRED": "प्लेटफ़ॉर्म चुनना आवश्यक है"
     },
     "RATING": {
       "1": "बहुत खराब",

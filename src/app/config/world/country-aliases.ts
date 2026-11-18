@@ -62,5 +62,8 @@ export const REGION_NAME_ALIASES: Record<string, string[]> = {
 export const COUNTRY_POLYGON_ALIASES: Record<string, string> = {
   mq: 'fr',
   mtq: 'fr',
-  sct: 'gb',
+  'gb-sct': 'sct',
+  'gb-nir': 'nir',
+  'gb-eng': 'eng',
+  'gb-wls': 'wls',
 };

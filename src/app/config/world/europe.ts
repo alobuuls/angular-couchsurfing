@@ -529,25 +529,6 @@ export const EUROPE = {
   },
 
   /*** NORTHERN EUROPE ***/
-
-  gb: {
-    name: {
-      en: 'United Kingdom',
-      es: 'Reino Unido',
-      de: 'Vereinigtes Königreich',
-      zh: '英国',
-      fr: 'Royaume-Uni',
-      it: 'Regno Unito',
-      pt: 'Reino Unido',
-      ru: 'Великобритания',
-      ja: 'イギリス',
-      hi: 'यूनाइटेड किंगडम',
-      ko: '영국',
-      he: 'הממלכה המאוחדת',
-    },
-    prefix: '+44',
-  },
-
   'gb-eng': {
     name: {
       en: 'England',
