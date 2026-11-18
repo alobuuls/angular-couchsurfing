@@ -117,7 +117,8 @@
     "UNITED_KINGDOM": "イギリス",
     "UNKNOWN_COUNTRY": "不明な国",
     "VIEW_GUESTS": "ゲストを表示",
-    "VIEW_GUEST": "ゲストを表示"
+    "VIEW_GUEST": "ゲストを表示",
+    "COUNTRIES_VISITED": "訪問した国"
   },
   "GUESTS_CARDS": {
     "GUEST": "人のゲスト",
