@@ -367,8 +367,10 @@
       "THEIR_REFERENCE": "ההמלצה שלהם",
       "MY_REFERENCE": "ההמלצה שלי",
       "COMMENTS": "השאירו הערה",
-      "LOADING_STATES": "טוען מדינות ואזורים...",
-      "LOADING_CITIES": "טוען ערים..."
+      "LOADING_STATES": "טוען מדינות...",
+      "LOADING_CITIES": "טוען ערים...",
+      "RESIDES_IN_HOMETOWN": "האם אתה גר שם?",
+      "PLATFORM": "פלטפורמה"
     },
     "CHECKBOXES": {
       "FIRST_TIME": "ביקור ראשון",

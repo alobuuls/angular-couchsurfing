@@ -368,8 +368,10 @@
       "THEIR_REFERENCE": "Их рекомендация",
       "MY_REFERENCE": "Моя рекомендация",
       "COMMENTS": "Оставить комментарий",
-      "LOADING_STATES": "Загрузка штатов и регионов...",
-      "LOADING_CITIES": "Загрузка городов..."
+      "LOADING_STATES": "Загрузка штатов...",
+      "LOADING_CITIES": "Загрузка городов...",
+      "RESIDES_IN_HOMETOWN": "Вы там живёте?",
+      "PLATFORM": "Платформа"
     },
     "CHECKBOXES": {
       "FIRST_TIME": "Впервые",
