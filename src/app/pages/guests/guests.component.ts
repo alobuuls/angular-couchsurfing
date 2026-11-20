@@ -72,6 +72,7 @@ export class GuestsComponent implements OnInit {
     asia: 'fa-solid fa-earth-asia',
     europe: 'fa-solid fa-earth-europe',
     oceania: 'fa-solid fa-earth-oceania',
+    global: 'fa-solid fa-earth',
   };
 
   currentView: ICurrentView = 'table';

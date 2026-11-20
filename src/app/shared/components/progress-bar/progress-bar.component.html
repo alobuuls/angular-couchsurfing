@@ -1,0 +1,21 @@
+<!-- COUNTRIES PROGRESS -->
+<div class="map-progress-header">
+  <span class="map-progress-label">
+    {{ getContinent(continent) }}
+  </span>
+
+  <strong class="map-progress-count"> {{ visitedCountriesCount }}/{{ totalCountriesCount }} </strong>
+</div>
+
+<div
+  [style.--bg-progress-bar]="bgBar"
+  class="map-progress-track"
+  role="progressbar"
+  [attr.aria-valuenow]="visitedCountriesPercentage"
+  aria-valuemin="0"
+  aria-valuemax="100"
+>
+  <div class="map-progress-fill" [style.width.%]="visitedCountriesPercentage"></div>
+</div>
+
+<div class="map-progress-percentage">{{ visitedCountriesPercentage }}%</div>

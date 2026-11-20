@@ -5,7 +5,7 @@ export type Language = (typeof LANG)[number];
 
 export type CountriesCodes = keyof typeof WORLD;
 
-export const CONTINENTS = ['africa', 'america', 'asia', 'europe', 'oceania'] as const;
+export const CONTINENTS = ['africa', 'america', 'asia', 'europe', 'oceania', 'global'] as const;
 export type Continents = (typeof CONTINENTS)[number];
 
 export type Regions =
