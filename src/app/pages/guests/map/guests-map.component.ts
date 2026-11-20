@@ -12,7 +12,7 @@ import { GeonameService } from '@services/geoname.service';
 // Interfaces
 import { IGuestTableMember, IGuestTableRow } from '@interfaces/data-structure-api';
 import { IAdminRegionsFeature, IAdminRegionsGeoJson, IWorldGeoJson } from '@interfaces/map-interface';
-import { WORLD, REGION_NAMES, getCountryLocation, REGION_NAME_ALIASES, COUNTRY_NAME_ALIASES, COUNTRY_POLYGON_ALIASES } from '@config/world';
+import { WORLD, REGION_NAMES, getCountryLocation, REGION_NAME_ALIASES, COUNTRY_NAME_ALIASES, COUNTRY_POLYGON_ALIASES, AFRICA } from '@config/world';
 
 // Types
 import { Continents, ICountry } from '@type/word.types';
@@ -33,6 +33,8 @@ import { GUEST_GENDER_CONFIG } from '@utils';
 })
 export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
   @Input() data: IGuestTableRow[] = [];
+
+  progressBars: Continents[] = ['global', 'america', 'europe', 'asia', 'africa', 'oceania'];
 
   private selectedCountryIso2 = '';
 
@@ -80,6 +82,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
   private resizeObserver?: ResizeObserver;
 
+  // guest count
   private guestCounts: Record<string, number> = {};
 
   // ISO
@@ -112,28 +115,27 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['data'] || changes['data'].firstChange) {
-      return;
-    }
+    if (!changes['data'] || changes['data'].firstChange) return;
     this.guestCounts = this.getGuestCounts();
     this.updateCountryStyles();
     this.updateGuestMarkers();
   }
 
-  // Countries count
-  get visitedCountriesCount(): number {
-    return Object.keys(this.guestCounts).filter(
-      code => (this.guestCounts[code] ?? 0) > 0 && (this.ukRegionCodes.some(region => code === `gb-${region}`) || !!this.countriesByIso2[code])
-    ).length;
+  visitedCount(continent: Continents | 'global'): number {
+    const visitedCountries = this.getVisitedCountryCodes();
+    if (continent === 'global') return visitedCountries.size;
+    return [...visitedCountries].filter(code => getCountryLocation(code)?.continent === continent).length;
   }
 
-  get totalCountriesCount(): number {
-    return Object.keys(WORLD).length;
+  totalCount(continent: Continents | 'global'): number {
+    if (continent === 'global') return Object.keys(WORLD).length;
+    return Object.keys(WORLD).filter(code => getCountryLocation(code)?.continent === continent).length;
   }
 
-  get visitedCountriesPercentage(): number {
-    if (!this.totalCountriesCount) return 0;
-    return Number(((this.visitedCountriesCount / this.totalCountriesCount) * 100).toFixed(1));
+  visitedPercentage(continent: Continents | 'global'): number {
+    const total = this.totalCount(continent);
+    if (!total) return 0;
+    return Number(((this.visitedCount(continent) / total) * 100).toFixed(1));
   }
 
   getContinentName(continent: Continents): string {
@@ -411,9 +413,8 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
 
   // GEOJSON
   private createGeoLayer(): void {
-    if (!this.map || !this.geoJsonData) {
-      return;
-    }
+    if (!this.map || !this.geoJsonData) return;
+
     this.geoLayer = L.geoJSON(this.geoJsonData as any, {
       style: (feature: any): L.PathOptions => {
         return this.getCountryStyle(feature);
@@ -769,6 +770,24 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     );
   }
 
+  private getVisitedCountryCodes(): Set<string> {
+    const visitedCountries = new Set<string>();
+
+    for (const code of Object.keys(this.guestCounts)) {
+      // Group England, Scotland, Wales and Northern Ireland under GB.
+      if (code.startsWith('gb-') && this.ukRegionCodes.includes(code.split('-')[1])) {
+        visitedCountries.add('gb');
+        continue;
+      }
+
+      if (this.countriesByIso2[code]) {
+        visitedCountries.add(code);
+      }
+    }
+
+    return visitedCountries;
+  }
+
   // GUEST COUNTS
   private getGuestCounts(): Record<string, number> {
     const counts: Record<string, number> = {};
@@ -785,7 +804,6 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
         const rawCode = person.hometown?.code?.toLowerCase().trim();
         if (!rawCode) continue;
         let iso2 = '';
-
         // Keep individual UK region counts and group them under Great Britain.
         const ukRegionCode = rawCode.startsWith('gb-') ? rawCode.split('-')[1] : rawCode;
 
@@ -830,25 +848,19 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     countryCodes.sort((a, b) => {
       // The country with the most guests wins.
       const countDifference = counts[b] - counts[a];
-
-      if (countDifference !== 0) {
-        return countDifference;
-      }
+      if (countDifference !== 0) return countDifference;
 
       // If tied, the country that reached its current total first wins.
       const dateA = reachedCurrentCountAt[a] ?? Infinity;
       const dateB = reachedCurrentCountAt[b] ?? Infinity;
 
-      if (dateA !== dateB) {
-        return dateA - dateB;
-      }
+      if (dateA !== dateB) return dateA - dateB;
 
       // Use alphabetical order as a fallback when dates cannot break the tie.
       return a.localeCompare(b);
     });
 
     this.topGuestCountryIso2 = countryCodes[0] ?? '';
-
     return counts;
   }
 
@@ -866,9 +878,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private createAdminRegionsLayer(): void {
-    if (!this.map || !this.adminRegionsGeoJsonData) {
-      return;
-    }
+    if (!this.map || !this.adminRegionsGeoJsonData) return;
 
     // Evitamos crear la capa dos veces
     this.adminRegionsLayer?.remove();
@@ -878,12 +888,8 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     const featuresByRegion: Record<string, any[]> = {};
     for (const feature of this.adminRegionsGeoJsonData.features) {
       const code = feature.properties?.gu_a3?.toLowerCase();
-      if (!code || !this.ukRegionCodes.includes(code)) {
-        continue;
-      }
-      if (!featuresByRegion[code]) {
-        featuresByRegion[code] = [];
-      }
+      if (!code || !this.ukRegionCodes.includes(code)) continue;
+      if (!featuresByRegion[code]) featuresByRegion[code] = [];
       featuresByRegion[code].push(feature);
     }
 
@@ -892,9 +898,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     const dissolvedFeatures: any[] = [];
     for (const code of this.ukRegionCodes) {
       const features = featuresByRegion[code];
-      if (!features?.length) {
-        continue;
-      }
+      if (!features?.length) continue;
       try {
         const merged = union(featureCollection(features));
         if (!merged) {
@@ -980,11 +984,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     // CLICK
     layer.on('click', () => {
       const currentCount = this.guestCounts[code] ?? 0;
-
-      if (currentCount === 0) {
-        return;
-      }
-
+      if (currentCount === 0) return;
       this.showAdminRegionPopup(layer, countryName, code, currentCount);
     });
   }
@@ -1007,10 +1007,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
       maxWidth: 280,
     });
 
-    layer.once('popupopen', (event: L.PopupEvent) => {
-      this.bindCountryPopupButton(event.popup, count);
-    });
-
+    layer.once('popupopen', (event: L.PopupEvent) => this.bindCountryPopupButton(event.popup, count));
     layer.openPopup();
   }
 
@@ -1087,7 +1084,6 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     if (ukRegionCode && this.ukRegionCodes.includes(ukRegionCode)) {
       matches = this.adminRegionsGeoJsonData.features.filter(feature => {
         const properties = feature.properties as Record<string, unknown>;
-
         return normalize(String(properties['gu_a3'] ?? '')) === ukRegionCode;
       });
     } else {
@@ -1115,10 +1111,7 @@ export class GuestsMapComponent implements OnInit, OnDestroy, OnChanges {
     // Turf expects properly typed GeoJSON geometries.
     const typedMatches = matches as unknown as Feature<Polygon | MultiPolygon>[];
 
-    if (typedMatches.length === 1) {
-      return typedMatches[0];
-    }
-
+    if (typedMatches.length === 1) return typedMatches[0];
     const collection = featureCollection(typedMatches);
 
     return union(collection) as Feature<Polygon | MultiPolygon> | null;

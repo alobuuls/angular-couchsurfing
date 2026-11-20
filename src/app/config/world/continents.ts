@@ -1,6 +1,6 @@
 import { Continents, Language } from '@type/word.types';
 
-export const CONTINENT_NAMES: Record<Continents, Record<Language, string>> = {
+export const CONTINENT_NAMES: Record<Continents | 'global', Record<Language, string>> = {
   africa: {
     en: 'Africa',
     es: 'África',
@@ -70,5 +70,19 @@ export const CONTINENT_NAMES: Record<Continents, Record<Language, string>> = {
     hi: 'ओशिनिया',
     ko: '오세아니아',
     he: 'אוקיאניה',
+  },
+  global: {
+    en: 'Global',
+    es: 'Global',
+    de: 'Global',
+    zh: '全球',
+    fr: 'Mondial',
+    it: 'Globale',
+    pt: 'Global',
+    ru: 'Глобальный',
+    ja: 'グローバル',
+    hi: 'वैश्विक',
+    ko: '글로벌',
+    he: 'גלובלי',
   },
 };

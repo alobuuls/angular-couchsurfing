@@ -1,26 +1,21 @@
-<div class="map-wrapper">
-  <!-- COUNTRIES PROGRESS -->
-  <div class="map-progress">
-    <div class="map-progress-header">
-      <span class="map-progress-label">
-        {{ 'MAP.COUNTRIES_VISITED' | translate }}
-      </span>
-
-      <strong class="map-progress-count"> {{ visitedCountriesCount }}/{{ totalCountriesCount }} </strong>
-    </div>
-
-    <div
-      class="map-progress-track"
-      role="progressbar"
-      [attr.aria-valuenow]="visitedCountriesPercentage"
-      aria-valuemin="0"
-      aria-valuemax="100"
-    >
-      <div class="map-progress-fill" [style.width.%]="visitedCountriesPercentage"></div>
-    </div>
-
-    <div class="map-progress-percentage">{{ visitedCountriesPercentage }}%</div>
+<div class="map-progress">
+  <div class="ctn-close-icon">
+    <label>
+      <mat-icon>close</mat-icon>
+      <input type="checkbox" id="close-progress-map" />
+    </label>
   </div>
 
+  <!-- Global -->
+  <sh-progress-bar
+    *ngFor="let p of progressBars"
+    [continent]="p"
+    [visitedCountriesCount]="visitedCount(p)"
+    [totalCountriesCount]="totalCount(p)"
+    [visitedCountriesPercentage]="visitedPercentage(p)"
+  />
+</div>
+
+<div class="map-wrapper">
   <div #mapCtn id="guests-map" class="map"></div>
 </div>
