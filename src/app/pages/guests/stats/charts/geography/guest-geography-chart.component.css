@@ -38,12 +38,6 @@
   min-height: 400px;
 }
 
-.geography-chart-ctn {
-  width: 100%;
-  max-width: 1000px;
-  min-height: 400px;
-}
-
 /* Ranking buttons */
 .ctn-ranking-buttons {
   display: flex;

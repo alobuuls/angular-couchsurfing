@@ -15,7 +15,17 @@
   <!-- Gifts chart -->
   <div class="gifts-chart-row">
     <div class="gifts-chart-ctn">
-      <canvas #giftsChart></canvas>
+      <polar-area-chart
+        *ngIf="vm as chart"
+        [title]="chart.title"
+        [datasetLabel]="chart.title"
+        [labels]="chart.labels"
+        [values]="chart.values"
+        [colors]="chart.colors"
+        [height]="chart.height"
+        [tooltip]="getTooltip"
+        (itemClick)="onItemClick($event)"
+      />
     </div>
   </div>
 </div>

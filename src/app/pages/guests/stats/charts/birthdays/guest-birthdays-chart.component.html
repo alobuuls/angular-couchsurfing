@@ -15,7 +15,63 @@
   <!-- Birthdays chart -->
   <div class="birthdays-chart-row">
     <div class="birthdays-chart-ctn">
-      <canvas #birthdaysChart></canvas>
+      <!-- Calendar -->
+      <heatmap-chart
+        *ngIf="heatmapVm as heatmap"
+        [maintainAspectRatio]="false"
+        [title]="heatmap.title"
+        [datasetLabel]="heatmap.datasetLabel"
+        [cells]="heatmap.cells"
+        [xLabels]="heatmap.xLabels"
+        [yLabels]="heatmap.yLabels"
+        [xTitle]="monthAxisTitle"
+        [yTitle]="dayAxisTitle"
+        [padding]="chartPadding"
+        [cellColor]="calendarCellColor"
+        [cellBorderColor]="'transparent'"
+        [tooltip]="getCalendarTooltip"
+        (itemClick)="onCalendarClick($event)"
+      />
+
+      <!-- Repeated -->
+      <bubble-chart
+        *ngIf="bubbleVm as bubble"
+        [maintainAspectRatio]="false"
+        [title]="bubble.title"
+        [datasetLabel]="bubble.datasetLabel"
+        [points]="bubble.points"
+        [colors]="bubble.colors"
+        [xTitle]="monthAxisTitle"
+        [yTitle]="dayAxisTitle"
+        [xMin]="0"
+        [xMax]="13"
+        [yMin]="1"
+        [yMax]="31"
+        [xTickFormatter]="monthTickFormatter"
+        [tooltip]="getRepeatedTooltip"
+        (itemClick)="onRepeatedClick($event)"
+      />
+
+      <!-- Unusual -->
+      <line-chart
+        *ngIf="lineVm as line"
+        [maintainAspectRatio]="false"
+        [title]="line.title"
+        [datasetLabel]="line.datasetLabel"
+        [points]="line.points"
+        [colors]="line.colors"
+        [padding]="chartPadding"
+        [xTitle]="monthAxisTitle"
+        [yTitle]="dayAxisTitle"
+        [xMin]="0"
+        [xMax]="13"
+        [yMin]="0"
+        [yMax]="32"
+        [xTickFormatter]="monthTickFormatter"
+        [yTickFormatter]="dayTickFormatter"
+        [tooltip]="getUnusualTooltip"
+        (itemClick)="onUnusualClick($event)"
+      />
     </div>
   </div>
 </div>

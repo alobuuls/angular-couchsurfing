@@ -41,7 +41,69 @@
   <!-- Stays chart -->
   <div class="stays-chart-row">
     <div class="stays-chart-ctn">
-      <canvas #staysChart></canvas>
+      <!-- Longest / Shortest -->
+      <polar-area-chart
+        *ngIf="polarVm as polar"
+        [maintainAspectRatio]="false"
+        [title]="polar.title"
+        [datasetLabel]="polar.title"
+        [labels]="polar.labels"
+        [values]="polar.values"
+        [colors]="polar.colors"
+        [tooltip]="getPolarTooltip"
+        (itemClick)="onPolarClick($event)"
+      ></polar-area-chart>
+
+      <!-- Max people together -->
+      <bar-chart
+        *ngIf="maxPeopleVm as max"
+        [horizontal]="false"
+        [maintainAspectRatio]="false"
+        [showLegend]="false"
+        [title]="max.title"
+        [datasetLabel]="max.title"
+        [labels]="max.labels"
+        [values]="max.values"
+        [colors]="max.colors"
+        [valueAxisTitle]="max.valueAxisTitle"
+        [categoryAxisTitle]="max.categoryAxisTitle"
+        [valueStep]="1"
+        [valuePrecision]="0"
+        [tooltip]="getMaxPeopleTooltip"
+        (itemClick)="onMaxPeopleClick($event)"
+      ></bar-chart>
+
+      <!-- Same arrival -->
+      <bar-chart
+        *ngIf="arrivalVm as arrival"
+        [maintainAspectRatio]="false"
+        [title]="arrival.title"
+        [datasetLabel]="arrival.datasetLabel"
+        [labels]="arrival.labels"
+        [values]="arrival.values"
+        [colors]="arrival.colors"
+        [legend]="arrival.legend"
+        [valueAxisTitle]="arrival.valueAxisTitle"
+        [categoryAxisTitle]="arrival.categoryAxisTitle"
+        [valueStep]="1"
+        [valuePrecision]="0"
+        [tooltip]="getArrivalTooltip"
+        (itemClick)="onArrivalClick($event)"
+      ></bar-chart>
+
+      <!-- Same dates -->
+      <network-chart
+        *ngIf="networkVm as network"
+        [maintainAspectRatio]="false"
+        [title]="network.title"
+        [labels]="network.labels"
+        [edges]="network.edges"
+        [nodeColors]="network.colors"
+        [legend]="network.legend"
+        [pointRadius]="10"
+        [tooltip]="getNetworkTooltip"
+        (itemClick)="onNetworkClick($event)"
+      ></network-chart>
     </div>
   </div>
 </div>

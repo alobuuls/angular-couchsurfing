@@ -15,7 +15,28 @@
   <!-- Timeline chart -->
   <div class="timeline-chart-row">
     <div class="timeline-chart-ctn">
-      <canvas #timelineChart></canvas>
+      <bar-chart
+        *ngIf="barVm as bar"
+        [title]="bar.title"
+        [datasetLabel]="bar.title"
+        [labels]="bar.labels"
+        [values]="bar.values"
+        [colors]="bar.colors"
+        [legend]="bar.legend"
+        [height]="bar.height"
+        [valueAxisTitle]="bar.valueAxisTitle"
+        (itemClick)="onBarClick($event)"
+      />
+
+      <network-chart
+        *ngIf="networkVm as network"
+        [title]="network.title"
+        [labels]="network.labels"
+        [edges]="network.edges"
+        [nodeColors]="network.colors"
+        [tooltip]="getNetworkTooltip"
+        (itemClick)="onNetworkClick($event)"
+      />
     </div>
   </div>
 </div>

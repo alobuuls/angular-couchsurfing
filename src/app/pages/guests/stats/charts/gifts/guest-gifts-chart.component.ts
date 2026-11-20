@@ -1,15 +1,15 @@
-import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
-import Chart from 'chart.js/auto';
-
 // Interfaces
 import { IGiftGuest, IGiftsDistribution, IGiftsView } from '@interfaces/stats-interface';
+import { TChartTooltipContent } from '@type/chart.types';
+import { IGiftsChartVm } from '@interfaces/charts/chart-gifts.interface';
 
 // Helpers
-import { createExternalTooltip, destroyExternalTooltip, getColorWithOpacity, GIFTS_COLORS, hideExternalTooltip } from '@utils';
+import { getColorWithOpacity, GIFTS_COLORS } from '@utils';
 
 // Services
 import { FormatService } from '@services/format.service';
@@ -20,7 +20,7 @@ import { FlagPipe } from '@shared/pipes/two-code-letters-flag.pipe';
   templateUrl: './guest-gifts-chart.component.html',
   styleUrls: ['./guest-gifts-chart.component.css'],
 })
-export class GuestGiftsChartComponent implements AfterViewInit, OnChanges, OnDestroy {
+export class GuestGiftsChartComponent implements OnInit, OnChanges, OnDestroy {
   private _format = inject(FormatService);
   private _router = inject(Router);
   private _translate = inject(TranslateService);
@@ -29,9 +29,6 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges, OnDes
   private langChangeSubscription?: Subscription;
 
   @Input() gifts!: IGiftsDistribution;
-
-  @ViewChild('giftsChart')
-  giftsChart!: ElementRef<HTMLCanvasElement>;
 
   // Controls the currently selected gifts view.
   selectedView: IGiftsView = 'groups';
@@ -45,47 +42,28 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges, OnDes
     solo: 'STATS.GIFTS.VIEWS.SOLO',
   };
 
-  private chart?: Chart;
+  // Data of the chart. Undefined when there is nothing to display.
+  vm?: IGiftsChartVm;
 
   // Configuration for each gifts view.
-  private readonly chartConfig: Record<
-    IGiftsView,
-    {
-      titleKey: string;
-      getData: (gifts: IGiftsDistribution) => IGiftGuest[];
-    }
-  > = {
-    groups: {
-      titleKey: 'STATS.GIFTS.TITLES.GROUPS',
-      getData: gifts => gifts.groups,
-    },
-
-    solo: {
-      titleKey: 'STATS.GIFTS.TITLES.SOLO',
-      getData: gifts => gifts.solo,
-    },
+  private readonly chartConfig: Record<IGiftsView, { titleKey: string; getData: (gifts: IGiftsDistribution) => IGiftGuest[] }> = {
+    groups: { titleKey: 'STATS.GIFTS.TITLES.GROUPS', getData: gifts => gifts.groups },
+    solo: { titleKey: 'STATS.GIFTS.TITLES.SOLO', getData: gifts => gifts.solo },
   };
 
-  ngAfterViewInit(): void {
-    if (this.gifts) {
-      this.createChart();
-    }
-
-    // Recreate the chart when the language changes.
-    this.langChangeSubscription = this._translate.onLangChange.subscribe(() => {
-      this.createChart();
-    });
+  ngOnInit(): void {
+    // Rebuild the texts when the language changes.
+    this.langChangeSubscription = this._translate.onLangChange.subscribe(() => this.buildVm());
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['gifts'] && this.giftsChart) {
-      this.createChart();
+    if (changes['gifts']) {
+      this.buildVm();
     }
   }
 
   ngOnDestroy(): void {
     this.langChangeSubscription?.unsubscribe();
-    this.destroyChart();
   }
 
   selectView(view: IGiftsView): void {
@@ -94,135 +72,69 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges, OnDes
     }
 
     this.selectedView = view;
-    this.createChart();
+    this.buildVm();
   }
 
-  // Creates the Polar Area chart for the selected gifts view.
-  private createChart(): void {
-    if (!this.giftsChart || !this.gifts) {
+  onItemClick(index: number): void {
+    const guest = this.vm?.items[index];
+
+    if (!guest?.guestId) {
       return;
     }
 
-    this.destroyChart();
+    this._router.navigate(['/guests', guest.guestId]);
+  }
+
+  // Arrow function: it keeps `this` and has a stable reference.
+  getTooltip = (index: number): TChartTooltipContent | null => {
+    const guest = this.vm?.items[index];
+
+    if (!guest) {
+      return null;
+    }
+
+    return {
+      title: guest.fullName,
+      rows: [
+        { label: this._translate.instant('STATS.GIFTS.LABELS.GROUP'), value: this.formatGroupType(guest.groupType) },
+        { label: this._translate.instant('STATS.GIFTS.LABELS.VISIT'), value: this._format.formatDate(guest.visitedDate) },
+        { label: this._translate.instant('STATS.GIFTS.LABELS.GIFTS_RECEIVED'), value: '' },
+        ...guest.gifts.map(gift => ({ value: `• ${gift}` })),
+      ],
+      country: {
+        name: this._format.formatCountry(guest.hometownCode),
+        flagClass: this._flag.transform(guest.hometownCode),
+      },
+    };
+  };
+
+  private buildVm(): void {
+    this.vm = undefined;
+
+    if (!this.gifts) {
+      return;
+    }
 
     const config = this.chartConfig[this.selectedView];
-    const giftsData = config.getData(this.gifts);
+    const items = config.getData(this.gifts);
 
-    if (!giftsData.length) {
+    if (!items.length) {
       return;
     }
 
-    const title = this._translate.instant(config.titleKey);
+    const palette = items.map((_, index) => GIFTS_COLORS[index % GIFTS_COLORS.length]);
 
-    this.giftsChart.nativeElement.style.height = `${Math.max(400, giftsData.length * 50)}px`;
-
-    this.chart = new Chart(this.giftsChart.nativeElement, {
-      type: 'polarArea',
-      data: {
-        labels: giftsData.map(guest => guest.fullName),
-        datasets: [
-          {
-            label: title,
-            data: giftsData.map(guest => guest.total),
-            backgroundColor: giftsData.map((_, index) => getColorWithOpacity(GIFTS_COLORS[index % GIFTS_COLORS.length])),
-            borderColor: giftsData.map((_, index) => GIFTS_COLORS[index % GIFTS_COLORS.length].border),
-            borderWidth: 1,
-          },
-        ],
+    this.vm = {
+      title: this._translate.instant(config.titleKey),
+      labels: items.map(guest => guest.fullName),
+      values: items.map(guest => guest.total),
+      colors: {
+        background: palette.map(color => getColorWithOpacity(color)),
+        border: palette.map(color => color.border),
       },
-      options: {
-        responsive: true,
-        onClick: (_event, elements) => {
-          if (!elements.length) {
-            return;
-          }
-
-          const index = elements[0].index;
-          const guest = giftsData[index];
-
-          if (!guest?.guestId) {
-            return;
-          }
-
-          this.navigateToGuest(guest.guestId);
-        },
-        plugins: {
-          title: {
-            display: true,
-            text: title,
-          },
-          legend: {
-            display: true,
-          },
-          tooltip: {
-            enabled: false,
-            external: context => {
-              const dataPoint = context.tooltip.dataPoints?.[0];
-
-              if (!dataPoint) {
-                hideExternalTooltip(context.chart);
-                return;
-              }
-
-              const guest = giftsData[dataPoint.dataIndex];
-
-              if (!guest) {
-                hideExternalTooltip(context.chart);
-                return;
-              }
-
-              createExternalTooltip(context.chart, context.tooltip, {
-                title: guest.fullName,
-                rows: [
-                  {
-                    label: this._translate.instant('STATS.GIFTS.LABELS.GROUP'),
-                    value: this.formatGroupType(guest.groupType),
-                  },
-                  {
-                    label: this._translate.instant('STATS.GIFTS.LABELS.VISIT'),
-                    value: this._format.formatDate(guest.visitedDate),
-                  },
-                  {
-                    label: this._translate.instant('STATS.GIFTS.LABELS.GIFTS_RECEIVED'),
-                    value: '',
-                  },
-                  ...guest.gifts.map(gift => ({
-                    value: `• ${gift}`,
-                  })),
-                ],
-                country: {
-                  name: this._format.formatCountry(guest.hometownCode),
-                  flagClass: this._flag.transform(guest.hometownCode),
-                },
-              });
-            },
-          },
-        },
-        scales: {
-          r: {
-            beginAtZero: true,
-            ticks: {
-              precision: 0,
-            },
-          },
-        },
-      },
-    });
-  }
-
-  // Builds the common tooltip information for both charts.
-  private getTooltipLines(guest: IGiftGuest): string[] {
-    return [
-      `${this._translate.instant('STATS.GIFTS.LABELS.GROUP')}: ${this.formatGroupType(guest.groupType)}`,
-
-      `${this._translate.instant('STATS.GIFTS.LABELS.COUNTRY')}: ${this._format.formatCountry(guest.hometownCode)}`,
-
-      `${this._translate.instant('STATS.GIFTS.LABELS.VISIT')}: ${this._format.formatDate(guest.visitedDate)}`,
-
-      this._translate.instant('STATS.GIFTS.LABELS.GIFTS_RECEIVED'),
-
-      ...guest.gifts.map(gift => `• ${gift}`),
-    ];
+      height: Math.max(400, items.length * 50),
+      items,
+    };
   }
 
   // Translates the group type received from the API.
@@ -235,20 +147,5 @@ export class GuestGiftsChartComponent implements AfterViewInit, OnChanges, OnDes
     const translated = this._translate.instant(key);
 
     return translated === key ? groupType.charAt(0).toUpperCase() + groupType.slice(1) : translated;
-  }
-
-  // Destroys the current Chart.js instance.
-  private destroyChart(): void {
-    if (!this.chart) {
-      return;
-    }
-
-    destroyExternalTooltip(this.chart);
-    this.chart.destroy();
-    this.chart = undefined;
-  }
-
-  private navigateToGuest(guestId: string): void {
-    this._router.navigate(['/guests', guestId]);
   }
 }

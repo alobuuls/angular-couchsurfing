@@ -1,15 +1,15 @@
-import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
-import Chart from 'chart.js/auto';
-
 // Interfaces
 import { IRankingGenderView, IRankingGroupView, IRankingItem, IRankingView, IRankingsDistribution } from '@interfaces/stats-interface';
+import { TChartTooltipContent } from '@type/chart.types';
+import { IRankingChartVm } from '@interfaces/charts/chart-rankings.interface';
 
 // Helpers
-import { createExternalTooltip, destroyExternalTooltip, getColorWithOpacity, getRankingColors, hideExternalTooltip, RANKING_COLORS } from '@utils';
+import { getColorWithOpacity, getRankingColors, RANKING_COLORS } from '@utils';
 
 // Services
 import { FormatService } from '@services/format.service';
@@ -20,7 +20,7 @@ import { FlagPipe } from '@shared/pipes/two-code-letters-flag.pipe';
   templateUrl: './guest-rankings-chart.component.html',
   styleUrls: ['./guest-rankings-chart.component.css'],
 })
-export class GuestRankingsChartComponent implements AfterViewInit, OnChanges, OnDestroy {
+export class GuestRankingsChartComponent implements OnInit, OnChanges, OnDestroy {
   private _format = inject(FormatService);
   private _router = inject(Router);
   private _translate = inject(TranslateService);
@@ -30,8 +30,7 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges, On
 
   @Input() rankings!: IRankingsDistribution;
 
-  @ViewChild('rankingChart')
-  rankingChart!: ElementRef<HTMLCanvasElement>;
+  chartVm: IRankingChartVm | null = null;
 
   // Controls the currently selected ranking view.
   selectedView: IRankingView = 'people';
@@ -63,276 +62,173 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges, On
   // Available Group ranking views.
   readonly groupRankingViews: IRankingGroupView[] = ['overall', 'couple', 'family', 'friends'];
 
-  // Stores the current Chart.js instance.
-  private chart?: Chart;
-
-  // Configuration for each ranking view.
-  private readonly chartConfig: Record<
-    IRankingView,
-    {
-      titleKey: string;
-      getData: (rankings: IRankingsDistribution) => IRankingItem[];
-    }
-  > = {
-    people: {
-      titleKey: 'STATS.RANKINGS.TITLES.PEOPLE',
-      getData: rankings => rankings.people.overall,
-    },
-
-    women: {
-      titleKey: 'STATS.RANKINGS.TITLES.WOMEN',
-      getData: rankings => rankings.women.overall,
-    },
-
-    men: {
-      titleKey: 'STATS.RANKINGS.TITLES.MEN',
-      getData: rankings => rankings.men.overall,
-    },
-
-    groups: {
-      titleKey: 'STATS.RANKINGS.TITLES.GROUPS',
-      getData: rankings => rankings.groups.overall,
-    },
+  // Title for each ranking view.
+  private readonly titleKeys: Record<IRankingView, string> = {
+    people: 'STATS.RANKINGS.TITLES.PEOPLE',
+    women: 'STATS.RANKINGS.TITLES.WOMEN',
+    men: 'STATS.RANKINGS.TITLES.MEN',
+    groups: 'STATS.RANKINGS.TITLES.GROUPS',
   };
 
-  // Create the initial ranking chart after the canvas is rendered.
-  ngAfterViewInit(): void {
-    if (this.rankings) {
-      this.createChart();
-    }
+  // ─────────────────────────────────────────────
+  // Lifecycle
+  // ─────────────────────────────────────────────
 
-    // Recreate the chart when the language changes.
-    this.langChangeSubscription = this._translate.onLangChange.subscribe(() => {
-      this.createChart();
-    });
+  ngOnInit(): void {
+    // Rebuild the chart data when the language changes.
+    this.langChangeSubscription = this._translate.onLangChange.subscribe(() => this.buildVm());
   }
 
-  // Recreate the chart when ranking data changes.
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['rankings'] && this.rankingChart) {
-      this.createChart();
-    }
+  // Rebuild the chart data when ranking data changes.
+  ngOnChanges(): void {
+    this.buildVm();
   }
 
-  // Clean up subscriptions and the chart instance.
   ngOnDestroy(): void {
     this.langChangeSubscription?.unsubscribe();
-    this.destroyChart();
   }
+
+  // ─────────────────────────────────────────────
+  // Template actions
+  // ─────────────────────────────────────────────
 
   // Changes the main ranking view.
   selectView(view: IRankingView): void {
     this.selectedView = view;
 
     // Reset the selected subview when changing the main view.
-    if (view === 'people') {
-      this.selectedPeopleView = 'overall';
-    }
+    if (view === 'people') this.selectedPeopleView = 'overall';
+    if (view === 'women') this.selectedWomenView = 'overall';
+    if (view === 'men') this.selectedMenView = 'overall';
+    if (view === 'groups') this.selectedGroupView = 'overall';
 
-    if (view === 'women') {
-      this.selectedWomenView = 'overall';
-    }
-
-    if (view === 'men') {
-      this.selectedMenView = 'overall';
-    }
-
-    if (view === 'groups') {
-      this.selectedGroupView = 'overall';
-    }
-
-    this.createChart();
+    this.buildVm();
   }
 
-  // Changes the selected People ranking view.
   selectPeopleView(view: IRankingGenderView): void {
     this.selectedPeopleView = view;
-    this.createChart();
+    this.buildVm();
   }
 
-  // Changes the selected Women ranking view.
   selectWomenView(view: IRankingGenderView): void {
     this.selectedWomenView = view;
-    this.createChart();
+    this.buildVm();
   }
 
-  // Changes the selected Men ranking view.
   selectMenView(view: IRankingGenderView): void {
     this.selectedMenView = view;
-    this.createChart();
+    this.buildVm();
   }
 
-  // Changes the selected Group ranking view.
   selectGroupView(view: IRankingGroupView): void {
     this.selectedGroupView = view;
-    this.createChart();
+    this.buildVm();
   }
 
-  // Creates the ranking chart according to the selected view.
-  // Creates the ranking chart according to the selected view.
-  private createChart(): void {
-    if (!this.rankingChart || !this.rankings) {
-      return;
-    }
+  // Click on a bar.
+  onChartClick(index: number): void {
+    const guest = this.chartVm?.items[index]?.guest;
 
-    // Destroy the previous chart before creating another one.
-    this.destroyChart();
+    if (!guest?.guestId) return;
 
-    const config = this.chartConfig[this.selectedView];
+    this.navigateToGuest(guest.guestId, guest.groupType, guest.groupId);
+  }
 
-    // Get the data for the selected main view and subview.
-    const rankingData =
-      this.selectedView === 'people'
-        ? (this.rankings.people[this.selectedPeopleView] ?? [])
-        : this.selectedView === 'women'
-          ? (this.rankings.women[this.selectedWomenView] ?? [])
-          : this.selectedView === 'men'
-            ? (this.rankings.men[this.selectedMenView] ?? [])
-            : this.selectedView === 'groups'
-              ? (this.rankings.groups[this.selectedGroupView] ?? [])
-              : config.getData(this.rankings);
+  // Tooltip content for a bar.
+  rankingTooltip = (index: number): TChartTooltipContent | null => {
+    const item = this.chartVm?.items[index];
+
+    if (!item?.guest) return null;
+
+    const guest = item.guest;
+
+    return {
+      title: guest.fullName,
+      rows: [
+        {
+          label: this._translate.instant('STATS.RANKINGS.LABELS.OVERALL_RANKING'),
+          value: String(item.position),
+        },
+        {
+          label: this._translate.instant('STATS.RANKINGS.LABELS.VISIT'),
+          value: this._format.formatDate(guest.visitedDate),
+        },
+      ],
+      country: {
+        name: this._format.formatCountry(guest.hometownCode),
+        flagClass: this._flag.transform(guest.hometownCode),
+      },
+    };
+  };
+
+  // ─────────────────────────────────────────────
+  // View model
+  // ─────────────────────────────────────────────
+
+  private buildVm(): void {
+    this.chartVm = this.buildChartVm();
+  }
+
+  private buildChartVm(): IRankingChartVm | null {
+    if (!this.rankings) return null;
+
+    const items = this.getRankingData();
 
     // Do not create a chart when there is no ranking data.
-    if (!rankingData.length) {
-      return;
-    }
+    if (!items.length) return null;
 
-    // Get the highest ranking position from the current data.
-    const maxPosition = Math.max(...rankingData.map(item => item.position));
+    const positions = items.map(item => item.position);
 
     // Keep the chart maximum aligned with the ranking scale.
-    const chartMax = maxPosition <= 100 ? 100 : Math.ceil(maxPosition / 50) * 50;
+    const maxPosition = Math.max(...positions);
+    const max = maxPosition <= 100 ? 100 : Math.ceil(maxPosition / 50) * 50;
 
     // Ranking scale: 1, 10, 25, 50, 75, 100, then every 50.
-    const rankingTicks = [1, 10, 25, 50, 75, 100];
+    const ticks = [1, 10, 25, 50, 75, 100];
 
-    if (chartMax > 100) {
-      for (let position = 150; position <= chartMax; position += 50) {
-        rankingTicks.push(position);
-      }
+    for (let position = 150; position <= max; position += 50) {
+      ticks.push(position);
     }
 
-    const rankColors = getRankingColors(rankingData.map(item => item.position));
+    const rankColors = getRankingColors(positions);
 
-    const title = this._translate.instant(config.titleKey);
-    const subviewLabel = this.getSelectedSubviewLabel();
+    const title = this._translate.instant(this.titleKeys[this.selectedView]);
 
-    const datasetLabel = this._translate.instant('STATS.RANKINGS.LABELS.DATASET', {
+    return {
       title,
-      subview: subviewLabel,
-    });
+      datasetLabel: this._translate.instant('STATS.RANKINGS.LABELS.DATASET', {
+        title,
+        subview: this.getSelectedSubviewLabel(),
+      }),
+      // Use the translated guest display name in chart labels.
+      labels: items.map(item => this.getGuestDisplayName(item)),
+      values: positions,
+      colors: {
+        background: rankColors.background.map(color => {
+          const rankingColor = Object.values(RANKING_COLORS).find(ranking => ranking.background === color);
 
-    this.chart = new Chart(this.rankingChart.nativeElement, {
-      type: 'bar',
-
-      data: {
-        // Use the translated guest display name in chart labels.
-        labels: rankingData.map(item => this.getGuestDisplayName(item)),
-
-        datasets: [
-          {
-            label: datasetLabel,
-            data: rankingData.map(item => item.position),
-
-            backgroundColor: rankColors.background.map(color => {
-              const rankingColor = Object.values(RANKING_COLORS).find(ranking => ranking.background === color);
-
-              return rankingColor ? getColorWithOpacity(rankingColor) : color;
-            }),
-
-            borderColor: rankColors.border,
-            borderWidth: 1,
-          },
-        ],
+          return rankingColor ? getColorWithOpacity(rankingColor) : color;
+        }),
+        border: rankColors.border,
       },
+      max,
+      tickFormatter: value => (ticks.includes(Number(value)) ? Number(value) : ''),
+      items,
+    };
+  }
 
-      options: {
-        responsive: true,
-
-        onClick: (_event, elements) => {
-          if (!elements.length) {
-            return;
-          }
-
-          const index = elements[0].index;
-          const item = rankingData[index];
-
-          if (!item?.guest?.guestId) {
-            return;
-          }
-
-          this.navigateToGuest(item.guest.guestId, item.guest.groupType, item.guest.groupId);
-        },
-
-        indexAxis: 'y',
-
-        plugins: {
-          tooltip: {
-            enabled: false,
-            external: context => {
-              const dataPoint = context.tooltip.dataPoints?.[0];
-
-              if (!dataPoint) {
-                hideExternalTooltip(context.chart);
-                return;
-              }
-
-              const item = rankingData[dataPoint.dataIndex];
-
-              if (!item?.guest) {
-                hideExternalTooltip(context.chart);
-                return;
-              }
-
-              const guest = item.guest;
-
-              createExternalTooltip(context.chart, context.tooltip, {
-                title: guest.fullName,
-                rows: [
-                  {
-                    label: this._translate.instant('STATS.RANKINGS.LABELS.OVERALL_RANKING'),
-                    value: String(item.position),
-                  },
-                  {
-                    label: this._translate.instant('STATS.RANKINGS.LABELS.VISIT'),
-                    value: this._format.formatDate(guest.visitedDate),
-                  },
-                ],
-                country: {
-                  name: this._format.formatCountry(guest.hometownCode),
-                  flagClass: this._flag.transform(guest.hometownCode),
-                },
-              });
-            },
-          },
-        },
-
-        scales: {
-          x: {
-            beginAtZero: true,
-            min: 0,
-            max: chartMax,
-
-            ticks: {
-              callback: (value: string | number) => {
-                const numericValue = Number(value);
-
-                return rankingTicks.includes(numericValue) ? numericValue : '';
-              },
-            },
-
-            title: {
-              display: true,
-              text: this._translate.instant('STATS.RANKINGS.LABELS.RANKING_POSITION'),
-            },
-          },
-
-          y: {
-            beginAtZero: true,
-          },
-        },
-      },
-    });
+  // Gets the data for the selected main view and subview.
+  private getRankingData(): IRankingItem[] {
+    switch (this.selectedView) {
+      case 'people':
+        return this.rankings.people[this.selectedPeopleView] ?? [];
+      case 'women':
+        return this.rankings.women[this.selectedWomenView] ?? [];
+      case 'men':
+        return this.rankings.men[this.selectedMenView] ?? [];
+      case 'groups':
+        return this.rankings.groups[this.selectedGroupView] ?? [];
+    }
   }
 
   // Gets the translated label for the selected subview.
@@ -358,16 +254,9 @@ export class GuestRankingsChartComponent implements AfterViewInit, OnChanges, On
     return `${item.guest.fullName} (${country})`;
   }
 
-  // Destroys the current Chart.js instance.
-  private destroyChart(): void {
-    if (!this.chart) {
-      return;
-    }
-
-    destroyExternalTooltip(this.chart);
-    this.chart.destroy();
-    this.chart = undefined;
-  }
+  // ─────────────────────────────────────────────
+  // Navigation
+  // ─────────────────────────────────────────────
 
   // Navigates to the group or individual guest details.
   private navigateToGuest(guestId: string, groupType?: string | null, groupId?: string | null): void {

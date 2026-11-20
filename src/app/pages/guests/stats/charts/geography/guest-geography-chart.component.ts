@@ -1,9 +1,7 @@
-import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-
-import Chart from 'chart.js/auto';
 
 // Interfaces
 import {
@@ -16,6 +14,8 @@ import {
   IGeographyRegion,
   IGeographyView,
 } from '@interfaces/stats-interface';
+import { IChartColors, IChartLegendItem, TChartTooltipContent } from '@type/chart.types';
+import { ConsecutiveGuest, GeographyItem, IConsecutiveChartVm, IGeographyChartVm } from '@interfaces/charts/chart-geography.interface';
 
 // Services
 import { FormatService } from '@services/format.service';
@@ -28,14 +28,13 @@ import { Continents, CountriesCodes, Language, Regions } from '@type/word.types'
 // Helpers
 import { CHART_UNKNOWN_COLOR, CONTINENT_COLORS, GENDER_COLORS, getColorWithOpacity, getGenderColor, getRankingColors, RANKING_COLORS } from '@utils';
 import { FlagPipe } from '@shared/pipes/two-code-letters-flag.pipe';
-import { createExternalTooltip, destroyExternalTooltip, hideExternalTooltip } from '@utils';
 
 @Component({
   selector: 'guest-geography-chart',
   templateUrl: './guest-geography-chart.component.html',
   styleUrls: ['./guest-geography-chart.component.css'],
 })
-export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, OnDestroy {
+export class GuestGeographyChartComponent implements OnInit, OnChanges, OnDestroy {
   private _format = inject(FormatService);
   private _router = inject(Router);
   private _translate = inject(TranslateService);
@@ -43,10 +42,12 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
   private readonly _flag = inject(FlagPipe);
 
   private langChangeSubscription?: Subscription;
+
   @Input() geography!: IGeographyDistribution;
 
-  @ViewChild('geographyChart')
-  geographyChart!: ElementRef<HTMLCanvasElement>;
+  // Only one of these two is defined at a time.
+  chartVm: IGeographyChartVm | null = null;
+  consecutiveVm: IConsecutiveChartVm | null = null;
 
   // Controls the currently selected geography view.
   selectedView: IGeographyView = 'continents';
@@ -69,18 +70,6 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
   readonly countryRankingViews: ICountryRanking[] = ['topFemale', 'topMale', 'mostConsecutive'];
 
   readonly rankingViews: ICountryRanking[] = ['all', 'top', 'bottom'];
-
-  private chart?: Chart;
-
-  private getContinent(item: IGeographyContinent | IGeographyRegion | IGeographyCountry | IGeographyLocation): string {
-    const code = item.code.toLowerCase();
-    // When the item is already a continent.
-    if (this.selectedView === 'continents') return code;
-    // When the item is a region.
-    if (this.selectedView === 'regions') return REGION_CONTINENT_INDEX[code as Regions] ?? '';
-    // When the item is a country, livingIn or hometown location.
-    return getCountryLocation(code)?.continent ?? '';
-  }
 
   // Configuration for each geography view.
   private readonly chartConfig: Record<
@@ -130,429 +119,314 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
     },
   };
 
-  ngAfterViewInit(): void {
-    // Create the initial geography chart after the canvas is rendered.
-    if (this.geography) {
-      this.createChart();
-    }
+  // ─────────────────────────────────────────────
+  // Lifecycle
+  // ─────────────────────────────────────────────
 
-    // Recreate the chart when the language changes.
-    this.langChangeSubscription = this._translate.onLangChange.subscribe(() => {
-      this.destroyChart();
-      this.createChart();
-    });
+  ngOnInit(): void {
+    // Rebuild the chart data when the language changes.
+    this.langChangeSubscription = this._translate.onLangChange.subscribe(() => this.buildVm());
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    // Recreate the chart when geography data changes.
-    if (changes['geography'] && this.geographyChart) {
-      this.createChart();
-    }
+  ngOnChanges(): void {
+    // Rebuild the chart data when geography data changes.
+    this.buildVm();
   }
 
   ngOnDestroy(): void {
     this.langChangeSubscription?.unsubscribe();
-    this.destroyChart();
   }
 
-  getContinentName(continent: Continents): string {
-    return this._geoname.getContinentName(continent);
-  }
+  // ─────────────────────────────────────────────
+  // Template actions
+  // ─────────────────────────────────────────────
 
   selectView(view: IGeographyView): void {
     this.selectedView = view;
 
     // Reset to the complete data when changing geography.
     this.selectedRanking = 'all';
-
-    // Destroy the previous chart before creating a new one.
-    this.destroyChart();
-
-    // Wait for Angular to update the view before creating a new chart.
-    setTimeout(() => {
-      this.createChart();
-    });
+    this.buildVm();
   }
 
   selectRanking(ranking: ICountryRanking): void {
     this.selectedRanking = ranking;
-
-    // Destroy the previous chart before creating a new one.
-    this.destroyChart();
-
-    // Create the chart using the selected ranking.
-    setTimeout(() => {
-      this.createChart();
-    });
+    this.buildVm();
   }
 
-  private createChart(): void {
-    if (!this.geographyChart || !this.geography) {
-      return;
+  // Click on a pie / bar item.
+  onChartClick(index: number): void {
+    const item = this.chartVm?.items[index];
+
+    if (!item) return;
+
+    switch (this.selectedView) {
+      case 'continents':
+        this.navigateToContinent(item.code.toLowerCase());
+        break;
+      case 'regions':
+        this.navigateToRegion(item.code);
+        break;
+      case 'countries':
+        this.navigateToCountry(item.code);
+        break;
+      case 'livingIn':
+        this.navigateToLivingIn((item as IGeographyLocation).name);
+        break;
+      case 'hometown':
+        this.navigateToHometown((item as IGeographyLocation).name);
+        break;
     }
+  }
+
+  // Click on a most consecutive point.
+  onConsecutiveClick(index: number): void {
+    const guest = this.consecutiveVm?.guests[index];
+
+    if (!guest?.guestId) return;
+
+    this.navigateToGuest(guest.guestId);
+  }
+
+  // Tooltip of the most consecutive chart.
+  consecutiveTooltip = (index: number): TChartTooltipContent | null => {
+    const vm = this.consecutiveVm;
+    const guest = vm?.guests[index];
+
+    if (!vm || !guest) return null;
+
+    return {
+      title: guest.fullName,
+      rows: [
+        {
+          label: this._translate.instant('GENDER.TXT'),
+          value: this.getTranslatedGender(guest.gender),
+        },
+        {
+          label: this._translate.instant('STATS.GEOGRAPHY.LABELS.GROUP'),
+          value: this._translate.instant(`STATS.DEMOGRAPHICS.GROUPS.${guest.groupType.toUpperCase()}`),
+        },
+        {
+          label: this._translate.instant('STATS.GEOGRAPHY.LABELS.VISIT'),
+          value: this._format.formatDate(guest.visitedDate),
+        },
+      ],
+      country: {
+        name: vm.countryName,
+        flagClass: this._flag.transform(vm.countryCode),
+      },
+    };
+  };
+
+  consecutiveTickFormatter = (value: number | string): string => {
+    const locale = this._translate.currentLang === 'es' ? 'es-CO' : 'en-US';
+
+    return new Date(Number(value)).toLocaleDateString(locale, {
+      month: 'short',
+      day: 'numeric',
+    });
+  };
+
+  // ─────────────────────────────────────────────
+  // View model
+  // ─────────────────────────────────────────────
+
+  private buildVm(): void {
+    this.chartVm = null;
+    this.consecutiveVm = null;
+
+    if (!this.geography) return;
 
     if (this.selectedView === 'countries' && this.selectedRanking === 'mostConsecutive') {
-      this.createMostConsecutiveChart();
+      this.consecutiveVm = this.buildConsecutiveVm();
       return;
     }
 
+    this.chartVm = this.buildChartVm();
+  }
+
+  private buildChartVm(): IGeographyChartVm | null {
     const config = this.chartConfig[this.selectedView];
-    const geographyData = this.getSelectedData(config);
+    const items = this.getSelectedData(config) as GeographyItem[];
 
-    if (!geographyData.length) {
-      return;
-    }
+    if (!items.length) return null;
 
-    this.destroyChart();
-    this.setChartHeight(geographyData.length);
+    const values = items.map(item => {
+      if (this.selectedRanking === 'topFemale') return (item as IGeographyCountry).female;
+      if (this.selectedRanking === 'topMale') return (item as IGeographyCountry).male;
+      return item.total;
+    });
 
-    const chartValues =
-      this.selectedRanking === 'topFemale'
-        ? geographyData.map(item => (item as IGeographyCountry).female)
-        : this.selectedRanking === 'topMale'
-          ? geographyData.map(item => (item as IGeographyCountry).male)
-          : geographyData.map(item => item.total);
+    return {
+      type: config.type as 'pie' | 'bar',
+      title: this.getChartTitle(config.label),
+      datasetLabel: this.getDatasetLabel(config.label),
+      labels: items.map(item => this.getItemLabel(item)),
+      values,
+      colors: this.getColors(items, values),
+      legend: this.getLegend(items),
+      height: this.getChartHeight(items.length),
+      items,
+    };
+  }
 
+  private buildConsecutiveVm(): IConsecutiveChartVm | null {
+    const consecutive = this.geography.countries.mostConsecutive;
+
+    if (!consecutive || !consecutive.guests.length) return null;
+
+    const countryName = this.getCountryName(consecutive.code);
+    const guests = [...consecutive.guests].sort((a, b) => new Date(a.visitedDate).getTime() - new Date(b.visitedDate).getTime());
+
+    // Add some space around the first and last points.
+    const datePadding = 24 * 60 * 60 * 1000;
+
+    return {
+      title: this._translate.instant('STATS.GEOGRAPHY.TITLES.MOST_CONSECUTIVE_VISITS', {
+        country: countryName,
+        streak: consecutive.streak,
+      }),
+      countryName,
+      countryCode: consecutive.code,
+      guests,
+      points: guests.map(guest => ({
+        x: new Date(guest.visitedDate).getTime(),
+        y: guest.fullName,
+      })),
+      colors: {
+        background: guests.map(guest =>
+          getColorWithOpacity(
+            GENDER_COLORS[guest.gender.toLowerCase() as keyof typeof GENDER_COLORS] ?? {
+              background: CHART_UNKNOWN_COLOR,
+              border: CHART_UNKNOWN_COLOR,
+            }
+          )
+        ),
+        border: guests.map(guest => getGenderColor(guest.gender)),
+      },
+      legend: this.getGenderLegend(guests),
+      xMin: new Date(consecutive.firstVisit).getTime() - datePadding,
+      xMax: new Date(consecutive.lastVisit).getTime() + datePadding,
+      height: Math.max(250, guests.length * 70),
+    };
+  }
+
+  // ─────────────────────────────────────────────
+  // Colors, legends, labels
+  // ─────────────────────────────────────────────
+
+  private getColors(items: GeographyItem[], values: number[]): IChartColors {
     const isRankingChart = this.selectedRanking !== 'all' || this.selectedView === 'livingIn' || this.selectedView === 'hometown';
 
-    const colors = isRankingChart
-      ? getRankingColors(chartValues)
-      : {
-          background: geographyData.map(item => {
-            const continent = this.getContinent(item);
-            return CONTINENT_COLORS[continent as keyof typeof CONTINENT_COLORS]?.background;
-          }),
+    if (isRankingChart) {
+      return getRankingColors(values);
+    }
 
-          border: geographyData.map(item => {
-            const continent = this.getContinent(item);
-            return CONTINENT_COLORS[continent as keyof typeof CONTINENT_COLORS]?.border;
-          }),
-        };
+    const continentColor = (item: GeographyItem, key: 'background' | 'border'): string =>
+      CONTINENT_COLORS[this.getContinent(item) as keyof typeof CONTINENT_COLORS]?.[key] ?? CHART_UNKNOWN_COLOR;
 
-    const datasetLabel =
-      this.selectedRanking === 'topFemale'
-        ? this._translate.instant('STATS.GEOGRAPHY.LABELS.FEMALE_GUESTS')
-        : this.selectedRanking === 'topMale'
-          ? this._translate.instant('STATS.GEOGRAPHY.LABELS.MALE_GUESTS')
-          : this._translate.instant(config.label);
+    return {
+      background: items.map(item => continentColor(item, 'background')),
+      border: items.map(item => continentColor(item, 'border')),
+    };
+  }
 
-    this.chart = new Chart(this.geographyChart.nativeElement, {
-      type: config.type,
-      data: {
-        labels: geographyData.map(item => {
-          if ('name' in item) return item.name;
+  private getLegend(items: GeographyItem[]): IChartLegendItem[] | null {
+    // Pie chart uses the default legend.
+    if (this.selectedView === 'continents') return null;
 
-          if (this.selectedView === 'continents') return this.getContinentName(item.code.toLowerCase() as Continents);
+    // Living in / hometown and every ranking use the ranking legend.
+    if (this.selectedView === 'livingIn' || this.selectedView === 'hometown' || this.selectedRanking !== 'all') {
+      return this.getRankingLegend();
+    }
 
-          if (this.selectedView === 'regions')
-            return REGION_NAMES[item.code as Regions]?.[this._translate.currentLang as Language] ?? REGION_NAMES[item.code as Regions]?.en ?? item.code;
+    // Regions / countries with all data use the continent legend.
+    return this.getContinentLegend(items);
+  }
 
-          if (this.selectedView === 'countries') {
-            const code = item.code.toLowerCase() as CountriesCodes;
-            return WORLD[code]?.name?.[this._translate.currentLang as Language] ?? WORLD[code]?.name?.en ?? item.code;
-          }
+  private getContinentLegend(items: GeographyItem[]): IChartLegendItem[] {
+    const present = new Set(items.map(item => this.getContinent(item)));
 
-          return item.code;
-        }),
-        datasets: [
-          {
-            label: datasetLabel,
-            data: chartValues,
-            backgroundColor: colors.background,
-            borderColor: colors.border,
-            borderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        onClick: (_event, elements) => {
-          if (!elements.length) return;
+    return (['america', 'europe', 'africa', 'asia', 'oceania'] as const)
+      .filter(continent => present.has(continent))
+      .map(continent => ({
+        text: this._geoname.getContinentName(continent),
+        background: CONTINENT_COLORS[continent].background,
+        border: CONTINENT_COLORS[continent].border,
+      }));
+  }
 
-          const index = elements[0].index;
-          const item = geographyData[index];
+  private getRankingLegend(): IChartLegendItem[] {
+    const text = (key: string) => this._translate.instant(`STATS.GEOGRAPHY.RANKING_LABELS.${key}`);
 
-          if (!item) return;
+    return [
+      { text: text('FIRST'), background: RANKING_COLORS.gold.background, border: RANKING_COLORS.gold.border },
+      { text: text('SECOND'), background: RANKING_COLORS.silver.background, border: RANKING_COLORS.silver.border },
+      { text: text('THIRD'), background: RANKING_COLORS.bronze.background, border: RANKING_COLORS.bronze.border },
+      { text: text('OTHERS'), background: RANKING_COLORS.neutral.background, border: RANKING_COLORS.neutral.border },
+    ];
+  }
 
-          if (this.selectedView === 'continents') {
-            const continent = item as IGeographyContinent;
-            this.navigateToContinent(continent.code.toLowerCase());
-          }
+  private getGenderLegend(guests: ConsecutiveGuest[]): IChartLegendItem[] {
+    return (['female', 'male', 'gay', 'trans'] as const)
+      .filter(gender => guests.some(guest => guest.gender.toLowerCase() === gender))
+      .map(gender => ({
+        text: this._translate.instant(`GENDER.${gender.toUpperCase()}`),
+        background: GENDER_COLORS[gender].background,
+        border: GENDER_COLORS[gender].border,
+      }));
+  }
 
-          if (this.selectedView === 'regions') {
-            const region = item as IGeographyRegion;
-            this.navigateToRegion(region.code);
-          }
+  private getItemLabel(item: GeographyItem): string {
+    if ('name' in item) return item.name;
 
-          if (this.selectedView === 'countries') {
-            const country = item as IGeographyCountry;
-            this.navigateToCountry(country.code);
-          }
+    const lang = this._translate.currentLang as Language;
 
-          if (this.selectedView === 'livingIn') {
-            const location = item as IGeographyLocation;
-            this.navigateToLivingIn(location.name);
-          }
+    if (this.selectedView === 'continents') {
+      return this._geoname.getContinentName(item.code.toLowerCase() as Continents);
+    }
 
-          if (this.selectedView === 'hometown') {
-            const location = item as IGeographyLocation;
-            this.navigateToHometown(location.name);
-          }
-        },
-        indexAxis: config.type === 'bar' ? 'y' : 'x',
-        plugins: {
-          title: {
-            display: true,
-            text: this.getChartTitle(config.label),
-          },
-          legend: {
-            display: true,
-            labels:
-              this.selectedView === 'regions' || this.selectedView === 'countries' || this.selectedView === 'livingIn' || this.selectedView === 'hometown'
-                ? {
-                    generateLabels: () => {
-                      const labels = [];
+    if (this.selectedView === 'regions') {
+      return REGION_NAMES[item.code as Regions]?.[lang] ?? REGION_NAMES[item.code as Regions]?.en ?? item.code;
+    }
 
-                      // REGIONS
-                      if (this.selectedView === 'regions') {
-                        // Regions - All
-                        if (this.selectedRanking === 'all') {
-                          const regions = this.getSelectedData(this.chartConfig.regions) as IGeographyRegion[];
+    if (this.selectedView === 'countries') {
+      const code = item.code.toLowerCase() as CountriesCodes;
+      return WORLD[code]?.name?.[lang] ?? WORLD[code]?.name?.en ?? item.code;
+    }
 
-                          if (regions.some(region => this.getContinent(region) === 'america')) {
-                            labels.push({
-                              text: this._geoname.getContinentName('america'),
-                              fillStyle: CONTINENT_COLORS.america.background,
-                              strokeStyle: CONTINENT_COLORS.america.border,
-                              lineWidth: 1,
-                              fontColor: CHART_UNKNOWN_COLOR,
-                            });
-                          }
+    return item.code;
+  }
 
-                          if (regions.some(region => this.getContinent(region) === 'europe')) {
-                            labels.push({
-                              text: this._geoname.getContinentName('europe'),
-                              fillStyle: CONTINENT_COLORS.europe.background,
-                              strokeStyle: CONTINENT_COLORS.europe.border,
-                              lineWidth: 1,
-                              fontColor: CHART_UNKNOWN_COLOR,
-                            });
-                          }
+  private getDatasetLabel(label: string): string {
+    if (this.selectedRanking === 'topFemale') return this._translate.instant('STATS.GEOGRAPHY.LABELS.FEMALE_GUESTS');
+    if (this.selectedRanking === 'topMale') return this._translate.instant('STATS.GEOGRAPHY.LABELS.MALE_GUESTS');
+    return this._translate.instant(label);
+  }
 
-                          if (regions.some(region => this.getContinent(region) === 'africa')) {
-                            labels.push({
-                              text: this._geoname.getContinentName('africa'),
-                              fillStyle: CONTINENT_COLORS.africa.background,
-                              strokeStyle: CONTINENT_COLORS.africa.border,
-                              lineWidth: 1,
-                              fontColor: CHART_UNKNOWN_COLOR,
-                            });
-                          }
+  private getChartTitle(label: string): string {
+    const translatedLabel = this._translate.instant(label);
 
-                          if (regions.some(region => this.getContinent(region) === 'asia')) {
-                            labels.push({
-                              text: this._geoname.getContinentName('asia'),
-                              fillStyle: CONTINENT_COLORS.asia.background,
-                              strokeStyle: CONTINENT_COLORS.asia.border,
-                              lineWidth: 1,
-                              fontColor: CHART_UNKNOWN_COLOR,
-                            });
-                          }
+    const rankingTitles: Record<ICountryRanking, string> = {
+      all: translatedLabel,
+      top: `${translatedLabel} - ${this._translate.instant('STATS.GEOGRAPHY.RANKINGS.TOP')}`,
+      bottom: `${translatedLabel} - ${this._translate.instant('STATS.GEOGRAPHY.RANKINGS.BOTTOM')}`,
+      topFemale: `${translatedLabel} - ${this._translate.instant('STATS.GEOGRAPHY.RANKINGS.TOP_FEMALE')}`,
+      topMale: `${translatedLabel} - ${this._translate.instant('STATS.GEOGRAPHY.RANKINGS.TOP_MALE')}`,
+      mostConsecutive: `${translatedLabel} - ${this._translate.instant('STATS.GEOGRAPHY.RANKINGS.MOST_CONSECUTIVE')}`,
+    };
 
-                          if (regions.some(region => this.getContinent(region) === 'oceania')) {
-                            labels.push({
-                              text: this._geoname.getContinentName('oceania'),
-                              fillStyle: CONTINENT_COLORS.oceania.background,
-                              strokeStyle: CONTINENT_COLORS.oceania.border,
-                              lineWidth: 1,
-                              fontColor: CHART_UNKNOWN_COLOR,
-                            });
-                          }
-                        }
+    return rankingTitles[this.selectedRanking];
+  }
 
-                        // Regions - Top / Bottom
-                        if (this.selectedRanking === 'top' || this.selectedRanking === 'bottom') {
-                          labels.push(
-                            {
-                              text: this._translate.instant('STATS.GEOGRAPHY.RANKING_LABELS.FIRST'),
-                              fillStyle: RANKING_COLORS.gold.background,
-                              strokeStyle: RANKING_COLORS.gold.border,
-                              lineWidth: 1,
-                              fontColor: CHART_UNKNOWN_COLOR,
-                            },
-                            {
-                              text: this._translate.instant('STATS.GEOGRAPHY.RANKING_LABELS.SECOND'),
-                              fillStyle: RANKING_COLORS.silver.background,
-                              strokeStyle: RANKING_COLORS.silver.border,
-                              lineWidth: 1,
-                              fontColor: CHART_UNKNOWN_COLOR,
-                            },
-                            {
-                              text: this._translate.instant('STATS.GEOGRAPHY.RANKING_LABELS.THIRD'),
-                              fillStyle: RANKING_COLORS.bronze.background,
-                              strokeStyle: RANKING_COLORS.bronze.border,
-                              lineWidth: 1,
-                              fontColor: CHART_UNKNOWN_COLOR,
-                            },
-                            {
-                              text: this._translate.instant('STATS.GEOGRAPHY.RANKING_LABELS.OTHERS'),
-                              fillStyle: RANKING_COLORS.neutral.background,
-                              strokeStyle: RANKING_COLORS.neutral.border,
-                              lineWidth: 1,
-                              fontColor: CHART_UNKNOWN_COLOR,
-                            }
-                          );
-                        }
-                      }
-                      // COUNTRIES
-                      if (this.selectedView === 'countries') {
-                        // Countries - All
-                        if (this.selectedRanking === 'all') {
-                          const countries = this.getSelectedData(this.chartConfig.countries) as IGeographyCountry[];
+  // Countries can contain many entries, so give each item
+  // enough vertical space to remain readable.
+  private getChartHeight(dataLength: number): number | undefined {
+    if (this.selectedView === 'countries' && this.selectedRanking === 'all') {
+      return Math.max(500, dataLength * 10);
+    }
 
-                          if (countries.some(country => this.getContinent(country) === 'america')) {
-                            labels.push({
-                              text: this._geoname.getContinentName('america'),
-                              fillStyle: CONTINENT_COLORS.america.background,
-                              strokeStyle: CONTINENT_COLORS.america.border,
-                              lineWidth: 1,
-                              fontColor: CHART_UNKNOWN_COLOR,
-                            });
-                          }
-
-                          if (countries.some(country => this.getContinent(country) === 'europe')) {
-                            labels.push({
-                              text: this._geoname.getContinentName('europe'),
-                              fillStyle: CONTINENT_COLORS.europe.background,
-                              strokeStyle: CONTINENT_COLORS.europe.border,
-                              lineWidth: 1,
-                              fontColor: CHART_UNKNOWN_COLOR,
-                            });
-                          }
-
-                          if (countries.some(country => this.getContinent(country) === 'africa')) {
-                            labels.push({
-                              text: this._geoname.getContinentName('africa'),
-                              fillStyle: CONTINENT_COLORS.africa.background,
-                              strokeStyle: CONTINENT_COLORS.africa.border,
-                              lineWidth: 1,
-                              fontColor: CHART_UNKNOWN_COLOR,
-                            });
-                          }
-
-                          if (countries.some(country => this.getContinent(country) === 'asia')) {
-                            labels.push({
-                              text: this._geoname.getContinentName('asia'),
-                              fillStyle: CONTINENT_COLORS.asia.background,
-                              strokeStyle: CONTINENT_COLORS.asia.border,
-                              lineWidth: 1,
-                              fontColor: CHART_UNKNOWN_COLOR,
-                            });
-                          }
-
-                          if (countries.some(country => this.getContinent(country) === 'oceania')) {
-                            labels.push({
-                              text: this._geoname.getContinentName('oceania'),
-                              fillStyle: CONTINENT_COLORS.oceania.background,
-                              strokeStyle: CONTINENT_COLORS.oceania.border,
-                              lineWidth: 1,
-                              fontColor: CHART_UNKNOWN_COLOR,
-                            });
-                          }
-                        }
-
-                        // Countries - Top / Bottom / Top Female / Top Male
-                        if (this.selectedRanking === 'top' || this.selectedRanking === 'bottom' || this.selectedRanking === 'topFemale' || this.selectedRanking === 'topMale') {
-                          labels.push(
-                            {
-                              text: this._translate.instant('STATS.GEOGRAPHY.RANKING_LABELS.FIRST'),
-                              fillStyle: RANKING_COLORS.gold.background,
-                              strokeStyle: RANKING_COLORS.gold.border,
-                              lineWidth: 1,
-                              fontColor: CHART_UNKNOWN_COLOR,
-                            },
-                            {
-                              text: this._translate.instant('STATS.GEOGRAPHY.RANKING_LABELS.SECOND'),
-                              fillStyle: RANKING_COLORS.silver.background,
-                              strokeStyle: RANKING_COLORS.silver.border,
-                              lineWidth: 1,
-                              fontColor: CHART_UNKNOWN_COLOR,
-                            },
-                            {
-                              text: this._translate.instant('STATS.GEOGRAPHY.RANKING_LABELS.THIRD'),
-                              fillStyle: RANKING_COLORS.bronze.background,
-                              strokeStyle: RANKING_COLORS.bronze.border,
-                              lineWidth: 1,
-                              fontColor: CHART_UNKNOWN_COLOR,
-                            },
-                            {
-                              text: this._translate.instant('STATS.GEOGRAPHY.RANKING_LABELS.OTHERS'),
-                              fillStyle: RANKING_COLORS.neutral.background,
-                              strokeStyle: RANKING_COLORS.neutral.border,
-                              lineWidth: 1,
-                              fontColor: CHART_UNKNOWN_COLOR,
-                            }
-                          );
-                        }
-                      }
-
-                      // LIVING IN / HOMETOWN
-                      if (this.selectedView === 'livingIn' || this.selectedView === 'hometown') {
-                        labels.push(
-                          {
-                            text: this._translate.instant('STATS.GEOGRAPHY.RANKING_LABELS.FIRST'),
-                            fillStyle: RANKING_COLORS.gold.background,
-                            strokeStyle: RANKING_COLORS.gold.border,
-                            lineWidth: 1,
-                            fontColor: CHART_UNKNOWN_COLOR,
-                          },
-                          {
-                            text: this._translate.instant('STATS.GEOGRAPHY.RANKING_LABELS.SECOND'),
-                            fillStyle: RANKING_COLORS.silver.background,
-                            strokeStyle: RANKING_COLORS.silver.border,
-                            lineWidth: 1,
-                            fontColor: CHART_UNKNOWN_COLOR,
-                          },
-                          {
-                            text: this._translate.instant('STATS.GEOGRAPHY.RANKING_LABELS.THIRD'),
-                            fillStyle: RANKING_COLORS.bronze.background,
-                            strokeStyle: RANKING_COLORS.bronze.border,
-                            lineWidth: 1,
-                            fontColor: CHART_UNKNOWN_COLOR,
-                          },
-                          {
-                            text: this._translate.instant('STATS.GEOGRAPHY.RANKING_LABELS.OTHERS'),
-                            fillStyle: RANKING_COLORS.neutral.background,
-                            strokeStyle: RANKING_COLORS.neutral.border,
-                            lineWidth: 1,
-                            fontColor: CHART_UNKNOWN_COLOR,
-                          }
-                        );
-                      }
-
-                      return labels;
-                    },
-                  }
-                : undefined,
-          },
-        },
-        scales:
-          config.type === 'bar'
-            ? {
-                x: {
-                  beginAtZero: true,
-                  title: {
-                    display: true,
-                    text: this._translate.instant('STATS.GEOGRAPHY.LABELS.NUMBER_OF_GUESTS'),
-                  },
-                },
-                y: {
-                  beginAtZero: true,
-                },
-              }
-            : undefined,
-      },
-    });
+    return undefined;
   }
 
   private getTranslatedGender(gender: string): string {
@@ -560,6 +434,24 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
     const translated = this._translate.instant(key);
 
     return translated === key ? gender : translated;
+  }
+
+  private getCountryName(code: string): string {
+    return this._format.formatCountry(code);
+  }
+
+  // ─────────────────────────────────────────────
+  // Data
+  // ─────────────────────────────────────────────
+
+  private getContinent(item: GeographyItem): string {
+    const code = item.code.toLowerCase();
+    // When the item is already a continent.
+    if (this.selectedView === 'continents') return code;
+    // When the item is a region.
+    if (this.selectedView === 'regions') return REGION_CONTINENT_INDEX[code as Regions] ?? '';
+    // When the item is a country, livingIn or hometown location.
+    return getCountryLocation(code)?.continent ?? '';
   }
 
   private getSelectedData(config: {
@@ -599,306 +491,31 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
     return data;
   }
 
-  private getChartTitle(label: string): string {
-    const translatedLabel = this._translate.instant(label);
+  // ─────────────────────────────────────────────
+  // Navigation
+  // ─────────────────────────────────────────────
 
-    const rankingTitles: Record<ICountryRanking, string> = {
-      all: translatedLabel,
-      top: `${translatedLabel} - ${this._translate.instant('STATS.GEOGRAPHY.RANKINGS.TOP')}`,
-      bottom: `${translatedLabel} - ${this._translate.instant('STATS.GEOGRAPHY.RANKINGS.BOTTOM')}`,
-      topFemale: `${translatedLabel} - ${this._translate.instant('STATS.GEOGRAPHY.RANKINGS.TOP_FEMALE')}`,
-      topMale: `${translatedLabel} - ${this._translate.instant('STATS.GEOGRAPHY.RANKINGS.TOP_MALE')}`,
-      mostConsecutive: `${translatedLabel} - ${this._translate.instant('STATS.GEOGRAPHY.RANKINGS.MOST_CONSECUTIVE')}`,
-    };
-
-    return rankingTitles[this.selectedRanking];
-  }
-
-  // Change the chart height.
-  private setChartHeight(dataLength: number): void {
-    const canvas = this.geographyChart.nativeElement;
-
-    // Countries can contain many entries, so give each item
-    // enough vertical space to remain readable.
-    if (this.selectedView === 'countries' && this.selectedRanking === 'all') {
-      const height = Math.max(500, dataLength * 10);
-      canvas.style.height = `${height}px`;
-    } else {
-      canvas.style.height = '';
-    }
-  }
-
-  private destroyChart(): void {
-    // Destroy the external tooltip before destroying the chart.
-    if (this.chart) {
-      destroyExternalTooltip(this.chart);
-      this.chart.destroy();
-      this.chart = undefined;
-    }
-  }
-
-  // FLAG
-  getSelectedCountries(): (IGeographyCountry | IGeographyLocation)[] {
-    if (this.selectedRanking === 'mostConsecutive') {
-      return [];
-    }
-
-    const config = this.chartConfig[this.selectedView];
-
-    return this.getSelectedData(config) as (IGeographyCountry | IGeographyLocation)[];
-  }
-
-  getCountryName(code: string) {
-    return this._format.formatCountry(code);
-  }
-
-  // COUNTRY - MOST CONSECUTIVE
-
-  private createMostConsecutiveChart(): void {
-    const consecutive = this.geography.countries.mostConsecutive;
-
-    if (!consecutive || !consecutive.guests.length) return;
-    this.destroyChart();
-
-    const countryName = this.getCountryName(consecutive.code);
-    const guests = [...consecutive.guests].sort((a, b) => new Date(a.visitedDate).getTime() - new Date(b.visitedDate).getTime());
-
-    const startDate = new Date(consecutive.firstVisit);
-    const endDate = new Date(consecutive.lastVisit);
-    const minDate = startDate.getTime();
-    const maxDate = endDate.getTime();
-
-    // Add some space around the first and last points.
-    const datePadding = 24 * 60 * 60 * 1000;
-
-    this.geographyChart.nativeElement.style.height = `${Math.max(250, guests.length * 70)}px`;
-
-    this.chart = new Chart(this.geographyChart.nativeElement, {
-      type: 'scatter',
-      data: {
-        datasets: [
-          {
-            label: this._translate.instant('STATS.GEOGRAPHY.TITLES.MOST_CONSECUTIVE_VISITS', {
-              country: countryName,
-              streak: consecutive.streak,
-            }),
-            data: guests.map(guest => ({
-              x: new Date(guest.visitedDate).getTime(),
-              y: guest.fullName,
-            })),
-            pointRadius: 20,
-            pointHoverRadius: 10,
-            pointBackgroundColor: guests.map(guest =>
-              getColorWithOpacity(
-                GENDER_COLORS[guest.gender.toLowerCase() as keyof typeof GENDER_COLORS] ?? {
-                  background: CHART_UNKNOWN_COLOR,
-                  border: CHART_UNKNOWN_COLOR,
-                }
-              )
-            ),
-            pointBorderColor: guests.map(guest => getGenderColor(guest.gender)),
-            showLine: false,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        onClick: (_event, elements) => {
-          if (!elements.length) {
-            return;
-          }
-
-          const index = elements[0].index;
-          const guest = guests[index];
-
-          if (!guest?.guestId) {
-            return;
-          }
-
-          this.navigateToGuest(guest.guestId);
-        },
-        layout: {
-          padding: {
-            left: 15,
-            right: 15,
-            top: 10,
-            bottom: 10,
-          },
-        },
-        plugins: {
-          title: {
-            display: true,
-            text: this._translate.instant('STATS.GEOGRAPHY.TITLES.MOST_CONSECUTIVE_VISITS', {
-              country: countryName,
-              streak: consecutive.streak,
-            }),
-          },
-          legend: {
-            display: true,
-            labels: {
-              generateLabels: () => {
-                const labels = [];
-
-                if (guests.some(guest => guest.gender.toLowerCase() === 'female')) {
-                  labels.push({
-                    text: this._translate.instant('GENDER.FEMALE'),
-                    fillStyle: GENDER_COLORS.female.background,
-                    strokeStyle: GENDER_COLORS.female.border,
-                    lineWidth: 1,
-                    fontColor: CHART_UNKNOWN_COLOR,
-                  });
-                }
-
-                if (guests.some(guest => guest.gender.toLowerCase() === 'male')) {
-                  labels.push({
-                    text: this._translate.instant('GENDER.MALE'),
-                    fillStyle: GENDER_COLORS.male.background,
-                    strokeStyle: GENDER_COLORS.male.border,
-                    lineWidth: 1,
-                    fontColor: CHART_UNKNOWN_COLOR,
-                  });
-                }
-
-                if (guests.some(guest => guest.gender.toLowerCase() === 'gay')) {
-                  labels.push({
-                    text: this._translate.instant('GENDER.GAY'),
-                    fillStyle: GENDER_COLORS.gay.background,
-                    strokeStyle: GENDER_COLORS.gay.border,
-                    lineWidth: 1,
-                    fontColor: CHART_UNKNOWN_COLOR,
-                  });
-                }
-
-                if (guests.some(guest => guest.gender.toLowerCase() === 'trans')) {
-                  labels.push({
-                    text: this._translate.instant('GENDER.TRANS'),
-                    fillStyle: GENDER_COLORS.trans.background,
-                    strokeStyle: GENDER_COLORS.trans.border,
-                    lineWidth: 1,
-                    fontColor: CHART_UNKNOWN_COLOR,
-                  });
-                }
-
-                return labels;
-              },
-            },
-          },
-          tooltip: {
-            enabled: false,
-            external: context => {
-              const dataPoint = context.tooltip.dataPoints?.[0];
-
-              if (!dataPoint) {
-                hideExternalTooltip(context.chart);
-                return;
-              }
-
-              const guest = guests[dataPoint.dataIndex];
-
-              if (!guest) {
-                hideExternalTooltip(context.chart);
-                return;
-              }
-
-              createExternalTooltip(context.chart, context.tooltip, {
-                title: guest.fullName,
-                rows: [
-                  {
-                    label: this._translate.instant('GENDER.TXT'),
-                    value: this.getTranslatedGender(guest.gender),
-                  },
-                  {
-                    label: this._translate.instant('STATS.GEOGRAPHY.LABELS.GROUP'),
-                    value: this._translate.instant(`STATS.DEMOGRAPHICS.GROUPS.${guest.groupType.toUpperCase()}`),
-                  },
-                  {
-                    label: this._translate.instant('STATS.GEOGRAPHY.LABELS.VISIT'),
-                    value: this._format.formatDate(guest.visitedDate),
-                  },
-                ],
-                country: {
-                  name: countryName,
-                  flagClass: this._flag.transform(consecutive.code),
-                },
-              });
-            },
-          },
-        },
-        scales: {
-          x: {
-            type: 'linear',
-            min: minDate - datePadding,
-            max: maxDate + datePadding,
-            ticks: {
-              callback: value => {
-                const locale = this._translate.currentLang === 'es' ? 'es-CO' : 'en-US';
-
-                return new Date(Number(value)).toLocaleDateString(locale, {
-                  month: 'short',
-                  day: 'numeric',
-                });
-              },
-            },
-            title: {
-              display: true,
-              text: this._translate.instant('STATS.GEOGRAPHY.LABELS.VISIT_DATE'),
-            },
-          },
-          y: {
-            type: 'category',
-            labels: guests.map(guest => guest.fullName),
-            title: {
-              display: true,
-              text: this._translate.instant('STATS.GEOGRAPHY.LABELS.GUESTS'),
-            },
-          },
-        },
-      },
-    });
-  }
-
-  // Click on chart
   private navigateToContinent(continent: string): void {
-    const filters = continent;
-    if (!filters) return;
+    if (!continent) return;
 
-    this._router.navigate(['/guests'], {
-      queryParams: {
-        view: 'cards',
-        continent: filters,
-      },
-    });
+    this._router.navigate(['/guests'], { queryParams: { view: 'cards', continent } });
   }
 
   private navigateToRegion(region: string): void {
-    const filters = region;
-    if (!filters) return;
+    if (!region) return;
 
-    this._router.navigate(['/guests'], {
-      queryParams: {
-        view: 'cards',
-        region: filters,
-      },
-    });
+    this._router.navigate(['/guests'], { queryParams: { view: 'cards', region } });
   }
 
   private navigateToCountry(country: string): void {
-    this._router.navigate(['/guests'], {
-      queryParams: {
-        view: 'cards',
-        country,
-      },
-    });
+    this._router.navigate(['/guests'], { queryParams: { view: 'cards', country } });
   }
 
   private navigateToLivingIn(location: string): void {
     if (!location) return;
 
     this._router.navigate(['/guests'], {
-      queryParams: {
-        view: 'cards',
-        livingInState: location.toLowerCase().replace(/\s+/g, '-'),
-      },
+      queryParams: { view: 'cards', livingInState: location.toLowerCase().replace(/\s+/g, '-') },
     });
   }
 
@@ -906,10 +523,7 @@ export class GuestGeographyChartComponent implements AfterViewInit, OnChanges, O
     if (!location) return;
 
     this._router.navigate(['/guests'], {
-      queryParams: {
-        view: 'cards',
-        hometownState: location.toLowerCase().replace(/\s+/g, '-'),
-      },
+      queryParams: { view: 'cards', hometownState: location.toLowerCase().replace(/\s+/g, '-') },
     });
   }
 

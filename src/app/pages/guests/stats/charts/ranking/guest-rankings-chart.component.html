@@ -67,7 +67,19 @@
   <!-- Ranking chart -->
   <div class="ranking-chart-row">
     <div class="ranking-chart-ctn">
-      <canvas #rankingChart></canvas>
+      <bar-chart
+        *ngIf="chartVm as vm"
+        [datasetLabel]="vm.datasetLabel"
+        [labels]="vm.labels"
+        [values]="vm.values"
+        [colors]="vm.colors"
+        [valueMin]="0"
+        [valueMax]="vm.max"
+        [valueTickFormatter]="vm.tickFormatter"
+        [valueAxisTitle]="'STATS.RANKINGS.LABELS.RANKING_POSITION' | translate"
+        [tooltip]="rankingTooltip"
+        (itemClick)="onChartClick($event)"
+      />
     </div>
   </div>
 </div>

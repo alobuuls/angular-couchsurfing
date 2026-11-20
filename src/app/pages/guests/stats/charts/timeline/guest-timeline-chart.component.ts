@@ -1,22 +1,17 @@
-import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
-import Chart from 'chart.js/auto';
-import { ForceDirectedGraphController, EdgeLine } from 'chartjs-chart-graph';
-import { LinearScale, PointElement } from 'chart.js';
-
-// Register the network graph.
-Chart.register(ForceDirectedGraphController, EdgeLine, LinearScale, PointElement);
-
 // Interfaces
 import { ISameArrivalDay, ISameStay, ITimelineDistribution, ITimelineItem, ITimelineView } from '@interfaces/stats-interface';
+import { IChartEdge, IChartLegendItem, TChartTooltipContent } from '@type/chart.types';
+import { INetworkNode, ITimelineBarVm, ITimelineNetworkVm, TBarItem } from '@interfaces/charts/chart-timeline.interface';
 
 // Helpers
-import { CHART_UNKNOWN_COLOR, createExternalTooltip, destroyExternalTooltip, getRankingColors, hideExternalTooltip, RANKING_COLORS, TIMELINE_COLORS } from '@utils';
+import { getRankingColors, RANKING_COLORS, TIMELINE_COLORS } from '@utils';
 
-// Service
+// Services
 import { FormatService } from '@services/format.service';
 import { FlagPipe } from '@shared/pipes/two-code-letters-flag.pipe';
 
@@ -25,7 +20,7 @@ import { FlagPipe } from '@shared/pipes/two-code-letters-flag.pipe';
   templateUrl: './guest-timeline-chart.component.html',
   styleUrls: ['./guest-timeline-chart.component.css'],
 })
-export class GuestTimelineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
+export class GuestTimelineChartComponent implements OnInit, OnChanges, OnDestroy {
   private _format = inject(FormatService);
   private _router = inject(Router);
   private _translate = inject(TranslateService);
@@ -35,16 +30,15 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges, On
 
   @Input() timeline!: ITimelineDistribution;
 
-  @ViewChild('timelineChart')
-  timelineChart!: ElementRef<HTMLCanvasElement>;
-
   // Controls the selected timeline view.
   selectedView: ITimelineView = 'years';
 
   // Available timeline views.
   readonly timelineViews: ITimelineView[] = ['years', 'months', 'days', 'sameArrivalDay', 'sameStay'];
 
-  private chart?: Chart;
+  // Only one of them is defined at a time.
+  barVm?: ITimelineBarVm;
+  networkVm?: ITimelineNetworkVm;
 
   // Configuration for each timeline view.
   private readonly chartConfig: Record<
@@ -55,383 +49,209 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges, On
       getData: (timeline: ITimelineDistribution) => ITimelineItem[] | ISameArrivalDay[] | ISameStay[];
     }
   > = {
-    years: {
-      titleKey: 'STATS.TIMELINE.TITLES.YEARS',
-      type: 'bar',
-      getData: timeline => timeline.years,
-    },
-    months: {
-      titleKey: 'STATS.TIMELINE.TITLES.MONTHS',
-      type: 'bar',
-      getData: timeline => timeline.months,
-    },
-    days: {
-      titleKey: 'STATS.TIMELINE.TITLES.DAYS',
-      type: 'bar',
-      getData: timeline => timeline.days,
-    },
-    sameArrivalDay: {
-      titleKey: 'STATS.TIMELINE.TITLES.SAMEARRIVALDAY',
-      type: 'bar',
-      getData: timeline => timeline.sameArrivalDay,
-    },
-    sameStay: {
-      titleKey: 'STATS.TIMELINE.TITLES.SAMESTAY',
-      type: 'network',
-      getData: timeline => timeline.sameStay,
-    },
+    years: { titleKey: 'STATS.TIMELINE.TITLES.YEARS', type: 'bar', getData: timeline => timeline.years },
+    months: { titleKey: 'STATS.TIMELINE.TITLES.MONTHS', type: 'bar', getData: timeline => timeline.months },
+    days: { titleKey: 'STATS.TIMELINE.TITLES.DAYS', type: 'bar', getData: timeline => timeline.days },
+    sameArrivalDay: { titleKey: 'STATS.TIMELINE.TITLES.SAMEARRIVALDAY', type: 'bar', getData: timeline => timeline.sameArrivalDay },
+    sameStay: { titleKey: 'STATS.TIMELINE.TITLES.SAMESTAY', type: 'network', getData: timeline => timeline.sameStay },
   };
 
-  ngAfterViewInit(): void {
-    // Update chart texts when the language changes.
-    this.langChangeSubscription = this._translate.onLangChange.subscribe(() => {
-      this.destroyChart();
-      this.createChart();
-    });
-
-    // Create the initial chart after the canvas is rendered.
-    if (this.timeline) {
-      this.createChart();
-    }
+  ngOnInit(): void {
+    // Rebuild the texts when the language changes.
+    this.langChangeSubscription = this._translate.onLangChange.subscribe(() => this.buildView());
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // Recreate the chart when data changes.
-    if (changes['timeline'] && this.timelineChart && this.timeline) {
-      this.createChart();
+    if (changes['timeline']) {
+      this.buildView();
     }
   }
 
   ngOnDestroy(): void {
-    // Unsubscribe from language changes.
     this.langChangeSubscription?.unsubscribe();
-
-    // Destroy the current chart.
-    this.destroyChart();
   }
 
   selectView(view: ITimelineView): void {
+    if (this.selectedView === view) {
+      return;
+    }
+
     this.selectedView = view;
-
-    // Remove the previous chart.
-    this.destroyChart();
-
-    // Wait for Angular to update the canvas.
-    setTimeout(() => {
-      this.createChart();
-    });
+    this.buildView();
   }
 
-  private createChart(): void {
-    if (!this.timelineChart || !this.timeline) {
+  // CLICKS
+  onBarClick(index: number): void {
+    const item = this.barVm?.items[index];
+
+    if (!item) {
+      return;
+    }
+
+    switch (this.selectedView) {
+      case 'years':
+        this.navigateToYear((item as ITimelineItem).period);
+        break;
+      case 'months':
+        this.navigateToMonth((item as ITimelineItem).period);
+        break;
+      case 'days':
+        this.navigateToDay((item as ITimelineItem).period);
+        break;
+      case 'sameArrivalDay':
+        this.navigateToSameArrivalDay((item as ISameArrivalDay).date);
+        break;
+    }
+  }
+
+  onNetworkClick(index: number): void {
+    const node = this.networkVm?.nodes[index];
+
+    if (!node?.guestId) {
+      return;
+    }
+
+    this.navigateToGuest(node.guestId, node.groupType, node.groupId);
+  }
+
+  // TOOLTIP
+  // Arrow function: it keeps `this` and has a stable reference.
+  getNetworkTooltip = (index: number): TChartTooltipContent | null => {
+    const node = this.networkVm?.nodes[index];
+
+    if (!node) {
+      return null;
+    }
+
+    return {
+      title: node.label,
+      rows: [
+        { label: this._translate.instant('STATS.TIMELINE.LABELS.GENDER'), value: this._format.formatGender(node.gender) },
+        { label: this._translate.instant('STATS.TIMELINE.LABELS.VISIT'), value: this._format.formatDate(node.visitedDate) },
+      ],
+      country: {
+        name: this._format.formatCountry(node.country),
+        flagClass: this._flag.transform(node.country),
+      },
+    };
+  };
+
+  // VIEW MODELS
+  private buildView(): void {
+    this.barVm = undefined;
+    this.networkVm = undefined;
+
+    if (!this.timeline) {
       return;
     }
 
     const config = this.chartConfig[this.selectedView];
+    const data = config.getData(this.timeline);
 
-    // Get data for the selected view.
-    const timelineData = config.getData(this.timeline);
-
-    // Remove any existing chart.
-    this.destroyChart();
-
-    // Stop when there is no data.
-    if (!timelineData.length) {
+    if (!data.length) {
       return;
     }
+
+    const title = this._translate.instant(config.titleKey);
 
     if (config.type === 'network') {
-      this.createNetworkChart(timelineData as ISameStay[]);
+      this.networkVm = this.buildNetworkVm(data as ISameStay[], title);
       return;
     }
 
-    this.createBarChart(timelineData as ITimelineItem[] | ISameArrivalDay[], this._translate.instant(config.titleKey));
+    this.barVm = this.buildBarVm(data as TBarItem[], title);
   }
 
-  private createBarChart(data: ITimelineItem[] | ISameArrivalDay[], label: string): void {
-    // Give the chart more space when needed.
-    this.setChartHeight(data.length);
+  private buildBarVm(items: TBarItem[], title: string): ITimelineBarVm {
+    const totals = items.map(item => item.total);
 
-    // Get ranking colors based on the number of guests.
-    const rankingColors = getRankingColors(data.map(item => item.total));
-
-    this.chart = new Chart(this.timelineChart.nativeElement, {
-      type: 'bar',
-      data: {
-        labels: data.map(item => this.formatTimelineLabel(item)),
-        datasets: [
-          {
-            label,
-            // Use the total number of guests.
-            data: data.map(item => item.total),
-            // Color bars according to their ranking.
-            backgroundColor: rankingColors.background,
-            borderColor: rankingColors.border,
-            borderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-
-        // Horizontal bars improve text readability.
-        indexAxis: 'y',
-
-        onClick: (_event, elements) => {
-          if (!elements.length) {
-            return;
-          }
-
-          const index = elements[0].index;
-          const item = data[index];
-
-          if (!item) {
-            return;
-          }
-
-          if (this.selectedView === 'years') {
-            const yearItem = item as ITimelineItem;
-            this.navigateToYear(yearItem.period);
-          }
-
-          if (this.selectedView === 'months') {
-            const monthItem = item as ITimelineItem;
-            this.navigateToMonth(monthItem.period);
-          }
-
-          if (this.selectedView === 'days') {
-            const dayItem = item as ITimelineItem;
-            this.navigateToDay(dayItem.period);
-            return;
-          }
-
-          if (this.selectedView === 'sameArrivalDay') {
-            const arrivalItem = item as ISameArrivalDay;
-            this.navigateToSameArrivalDay(arrivalItem.date);
-            return;
-          }
-        },
-
-        plugins: {
-          title: {
-            display: true,
-            text: this.getChartTitle(),
-          },
-
-          legend: {
-            display: true,
-            labels: {
-              generateLabels: () => [
-                {
-                  text: this._translate.instant('STATS.TIMELINE.LABELS.FIRST'),
-                  fillStyle: RANKING_COLORS.gold.background,
-                  strokeStyle: RANKING_COLORS.gold.border,
-                  lineWidth: 1,
-                  fontColor: CHART_UNKNOWN_COLOR,
-                },
-                {
-                  text: this._translate.instant('STATS.TIMELINE.LABELS.SECOND'),
-                  fillStyle: RANKING_COLORS.silver.background,
-                  strokeStyle: RANKING_COLORS.silver.border,
-                  lineWidth: 1,
-                  fontColor: CHART_UNKNOWN_COLOR,
-                },
-                {
-                  text: this._translate.instant('STATS.TIMELINE.LABELS.THIRD'),
-                  fillStyle: RANKING_COLORS.bronze.background,
-                  strokeStyle: RANKING_COLORS.bronze.border,
-                  lineWidth: 1,
-                  fontColor: CHART_UNKNOWN_COLOR,
-                },
-                {
-                  text: this._translate.instant('STATS.TIMELINE.LABELS.OTHER'),
-                  fillStyle: RANKING_COLORS.neutral.background,
-                  strokeStyle: RANKING_COLORS.neutral.border,
-                  lineWidth: 1,
-                  fontColor: CHART_UNKNOWN_COLOR,
-                },
-              ],
-            },
-          },
-        },
-
-        scales: {
-          x: {
-            beginAtZero: true,
-            title: {
-              display: true,
-              text: this._translate.instant('STATS.TIMELINE.LABELS.NUMBER_OF_GUESTS'),
-            },
-          },
-          y: {
-            beginAtZero: true,
-          },
-        },
-      },
-    });
+    return {
+      title,
+      valueAxisTitle: this._translate.instant('STATS.TIMELINE.LABELS.NUMBER_OF_GUESTS'),
+      labels: items.map(item => this.formatTimelineLabel(item)),
+      values: totals,
+      // Color bars according to their ranking.
+      colors: getRankingColors(totals),
+      legend: this.getRankingLegend(),
+      // Give the chart more space when needed.
+      height: items.length > 5 ? Math.max(500, items.length * 35) : undefined,
+      items,
+    };
   }
 
-  private createNetworkChart(data: ISameStay[]): void {
-    // Convert guests into network nodes.
+  private buildNetworkVm(data: ISameStay[], title: string): ITimelineNetworkVm {
     const nodes = this.getNetworkNodes(data);
-
-    // Create an index for each node.
     const nodeIndexes = new Map(nodes.map((node, index) => [node.id, index]));
 
-    // Convert shared stays into connections.
-    const edges = this.getNetworkEdges(data, nodeIndexes);
-
-    // Stop when there are no nodes.
-    if (!nodes.length) {
-      return;
-    }
-
-    this.chart = new Chart(this.timelineChart.nativeElement, {
-      type: 'forceDirectedGraph',
-      data: {
-        // Use guest names as node labels.
-        labels: nodes.map(node => node.label),
-
-        datasets: [
-          {
-            // Create one node for every guest.
-            data: nodes.map(() => ({})),
-
-            // Connect guests who shared a stay.
-            edges,
-
-            pointRadius: 8,
-            pointHoverRadius: 10,
-            pointBackgroundColor: TIMELINE_COLORS.sameStay.background,
-            pointBorderColor: TIMELINE_COLORS.sameStay.border,
-            borderColor: TIMELINE_COLORS.sameStay.edges,
-            borderWidth: 2,
-          },
-        ],
-      },
-
-      options: {
-        responsive: true,
-
-        onClick: (_event, elements) => {
-          if (!elements.length) {
-            return;
-          }
-
-          const index = elements[0].index;
-          const node = nodes[index];
-
-          if (!node?.guestId) {
-            return;
-          }
-
-          this.navigateToGuest(node.guestId, node.groupType, node.groupId);
-        },
-
-        plugins: {
-          title: {
-            display: true,
-            text: this._translate.instant('STATS.TIMELINE.TITLES.SAMESTAY'),
-          },
-
-          legend: {
-            display: false,
-          },
-
-          tooltip: {
-            enabled: false,
-            external: context => {
-              const dataPoint = context.tooltip.dataPoints?.[0];
-
-              if (!dataPoint) {
-                hideExternalTooltip(context.chart);
-                return;
-              }
-
-              const node = nodes[dataPoint.dataIndex];
-
-              if (!node) {
-                hideExternalTooltip(context.chart);
-                return;
-              }
-
-              createExternalTooltip(context.chart, context.tooltip, {
-                title: node.label,
-                rows: [
-                  {
-                    label: this._translate.instant('STATS.TIMELINE.LABELS.GENDER'),
-                    value: this._format.formatGender(node.gender),
-                  },
-                  {
-                    label: this._translate.instant('STATS.TIMELINE.LABELS.VISIT'),
-                    value: this._format.formatDate(node.visitedDate),
-                  },
-                ],
-                country: {
-                  name: this._format.formatCountry(node.country),
-                  flagClass: this._flag.transform(node.country),
-                },
-              });
-            },
-          },
-        },
-      },
-    });
+    return {
+      title,
+      labels: nodes.map(node => node.label),
+      edges: this.getNetworkEdges(data, nodeIndexes),
+      colors: TIMELINE_COLORS.sameStay,
+      nodes,
+    };
   }
 
-  private getNetworkNodes(data: ISameStay[]): {
-    id: string;
-    label: string;
-    country: string;
-    visitedDate: string;
-    guestId: string;
-    gender: string;
-    groupType: string | null;
-    groupId: string | null;
-  }[] {
-    const nodes = new Map<
-      string,
-      {
-        id: string;
-        label: string;
-        country: string;
-        visitedDate: string;
-        gender: string;
-        guestId: string;
-        groupType: string | null;
-        groupId: string | null;
-      }
-    >();
+  private getRankingLegend(): IChartLegendItem[] {
+    const entries = [
+      ['FIRST', RANKING_COLORS.gold],
+      ['SECOND', RANKING_COLORS.silver],
+      ['THIRD', RANKING_COLORS.bronze],
+      ['OTHER', RANKING_COLORS.neutral],
+    ] as const;
+
+    return entries.map(([key, color]) => ({
+      text: this._translate.instant(`STATS.TIMELINE.LABELS.${key}`),
+      background: color.background,
+      border: color.border,
+    }));
+  }
+
+  private getNetworkNodes(data: ISameStay[]): INetworkNode[] {
+    const nodes = new Map<string, INetworkNode>();
+
+    const addNode = (guest: ISameStay['guest']): void => {
+      nodes.set(guest.guestId, {
+        id: guest.guestId,
+        label: this.getGuestDisplayName(guest.fullName, guest.groupType),
+        country: guest.hometownCode,
+        visitedDate: guest.visitedDate,
+        guestId: guest.guestId,
+        gender: guest.gender,
+        groupType: guest.groupType,
+        groupId: guest.groupId,
+      });
+    };
 
     data.forEach(item => {
-      // Add the main guest as a node.
-      nodes.set(item.guest.guestId, {
-        id: item.guest.guestId,
-        label: this.getGuestDisplayName(item.guest.fullName, item.guest.groupType),
-        country: item.guest.hometownCode,
-        visitedDate: item.guest.visitedDate,
-        gender: item.guest.gender,
-        guestId: item.guest.guestId,
-        groupType: item.guest.groupType,
-        groupId: item.guest.groupId,
-      });
-
-      // Add every overlapping guest as a node.
-      item.guests.forEach(guest => {
-        nodes.set(guest.guestId, {
-          id: guest.guestId,
-          label: this.getGuestDisplayName(guest.fullName, guest.groupType),
-          country: guest.hometownCode,
-          visitedDate: guest.visitedDate,
-          guestId: guest.guestId,
-          gender: guest.gender,
-          groupType: guest.groupType,
-          groupId: guest.groupId,
-        });
-      });
+      // Add the main guest and every overlapping guest as nodes.
+      addNode(item.guest);
+      item.guests.forEach(guest => addNode(guest));
     });
 
     return Array.from(nodes.values());
+  }
+
+  private getNetworkEdges(data: ISameStay[], nodeIndexes: Map<string, number>): IChartEdge[] {
+    const edges: IChartEdge[] = [];
+
+    data.forEach(item => {
+      const source = nodeIndexes.get(item.guest.guestId);
+
+      if (source === undefined) {
+        return;
+      }
+
+      item.guests.forEach(guest => {
+        const target = nodeIndexes.get(guest.guestId);
+
+        if (target !== undefined) {
+          edges.push({ source, target });
+        }
+      });
+    });
+
+    return edges;
   }
 
   private getGuestDisplayName(fullName: string, groupType: string | null): string {
@@ -451,81 +271,13 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges, On
       return fullName;
     }
 
-    const groupLabel = this._translate.instant(groupLabelKey);
-
     return this._translate.instant('STATS.TIMELINE.LABELS.GROUP_NAME', {
       name: fullName,
-      group: groupLabel,
+      group: this._translate.instant(groupLabelKey),
     });
   }
 
-  private getNetworkEdges(
-    data: ISameStay[],
-    nodeIndexes: Map<string, number>
-  ): {
-    source: number;
-    target: number;
-  }[] {
-    const edges: {
-      source: number;
-      target: number;
-    }[] = [];
-
-    data.forEach(item => {
-      const source = nodeIndexes.get(item.guest.guestId);
-
-      // Skip invalid source nodes.
-      if (source === undefined) {
-        return;
-      }
-
-      item.guests.forEach(guest => {
-        const target = nodeIndexes.get(guest.guestId);
-
-        // Skip invalid target nodes.
-        if (target === undefined) {
-          return;
-        }
-
-        edges.push({
-          source,
-          target,
-        });
-      });
-    });
-
-    return edges;
-  }
-
-  private getChartTitle(): string {
-    return this._translate.instant(this.chartConfig[this.selectedView].titleKey);
-  }
-
-  // Change the chart height.
-  private setChartHeight(dataLength: number): void {
-    const canvas = this.timelineChart.nativeElement;
-
-    // Give each item enough vertical space.
-    if (dataLength > 5) {
-      const height = Math.max(500, dataLength * 35);
-      canvas.style.height = `${height}px`;
-    } else {
-      canvas.style.height = '';
-    }
-  }
-
-  private destroyChart(): void {
-    // Destroy the external tooltip before destroying the chart.
-    if (!this.chart) {
-      return;
-    }
-
-    destroyExternalTooltip(this.chart);
-    this.chart.destroy();
-    this.chart = undefined;
-  }
-
-  private formatTimelineLabel(item: ITimelineItem | ISameArrivalDay): string {
+  private formatTimelineLabel(item: TBarItem): string {
     if ('date' in item) {
       return this._format.formatDate(item.date);
     }
@@ -541,13 +293,10 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges, On
     return item.period;
   }
 
+  // NAVIGATION
   private navigateToYear(year: string): void {
     this._router.navigate(['/guests'], {
-      queryParams: {
-        view: 'cards',
-        from: `${year}-01-01`,
-        to: `${year}-12-31`,
-      },
+      queryParams: { view: 'cards', from: `${year}-01-01`, to: `${year}-12-31` },
     });
   }
 
@@ -556,31 +305,16 @@ export class GuestTimelineChartComponent implements AfterViewInit, OnChanges, On
     const lastDay = new Date(Number(year), Number(monthNumber), 0).getDate();
 
     this._router.navigate(['/guests'], {
-      queryParams: {
-        view: 'cards',
-        from: `${month}-01`,
-        to: `${month}-${String(lastDay).padStart(2, '0')}`,
-      },
+      queryParams: { view: 'cards', from: `${month}-01`, to: `${month}-${String(lastDay).padStart(2, '0')}` },
     });
   }
 
   private navigateToDay(period: string): void {
-    this._router.navigate(['/guests'], {
-      queryParams: {
-        view: 'cards',
-        day: period,
-      },
-    });
+    this._router.navigate(['/guests'], { queryParams: { view: 'cards', day: period } });
   }
 
   private navigateToSameArrivalDay(date: string): void {
-    this._router.navigate(['/guests'], {
-      queryParams: {
-        view: 'cards',
-        from: date,
-        to: date,
-      },
-    });
+    this._router.navigate(['/guests'], { queryParams: { view: 'cards', from: date, to: date } });
   }
 
   private navigateToGuest(guestId: string, groupType?: string | null, groupId?: string | null): void {
