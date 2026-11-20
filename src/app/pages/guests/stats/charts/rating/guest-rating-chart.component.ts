@@ -1,15 +1,15 @@
-import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
-import Chart from 'chart.js/auto';
-
 // Interfaces
 import { IChartType, IRatingGuest, IRatingGroupType, IRatingMainView, IRatingView, IRatingsData, IRatingsDistribution } from '@interfaces/stats-interface';
+import { IRatingDistributionVm, IRatingDotPlotVm } from '@interfaces/charts/chart.rating.interface';
+import { TChartTooltipContent } from '@type/chart.types';
 
 // Helpers
-import { createExternalTooltip, destroyExternalTooltip, hideExternalTooltip, RATING_DOT_COLORS, RATINGS_COLORS } from '@utils';
+import { RATING_DOT_COLORS, RATINGS_COLORS } from '@utils';
 
 // Services
 import { FormatService } from '@services/format.service';
@@ -20,7 +20,7 @@ import { FlagPipe } from '@shared/pipes/two-code-letters-flag.pipe';
   templateUrl: './guest-rating-chart.component.html',
   styleUrls: ['./guest-rating-chart.component.css'],
 })
-export class GuestRatingChartComponent implements AfterViewInit, OnChanges, OnDestroy {
+export class GuestRatingChartComponent implements OnInit, OnChanges, OnDestroy {
   private _format = inject(FormatService);
   private _router = inject(Router);
   private _translate = inject(TranslateService);
@@ -30,8 +30,9 @@ export class GuestRatingChartComponent implements AfterViewInit, OnChanges, OnDe
 
   @Input() ratings!: IRatingsData;
 
-  @ViewChild('ratingsChart')
-  ratingsChart!: ElementRef<HTMLCanvasElement>;
+  // Only one of these two is defined at a time.
+  distributionVm: IRatingDistributionVm | null = null;
+  dotPlotVm: IRatingDotPlotVm | null = null;
 
   // Main Rating view.
   selectedMainView: IRatingMainView = 'distribution';
@@ -42,37 +43,33 @@ export class GuestRatingChartComponent implements AfterViewInit, OnChanges, OnDe
   // Chart type used by Distribution.
   selectedChart: IChartType = 'bar';
 
-  // Current Chart.js instance.
-  private chart?: Chart;
-
   // Main Rating views.
   readonly ratingMainViews: IRatingMainView[] = ['distribution', 'lowest', 'highest'];
 
   // Rating group views.
   readonly ratingViews: IRatingView[] = ['overall', 'solo', 'couple', 'friends', 'family'];
 
-  // Initialize chart after the view is ready.
-  ngAfterViewInit(): void {
-    this.createChart();
+  // ─────────────────────────────────────────────
+  // Lifecycle
+  // ─────────────────────────────────────────────
 
-    // Recreate the chart when the language changes.
-    this.langChangeSubscription = this._translate.onLangChange.subscribe(() => {
-      this.createChart();
-    });
+  ngOnInit(): void {
+    // Rebuild the chart data when the language changes.
+    this.langChangeSubscription = this._translate.onLangChange.subscribe(() => this.buildVm());
   }
 
-  // Recreate chart when the data changes.
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['ratings'] && this.ratingsChart) {
-      this.createChart();
-    }
+  // Rebuild the chart data when the ratings change.
+  ngOnChanges(): void {
+    this.buildVm();
   }
 
-  // Clean up the subscription and chart instance.
   ngOnDestroy(): void {
     this.langChangeSubscription?.unsubscribe();
-    this.destroyChart();
   }
+
+  // ─────────────────────────────────────────────
+  // Template actions
+  // ─────────────────────────────────────────────
 
   // Select the main Rating view.
   selectMainView(view: IRatingMainView): void {
@@ -83,256 +80,129 @@ export class GuestRatingChartComponent implements AfterViewInit, OnChanges, OnDe
       this.selectedView = 'overall';
     }
 
-    this.createChart();
+    this.buildVm();
   }
 
   // Select a Rating group.
   selectView(view: IRatingView): void {
     this.selectedView = view;
-    this.createChart();
+    this.buildVm();
   }
 
-  // Create the chart according to the selected main view.
-  private createChart(): void {
-    if (!this.ratingsChart || !this.ratings) {
-      return;
-    }
+  // Change the Distribution chart type.
+  selectChartType(type: IChartType): void {
+    this.selectedChart = type;
+  }
 
-    // Destroy the previous chart.
-    this.destroyChart();
+  // Click on a Distribution item.
+  onDistributionClick(index: number): void {
+    // The last item represents unrated guests.
+    if (index > 4) return;
 
-    // Create Distribution chart.
+    this.navigateToRating(index + 1);
+  }
+
+  // Click on a Lowest / Highest dot.
+  onDotClick(index: number): void {
+    const guest = this.dotPlotVm?.guests[index];
+
+    if (guest) this.navigateToRating(guest.rating);
+  }
+
+  // Tooltip content for a dot.
+  dotTooltip = (index: number): TChartTooltipContent | null => {
+    const guest = this.dotPlotVm?.guests[index];
+
+    if (!guest) return null;
+
+    return {
+      title: guest.fullName,
+      rows: [
+        {
+          label: this._translate.instant('STATS.RATINGS.LABELS.RATING'),
+          value: `${guest.rating} ⭐`,
+        },
+        {
+          label: this._translate.instant('GENDER.TXT'),
+          value: this._format.formatGender(guest.gender),
+        },
+        {
+          label: this._translate.instant('STATS.RATINGS.LABELS.VISIT'),
+          value: this._format.formatDate(guest.visitedDate),
+        },
+      ],
+      country: {
+        name: this._format.formatCountry(guest.hometownCode),
+        flagClass: this._flag.transform(guest.hometownCode),
+      },
+    };
+  };
+
+  starTickFormatter = (value: number | string): string => `${value} ⭐`;
+
+  // ─────────────────────────────────────────────
+  // View model
+  // ─────────────────────────────────────────────
+
+  private buildVm(): void {
+    this.distributionVm = null;
+    this.dotPlotVm = null;
+
+    if (!this.ratings) return;
+
     if (this.selectedMainView === 'distribution') {
-      this.createDistributionChart();
+      this.distributionVm = this.buildDistributionVm();
       return;
     }
 
-    // Create Lowest / Highest Dot Plot.
-    this.createDotPlot();
+    this.dotPlotVm = this.buildDotPlotVm();
   }
 
-  // Create the Distribution chart.
-  private createDistributionChart(): void {
+  private buildDistributionVm(): IRatingDistributionVm | null {
     const distributions: Record<IRatingView, IRatingsDistribution> = this.ratings.distribution;
-
     const ratings = distributions[this.selectedView];
 
-    if (!ratings) {
-      return;
-    }
+    if (!ratings) return null;
 
-    const ratingLabels = ['1 ⭐', '2 ⭐', '3 ⭐', '4 ⭐', '5 ⭐', this._translate.instant('STATS.RATINGS.LABELS.UNRATED')];
-
-    this.chart = new Chart(this.ratingsChart.nativeElement, {
-      type: this.selectedChart,
-
-      data: {
-        labels: ratingLabels,
-
-        datasets: [
-          {
-            label: this._translate.instant('STATS.RATINGS.LABELS.GUESTS'),
-            data: [ratings['1'], ratings['2'], ratings['3'], ratings['4'], ratings['5'], ratings.unrated],
-            backgroundColor: RATINGS_COLORS.map(color => color.background),
-            borderColor: RATINGS_COLORS.map(color => color.border),
-            borderWidth: 1,
-          },
-        ],
+    return {
+      datasetLabel: this._translate.instant('STATS.RATINGS.LABELS.GUESTS'),
+      labels: ['1 ⭐', '2 ⭐', '3 ⭐', '4 ⭐', '5 ⭐', this._translate.instant('STATS.RATINGS.LABELS.UNRATED')],
+      values: [ratings['1'], ratings['2'], ratings['3'], ratings['4'], ratings['5'], ratings.unrated],
+      colors: {
+        background: RATINGS_COLORS.map(color => color.background),
+        border: RATINGS_COLORS.map(color => color.border),
       },
-
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        ...(this.selectedChart === 'doughnut' && {
-          layout: {
-            padding: 20,
-          },
-        }),
-        onClick: (_event, elements) => {
-          if (!elements.length) {
-            return;
-          }
-
-          const index = elements[0].index;
-          this.handleChartClick(index);
-        },
-
-        plugins: {
-          tooltip: {
-            callbacks: {
-              label: context => {
-                const value = context.parsed.y ?? context.parsed;
-
-                return `${context.dataset.label}: ${value}`;
-              },
-            },
-          },
-        },
-      },
-    });
+    };
   }
 
-  // Create a horizontal Dot Plot for Lowest / Highest guests.
-  private createDotPlot(): void {
-    const rankingData = this.selectedMainView === 'highest' ? this.ratings.highest : this.ratings.lowest;
-
-    const guests: IRatingGuest[] = rankingData[this.selectedView] ?? [];
-
-    if (!guests.length) {
-      return;
-    }
-
-    const orderedGuests = [...guests];
-
+  private buildDotPlotVm(): IRatingDotPlotVm | null {
     const isHighest = this.selectedMainView === 'highest';
+    const rankingData = isHighest ? this.ratings.highest : this.ratings.lowest;
 
-    this.chart = new Chart(this.ratingsChart.nativeElement, {
-      type: 'scatter',
+    const guests: IRatingGuest[] = [...(rankingData[this.selectedView] ?? [])];
 
-      data: {
-        datasets: [
-          {
-            label: this._translate.instant(isHighest ? 'STATS.RATINGS.VIEWS.HIGHEST' : 'STATS.RATINGS.VIEWS.LOWEST'),
+    if (!guests.length) return null;
 
-            data: orderedGuests.map((guest, index) => ({
-              x: index,
-              y: guest.rating,
-            })),
+    const dotColors = isHighest ? RATING_DOT_COLORS.highest : RATING_DOT_COLORS.lowest;
 
-            pointRadius: 8,
-            pointHoverRadius: 11,
-
-            backgroundColor: isHighest ? RATING_DOT_COLORS.highest.background : RATING_DOT_COLORS.lowest.background,
-
-            borderColor: isHighest ? RATING_DOT_COLORS.highest.border : RATING_DOT_COLORS.lowest.border,
-
-            borderWidth: 2,
-          },
-        ],
+    return {
+      datasetLabel: this._translate.instant(isHighest ? 'STATS.RATINGS.VIEWS.HIGHEST' : 'STATS.RATINGS.VIEWS.LOWEST'),
+      guests,
+      labels: guests.map(guest => guest.fullName),
+      values: guests.map(guest => guest.rating),
+      colors: {
+        background: guests.map(() => dotColors.background),
+        border: guests.map(() => dotColors.border),
       },
-
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-
-        scales: {
-          // Guests are displayed horizontally.
-          x: {
-            min: -0.5,
-            max: orderedGuests.length - 0.5,
-
-            ticks: {
-              stepSize: 1,
-
-              callback: value => {
-                const index = Number(value);
-                return orderedGuests[index]?.fullName ?? '';
-              },
-
-              maxRotation: 45,
-              minRotation: 45,
-            },
-
-            title: {
-              display: true,
-              text: this._translate.instant('STATS.RATINGS.LABELS.GUESTS'),
-            },
-          },
-
-          // Rating is displayed vertically.
-          y: {
-            min: 0,
-            max: 5.5,
-
-            afterBuildTicks: axis => {
-              axis.ticks = axis.ticks.filter(tick => Number(tick.value) <= 5);
-            },
-
-            ticks: {
-              stepSize: 1,
-
-              callback: value => `${value} ⭐`,
-            },
-
-            title: {
-              display: true,
-              text: this._translate.instant('STATS.RATINGS.LABELS.RATING'),
-            },
-          },
-        },
-
-        plugins: {
-          legend: {
-            display: true,
-          },
-
-          tooltip: {
-            enabled: false,
-            external: context => {
-              const dataPoint = context.tooltip.dataPoints?.[0];
-
-              if (!dataPoint) {
-                hideExternalTooltip(context.chart);
-                return;
-              }
-
-              const guest = orderedGuests[dataPoint.dataIndex];
-
-              if (!guest) {
-                hideExternalTooltip(context.chart);
-                return;
-              }
-
-              createExternalTooltip(context.chart, context.tooltip, {
-                title: guest.fullName,
-                rows: [
-                  {
-                    label: this._translate.instant('STATS.RATINGS.LABELS.RATING'),
-                    value: `${guest.rating} ⭐`,
-                  },
-                  {
-                    label: this._translate.instant('GENDER.TXT'),
-                    value: this._format.formatGender(guest.gender),
-                  },
-                  {
-                    label: this._translate.instant('STATS.RATINGS.LABELS.VISIT'),
-                    value: this._format.formatDate(guest.visitedDate),
-                  },
-                ],
-                country: {
-                  name: this._format.formatCountry(guest.hometownCode),
-                  flagClass: this._flag.transform(guest.hometownCode),
-                },
-              });
-            },
-          },
-        },
-
-        onClick: (_event, elements) => {
-          if (!elements.length) {
-            return;
-          }
-
-          const index = elements[0].index;
-          const guest = orderedGuests[index];
-
-          if (guest) {
-            this.handleGuestClick(guest);
-          }
-        },
-      },
-    });
+    };
   }
+
+  // ─────────────────────────────────────────────
+  // Navigation
+  // ─────────────────────────────────────────────
 
   // Navigate to the guests filtered by rating.
-  private handleChartClick(index: number): void {
-    // The last item represents unrated guests.
-    if (index > 4) {
-      return;
-    }
-
-    const rating = index + 1;
-
+  private navigateToRating(rating: number): void {
     const queryParams: {
       view: 'cards';
       rating: number;
@@ -346,48 +216,6 @@ export class GuestRatingChartComponent implements AfterViewInit, OnChanges, OnDe
       queryParams.groupType = this.selectedView;
     }
 
-    this._router.navigate(['/guests'], {
-      queryParams,
-    });
-  }
-
-  // Navigate to the selected guest.
-  private handleGuestClick(guest: IRatingGuest): void {
-    const queryParams: {
-      view: 'cards';
-      rating: number;
-      groupType?: IRatingGroupType;
-    } = {
-      view: 'cards',
-      rating: guest.rating,
-    };
-
-    if (this.selectedView !== 'overall') {
-      queryParams.groupType = this.selectedView;
-    }
-
-    this._router.navigate(['/guests'], {
-      queryParams,
-    });
-  }
-
-  // Change the Distribution chart type.
-  selectChartType(type: IChartType): void {
-    this.selectedChart = type;
-
-    if (this.selectedMainView === 'distribution') {
-      this.createChart();
-    }
-  }
-
-  // Destroy the current Chart.js instance.
-  private destroyChart(): void {
-    if (!this.chart) {
-      return;
-    }
-
-    destroyExternalTooltip(this.chart);
-    this.chart.destroy();
-    this.chart = undefined;
+    this._router.navigate(['/guests'], { queryParams });
   }
 }

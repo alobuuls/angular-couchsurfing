@@ -56,15 +56,58 @@
   <!-- Geography chart -->
   <div class="geography-chart-row">
     <div class="geography-chart-ctn">
-      <canvas #geographyChart></canvas>
+      <!-- Pie / bar charts -->
+      <ng-container *ngIf="chartVm as vm" [ngSwitch]="vm.type">
+        <pie-chart
+          *ngSwitchCase="'pie'"
+          [title]="vm.title"
+          [datasetLabel]="vm.datasetLabel"
+          [labels]="vm.labels"
+          [values]="vm.values"
+          [colors]="vm.colors"
+          [legend]="vm.legend"
+          (itemClick)="onChartClick($event)"
+        />
+
+        <bar-chart
+          *ngSwitchCase="'bar'"
+          [title]="vm.title"
+          [datasetLabel]="vm.datasetLabel"
+          [labels]="vm.labels"
+          [values]="vm.values"
+          [colors]="vm.colors"
+          [legend]="vm.legend"
+          [height]="vm.height"
+          [valueAxisTitle]="'STATS.GEOGRAPHY.LABELS.NUMBER_OF_GUESTS' | translate"
+          (itemClick)="onChartClick($event)"
+        />
+      </ng-container>
+
+      <!-- Most consecutive -->
+      <scatter-chart
+        *ngIf="consecutiveVm as vm"
+        [title]="vm.title"
+        [points]="vm.points"
+        [colors]="vm.colors"
+        [legend]="vm.legend"
+        [height]="vm.height"
+        [xMin]="vm.xMin"
+        [xMax]="vm.xMax"
+        [xTitle]="'STATS.GEOGRAPHY.LABELS.VISIT_DATE' | translate"
+        [yTitle]="'STATS.GEOGRAPHY.LABELS.GUESTS' | translate"
+        [xTickFormatter]="consecutiveTickFormatter"
+        [tooltip]="consecutiveTooltip"
+        (itemClick)="onConsecutiveClick($event)"
+      />
     </div>
+
     <!-- Country labels with flags -->
     <div
       *ngIf="selectedView === 'countries' || selectedView === 'livingIn' || selectedView === 'hometown'"
       class="country-labels"
       [class.ranking-labels]="selectedRanking !== 'all' || selectedView === 'livingIn' || selectedView === 'hometown'"
     >
-      <div *ngFor="let country of getSelectedCountries()" class="country-label">
+      <div *ngFor="let country of chartVm?.items" class="country-label">
         <span [class]="country.code | flag"></span>
       </div>
     </div>

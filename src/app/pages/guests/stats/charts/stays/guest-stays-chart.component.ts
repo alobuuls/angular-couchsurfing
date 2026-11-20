@@ -1,41 +1,26 @@
-import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
-import Chart from 'chart.js/auto';
-import { LinearScale, PointElement } from 'chart.js';
-import { EdgeLine, ForceDirectedGraphController } from 'chartjs-chart-graph';
-
-// Register the network graph.
-Chart.register(ForceDirectedGraphController, EdgeLine, LinearScale, PointElement);
-
 // Interfaces
 import { ILongestView, IStaysDistribution, IStaysView } from '@interfaces/stats-interface';
+import { IChartEdge, IChartLegendItem, TChartTooltipContent } from '@type/chart.types';
 
 // Services
 import { FormatService } from '@services/format.service';
 
 // Helpers
-import {
-  CHART_NEUTRAL_COLOR,
-  CHART_UNKNOWN_COLOR,
-  createExternalTooltip,
-  destroyExternalTooltip,
-  GENDER_COLORS,
-  getGenderColor,
-  getRankingColors,
-  hideExternalTooltip,
-  STAYS_COLORS,
-} from '@utils';
+import { CHART_NEUTRAL_COLOR, GENDER_COLORS, getGenderColor, getRankingColors, RANKING_COLORS, STAYS_COLORS } from '@utils';
 import { FlagPipe } from '@shared/pipes/two-code-letters-flag.pipe';
+import { IStaysArrivalVm, IStaysMaxPeopleVm, IStaysNetworkVm, IStaysPolarVm, TMaxPeople, TSameDatesGuest } from '@interfaces/charts/chart-stays.interface';
 
 @Component({
   selector: 'guest-stays-chart',
   templateUrl: './guest-stays-chart.component.html',
   styleUrls: ['./guest-stays-chart.component.css'],
 })
-export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDestroy {
+export class GuestStaysChartComponent implements OnInit, OnChanges, OnDestroy {
   private _format = inject(FormatService);
   private _router = inject(Router);
   private _translate = inject(TranslateService);
@@ -45,10 +30,6 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
 
   // Stays data received from parent.
   @Input() stays!: IStaysDistribution;
-
-  // Chart canvas.
-  @ViewChild('staysChart')
-  staysChart!: ElementRef<HTMLCanvasElement>;
 
   // Stores the main selected Stays view.
   selectedView: IStaysView = 'longest';
@@ -65,25 +46,16 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
   // Stores the selected Same Dates group.
   selectedSameDatesGroup = 0;
 
-  // Stores current Chart.js instance.
-  private chart?: Chart;
+  // Only one of them is defined at a time.
+  polarVm?: IStaysPolarVm;
+  maxPeopleVm?: IStaysMaxPeopleVm;
+  arrivalVm?: IStaysArrivalVm;
+  networkVm?: IStaysNetworkVm;
 
   // Configuration for Longest and Shortest views.
-  private readonly chartConfig: Record<
-    'longest' | 'shortest',
-    {
-      labelKey: string;
-      getData: (stays: IStaysDistribution) => IStaysDistribution['longest'];
-    }
-  > = {
-    longest: {
-      labelKey: 'STATS.STAYS.TITLES.LONGEST',
-      getData: stays => stays.longest,
-    },
-    shortest: {
-      labelKey: 'STATS.STAYS.TITLES.SHORTEST',
-      getData: stays => stays.shortest,
-    },
+  private readonly chartConfig: Record<'longest' | 'shortest', { labelKey: string; getData: (stays: IStaysDistribution) => IStaysDistribution['longest'] }> = {
+    longest: { labelKey: 'STATS.STAYS.TITLES.LONGEST', getData: stays => stays.longest },
+    shortest: { labelKey: 'STATS.STAYS.TITLES.SHORTEST', getData: stays => stays.shortest },
   };
 
   // Group type translation keys for tooltips and guest labels.
@@ -94,32 +66,21 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     family: 'STATS.STAYS.GROUP_LABELS.FAMILY',
   };
 
-  // Creates the chart after the view is initialized.
-  ngAfterViewInit(): void {
-    // Recreate charts when the language changes.
-    this.langChangeSubscription = this._translate.onLangChange.subscribe(() => {
-      this.destroyChart();
-      this.createChart();
-    });
-
-    if (this.stays) {
-      this.createChart();
-    }
+  ngOnInit(): void {
+    // Rebuild the texts when the language changes.
+    this.langChangeSubscription = this._translate.onLangChange.subscribe(() => this.buildView());
   }
 
-  // Recreates the chart when the input data changes.
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['stays'] && this.staysChart && this.stays) {
+    if (changes['stays']) {
       // Reset the selected group when new data arrives.
       this.selectedSameDatesGroup = 0;
-      setTimeout(() => this.createChart());
+      this.buildView();
     }
   }
 
-  // Clean up when the component is destroyed.
   ngOnDestroy(): void {
     this.langChangeSubscription?.unsubscribe();
-    this.destroyChart();
   }
 
   // Changes the main Stays view.
@@ -131,667 +92,315 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
       this.selectedSameDatesGroup = 0;
     }
 
-    this.destroyChart();
-
-    // Wait for Angular to update the template.
-    setTimeout(() => this.createChart());
+    this.buildView();
   }
 
   // Changes the selected Longest/Shortest subview.
   selectStayView(view: ILongestView): void {
     this.selectedStayView = view;
-    this.destroyChart();
-
-    // Wait for Angular to update the template.
-    setTimeout(() => this.createChart());
+    this.buildView();
   }
 
   // Changes the selected Same Dates group.
   selectSameDatesGroup(index: number): void {
     this.selectedSameDatesGroup = index;
-    this.destroyChart();
-
-    // Wait for Angular to update the canvas.
-    setTimeout(() => this.createChart());
+    this.buildView();
   }
 
-  // Creates the corresponding chart according to the selected view.
-  private createChart(): void {
-    if (!this.staysChart || !this.stays) {
-      return;
-    }
+  // CLICKS
+  onPolarClick(index: number): void {
+    const guest = this.polarVm?.items[index]?.guest;
 
-    // Longest and Shortest use the same Polar Area chart.
-    if (this.selectedView === 'longest' || this.selectedView === 'shortest') {
-      const config = this.chartConfig[this.selectedView];
-      const stayData = config.getData(this.stays);
-      const chartLabel = this.translate(config.labelKey);
-
-      this.createStayPolarChart(stayData, this.selectedStayView, chartLabel);
-      return;
-    }
-
-    if (this.selectedView === 'maxPeopleTogether') {
-      this.createMaxPeopleTogetherBarChart();
-      return;
-    }
-
-    // Same Arrival uses a Horizontal Bar chart.
-    if (this.selectedView === 'sameArrival') {
-      this.createSameArrivalBarChart();
-      return;
-    }
-
-    // Same Dates uses one Network chart per group.
-    if (this.selectedView === 'sameDates') {
-      this.createSameDatesNetworkChart();
+    if (guest?.guestId) {
+      this.navigateToGuest(guest.guestId, guest.groupType, guest.groupId);
     }
   }
 
-  // LONGEST / SHORTEST
-  // Creates the Polar Area chart for Longest and Shortest stays.
-  private createStayPolarChart(stayData: IStaysDistribution['longest'], selectedView: ILongestView, chartLabel: string): void {
-    if (!this.staysChart || !stayData) {
+  onMaxPeopleClick(index: number): void {
+    const entry = this.maxPeopleVm?.entries[index];
+
+    if (entry) {
+      this.navigateToPeopleTogether(entry.data.guests);
+    }
+  }
+
+  onArrivalClick(index: number): void {
+    const item = this.arrivalVm?.items[index];
+
+    if (!item?.date) {
       return;
     }
 
-    // Get the selected stay data.
-    const people = stayData[selectedView];
-
-    if (!people || people.length === 0) {
-      return;
-    }
-
-    this.destroyChart();
-
-    this.chart = new Chart(this.staysChart.nativeElement, {
-      type: 'polarArea',
-      data: {
-        labels: people.map(item => this.getGuestDisplayName(item.guest.fullName, item.guest.groupType)),
-        datasets: [
-          {
-            label: chartLabel,
-
-            // Number of nights determines the section size.
-            data: people.map(item => item.nights),
-
-            // Use guest gender for section colors.
-            backgroundColor: people.map(item => {
-              const gender = GENDER_COLORS[item.guest.gender.toLowerCase() as keyof typeof GENDER_COLORS];
-              return gender?.background ?? CHART_NEUTRAL_COLOR;
-            }),
-            borderColor: people.map(item => getGenderColor(item.guest.gender)),
-            borderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        onClick: (_event, elements) => {
-          if (!elements.length) {
-            return;
-          }
-
-          const index = elements[0].index;
-          const guest = people[index]?.guest;
-
-          if (!guest?.guestId) {
-            return;
-          }
-
-          this.navigateToGuest(guest.guestId, guest.groupType, guest.groupId);
-        },
-        maintainAspectRatio: false,
-        plugins: {
-          title: {
-            display: true,
-            text: chartLabel,
-          },
-          legend: {
-            display: true,
-          },
-          tooltip: {
-            enabled: false,
-            external: context => {
-              const dataPoint = context.tooltip.dataPoints?.[0];
-
-              if (!dataPoint) {
-                hideExternalTooltip(context.chart);
-                return;
-              }
-
-              const item = people[dataPoint.dataIndex];
-
-              if (!item) {
-                hideExternalTooltip(context.chart);
-                return;
-              }
-
-              const guest = item.guest;
-
-              const rows = [
-                {
-                  value: this.translate('STATS.STAYS.LABELS.TOTAL_NIGHTS', {
-                    count: item.nights,
-                  }),
-                },
-              ];
-
-              if (selectedView === 'overall') {
-                rows.push({
-                  value: this.translate('STATS.STAYS.LABELS.GROUP', {
-                    group: this.translateGroupType(guest.groupType),
-                  }),
-                });
-              }
-
-              rows.push({
-                value: this.translate('STATS.STAYS.LABELS.VISIT', {
-                  date: this._format.formatDate(guest.visitedDate),
-                }),
-              });
-
-              createExternalTooltip(context.chart, context.tooltip, {
-                title: this.getGuestDisplayName(guest.fullName, guest.groupType),
-                rows,
-                country: {
-                  name: this._format.formatCountry(guest.hometownCode),
-                  flagClass: this._flag.transform(guest.hometownCode),
-                },
-              });
-            },
-          },
-        },
-        scales: {
-          r: {
-            beginAtZero: true,
-            ticks: {
-              precision: 0,
-            },
-          },
-        },
-      },
+    this._router.navigate(['/guests'], {
+      queryParams: { view: 'cards', from: item.date, to: item.date },
     });
   }
 
-  // MAX PEOPLE TOGETHER
-  // Creates the bar chart comparing Overall and Solo.
-  private createMaxPeopleTogetherBarChart(): void {
-    if (!this.staysChart || !this.stays) {
+  onNetworkClick(index: number): void {
+    const guest = this.networkVm?.guests[index];
+
+    if (guest?.guestId) {
+      this.navigateToGuest(guest.guestId, guest.groupType, guest.groupId);
+    }
+  }
+
+  // TOOLTIPS (arrow functions: stable references that keep `this`)
+  getPolarTooltip = (index: number): TChartTooltipContent | null => {
+    const item = this.polarVm?.items[index];
+
+    if (!item) {
+      return null;
+    }
+
+    const guest = item.guest;
+    const rows: TChartTooltipContent['rows'] = [{ value: this.translate('STATS.STAYS.LABELS.TOTAL_NIGHTS', { count: item.nights }) }];
+
+    if (this.selectedStayView === 'overall') {
+      rows.push({ value: this.translate('STATS.STAYS.LABELS.GROUP', { group: this.translateGroupType(guest.groupType) }) });
+    }
+
+    rows.push({ value: this.translate('STATS.STAYS.LABELS.VISIT', { date: this._format.formatDate(guest.visitedDate) }) });
+
+    return {
+      title: this.getGuestDisplayName(guest.fullName, guest.groupType),
+      rows,
+      country: {
+        name: this._format.formatCountry(guest.hometownCode),
+        flagClass: this._flag.transform(guest.hometownCode),
+      },
+    };
+  };
+
+  getMaxPeopleTooltip = (index: number): TChartTooltipContent | null => {
+    const entry = this.maxPeopleVm?.entries[index];
+
+    if (!entry) {
+      return null;
+    }
+
+    const guests = entry.data.guests;
+
+    return {
+      title: guests[0] ? this._format.formatDate(guests[0].visitedDate) : entry.label,
+      rows: [{ value: this.translate('STATS.STAYS.LABELS.GUESTS_COUNT', { count: entry.data.total }) }, ...this.getGuestRows(guests)],
+    };
+  };
+
+  getArrivalTooltip = (index: number): TChartTooltipContent | null => {
+    const item = this.arrivalVm?.items[index];
+
+    if (!item) {
+      return null;
+    }
+
+    return {
+      title: this._format.formatDate(item.date),
+      rows: [{ value: this.translate('STATS.STAYS.LABELS.GUESTS_COUNT', { count: item.total }) }, ...this.getGuestRows(item.guests)],
+    };
+  };
+
+  getNetworkTooltip = (index: number): TChartTooltipContent | null => {
+    const vm = this.networkVm;
+    const guest = vm?.guests[index];
+
+    if (!vm || !guest) {
+      return null;
+    }
+
+    return {
+      title: this.getGuestDisplayName(guest.fullName, guest.groupType),
+      rows: [
+        { value: this.translate('STATS.STAYS.LABELS.CONNECTIONS', { count: vm.guests.length - 1 }) },
+        { value: this.translate('STATS.STAYS.LABELS.GROUP', { group: this.translateGroupType(guest.groupType) }) },
+        { value: this.translate('STATS.STAYS.LABELS.VISIT', { date: this._format.formatDate(guest.visitedDate) }) },
+      ],
+      country: {
+        name: this._format.formatCountry(guest.hometownCode),
+        flagClass: this._flag.transform(guest.hometownCode),
+      },
+    };
+  };
+
+  // VIEW MODELS
+  private buildView(): void {
+    this.polarVm = undefined;
+    this.maxPeopleVm = undefined;
+    this.arrivalVm = undefined;
+    this.networkVm = undefined;
+
+    if (!this.stays) {
       return;
     }
 
-    const chartData = this.stays.maxPeopleTogether;
+    switch (this.selectedView) {
+      case 'longest':
+      case 'shortest':
+        this.polarVm = this.buildPolarVm(this.selectedView);
+        break;
+      case 'maxPeopleTogether':
+        this.maxPeopleVm = this.buildMaxPeopleVm();
+        break;
+      case 'sameArrival':
+        this.arrivalVm = this.buildArrivalVm();
+        break;
+      case 'sameDates':
+        this.networkVm = this.buildNetworkVm();
+        break;
+    }
+  }
 
-    if (!chartData) {
-      this.destroyChart();
-      return;
+  private buildPolarVm(view: 'longest' | 'shortest'): IStaysPolarVm | undefined {
+    const config = this.chartConfig[view];
+    const items = config.getData(this.stays)?.[this.selectedStayView];
+
+    if (!items?.length) {
+      return undefined;
     }
 
-    const overall = chartData.overall;
-    const solo = chartData.solo;
+    return {
+      title: this.translate(config.labelKey),
+      labels: items.map(item => this.getGuestDisplayName(item.guest.fullName, item.guest.groupType)),
+      // Number of nights determines the section size.
+      values: items.map(item => item.nights),
+      // Use guest gender for section colors.
+      colors: {
+        background: items.map(item => this.getGenderBackground(item.guest.gender)),
+        border: items.map(item => getGenderColor(item.guest.gender)),
+      },
+      items,
+    };
+  }
 
-    if (!overall || !solo) {
-      this.destroyChart();
-      return;
+  private buildMaxPeopleVm(): IStaysMaxPeopleVm | undefined {
+    const data = this.stays.maxPeopleTogether;
+
+    if (!data?.overall || !data?.solo) {
+      return undefined;
     }
-
-    this.destroyChart();
 
     const labels = [this.translate('STATS.STAYS.LABELS.OVERALL'), this.translate('STATS.STAYS.LABELS.SOLO')];
 
-    const chartValues = [
-      { label: labels[0], data: overall },
-      { label: labels[1], data: solo },
-    ];
-
-    this.chart = new Chart(this.staysChart.nativeElement, {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [
-          {
-            label: this.translate('STATS.STAYS.TITLES.MAXIMUM_GUESTS_TOGETHER'),
-            data: [overall.total, solo.total],
-            backgroundColor: STAYS_COLORS.maxPeopleTogether.map(color => color.background),
-            borderColor: STAYS_COLORS.maxPeopleTogether.map(color => color.border),
-            borderWidth: 1,
-          },
-        ],
+    return {
+      title: this.translate('STATS.STAYS.TITLES.MAXIMUM_GUESTS_TOGETHER'),
+      labels,
+      values: [data.overall.total, data.solo.total],
+      colors: {
+        background: STAYS_COLORS.maxPeopleTogether.map(color => color.background),
+        border: STAYS_COLORS.maxPeopleTogether.map(color => color.border),
       },
-      options: {
-        responsive: true,
-        onClick: (_event, elements) => {
-          if (!elements.length) {
-            return;
-          }
-
-          const index = elements[0].index;
-          const selectedData = index === 0 ? overall : solo;
-
-          this.navigateToPeopleTogether(selectedData.guests);
-        },
-        maintainAspectRatio: false,
-        plugins: {
-          title: {
-            display: true,
-            text: this.translate('STATS.STAYS.TITLES.MAXIMUM_GUESTS_TOGETHER'),
-          },
-          legend: {
-            display: false,
-          },
-          tooltip: {
-            enabled: false,
-            external: context => {
-              const dataPoint = context.tooltip.dataPoints?.[0];
-
-              if (!dataPoint) {
-                hideExternalTooltip(context.chart);
-                return;
-              }
-
-              const index = dataPoint.dataIndex;
-              const selectedData = chartValues[index]?.data;
-
-              if (!selectedData) {
-                hideExternalTooltip(context.chart);
-                return;
-              }
-
-              const guests = selectedData.guests;
-
-              const rows = [
-                {
-                  value: this.translate('STATS.STAYS.LABELS.GUESTS_COUNT', {
-                    count: selectedData.total,
-                  }),
-                },
-              ];
-
-              rows.push(
-                ...guests.map(guest => ({
-                  value: `• ${guest.fullName}`,
-                  ...(guest.hometownCode
-                    ? {
-                        country: {
-                          name: this._format.formatCountry(guest.hometownCode),
-                          flagClass: this._flag.transform(guest.hometownCode),
-                        },
-                      }
-                    : {}),
-                }))
-              );
-
-              createExternalTooltip(context.chart, context.tooltip, {
-                title: guests[0] ? this._format.formatDate(guests[0].visitedDate) : chartValues[index].label,
-                rows,
-              });
-            },
-          },
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              precision: 0,
-              stepSize: 1,
-            },
-            title: {
-              display: true,
-              text: this.translate('STATS.STAYS.LABELS.GUESTS'),
-            },
-          },
-          x: {
-            title: {
-              display: true,
-              text: this.translate('STATS.STAYS.LABELS.STAY_TYPE'),
-            },
-          },
-        },
-      },
-    });
+      valueAxisTitle: this.translate('STATS.STAYS.LABELS.GUESTS'),
+      categoryAxisTitle: this.translate('STATS.STAYS.LABELS.STAY_TYPE'),
+      entries: [
+        { label: labels[0], data: data.overall },
+        { label: labels[1], data: data.solo },
+      ],
+    };
   }
 
-  // Creates a horizontal bar chart for guests with the same arrival date.
-  // Creates a horizontal bar chart for guests with the same arrival date.
-  private createSameArrivalBarChart(): void {
-    if (!this.staysChart || !this.stays) {
-      return;
+  private buildArrivalVm(): IStaysArrivalVm | undefined {
+    const items = this.stays.sameArrival;
+
+    if (!items?.length) {
+      return undefined;
     }
 
-    const chartData = this.stays.sameArrival;
+    const title = this.translate('STATS.STAYS.TITLES.GUESTS_WITH_SAME_ARRIVAL_DATE');
 
-    if (!chartData || chartData.length === 0) {
-      this.destroyChart();
-      return;
-    }
-
-    // Get ranking colors based on the number of guests.
-    const rankingColors = getRankingColors(chartData.map(item => item.total));
-
-    this.destroyChart();
-
-    this.chart = new Chart(this.staysChart.nativeElement, {
-      type: 'bar',
-      data: {
-        labels: chartData.map(item => this._format.formatDate(item.date)),
-        datasets: [
-          {
-            label: this.translate('STATS.STAYS.VIEWS.SAMEARRIVAL'),
-            data: chartData.map(item => item.total),
-            backgroundColor: rankingColors.background,
-            borderColor: rankingColors.border,
-            borderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        indexAxis: 'y',
-        responsive: true,
-        onClick: (_event, elements) => {
-          if (!elements.length) {
-            return;
-          }
-
-          const index = elements[0].index;
-          const item = chartData[index];
-
-          if (!item?.date) {
-            return;
-          }
-
-          this._router.navigate(['/guests'], {
-            queryParams: {
-              view: 'cards',
-              from: item.date,
-              to: item.date,
-            },
-          });
-        },
-        maintainAspectRatio: false,
-        plugins: {
-          title: {
-            display: true,
-            text: this.translate('STATS.STAYS.TITLES.GUESTS_WITH_SAME_ARRIVAL_DATE'),
-          },
-          legend: {
-            display: true,
-            labels: {
-              generateLabels: () => [
-                {
-                  text: this.translate('STATS.STAYS.LABELS.FIRST'),
-                  fillStyle: getRankingColors([1]).background[0],
-                  strokeStyle: getRankingColors([1]).border[0],
-                  lineWidth: 1,
-                  fontColor: CHART_UNKNOWN_COLOR,
-                },
-                {
-                  text: this.translate('STATS.STAYS.LABELS.SECOND'),
-                  fillStyle: getRankingColors([1, 2]).background[1],
-                  strokeStyle: getRankingColors([1, 2]).border[1],
-                  lineWidth: 1,
-                  fontColor: CHART_UNKNOWN_COLOR,
-                },
-                {
-                  text: this.translate('STATS.STAYS.LABELS.THIRD'),
-                  fillStyle: getRankingColors([1, 2, 3]).background[2],
-                  strokeStyle: getRankingColors([1, 2, 3]).border[2],
-                  lineWidth: 1,
-                  fontColor: CHART_UNKNOWN_COLOR,
-                },
-                {
-                  text: this.translate('STATS.STAYS.LABELS.OTHERS'),
-                  fillStyle: getRankingColors([1, 2, 3, 4]).background[3],
-                  strokeStyle: getRankingColors([1, 2, 3, 4]).border[3],
-                  lineWidth: 1,
-                  fontColor: CHART_UNKNOWN_COLOR,
-                },
-              ],
-            },
-          },
-          tooltip: {
-            enabled: false,
-            external: context => {
-              const dataPoint = context.tooltip.dataPoints?.[0];
-
-              if (!dataPoint) {
-                hideExternalTooltip(context.chart);
-                return;
-              }
-
-              const item = chartData[dataPoint.dataIndex];
-
-              if (!item) {
-                hideExternalTooltip(context.chart);
-                return;
-              }
-
-              const rows = [
-                {
-                  value: this.translate('STATS.STAYS.LABELS.GUESTS_COUNT', {
-                    count: item.total,
-                  }),
-                },
-                ...item.guests.map(guest => ({
-                  value: `• ${guest.fullName}`,
-                  ...(guest.hometownCode
-                    ? {
-                        country: {
-                          name: this._format.formatCountry(guest.hometownCode),
-                          flagClass: this._flag.transform(guest.hometownCode),
-                        },
-                      }
-                    : {}),
-                })),
-              ];
-
-              createExternalTooltip(context.chart, context.tooltip, {
-                title: this._format.formatDate(item.date),
-                rows,
-              });
-            },
-          },
-        },
-        scales: {
-          x: {
-            beginAtZero: true,
-            ticks: {
-              precision: 0,
-              stepSize: 1,
-            },
-            title: {
-              display: true,
-              text: this.translate('STATS.STAYS.LABELS.OVERLAPPING_GUESTS'),
-            },
-          },
-          y: {
-            title: {
-              display: true,
-              text: this.translate('STATS.STAYS.LABELS.ARRIVAL_DATE'),
-            },
-          },
-        },
-      },
-    });
+    return {
+      title,
+      datasetLabel: this.translate('STATS.STAYS.VIEWS.SAMEARRIVAL'),
+      labels: items.map(item => this._format.formatDate(item.date)),
+      values: items.map(item => item.total),
+      // Get ranking colors based on the number of guests.
+      colors: getRankingColors(items.map(item => item.total)),
+      legend: this.getRankingLegend(),
+      valueAxisTitle: this.translate('STATS.STAYS.LABELS.OVERLAPPING_GUESTS'),
+      categoryAxisTitle: this.translate('STATS.STAYS.LABELS.ARRIVAL_DATE'),
+      items,
+    };
   }
 
-  // Creates a network chart for guests with the same dates.
-  private createSameDatesNetworkChart(): void {
-    if (!this.staysChart || !this.stays) {
-      return;
+  private buildNetworkVm(): IStaysNetworkVm | undefined {
+    const group = this.stays.sameDates?.[this.selectedSameDatesGroup];
+
+    if (!group?.guests?.length) {
+      return undefined;
     }
 
-    const groups = this.stays.sameDates;
+    const guests = group.guests;
 
-    if (!groups || groups.length === 0) {
-      return;
-    }
-
-    const group = groups[this.selectedSameDatesGroup];
-
-    if (!group || !group.guests || group.guests.length === 0) {
-      return;
-    }
-
-    this.destroyChart();
-
-    // Create one node for every guest in the group.
-    const nodes = group.guests.map(guest => ({
-      id: guest.guestId,
-      label: this.getGuestDisplayName(guest.fullName, guest.groupType),
-      gender: guest.gender,
-      guestId: guest.guestId,
-      groupType: guest.groupType,
-      groupId: guest.groupId,
-    }));
-
-    // Connect every guest with the other guests in the same group.
-    const edges = this.getSameDatesEdges(nodes);
-
-    this.chart = new Chart(this.staysChart.nativeElement, {
-      type: 'forceDirectedGraph',
-      data: {
-        labels: nodes.map(node => node.label),
-        datasets: [
-          {
-            data: nodes.map(() => ({})),
-            edges,
-            pointRadius: 10,
-            pointHoverRadius: 13,
-
-            // Use guest gender for node colors.
-            pointBackgroundColor: nodes.map(node => {
-              const gender = GENDER_COLORS[node.gender.toLowerCase() as keyof typeof GENDER_COLORS];
-              return gender?.background ?? CHART_NEUTRAL_COLOR;
-            }),
-            pointBorderColor: nodes.map(node => getGenderColor(node.gender)),
-            borderColor: STAYS_COLORS.networkEdges,
-            borderWidth: 2,
-          },
-        ],
+    return {
+      title: this.translate('STATS.STAYS.TITLES.SAME_DATES_GROUP', { group: this.selectedSameDatesGroup + 1 }),
+      labels: guests.map(guest => this.getGuestDisplayName(guest.fullName, guest.groupType)),
+      edges: this.getSameDatesEdges(guests.length),
+      // Use guest gender for node colors.
+      colors: {
+        background: guests.map(guest => this.getGenderBackground(guest.gender)),
+        border: guests.map(guest => getGenderColor(guest.gender)),
+        edges: STAYS_COLORS.networkEdges,
       },
-      options: {
-        responsive: true,
-        onClick: (_event, elements) => {
-          if (!elements.length) {
-            return;
-          }
-
-          const index = elements[0].index;
-          const node = nodes[index];
-
-          if (!node?.guestId) {
-            return;
-          }
-
-          this.navigateToGuest(node.guestId, node.groupType, node.groupId);
-        },
-        maintainAspectRatio: false,
-        plugins: {
-          title: {
-            display: true,
-            text: this.translate('STATS.STAYS.TITLES.SAME_DATES_GROUP', {
-              group: this.selectedSameDatesGroup + 1,
-            }),
-          },
-          legend: {
-            display: true,
-            labels: {
-              generateLabels: () => {
-                const genders = [...new Set(nodes.map(node => node.gender.toLowerCase()))];
-
-                return genders
-                  .filter(gender => gender in GENDER_COLORS)
-                  .map(gender => {
-                    const color = GENDER_COLORS[gender as keyof typeof GENDER_COLORS];
-
-                    return {
-                      text: this.translateGender(gender),
-                      fillStyle: color.background,
-                      strokeStyle: color.border,
-                      lineWidth: 1,
-                      fontColor: CHART_UNKNOWN_COLOR,
-                    };
-                  });
-              },
-            },
-          },
-          tooltip: {
-            enabled: false,
-            external: context => {
-              const dataPoint = context.tooltip.dataPoints?.[0];
-
-              if (!dataPoint) {
-                hideExternalTooltip(context.chart);
-                return;
-              }
-
-              const guest = group.guests[dataPoint.dataIndex];
-
-              if (!guest) {
-                hideExternalTooltip(context.chart);
-                return;
-              }
-
-              createExternalTooltip(context.chart, context.tooltip, {
-                title: this.getGuestDisplayName(guest.fullName, guest.groupType),
-                rows: [
-                  {
-                    value: this.translate('STATS.STAYS.LABELS.CONNECTIONS', {
-                      count: nodes.length - 1,
-                    }),
-                  },
-                  {
-                    value: this.translate('STATS.STAYS.LABELS.GROUP', {
-                      group: this.translateGroupType(guest.groupType),
-                    }),
-                  },
-                  {
-                    value: this.translate('STATS.STAYS.LABELS.VISIT', {
-                      date: this._format.formatDate(guest.visitedDate),
-                    }),
-                  },
-                ],
-                country: {
-                  name: this._format.formatCountry(guest.hometownCode),
-                  flagClass: this._flag.transform(guest.hometownCode),
-                },
-              });
-            },
-          },
-        },
-      },
-    });
+      legend: this.getGenderLegend(guests),
+      guests,
+    };
   }
 
-  // Creates connections between every guest in the same dates group.
-  private getSameDatesEdges(
-    nodes: {
-      id: string;
-      label: string;
-      gender: string;
-      groupType: string | null;
-      groupId: string | null;
-    }[]
-  ): {
-    source: number;
-    target: number;
-  }[] {
-    const edges: {
-      source: number;
-      target: number;
-    }[] = [];
+  // Connects every guest with the other guests in the same group.
+  private getSameDatesEdges(total: number): IChartEdge[] {
+    const edges: IChartEdge[] = [];
 
-    for (let source = 0; source < nodes.length; source++) {
-      for (let target = source + 1; target < nodes.length; target++) {
-        edges.push({
-          source,
-          target,
-        });
+    for (let source = 0; source < total; source++) {
+      for (let target = source + 1; target < total; target++) {
+        edges.push({ source, target });
       }
     }
 
     return edges;
+  }
+
+  private getRankingLegend(): IChartLegendItem[] {
+    const entries = [
+      ['FIRST', RANKING_COLORS.gold],
+      ['SECOND', RANKING_COLORS.silver],
+      ['THIRD', RANKING_COLORS.bronze],
+      ['OTHERS', RANKING_COLORS.neutral],
+    ] as const;
+
+    return entries.map(([key, color]) => ({
+      text: this.translate(`STATS.STAYS.LABELS.${key}`),
+      background: color.background,
+      border: color.border,
+    }));
+  }
+
+  private getGenderLegend(guests: TSameDatesGuest[]): IChartLegendItem[] {
+    const genders = [...new Set(guests.map(guest => guest.gender.toLowerCase()))];
+
+    return genders
+      .filter(gender => gender in GENDER_COLORS)
+      .map(gender => {
+        const color = GENDER_COLORS[gender as keyof typeof GENDER_COLORS];
+
+        return { text: this.translateGender(gender), background: color.background, border: color.border };
+      });
+  }
+
+  // HELPERS
+  private getGenderBackground(gender: string): string {
+    return GENDER_COLORS[gender.toLowerCase() as keyof typeof GENDER_COLORS]?.background ?? CHART_NEUTRAL_COLOR;
+  }
+
+  private getGuestRows(guests: { fullName: string; hometownCode?: string | null }[]): TChartTooltipContent['rows'] {
+    return guests.map(guest => ({
+      value: `• ${guest.fullName}`,
+      ...(guest.hometownCode
+        ? {
+            country: {
+              name: this._format.formatCountry(guest.hometownCode),
+              flagClass: this._flag.transform(guest.hometownCode),
+            },
+          }
+        : {}),
+    }));
   }
 
   private getGuestDisplayName(fullName: string, groupType: string | null): string {
@@ -809,53 +418,6 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
       name: fullName,
       group: this.translate(groupLabelKey),
     });
-  }
-
-  // Build tooltip information for stay charts.
-  private getTooltipLines(item: IStaysDistribution['longest']['overall'][number], selectedView: ILongestView): string[] {
-    const guest = item.guest;
-
-    const lines = [
-      this.translate('STATS.STAYS.LABELS.TOTAL_NIGHTS', {
-        count: item.nights,
-      }),
-      this.translate('STATS.STAYS.LABELS.COUNTRY', {
-        country: this._format.formatCountry(guest.hometownCode),
-      }),
-      this.translate('STATS.STAYS.LABELS.VISIT', {
-        date: this._format.formatDate(guest.visitedDate),
-      }),
-    ];
-
-    if (selectedView === 'overall') {
-      lines.splice(
-        1,
-        0,
-        this.translate('STATS.STAYS.LABELS.GROUP', {
-          group: this.translateGroupType(guest.groupType),
-        })
-      );
-    }
-
-    return lines;
-  }
-
-  // Build tooltip information for network nodes.
-  private getNetworkTooltipLines(guest: IStaysDistribution['sameDates'][number]['guests'][number], connections: number): string[] {
-    return [
-      this.translate('STATS.STAYS.LABELS.CONNECTIONS', {
-        count: connections,
-      }),
-      this.translate('STATS.STAYS.LABELS.GROUP', {
-        group: this.translateGroupType(guest.groupType),
-      }),
-      this.translate('STATS.STAYS.LABELS.COUNTRY', {
-        country: this._format.formatCountry(guest.hometownCode),
-      }),
-      this.translate('STATS.STAYS.LABELS.VISIT', {
-        date: this._format.formatDate(guest.visitedDate),
-      }),
-    ];
   }
 
   // Translate a group type, keeping the original value as fallback.
@@ -885,17 +447,6 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     return translated === key ? (key.split('.').pop() ?? key) : translated;
   }
 
-  // Destroy the current chart instance.
-  private destroyChart(): void {
-    if (!this.chart) {
-      return;
-    }
-
-    destroyExternalTooltip(this.chart);
-    this.chart.destroy();
-    this.chart = undefined;
-  }
-
   private navigateToGuest(guestId: string, groupType?: string | null, groupId?: string | null): void {
     if (groupType !== 'solo' && groupId) {
       this._router.navigate(['/guests/groups', groupId]);
@@ -905,7 +456,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     this._router.navigate(['/guests', guestId]);
   }
 
-  private navigateToPeopleTogether(guests: typeof this.stays.maxPeopleTogether.overall.guests): void {
+  private navigateToPeopleTogether(guests: TMaxPeople['guests']): void {
     if (!guests.length) {
       return;
     }
@@ -915,11 +466,7 @@ export class GuestStaysChartComponent implements AfterViewInit, OnChanges, OnDes
     const to = dates.reduce((latest, date) => (date > latest ? date : latest));
 
     this._router.navigate(['/guests'], {
-      queryParams: {
-        view: 'cards',
-        from,
-        to,
-      },
+      queryParams: { view: 'cards', from, to },
     });
   }
 }

@@ -54,7 +54,99 @@
   <!-- Chart -->
   <div class="demographics-chart-row">
     <div class="demographics-chart-ctn">
-      <canvas #demographicsChart></canvas>
+      <!-- Totals · overall -->
+      <pie-chart
+        *ngIf="pieVm as pie"
+        [maintainAspectRatio]="false"
+        variant="doughnut"
+        [datasetLabel]="pie.datasetLabel"
+        [labels]="pie.labels"
+        [values]="pie.values"
+        [colors]="pie.colors"
+        (itemClick)="onPieClick($event)"
+      />
+
+      <!-- Totals · groups -->
+      <bar-chart
+        *ngIf="groupsBarVm as bar"
+        [maintainAspectRatio]="false"
+        [horizontal]="true"
+        [stacked]="true"
+        [labels]="bar.labels"
+        [series]="bar.series"
+        (elementClick)="onGroupsBarClick($event)"
+      />
+
+      <!-- Oldest / Youngest · overall -->
+      <bar-chart
+        *ngIf="rankingBarVm as bar"
+        [maintainAspectRatio]="false"
+        [horizontal]="true"
+        [datasetLabel]="bar.datasetLabel"
+        [labels]="bar.labels"
+        [values]="bar.values"
+        [colors]="bar.colors"
+        [legend]="bar.legend"
+        [valueAxisTitle]="ageTitle"
+        [tooltip]="getRankingTooltip"
+        (itemClick)="onRankingClick($event)"
+      />
+
+      <!-- Oldest / Youngest · solo -->
+      <scatter-chart
+        *ngIf="scatterVm as scatter"
+        [maintainAspectRatio]="false"
+        [datasetLabel]="scatter.datasetLabel"
+        [points]="scatter.points"
+        [colors]="scatter.colors"
+        [legend]="scatter.legend"
+        xType="time"
+        yType="linear"
+        [dateLocale]="dateLocale"
+        [xTitle]="visitDateTitle"
+        [yTitle]="ageTitle"
+        [yMin]="0"
+        [pointRadius]="6"
+        [pointHoverRadius]="9"
+        [tooltip]="getScatterTooltip"
+        (itemClick)="onScatterClick($event)"
+      />
+
+      <!-- Oldest / Youngest · groups -->
+      <bubble-chart
+        *ngIf="bubbleVm as bubble"
+        [maintainAspectRatio]="false"
+        [datasetLabel]="bubble.datasetLabel"
+        [points]="bubble.points"
+        [colors]="bubble.colors"
+        [legend]="bubble.legend"
+        [xTitle]="ageTitle"
+        [yTitle]="groupTitle"
+        [xMin]="0"
+        [yMin]="0.5"
+        [yMax]="3.5"
+        [yTickFormatter]="groupTickFormatter"
+        [tooltip]="getBubbleTooltip"
+        (itemClick)="onBubbleClick($event)"
+      />
+
+      <!-- First / Last -->
+      <scatter-chart
+        *ngIf="firstLastVm as firstLast"
+        [maintainAspectRatio]="false"
+        [series]="firstLast.series"
+        [legend]="firstLast.legend"
+        xType="time"
+        yType="category"
+        [yLabels]="firstLast.yLabels"
+        [dateLocale]="dateLocale"
+        [xTitle]="visitDateTitle"
+        [yTitle]="firstLast.yTitle"
+        [pointRadius]="8"
+        [pointHoverRadius]="11"
+        [tooltip]="getFirstLastTooltip"
+        (elementClick)="onFirstLastClick($event)"
+      />
     </div>
   </div>
 </div>

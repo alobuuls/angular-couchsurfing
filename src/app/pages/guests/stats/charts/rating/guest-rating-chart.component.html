@@ -28,11 +28,56 @@
   <!-- Chart + type buttons -->
   <div class="chart-row" [class.pie-chart-row]="selectedChart === 'doughnut' && selectedMainView === 'distribution'">
     <!-- Rating chart -->
+    <!-- Rating chart -->
     <div
       class="rating-charts-ctn"
       [class.pie-chart]="selectedChart === 'doughnut' && selectedMainView === 'distribution'"
     >
-      <canvas #ratingsChart></canvas>
+      <!-- Distribution -->
+      <ng-container *ngIf="distributionVm as vm">
+        <bar-chart
+          *ngIf="selectedChart !== 'doughnut'"
+          [datasetLabel]="vm.datasetLabel"
+          [labels]="vm.labels"
+          [values]="vm.values"
+          [colors]="vm.colors"
+          [horizontal]="false"
+          [maintainAspectRatio]="false"
+          [datasetLabelInTooltip]="true"
+          (itemClick)="onDistributionClick($event)"
+        />
+
+        <pie-chart
+          *ngIf="selectedChart === 'doughnut'"
+          variant="doughnut"
+          [padding]="20"
+          [datasetLabel]="vm.datasetLabel"
+          [labels]="vm.labels"
+          [values]="vm.values"
+          [colors]="vm.colors"
+          [maintainAspectRatio]="false"
+          [datasetLabelInTooltip]="true"
+          (itemClick)="onDistributionClick($event)"
+        />
+      </ng-container>
+
+      <!-- Lowest / Highest -->
+      <dot-plot-chart
+        *ngIf="dotPlotVm as vm"
+        [datasetLabel]="vm.datasetLabel"
+        [labels]="vm.labels"
+        [values]="vm.values"
+        [colors]="vm.colors"
+        [yMin]="0"
+        [yMax]="5.5"
+        [yTickMax]="5"
+        [yTickFormatter]="starTickFormatter"
+        [xTitle]="'STATS.RATINGS.LABELS.GUESTS' | translate"
+        [yTitle]="'STATS.RATINGS.LABELS.RATING' | translate"
+        [maintainAspectRatio]="false"
+        [tooltip]="dotTooltip"
+        (itemClick)="onDotClick($event)"
+      />
     </div>
 
     <!-- Distribution chart type buttons -->

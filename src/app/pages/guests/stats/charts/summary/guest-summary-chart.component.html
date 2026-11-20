@@ -44,5 +44,26 @@
   </div>
 
   <!-- Charts -->
-  <canvas *ngIf="selectedView !== 'total'" #summaryChart></canvas>
+  <radar-chart
+    *ngIf="radarVm as vm"
+    [labels]="vm.labels"
+    [values]="vm.values"
+    [datasetLabel]="vm.datasetLabel"
+    [colors]="vm.colors"
+    [pointColors]="vm.pointColors"
+    [max]="vm.max"
+    [showLegend]="false"
+    [tooltip]="getRadarTooltip"
+  />
+
+  <pie-chart
+    *ngIf="doughnutVm as vm"
+    [labels]="vm.labels"
+    [values]="vm.values"
+    [datasetLabel]="vm.datasetLabel"
+    [colors]="vm.colors"
+    variant="doughnut"
+    [tooltip]="getDoughnutTooltip"
+    (itemClick)="onGiftClick($event)"
+  />
 </div>
