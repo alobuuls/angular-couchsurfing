@@ -5,3 +5,4 @@ export * from './guest-routing.utils';
 export * from './date.helper';
 export * from './chart-external-tooltip';
 export * from './common.utils';
+export * from './chart-theme';

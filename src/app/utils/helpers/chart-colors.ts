@@ -75,6 +75,34 @@ export const getRankingColors = (values: number[]): { background: string[]; bord
   };
 };
 
+// RANKINGS
+export const RANKING_PALETTE: IChartColor[] = [
+  createColor(54, 162, 235, 0.2), // Blue
+  createColor(255, 99, 132, 0.2), // Pink
+  createColor(75, 192, 120, 0.2), // Green
+  createColor(255, 159, 64, 0.2), // Orange
+  createColor(153, 102, 255, 0.2), // Purple
+  createColor(255, 205, 86, 0.2), // Yellow
+  createColor(75, 192, 192, 0.2), // Turquoise
+  createColor(220, 90, 180, 0.2), // Magenta
+  createColor(128, 128, 128, 0.2), // Gray
+  createColor(120, 180, 220, 0.2), // Light blue
+];
+
+export const getCyclicRankingColors = (
+  total: number
+): {
+  background: string[];
+  border: string[];
+} => {
+  const colors = Array.from({ length: total }, (_, index) => RANKING_PALETTE[index % RANKING_PALETTE.length]);
+
+  return {
+    background: colors.map(color => color.background),
+    border: colors.map(color => color.border),
+  };
+};
+
 // CONTINENTS
 export const CONTINENT_COLORS = {
   america: createColor(53, 164, 249, 0.2),

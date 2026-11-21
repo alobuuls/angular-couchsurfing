@@ -1,8 +1,11 @@
-import { AfterViewInit, Directive, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, EventEmitter, HostBinding, inject, Input, OnChanges, OnDestroy, Output, ViewChild } from '@angular/core';
 import Chart, { ActiveElement, ChartConfiguration, ChartEvent, ChartType, LegendItem, TooltipModel } from 'chart.js/auto';
 
 import { CHART_UNKNOWN_COLOR, createExternalTooltip, destroyExternalTooltip, hideExternalTooltip } from '@utils';
 import { IChartColors, IChartElementClick, IChartLegendItem, TChartTooltipContent } from '@type/chart.types';
+import { ThemeService } from '@core/services/theme.service';
+import { Subscription } from 'rxjs';
+import { getChartTheme } from '@utils';
 
 @Directive()
 export abstract class BaseChartDirective implements AfterViewInit, OnChanges, OnDestroy {
@@ -53,18 +56,22 @@ export abstract class BaseChartDirective implements AfterViewInit, OnChanges, On
     return this.labels.length > 0;
   }
 
+  private readonly themeService = inject(ThemeService);
+  private themeSubscription?: Subscription;
+
   ngAfterViewInit(): void {
     this.viewReady = true;
+
+    this.themeSubscription = this.themeService.themeChanges$.subscribe(() => {
+      this.updateChartTheme();
+    });
+
     this.render();
   }
 
   ngOnChanges(): void {
     // Inputs can change before the canvas exists.
     if (this.viewReady) this.render();
-  }
-
-  ngOnDestroy(): void {
-    this.destroy();
   }
 
   private render(): void {
@@ -74,6 +81,7 @@ export abstract class BaseChartDirective implements AfterViewInit, OnChanges, On
 
     this.canvas.nativeElement.style.height = this.height ? `${this.height}px` : '';
     this.chart = new Chart(this.canvas.nativeElement, this.buildConfig());
+    this.updateChartTheme();
   }
 
   private destroy(): void {
@@ -105,7 +113,7 @@ export abstract class BaseChartDirective implements AfterViewInit, OnChanges, On
               fillStyle: item.background,
               strokeStyle: item.border,
               lineWidth: 1,
-              fontColor: CHART_UNKNOWN_COLOR,
+              fontColor: getChartTheme(this.themeService.theme).text,
               datasetIndex: index,
             }) as LegendItem
         ),
@@ -157,4 +165,57 @@ export abstract class BaseChartDirective implements AfterViewInit, OnChanges, On
     this.itemClick.emit(index);
     this.elementClick.emit({ datasetIndex, index });
   };
+
+  // Theme
+  protected updateChartTheme(): void {
+    if (!this.chart) return;
+
+    const theme = getChartTheme(this.themeService.theme);
+    const options = this.chart.options as any;
+
+    // Update all existing scales (X, Y and radial).
+    if (options.scales) {
+      Object.values(options.scales).forEach((scale: any) => {
+        if (!scale) return;
+
+        scale.grid = {
+          ...scale.grid,
+          color: theme.grid,
+        };
+
+        scale.border = {
+          ...scale.border,
+          color: theme.border,
+        };
+
+        scale.ticks = {
+          ...scale.ticks,
+          color: theme.text,
+        };
+
+        scale.title = {
+          ...scale.title,
+          color: theme.text,
+        };
+      });
+    }
+
+    // Update legend text.
+    options.plugins ??= {};
+    options.plugins.legend ??= {};
+    options.plugins.legend.labels ??= {};
+
+    options.plugins.legend.labels.color = theme.text;
+
+    // Update chart title.
+    options.plugins.title ??= {};
+    options.plugins.title.color = theme.text;
+
+    this.chart.update('none');
+  }
+
+  ngOnDestroy(): void {
+    this.themeSubscription?.unsubscribe();
+    this.destroy();
+  }
 }
