@@ -9,7 +9,7 @@ import { TChartTooltipContent } from '@type/chart.types';
 import { IRankingChartVm } from '@interfaces/charts/chart-rankings.interface';
 
 // Helpers
-import { getColorWithOpacity, getRankingColors, RANKING_COLORS } from '@utils';
+import { getCyclicRankingColors } from '@utils';
 
 // Services
 import { FormatService } from '@services/format.service';
@@ -190,7 +190,7 @@ export class GuestRankingsChartComponent implements OnInit, OnChanges, OnDestroy
       ticks.push(position);
     }
 
-    const rankColors = getRankingColors(positions);
+    const rankColors = getCyclicRankingColors(items.length);
 
     const title = this._translate.instant(this.titleKeys[this.selectedView]);
 
@@ -203,14 +203,7 @@ export class GuestRankingsChartComponent implements OnInit, OnChanges, OnDestroy
       // Use the translated guest display name in chart labels.
       labels: items.map(item => this.getGuestDisplayName(item)),
       values: positions,
-      colors: {
-        background: rankColors.background.map(color => {
-          const rankingColor = Object.values(RANKING_COLORS).find(ranking => ranking.background === color);
-
-          return rankingColor ? getColorWithOpacity(rankingColor) : color;
-        }),
-        border: rankColors.border,
-      },
+      colors: rankColors,
       max,
       tickFormatter: value => (ticks.includes(Number(value)) ? Number(value) : ''),
       items,

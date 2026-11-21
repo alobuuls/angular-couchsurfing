@@ -311,6 +311,7 @@ export interface ISameArrivalDay {
   total: number;
   guests: ISameArrivalDayGuest[];
 }
+
 export interface ISameStayGuest {
   guestId: string;
   fullName: string;

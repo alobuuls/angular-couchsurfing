@@ -5,11 +5,11 @@ import { Subscription } from 'rxjs';
 
 // Interfaces
 import { ISameArrivalDay, ISameStay, ITimelineDistribution, ITimelineItem, ITimelineView } from '@interfaces/stats-interface';
-import { IChartEdge, IChartLegendItem, TChartTooltipContent } from '@type/chart.types';
+import { IChartColors, IChartEdge, IChartLegendItem, TChartTooltipContent } from '@type/chart.types';
 import { INetworkNode, ITimelineBarVm, ITimelineNetworkVm, TBarItem } from '@interfaces/charts/chart-timeline.interface';
 
 // Helpers
-import { getRankingColors, RANKING_COLORS, TIMELINE_COLORS } from '@utils';
+import { RANKING_COLORS, TIMELINE_COLORS } from '@utils';
 
 // Services
 import { FormatService } from '@services/format.service';
@@ -78,6 +78,40 @@ export class GuestTimelineChartComponent implements OnInit, OnChanges, OnDestroy
 
     this.selectedView = view;
     this.buildView();
+  }
+
+  private getTimelineRankingColors(items: TBarItem[]): IChartColors {
+    const rankingColors = [RANKING_COLORS.gold, RANKING_COLORS.silver, RANKING_COLORS.bronze];
+
+    const getDateValue = (item: TBarItem): number => {
+      const period = 'date' in item ? item.date : item.period;
+
+      if (this.selectedView === 'months') {
+        return new Date(`${period}-01`).getTime();
+      }
+
+      if (this.selectedView === 'years') {
+        return new Date(`${period}-01-01`).getTime();
+      }
+
+      return new Date(period).getTime();
+    };
+
+    const rankingIndexes = items
+      .map((item, index) => ({ index, total: item.total, date: getDateValue(item) }))
+      .sort((a, b) => b.total - a.total || a.date - b.date)
+      .slice(0, 3);
+
+    const colors = items.map(() => RANKING_COLORS.neutral);
+
+    rankingIndexes.forEach((item, index) => {
+      colors[item.index] = rankingColors[index];
+    });
+
+    return {
+      background: colors.map(color => color.background),
+      border: colors.map(color => color.border),
+    };
   }
 
   // CLICKS
@@ -170,9 +204,12 @@ export class GuestTimelineChartComponent implements OnInit, OnChanges, OnDestroy
       valueAxisTitle: this._translate.instant('STATS.TIMELINE.LABELS.NUMBER_OF_GUESTS'),
       labels: items.map(item => this.formatTimelineLabel(item)),
       values: totals,
-      // Color bars according to their ranking.
-      colors: getRankingColors(totals),
+
+      // Assign unique ranking colors, using chronological order to break ties.
+      colors: this.getTimelineRankingColors(items),
+
       legend: this.getRankingLegend(),
+
       // Give the chart more space when needed.
       height: items.length > 5 ? Math.max(500, items.length * 35) : undefined,
       items,

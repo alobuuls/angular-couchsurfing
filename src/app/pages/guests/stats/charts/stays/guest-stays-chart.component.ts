@@ -95,6 +95,33 @@ export class GuestStaysChartComponent implements OnInit, OnChanges, OnDestroy {
     this.buildView();
   }
 
+  private getArrivalRankingColors(items: IStaysDistribution['sameArrival']): {
+    background: string[];
+    border: string[];
+  } {
+    const rankingColors = [RANKING_COLORS.gold, RANKING_COLORS.silver, RANKING_COLORS.bronze];
+
+    const rankingIndexes = items
+      .map((item, index) => ({
+        index,
+        total: item.total,
+        date: new Date(item.date).getTime(),
+      }))
+      .sort((a, b) => b.total - a.total || a.date - b.date)
+      .slice(0, 3);
+
+    const colors = items.map(() => RANKING_COLORS.neutral);
+
+    rankingIndexes.forEach((item, index) => {
+      colors[item.index] = rankingColors[index];
+    });
+
+    return {
+      background: colors.map(color => color.background),
+      border: colors.map(color => color.border),
+    };
+  }
+
   // Changes the selected Longest/Shortest subview.
   selectStayView(view: ILongestView): void {
     this.selectedStayView = view;
@@ -311,8 +338,10 @@ export class GuestStaysChartComponent implements OnInit, OnChanges, OnDestroy {
       datasetLabel: this.translate('STATS.STAYS.VIEWS.SAMEARRIVAL'),
       labels: items.map(item => this._format.formatDate(item.date)),
       values: items.map(item => item.total),
-      // Get ranking colors based on the number of guests.
-      colors: getRankingColors(items.map(item => item.total)),
+
+      // Assign unique ranking colors, using the earliest arrival date to break ties.
+      colors: this.getArrivalRankingColors(items),
+
       legend: this.getRankingLegend(),
       valueAxisTitle: this.translate('STATS.STAYS.LABELS.OVERLAPPING_GUESTS'),
       categoryAxisTitle: this.translate('STATS.STAYS.LABELS.ARRIVAL_DATE'),

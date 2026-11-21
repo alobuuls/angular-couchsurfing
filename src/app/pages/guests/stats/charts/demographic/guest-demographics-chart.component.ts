@@ -31,7 +31,7 @@ import {
 } from '@interfaces/charts/chart-demographics.interface';
 
 // Helpers
-import { CHART_NEUTRAL_COLOR, GENDER_COLORS, getColorWithOpacity, getRankingColors, GROUP_COLORS, RANKING_COLORS } from '@utils';
+import { CHART_NEUTRAL_COLOR, GENDER_COLORS, getApproximateAge, getBirthYear, getColorWithOpacity, GROUP_COLORS, RANKING_COLORS } from '@utils';
 
 const DEMOGRAPHIC_KEYS: TDemographicKey[] = ['male', 'female', 'trans', 'isGay'];
 const GROUP_KEYS: TGroupKey[] = ['couple', 'friends', 'family'];
@@ -332,52 +332,105 @@ export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDes
 
   // OLDEST / YOUNGEST - OVERALL
   private buildRankingBarVm(mode: TAgeMode): IDemographicsRankingBarVm | undefined {
-    const items = (this.demographics[mode].overall.people as IDemographicsPerson[])
-      .filter(person => person.birthDate)
-      .map(person => this.toItem(person))
-      .sort((a, b) => (mode === 'oldest' ? b.age - a.age : a.age - b.age));
+    const people = [...this.demographics[mode].overall.people]
+      .filter(person => getBirthYear(person.birthDate) !== null)
+      .sort((a, b) => {
+        const birthComparison = this.compareBirthDates(a.birthDate!, b.birthDate!);
+
+        // Oldest: earlier birth dates first.
+        // Youngest: later birth dates first.
+        if (birthComparison !== 0) {
+          return mode === 'oldest' ? birthComparison : -birthComparison;
+        }
+
+        // Tie-breaker: the guest who was hosted first wins.
+        return new Date(a.visitedDate).getTime() - new Date(b.visitedDate).getTime();
+      });
+
+    const items = people.map(person => this.toItem(person));
 
     if (!items.length) {
       return undefined;
     }
 
-    const suffix = mode.toUpperCase();
     const podium = [
-      { key: `RANKING.${suffix}`, color: RANKING_COLORS.gold },
-      { key: `RANKING.SECOND_${suffix}`, color: RANKING_COLORS.silver },
-      { key: `RANKING.THIRD_${suffix}`, color: RANKING_COLORS.bronze },
+      { key: `RANKING.${mode.toUpperCase()}`, color: RANKING_COLORS.gold },
+      { key: `RANKING.SECOND_${mode.toUpperCase()}`, color: RANKING_COLORS.silver },
+      { key: `RANKING.THIRD_${mode.toUpperCase()}`, color: RANKING_COLORS.bronze },
     ];
 
-    const legend: IChartLegendItem[] = podium.map(({ key, color }) => ({
-      text: this.translate(`STATS.DEMOGRAPHICS.${key}`),
-      background: getColorWithOpacity(color),
-      border: color.border,
-    }));
-
-    if (mode === 'oldest') {
-      legend.push({
+    const legend: IChartLegendItem[] = [
+      ...podium.map(({ key, color }) => ({
+        text: this.translate(`STATS.DEMOGRAPHICS.${key}`),
+        background: getColorWithOpacity(color),
+        border: color.border,
+      })),
+      {
         text: this.translate('STATS.DEMOGRAPHICS.RANKING.OTHER'),
         background: RANKING_COLORS.neutral.background,
         border: RANKING_COLORS.neutral.border,
-      });
-    }
+      },
+    ];
 
-    const ages = items.map(item => item.age);
+    // Each position gets a different medal. Everyone else is neutral.
+    const colors = items.map((_, index) => {
+      if (index === 0) return RANKING_COLORS.gold;
+      if (index === 1) return RANKING_COLORS.silver;
+      if (index === 2) return RANKING_COLORS.bronze;
+
+      return RANKING_COLORS.neutral;
+    });
 
     return {
       datasetLabel: this.ageTitle,
       labels: items.map(item => item.name),
-      values: ages,
-      colors: getRankingColors(ages),
+      values: items.map(item => item.age),
+      colors: {
+        background: colors.map(color => color.background),
+        border: colors.map(color => color.border),
+      },
       legend,
       items,
     };
   }
 
+  private compareBirthDates(a: string, b: string): number {
+    const parse = (date: string) => {
+      const [year, month, day] = date.split('-').map(Number);
+
+      return {
+        year,
+        month: date.split('-').length >= 2 ? month : null,
+        day: date.split('-').length === 3 ? day : null,
+      };
+    };
+
+    const first = parse(a);
+    const second = parse(b);
+
+    if (first.year !== second.year) {
+      return first.year - second.year;
+    }
+
+    // Compare months only when both are available.
+    if (first.month !== null && second.month !== null) {
+      if (first.month !== second.month) {
+        return first.month - second.month;
+      }
+    }
+
+    // Compare days only when both are available.
+    if (first.day !== null && second.day !== null) {
+      return first.day - second.day;
+    }
+
+    return 0;
+  }
+
   // OLDEST / YOUNGEST - SOLO
   private buildSoloScatterVm(mode: TAgeMode): IDemographicsScatterVm | undefined {
     const items = this.getSoloPeople(mode)
-      .filter(person => person.birthDate)
+      .filter(person => getBirthYear(person.birthDate) !== null)
       .map(person => this.toItem(person, person.demographic));
 
     if (!items.length) {
@@ -400,7 +453,14 @@ export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDes
   private buildGroupsBubbleVm(mode: TAgeMode): IDemographicsBubbleVm | undefined {
     const data = this.demographics[mode];
 
-    const items = GROUP_KEYS.flatMap(group => (data[group] as IDemographicsPerson[]).filter(person => person.birthDate).map(person => ({ ...this.toItem(person), group })));
+    const items = GROUP_KEYS.flatMap(group =>
+      (data[group] as IDemographicsPerson[])
+        .filter(person => getBirthYear(person.birthDate) !== null)
+        .map(person => ({
+          ...this.toItem(person),
+          group,
+        }))
+    );
 
     if (!items.length) {
       return undefined;
@@ -508,17 +568,7 @@ export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDes
   }
 
   private calculateAge(birthDate: string): number {
-    const birth = new Date(birthDate);
-    const today = new Date();
-
-    let age = today.getFullYear() - birth.getFullYear();
-    const hasHadBirthday = today.getMonth() > birth.getMonth() || (today.getMonth() === birth.getMonth() && today.getDate() >= birth.getDate());
-
-    if (!hasHadBirthday) {
-      age--;
-    }
-
-    return age;
+    return getApproximateAge(birthDate) ?? 0;
   }
 
   // Only call with people that have a birth date.
@@ -526,7 +576,7 @@ export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDes
     return {
       name: person.fullName,
       guestId: person.guestId,
-      age: this.calculateAge(person.birthDate!),
+      age: getApproximateAge(person.birthDate) ?? 0,
       gender: person.gender,
       demographic,
       visitedDate: person.visitedDate,

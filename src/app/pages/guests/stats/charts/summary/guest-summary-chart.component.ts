@@ -63,10 +63,6 @@ export class GuestSummaryChartComponent implements OnInit, OnChanges, OnDestroy 
     }
   }
 
-  ngOnDestroy(): void {
-    this.langChangeSubscription?.unsubscribe();
-  }
-
   selectView(view: ISummaryView): void {
     if (this.selectedView === view) {
       return;
@@ -203,5 +199,9 @@ export class GuestSummaryChartComponent implements OnInit, OnChanges, OnDestroy 
 
   private navigateToGiftGuests(hasGift: boolean): void {
     this._router.navigate(['/guests'], { queryParams: { view: 'cards', gift: hasGift } });
+  }
+
+  ngOnDestroy(): void {
+    this.langChangeSubscription?.unsubscribe();
   }
 }

@@ -319,7 +319,12 @@ export class GuestGeographyChartComponent implements OnInit, OnChanges, OnDestro
     const isRankingChart = this.selectedRanking !== 'all' || this.selectedView === 'livingIn' || this.selectedView === 'hometown';
 
     if (isRankingChart) {
-      return getRankingColors(values);
+      const rankingColors = [RANKING_COLORS.gold, RANKING_COLORS.silver, RANKING_COLORS.bronze];
+
+      return {
+        background: items.map((_, index) => rankingColors[index]?.background ?? RANKING_COLORS.neutral.background),
+        border: items.map((_, index) => rankingColors[index]?.border ?? RANKING_COLORS.neutral.border),
+      };
     }
 
     const continentColor = (item: GeographyItem, key: 'background' | 'border'): string =>
@@ -480,12 +485,21 @@ export class GuestGeographyChartComponent implements OnInit, OnChanges, OnDestro
           return (b as IGeographyCountry).male - (a as IGeographyCountry).male;
         }
 
-        if (this.selectedRanking === 'bottom') {
-          return a.total - b.total;
-        }
+        const totalComparison = this.selectedRanking === 'bottom' ? a.total - b.total : b.total - a.total;
 
-        return b.total - a.total;
+        if (totalComparison !== 0) return totalComparison;
+
+        // In case of a tie, the earliest first visit wins.
+        const firstVisitA = (a as IGeographyRegion | IGeographyCountry).firstVisit;
+        const firstVisitB = (b as IGeographyRegion | IGeographyCountry).firstVisit;
+
+        return new Date(firstVisitA).getTime() - new Date(firstVisitB).getTime();
       }) as IGeographyRegion[] | IGeographyCountry[];
+    }
+
+    // Living in / hometown keep the order provided by the backend.
+    if (this.selectedView === 'livingIn' || this.selectedView === 'hometown') {
+      return data;
     }
 
     return data;
