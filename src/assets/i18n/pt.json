@@ -330,7 +330,9 @@
     "VISITED_DATE_REQUIRED": "A data da visita é obrigatória",
     "TODAY": "Hoje",
     "STAYED": "Hospedou-se?",
-    "NIGHTS": "Noites"
+    "NIGHTS": "Noites",
+    "STAYED_REQUIRED": "Selecione se o hóspede passou a noite",
+    "NIGHTS_REQUIRED": "Selecione o número de noites"
   },
   "GUEST_FORM": {
     "SECTIONS": {

@@ -329,7 +329,9 @@
     "VISITED_DATE_REQUIRED": "יש להזין את תאריך הביקור",
     "TODAY": "היום",
     "STAYED": "האם התארחו?",
-    "NIGHTS": "לילות"
+    "NIGHTS": "לילות",
+    "STAYED_REQUIRED": "יש לבחור האם האורח נשאר ללון",
+    "NIGHTS_REQUIRED": "יש לבחור את מספר הלילות"
   },
   "GUEST_FORM": {
     "SECTIONS": {

@@ -334,7 +334,9 @@
     "VISITED_DATE_REQUIRED": "必须填写访问日期",
     "TODAY": "今天",
     "STAYED": "是否留宿？",
-    "NIGHTS": "晚数"
+    "NIGHTS": "晚",
+    "STAYED_REQUIRED": "请选择客人是否留宿",
+    "NIGHTS_REQUIRED": "请选择住宿晚数"
   },
   "GUEST_FORM": {
     "SECTIONS": {

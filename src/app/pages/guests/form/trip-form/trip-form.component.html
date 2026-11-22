@@ -43,6 +43,10 @@
               {{ 'GENERAL.NO' | translate }}
             </mat-radio-button>
           </mat-radio-group>
+
+          <mat-error *ngIf="f['stayed'].hasError('required') && f['stayed'].touched">
+            {{ 'TRIP_FORM.STAYED_REQUIRED' | translate }}
+          </mat-error>
         </div>
 
         <!-- NIGHTS -->
@@ -54,6 +58,10 @@
               {{ night }}
             </mat-option>
           </mat-select>
+
+          <mat-error *ngIf="f['nights'].hasError('required')">
+            {{ 'TRIP_FORM.NIGHTS_REQUIRED' | translate }}
+          </mat-error>
         </mat-form-field>
       </section>
     </div>

@@ -330,7 +330,9 @@
     "VISITED_DATE_REQUIRED": "Das Besuchsdatum ist erforderlich",
     "TODAY": "Heute",
     "STAYED": "Übernachtet?",
-    "NIGHTS": "Nächte"
+    "NIGHTS": "Nächte",
+    "STAYED_REQUIRED": "Bitte gib an, ob der Gast über Nacht geblieben ist",
+    "NIGHTS_REQUIRED": "Bitte wähle die Anzahl der Nächte aus"
   },
   "GUEST_FORM": {
     "SECTIONS": {

@@ -330,7 +330,9 @@
     "VISITED_DATE_REQUIRED": "मुलाक़ात की तारीख आवश्यक है",
     "TODAY": "आज",
     "STAYED": "क्या ठहरे थे?",
-    "NIGHTS": "रातें"
+    "NIGHTS": "रातें",
+    "STAYED_REQUIRED": "कृपया चुनें कि मेहमान रात भर रुके थे या नहीं",
+    "NIGHTS_REQUIRED": "कृपया रातों की संख्या चुनें"
   },
   "GUEST_FORM": {
     "SECTIONS": {
