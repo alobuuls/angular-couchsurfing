@@ -330,7 +330,9 @@
     "VISITED_DATE_REQUIRED": "방문 날짜는 필수 항목입니다",
     "TODAY": "오늘",
     "STAYED": "숙박했나요?",
-    "NIGHTS": "숙박 일수"
+    "NIGHTS": "숙박 일수",
+    "STAYED_REQUIRED": "게스트가 숙박했는지 선택해 주세요",
+    "NIGHTS_REQUIRED": "숙박 일수를 선택해 주세요"
   },
   "GUEST_FORM": {
     "SECTIONS": {

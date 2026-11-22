@@ -331,7 +331,9 @@
     "VISITED_DATE_REQUIRED": "La fecha de visita es obligatoria",
     "TODAY": "Hoy",
     "STAYED": "¿Se alojó?",
-    "NIGHTS": "Noches"
+    "NIGHTS": "Noches",
+    "STAYED_REQUIRED": "Selecciona si el huésped se quedó a dormir",
+    "NIGHTS_REQUIRED": "Selecciona el número de noches"
   },
   "GUEST_FORM": {
     "SECTIONS": {

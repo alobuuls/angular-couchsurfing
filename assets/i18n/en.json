@@ -322,7 +322,9 @@
     "VISITED_DATE_REQUIRED": "Visited Date is required",
     "TODAY": "Today",
     "STAYED": "Stayed?",
-    "NIGHTS": "Nights"
+    "NIGHTS": "Nights",
+    "STAYED_REQUIRED": "Please select whether the guest stayed overnight",
+    "NIGHTS_REQUIRED": "Please select the number of nights"
   },
   "GUEST_FORM": {
     "SECTIONS": {
