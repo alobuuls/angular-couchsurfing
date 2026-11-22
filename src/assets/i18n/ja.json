@@ -330,7 +330,9 @@
     "VISITED_DATE_REQUIRED": "訪問日は必須です",
     "TODAY": "今日",
     "STAYED": "宿泊しましたか？",
-    "NIGHTS": "宿泊数"
+    "NIGHTS": "宿泊数",
+    "STAYED_REQUIRED": "ゲストが宿泊したかどうかを選択してください",
+    "NIGHTS_REQUIRED": "宿泊数を選択してください"
   },
   "GUEST_FORM": {
     "SECTIONS": {

@@ -330,7 +330,9 @@
     "VISITED_DATE_REQUIRED": "Необходимо указать дату посещения",
     "TODAY": "Сегодня",
     "STAYED": "Останавливался?",
-    "NIGHTS": "Ночи"
+    "NIGHTS": "Ночи",
+    "STAYED_REQUIRED": "Укажите, оставался ли гость на ночь",
+    "NIGHTS_REQUIRED": "Выберите количество ночей"
   },
   "GUEST_FORM": {
     "SECTIONS": {

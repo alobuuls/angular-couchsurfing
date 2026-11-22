@@ -148,8 +148,8 @@ export class GuestFormComponent implements OnInit {
 
   readonly platforms = [
     { value: 'couchsurfing', label: 'Couchsurfing' },
-    { value: 'couchers', label: 'Couchers.org' },
-    { value: 'booking', label: 'Booking.com' },
+    { value: 'couchers.org', label: 'Couchers.org' },
+    { value: 'booking.com', label: 'Booking.com' },
     { value: 'airbnb', label: 'Airbnb' },
   ];
 
@@ -465,7 +465,7 @@ export class GuestFormComponent implements OnInit {
 
     this.formCreateGuest.patchValue(
       {
-        platform: this.guest.platform ?? 'cs',
+        platform: this.guest.platform,
         fullName: this.guest.fullName,
         instagram: this.guest.instagram,
         urlProfileCs: this.guest.urlProfileCs,
