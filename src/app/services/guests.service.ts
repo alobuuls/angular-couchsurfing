@@ -44,6 +44,7 @@ export class GuestsService {
     year,
     day,
     birthDate,
+    platform,
   }: IQueryParamsGuests): Observable<IGuestsResp> {
     let params = new HttpParams().set('limit', String(limit)).set('page', String(page));
 
@@ -67,6 +68,7 @@ export class GuestsService {
     if (year !== undefined) params = params.set('year', String(year));
     if (day !== undefined) params = params.set('day', String(day));
     if (birthDate !== undefined) params = params.set('birthDate', String(birthDate));
+    if (platform !== undefined) params = params.set('platform', String(platform));
 
     return this.http.get<IGuestsResp>(this.urlGuests, { params });
   }

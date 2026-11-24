@@ -158,6 +158,7 @@ interface IApiCsErrResp {
 
 export interface IQueryParamsGuests {
   limit?: number;
+  platform?: string;
   page?: number;
   country?: string;
   from?: string;
