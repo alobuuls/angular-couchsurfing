@@ -1,8 +1,8 @@
-import { Component, ElementRef, HostListener, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, DestroyRef, ElementRef, HostListener, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable, BehaviorSubject, combineLatest, timer, throwError } from 'rxjs';
-import { combineLatestWith, map, switchMap, tap, finalize, retry } from 'rxjs/operators';
+import { combineLatestWith, map, switchMap, tap, finalize, retry, distinctUntilChanged } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 
 // Material
@@ -35,7 +35,16 @@ import { WORLD, REGION_NAMES, ISO_CODES, COUNTRY_REGION_INDEX, REGION_CONTINENT_
 
 // Utils
 import { withReqState, isGroup, mapGuestTable, parseBooleanParam, parseMultiParam } from '@utils';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+const GENDERS = ['female', 'male', 'trans'] as const;
+
+const normalizeFilters = (value: object): string =>
+  JSON.stringify(
+    Object.entries(value)
+      .filter(([, v]) => v !== undefined && v !== null && v !== '')
+      .sort(([a], [b]) => a.localeCompare(b))
+  );
 @Component({
   providers: [GuestSortService, StatsService],
   selector: 'guests',
@@ -148,6 +157,7 @@ export class GuestsComponent implements OnInit {
     }
   }
 
+  private readonly destroyRef = inject(DestroyRef);
   private fb = inject(FormBuilder);
   private _route = inject(ActivatedRoute);
   private _router = inject(Router);
@@ -176,6 +186,7 @@ export class GuestsComponent implements OnInit {
   // FILTERS
   private initFiltersForm(): void {
     this.filtersForm = this.fb.group({
+      platform: [[]],
       country: [[]],
       continent: [[]],
       region: [[]],
@@ -203,6 +214,7 @@ export class GuestsComponent implements OnInit {
       continent: this.formatMultiFilter(formValue.continent),
       region: this.formatMultiFilter(formValue.region),
       groupType: this.formatMultiFilter(formValue.groupType),
+      platform: this.formatMultiFilter(formValue.platform),
       from: this.formatDate(formValue.from),
       to: this.formatDate(formValue.to),
       isFirstTime: this.getBooleanFilter(formValue.isFirstTime),
@@ -236,6 +248,7 @@ export class GuestsComponent implements OnInit {
       continent: [],
       region: [],
       groupType: [],
+      platform: [],
       from: '',
       to: '',
       isFirstTime: '',
@@ -261,6 +274,7 @@ export class GuestsComponent implements OnInit {
         continent: filters.continent ?? null,
         region: filters.region ?? null,
         groupType: filters.groupType ?? null,
+        platform: filters.platform ?? null,
         from: filters.from ?? null,
         to: filters.to ?? null,
         isFirstTime: filters.isFirstTime?.toString() ?? null,
@@ -600,133 +614,106 @@ export class GuestsComponent implements OnInit {
     };
   }
 
+  private parseFilters(params: Params): IQueryParamsGuests {
+    const str = (key: string): string | undefined => params[key] || undefined;
+
+    const num = (key: string): number | undefined => {
+      const raw = params[key];
+      if (raw === undefined || raw === '') return undefined;
+      const n = Number(raw);
+      return Number.isFinite(n) ? n : undefined; // evita NaN
+    };
+
+    return {
+      gender: GENDERS.find(g => g === params['gender']), // 'female' | 'male' | 'trans' | undefined
+
+      platform: str('platform'),
+      groupType: str('groupType'),
+      continent: str('continent'),
+      region: str('region'),
+      country: str('country'),
+      hometownState: str('hometownState'),
+      livingInState: str('livingInState'),
+      from: str('from'),
+      to: str('to'),
+
+      rating: num('rating'),
+      day: num('day'),
+      birthDate: num('birthDate'),
+
+      gift: parseBooleanParam(params['gift']),
+      gay: parseBooleanParam(params['gay']),
+      isFirstTime: parseBooleanParam(params['isFirstTime']),
+      hangOut: parseBooleanParam(params['hangOut']),
+      ambassador: parseBooleanParam(params['ambassador']),
+      didTheyReq: parseBooleanParam(params['didTheyReq']),
+    };
+  }
+
+  private parseView(params: Params): ICurrentView {
+    const view = params['view'];
+    return view === 'cards' || view === 'map' ? view : 'table';
+  }
+
+  private restoreForm(params: Params, f: IQueryParamsGuests): void {
+    this.filtersForm.patchValue(
+      {
+        continent: parseMultiParam(params['continent']),
+        region: parseMultiParam(params['region']),
+        country: parseMultiParam(params['country']),
+        groupType: parseMultiParam(params['groupType']),
+        platform: parseMultiParam(params['platform']),
+        from: f.from ? new Date(`${f.from}T00:00:00`) : '',
+        to: f.to ? new Date(`${f.to}T00:00:00`) : '',
+        isFirstTime: f.isFirstTime ?? '',
+        hangOut: f.hangOut ?? '',
+        ambassador: f.ambassador ?? '',
+        didTheyReq: f.didTheyReq ?? '',
+      },
+      { emitEvent: false }
+    );
+  }
+
   private listenQueryParams(): void {
-    this._route.queryParams.subscribe(params => {
-      // CURRENT VIEW
-      const view: ICurrentView = params['view'] === 'cards' || params['view'] === 'map' ? params['view'] : 'table';
-      // Check whether the user changed the view
-      const viewChanged = this.currentView !== view;
-      this.currentView = view;
+    this._route.queryParams
+      .pipe(
+        map(params => ({
+          params,
+          filters: this.parseFilters(params),
+          view: this.parseView(params),
+        })),
+        // view cuenta en la comparación, si no un cambio solo de vista se descartaría
+        distinctUntilChanged((a, b) => a.view === b.view && normalizeFilters(a.filters) === normalizeFilters(b.filters)),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(({ params, filters, view }) => {
+        const viewChanged = this.currentView !== view;
+        this.currentView = view;
 
-      // READ FILTERS FROM URL
-      const rating = params['rating'];
-      const gift = params['gift'];
-      const gender = params['gender'];
-      const gay = params['gay'];
-      const hometownState = params['hometownState'];
-      const livingInState = params['livingInState'];
-      const day = params['day'];
-      const birthDate = params['birthDate'];
-      const continent = params['continent'];
-      const region = params['region'];
-      const country = params['country'];
-      const groupType = params['groupType'];
-      const from = params['from'];
-      const to = params['to'];
-      const isFirstTime = params['isFirstTime'];
-      const hangOut = params['hangOut'];
-      const ambassador = params['ambassador'];
-      const didTheyReq = params['didTheyReq'];
+        this.restoreForm(params, filters);
+        this.updateFilteredRegions();
+        this.updateFilteredCountries();
 
-      // RESTORE FILTER FORM VALUES
-      //Convert URL parameters into the expected from control values
-      this.filtersForm.patchValue(
-        {
-          continent: parseMultiParam(continent),
-          region: parseMultiParam(region),
-          country: parseMultiParam(country),
-          groupType: parseMultiParam(groupType),
-
-          // Comprobe truthy value
-          from: from ? new Date(`${from}T00:00:00`) : '',
-          to: to ? new Date(`${to}T00:00:00`) : '',
-
-          isFirstTime: parseBooleanParam(isFirstTime) ?? '',
-          hangOut: parseBooleanParam(hangOut) ?? '',
-          ambassador: parseBooleanParam(ambassador) ?? '',
-          didTheyReq: parseBooleanParam(didTheyReq) ?? '',
-        },
-        { emitEvent: false }
-      );
-
-      // RESTORE FILTERED OPTIONS
-      // Update available regions and countries based on the selected filters
-      this.updateFilteredRegions();
-      this.updateFilteredCountries();
-
-      // BUILD FILTERS
-      // Convert URL parameters into the format expected by the API
-      const filters: IQueryParamsGuests = {
-        groupType: groupType || undefined,
-        rating: rating ? Number(rating) : undefined,
-        gift: gift !== undefined ? gift === 'true' : undefined,
-        gender: gender || undefined,
-        gay: gay !== undefined ? gay === 'true' : undefined,
-        continent: continent || undefined,
-        region: region || undefined,
-        country: country || undefined,
-        hometownState: hometownState || undefined,
-        livingInState: livingInState || undefined,
-        from: from || undefined,
-        to: to || undefined,
-        day: day || undefined,
-        birthDate: birthDate || undefined,
-        isFirstTime: parseBooleanParam(isFirstTime),
-        hangOut: parseBooleanParam(hangOut),
-        ambassador: parseBooleanParam(ambassador),
-        didTheyReq: parseBooleanParam(didTheyReq),
-      };
-
-      // COMPARE FITERS
-      // Normalize both objects to avoid unnecessary requests when filters have not changed
-      const normalizeFilters = (value: IQueryParamsGuests) =>
-        JSON.stringify(
-          Object.entries(value)
-            .filter(([, item]) => item !== undefined && item !== null && item !== '')
-            .sort(([a], [b]) => a.localeCompare(b))
-        );
-
-      const filtersChanged = normalizeFilters(filters) !== normalizeFilters(this.filters$.value);
-
-      // HANDLE FILTER CHANGES
-      // Reset pagination and cached data only when filters actually change
-      if (filtersChanged) {
-        this.filters$.next(filters);
-
-        this.page$.next({
-          page: 1,
-          size: this.page$.value.size,
-        });
-
-        // Clear previously loaded cards and map data
-        this.resetCards();
-        this.mapData = [];
-
-        // Load data for the active view
-        if (this.currentView === 'cards') {
-          this.loadMoreCards();
+        if (normalizeFilters(filters) !== normalizeFilters(this.filters$.value)) {
+          this.filters$.next(filters);
+          this.page$.next({ page: 1, size: this.page$.value.size });
+          this.resetCards();
+          this.mapData = [];
+          this.loadActiveView();
+          return;
         }
 
-        if (this.currentView === 'map') {
-          this.loadMapData();
-        }
-        return;
-      }
+        if (viewChanged) this.loadActiveView(true);
+      });
+  }
 
-      // HANDLE VIEW CHANGES
-      // Reuse cached data whenever possible instead of requesting it again
-      if (viewChanged) {
-        // Load cards only if the have not been loaded yet
-        if (this.currentView === 'cards' && !this.cardsData.length) {
-          this.loadMoreCards();
-        }
-
-        // Load map only if its data is not available yet
-        if (this.currentView === 'map' && !this.mapData.length) {
-          this.loadMapData();
-        }
-      }
-    });
+  private loadActiveView(onlyIfEmpty = false): void {
+    if (this.currentView === 'cards' && (!onlyIfEmpty || !this.cardsData.length)) {
+      this.loadMoreCards();
+    }
+    if (this.currentView === 'map' && (!onlyIfEmpty || !this.mapData.length)) {
+      this.loadMapData();
+    }
   }
 
   // INFINITE SCROLL

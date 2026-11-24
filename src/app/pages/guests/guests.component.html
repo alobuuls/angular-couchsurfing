@@ -131,6 +131,34 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+
+        <!-- PLATFORM -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'GUEST_FORM.FIELDS.PLATFORM' | translate }}</mat-label>
+          <mat-icon class="material-symbols-outlined" matPrefix>travel_explore</mat-icon>
+
+          <mat-select formControlName="platform" multiple>
+            <mat-option value="couchsurfing">
+              <mat-icon class="material-symbols-outlined">weekend</mat-icon>
+              Couchsurfing
+            </mat-option>
+
+            <mat-option value="couchers.org">
+              <mat-icon class="material-symbols-outlined">chair</mat-icon>
+              Couchers.org
+            </mat-option>
+
+            <mat-option value="booking.com">
+              <mat-icon class="material-symbols-outlined">hotel</mat-icon>
+              Booking.com
+            </mat-option>
+
+            <mat-option value="airbnb">
+              <mat-icon class="material-symbols-outlined">house</mat-icon>
+              Airbnb
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
 
       <div>
