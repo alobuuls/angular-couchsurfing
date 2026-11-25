@@ -1,115 +1,19 @@
 <div *ngIf="vm$ | async as vm">
   <sh-title [titleTxt]="'STATS.TITLE' | translate"></sh-title>
 
-  <h1 *ngIf="vm.status === 'error'">{{ vm.error.message }}</h1>
+  <h1 *ngIf="vm.status === 'error'">{{ vm.error?.message }}</h1>
 
   <div class="ctn-buttons">
-    <!-- Summary -->
     <button
-      [attr.aria-label]="'STATS.NAV.SUMMARY' | translate"
-      [matTooltip]="'STATS.NAV.SUMMARY' | translate"
+      *ngFor="let item of navItems"
+      [attr.aria-label]="'STATS.NAV.' + item.chart.toUpperCase() | translate"
+      [matTooltip]="'STATS.NAV.' + item.chart.toUpperCase() | translate"
       mat-icon-button
-      [class.active]="currentChart === 'summary'"
-      class="btn-summary"
-      (click)="changeChart('summary')"
+      [ngClass]="item.btnClass"
+      [routerLink]="item.chart"
+      routerLinkActive="active"
     >
-      <mat-icon class="material-symbols-outlined">bar_chart</mat-icon>
-    </button>
-
-    <!-- Demographics -->
-    <button
-      [attr.aria-label]="'STATS.NAV.DEMOGRAPHICS' | translate"
-      [matTooltip]="'STATS.NAV.DEMOGRAPHICS' | translate"
-      mat-icon-button
-      [class.active]="currentChart === 'demographics'"
-      class="btn-demographics"
-      (click)="changeChart('demographics')"
-    >
-      <mat-icon class="material-symbols-outlined">groups</mat-icon>
-    </button>
-
-    <!-- Geography -->
-    <button
-      [attr.aria-label]="'STATS.NAV.GEOGRAPHY' | translate"
-      [matTooltip]="'STATS.NAV.GEOGRAPHY' | translate"
-      mat-icon-button
-      [class.active]="currentChart === 'geography'"
-      class="btn-geography"
-      (click)="changeChart('geography')"
-    >
-      <mat-icon class="material-symbols-outlined">globe_location_pin</mat-icon>
-    </button>
-
-    <!-- Gifts -->
-    <button
-      [attr.aria-label]="'STATS.NAV.GIFTS' | translate"
-      [matTooltip]="'STATS.NAV.GIFTS' | translate"
-      mat-icon-button
-      [class.active]="currentChart === 'gifts'"
-      class="btn-gifts"
-      (click)="changeChart('gifts')"
-    >
-      <mat-icon class="material-symbols-outlined">featured_seasonal_and_gifts</mat-icon>
-    </button>
-
-    <!-- Rankings -->
-    <button
-      [attr.aria-label]="'STATS.NAV.RANKINGS' | translate"
-      [matTooltip]="'STATS.NAV.RANKINGS' | translate"
-      mat-icon-button
-      [class.active]="currentChart === 'rankings'"
-      class="btn-ranking"
-      (click)="changeChart('rankings')"
-    >
-      <mat-icon class="material-symbols-outlined">leaderboard</mat-icon>
-    </button>
-
-    <!-- Ratings -->
-    <button
-      [attr.aria-label]="'STATS.NAV.RATINGS' | translate"
-      [matTooltip]="'STATS.NAV.RATINGS' | translate"
-      mat-icon-button
-      [class.active]="currentChart === 'ratings'"
-      class="btn-rating"
-      (click)="changeChart('ratings')"
-    >
-      <mat-icon class="material-symbols-outlined">star</mat-icon>
-    </button>
-
-    <!-- Timeline -->
-    <button
-      [attr.aria-label]="'STATS.NAV.TIMELINE' | translate"
-      [matTooltip]="'STATS.NAV.TIMELINE' | translate"
-      mat-icon-button
-      [class.active]="currentChart === 'timeline'"
-      class="btn-timeline"
-      (click)="changeChart('timeline')"
-    >
-      <mat-icon class="material-symbols-outlined">timeline</mat-icon>
-    </button>
-
-    <!-- Stays -->
-    <button
-      [attr.aria-label]="'STATS.NAV.STAYS' | translate"
-      [matTooltip]="'STATS.NAV.STAYS' | translate"
-      mat-icon-button
-      [class.active]="currentChart === 'stays'"
-      class="btn-stays"
-      (click)="changeChart('stays')"
-    >
-      <mat-icon class="material-symbols-outlined">hotel</mat-icon>
-    </button>
-
-    <!-- Birthdays -->
-    <button
-      [attr.aria-label]="'STATS.NAV.BIRTHDAYS' | translate"
-      [matTooltip]="'STATS.NAV.BIRTHDAYS' | translate"
-      mat-icon-button
-      [class.active]="currentChart === 'birthdays'"
-      class="btn-birthdays"
-      (click)="changeChart('birthdays')"
-    >
-      <mat-icon class="material-symbols-outlined">cake</mat-icon>
+      <mat-icon class="material-symbols-outlined">{{ item.icon }}</mat-icon>
     </button>
   </div>
 
@@ -123,26 +27,8 @@
     ]"
   ></app-loading>
 
-  <ng-container *ngIf="vm.status === 'success'">
-    <div class="ctn-content">
-      <ng-container *ngIf="hasCurrentChartData(vm.data); else noData">
-        <guest-summary-chart *ngIf="currentChart === 'summary'" [summary]="vm.data.summary" />
-        <guest-rating-chart *ngIf="currentChart === 'ratings'" [ratings]="vm.data.ratings" />
-        <guest-rankings-chart *ngIf="currentChart === 'rankings'" [rankings]="vm.data.rankings" />
-        <guest-demographics-chart *ngIf="currentChart === 'demographics'" [demographics]="vm.data.demographics" />
-        <guest-geography-chart *ngIf="currentChart === 'geography'" [geography]="vm.data.geography" />
-        <guest-timeline-chart *ngIf="currentChart === 'timeline'" [timeline]="vm.data.timeline" />
-        <guest-gifts-chart *ngIf="currentChart === 'gifts'" [gifts]="vm.data.gifts" />
-        <guest-stays-chart *ngIf="currentChart === 'stays'" [stays]="vm.data.stays" />
-        <guest-birthdays-chart *ngIf="currentChart === 'birthdays'" [birthdays]="vm.data.birthdays" />
-      </ng-container>
-
-      <ng-template #noData>
-        <div class="empty-data">
-          <h2>{{ 'STATS.EMPTY.TITLE' | translate }}</h2>
-          <p>{{ 'STATS.EMPTY.MESSAGE' | translate }}</p>
-        </div>
-      </ng-template>
-    </div>
-  </ng-container>
+  <!-- The chart routes are rendered only when the data is ready -->
+  <div class="ctn-content" *ngIf="vm.status === 'success'">
+    <router-outlet></router-outlet>
+  </div>
 </div>

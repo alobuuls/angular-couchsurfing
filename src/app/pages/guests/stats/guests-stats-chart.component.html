@@ -1,0 +1,22 @@
+<ng-container *ngIf="vm$ | async as vm">
+  <ng-container *ngIf="vm.hasData; else noData">
+    <ng-container [ngSwitch]="vm.chart">
+      <guest-summary-chart *ngSwitchCase="'summary'" [summary]="vm.stats.summary" />
+      <guest-rating-chart *ngSwitchCase="'ratings'" [ratings]="vm.stats.ratings" />
+      <guest-rankings-chart *ngSwitchCase="'rankings'" [rankings]="vm.stats.rankings" />
+      <guest-demographics-chart *ngSwitchCase="'demographics'" [demographics]="vm.stats.demographics" />
+      <guest-geography-chart *ngSwitchCase="'geography'" [geography]="vm.stats.geography" />
+      <guest-timeline-chart *ngSwitchCase="'timeline'" [timeline]="vm.stats.timeline" />
+      <guest-gifts-chart *ngSwitchCase="'gifts'" [gifts]="vm.stats.gifts" />
+      <guest-stays-chart *ngSwitchCase="'stays'" [stays]="vm.stats.stays" />
+      <guest-birthdays-chart *ngSwitchCase="'birthdays'" [birthdays]="vm.stats.birthdays" />
+    </ng-container>
+  </ng-container>
+
+  <ng-template #noData>
+    <div class="empty-data">
+      <h2>{{ 'STATS.EMPTY.TITLE' | translate }}</h2>
+      <p>{{ 'STATS.EMPTY.MESSAGE' | translate }}</p>
+    </div>
+  </ng-template>
+</ng-container>

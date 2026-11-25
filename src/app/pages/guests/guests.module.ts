@@ -50,6 +50,7 @@ import { GuestTimelineChartComponent } from '@pages/guests/stats/charts/timeline
 import { GuestGiftsChartComponent } from '@pages/guests/stats/charts/gifts/guest-gifts-chart.component';
 import { GuestStaysChartComponent } from '@pages/guests/stats/charts/stays/guest-stays-chart.component';
 import { GuestBirthdaysChartComponent } from '@pages/guests/stats/charts/birthdays/guest-birthdays-chart.component';
+import { GuestsStatsChartComponent } from '@pages/guests/stats/guests-stats-chart.component'; // 👈 new
 
 const MATERIAL_MODULES = [
   MatBadgeModule,
@@ -82,6 +83,7 @@ const MATERIAL_MODULES = [
     GuestsCardsComponent,
     GuestsMapComponent,
     GuestsStatsComponent,
+    GuestsStatsChartComponent,
     GuestRatingChartComponent,
     GuestSummaryChartComponent,
     GuestRankingsChartComponent,

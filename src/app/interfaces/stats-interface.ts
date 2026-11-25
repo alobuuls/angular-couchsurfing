@@ -1,4 +1,5 @@
 import { CountriesCodes } from '@type/word.types';
+import { IApiCsOkResp } from './guests.interface';
 
 // View Chart
 export type ICurrentChart = 'summary' | 'rankings' | 'demographics' | 'geography' | 'timeline' | 'ratings' | 'gifts' | 'stays' | 'birthdays';
@@ -6,6 +7,21 @@ export type IChartType = 'bar' | 'doughnut' | 'pie';
 
 // Summary
 export type ISummaryView = 'total' | 'nights' | 'gifts' | 'rating';
+
+export interface IGuestsStats {
+  birthdays: IBirthdaysDistribution;
+  demographics: IDemographicsDistribution;
+  geography: IGeographyDistribution;
+  gifts: IGiftsDistribution;
+  rankings: IRankingsDistribution;
+  ratings: IRatingsData;
+  stays: IStaysDistribution;
+  summary: ISummaryDistribution;
+  timeline: ITimelineDistribution;
+}
+
+export type IGuestsStatsResp = IApiCsOkResp<IGuestsStats>;
+
 export interface ISummaryDistribution {
   totalGuests: number;
   totalGuestsSolo: number;

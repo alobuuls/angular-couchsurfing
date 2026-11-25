@@ -8,6 +8,8 @@ import { GuestsDetailComponent } from '@pages/guests/detail/guests-detail.compon
 import { GuestsEditComponent } from '@pages/guests/edit/guests-edit.component';
 import { GuestsStatsComponent } from '@pages/guests/stats/guests-stats.component';
 import { pendingChangesFormGuard } from '@core/guards/pending-changes-form.guard';
+import { GuestsStatsChartComponent } from '@pages/guests/stats/guests-stats-chart.component';
+import { STATS_NAV } from '@pages/guests/stats/guests-stats.config';
 
 const guestsRoutes: Routes = [
   {
@@ -22,6 +24,20 @@ const guestsRoutes: Routes = [
   {
     path: 'stats',
     component: GuestsStatsComponent,
+    children: [
+      // /guests/stats → /guests/stats/summary
+      { path: '', pathMatch: 'full', redirectTo: STATS_NAV[0].chart },
+
+      // One subroute per button.
+      ...STATS_NAV.map(({ chart }) => ({
+        path: chart,
+        component: GuestsStatsChartComponent,
+        data: { chart },
+      })),
+
+      // Invalid chart → first chart.
+      { path: '**', redirectTo: STATS_NAV[0].chart },
+    ],
   },
   {
     path: 'groups/:groupId/edit',

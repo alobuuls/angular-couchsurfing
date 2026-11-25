@@ -31,7 +31,7 @@ import { CONTINENTS, Continents, CountriesCodes, ICountry, LANG, Language, Regio
 import { LocationFilter } from '@type/guest.types';
 
 // Constants
-import { WORLD, REGION_NAMES, ISO_CODES, COUNTRY_REGION_INDEX, REGION_CONTINENT_INDEX, getCountryLocation } from '@config/world';
+import { WORLD, REGION_NAMES, COUNTRY_REGION_INDEX, REGION_CONTINENT_INDEX, getCountryLocation } from '@config/world';
 
 // Utils
 import { withReqState, isGroup, mapGuestTable, parseBooleanParam, parseMultiParam } from '@utils';
