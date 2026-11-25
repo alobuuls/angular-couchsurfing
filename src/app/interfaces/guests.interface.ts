@@ -106,7 +106,7 @@ export type IGuest = Omit<IGuestDetail, 'comments' | 'instagram' | 'occupation' 
 export type IGuestListItem = IGuestDetail | IGroupDetail;
 
 // Ok Data Resp
-interface IApiCsOkResp<T> {
+export interface IApiCsOkResp<T> {
   data: T;
   success: boolean;
   message: string;
