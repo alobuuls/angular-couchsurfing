@@ -439,7 +439,16 @@
       "TITLE": "No data available",
       "MESSAGE": "There is no information available for this chart."
     },
-
+    "COMMON": {
+      "GROUP_NAME": "{{name}} ({{group}})",
+      "GROUP_TYPES": {
+        "SOLO": "Solo",
+        "COUPLE": "Couple",
+        "FRIENDS": "Friends",
+        "FAMILY": "Family"
+      },
+      "RANKING": { "FIRST": "…", "SECOND": "…", "THIRD": "…", "OTHERS": "…" }
+    },
     "SUMMARY": {
       "VIEWS": {
         "TOTAL": "Total",
@@ -470,6 +479,7 @@
       }
     },
     "DEMOGRAPHICS": {
+      "TOOLTIPS": { "FIRST_LAST_WITH_GROUP": "{{type}}: {{name}} and {{group}}" },
       "VIEWS": {
         "TOTALS": "Totals",
         "OLDEST": "Oldest",
