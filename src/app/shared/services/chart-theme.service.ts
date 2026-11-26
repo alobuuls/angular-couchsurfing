@@ -1,6 +1,6 @@
-// shared/services/chart-theme.service.ts
 import { inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subject } from 'rxjs';
 import Chart from 'chart.js/auto';
 
 import { ThemeService } from '@core/services/theme.service';
@@ -10,17 +10,21 @@ import { getChartTheme } from '@utils';
 export class ChartThemeService {
   private readonly _theme = inject(ThemeService);
 
+  // Emits AFTER the defaults are updated, so charts can safely re-render.
+  private readonly appliedSubject = new Subject<void>();
+  readonly applied$ = this.appliedSubject.asObservable();
+
   constructor() {
-    this._theme.themeChanges$.pipe(takeUntilDestroyed()).subscribe(() => this.apply());
     this.apply();
+    this._theme.themeChanges$.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.apply();
+      this.appliedSubject.next();
+    });
   }
 
-  // Chart.js resolves ticks, titles and legend from `defaults.color`,
-  // and grids and borders from `defaults.borderColor`.
   private apply(): void {
     const theme = getChartTheme(this._theme.theme);
     Chart.defaults.color = theme.text;
     Chart.defaults.borderColor = theme.grid;
-    Object.values(Chart.instances).forEach(chart => chart.update('none'));
   }
 }

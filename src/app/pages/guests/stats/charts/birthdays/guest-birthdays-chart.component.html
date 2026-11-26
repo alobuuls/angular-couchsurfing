@@ -20,7 +20,7 @@
       [padding]="chartPadding"
       [cellColor]="calendarCellColor"
       [cellBorderColor]="cellBorderColor"
-      [height]="700"
+      [height]="heatmapHeight"
       [tooltip]="getCalendarTooltip"
       (itemClick)="onCalendarClick($event)"
     ></heatmap-chart>
@@ -42,6 +42,7 @@
       [yTickFormatter]="dayTickFormatter"
       [padding]="chartPadding"
       [tooltip]="getRepeatedTooltip"
+      [height]="bubbleHeight"
       (itemClick)="onRepeatedClick($event)"
     ></bubble-chart>
 
@@ -62,6 +63,7 @@
       [yTickFormatter]="dayTickFormatter"
       [padding]="chartPadding"
       [tooltip]="getUnusualTooltip"
+      [height]="lineHeight"
       (itemClick)="onUnusualClick($event)"
     ></line-chart>
   </div>

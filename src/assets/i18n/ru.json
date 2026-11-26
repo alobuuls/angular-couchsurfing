@@ -447,7 +447,15 @@
       "TITLE": "Нет доступных данных",
       "MESSAGE": "Для этой диаграммы нет доступной информации."
     },
-
+    "COMMON": {
+      "GROUP_NAME": "{{name}} ({{group}})",
+      "GROUP_TYPES": {
+        "SOLO": "В одиночку",
+        "COUPLE": "Вдвоём",
+        "FRIENDS": "С друзьями",
+        "FAMILY": "С семьёй"
+      }
+    },
     "SUMMARY": {
       "VIEWS": {
         "TOTAL": "Всего",
@@ -478,6 +486,9 @@
       }
     },
     "DEMOGRAPHICS": {
+      "TOOLTIPS": {
+        "FIRST_LAST_WITH_GROUP": "{{type}}: {{name}} и {{group}}"
+      },
       "VIEWS": {
         "TOTALS": "Итоги",
         "OLDEST": "Самые старшие",

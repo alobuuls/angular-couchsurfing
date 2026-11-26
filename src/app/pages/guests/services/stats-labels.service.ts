@@ -48,7 +48,7 @@ export class StatsLabelsService {
     ] as const;
 
     return entries.map(([key, color]) => ({
-      text: this._translate.instant(`STATS.COMMON.RANKING.${key}`),
+      text: this._translate.instant(`STATS.GEOGRAPHY.RANKING_LABELS.${key}`),
       background: color.background,
       border: color.border,
     }));

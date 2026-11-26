@@ -7,7 +7,7 @@
   />
 
   <div class="gifts-chart-ctn">
-    <bar-chart
+    <pie-chart
       *ngIf="vm"
       [title]="vm.title"
       [labels]="vm.labels"
@@ -17,6 +17,6 @@
       [showLegend]="false"
       [tooltip]="getTooltip"
       (itemClick)="onItemClick($event)"
-    ></bar-chart>
+    ></pie-chart>
   </div>
 </div>

@@ -10,7 +10,7 @@ export interface IBirthdaysHeatmapVm {
   datasetLabel: string;
   xLabels: string[];
   yLabels: string[];
-  cells: IChartHeatmapCell[];
+  cells: IBirthdaysHeatmapCell[];
   birthdayMap: Map<string, TCalendarItem>;
 }
 
@@ -28,4 +28,9 @@ export interface IBirthdaysLineVm {
   points: IChartXYPoint[];
   colors: IChartColors;
   items: TUnusualItem[];
+}
+
+export interface IBirthdaysHeatmapCell extends IChartHeatmapCell {
+  month: number;
+  day: number;
 }

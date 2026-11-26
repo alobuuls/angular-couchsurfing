@@ -447,7 +447,15 @@
       "TITLE": "사용 가능한 데이터가 없습니다",
       "MESSAGE": "이 차트에 표시할 정보가 없습니다."
     },
-
+    "COMMON": {
+      "GROUP_NAME": "{{name}} ({{group}})",
+      "GROUP_TYPES": {
+        "SOLO": "혼자",
+        "COUPLE": "커플",
+        "FRIENDS": "친구끼리",
+        "FAMILY": "가족"
+      }
+    },
     "SUMMARY": {
       "VIEWS": {
         "TOTAL": "전체",
@@ -478,6 +486,9 @@
       }
     },
     "DEMOGRAPHICS": {
+      "TOOLTIPS": {
+        "FIRST_LAST_WITH_GROUP": "{{type}}: {{name}} 및 {{group}}"
+      },
       "VIEWS": {
         "TOTALS": "전체 합계",
         "OLDEST": "최고령",

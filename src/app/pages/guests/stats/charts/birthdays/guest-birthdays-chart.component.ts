@@ -3,7 +3,7 @@ import { Component, inject, Input } from '@angular/core';
 // Interfaces
 import { IBirthdaysDistribution, IBirthdaysView } from '@interfaces/stats-interface';
 import { IChartPadding, TChartTooltipContent } from '@type/chart.types';
-import { IBirthdaysBubbleVm, IBirthdaysHeatmapVm, IBirthdaysLineVm } from '@interfaces/charts/chart-birthdate.interface';
+import { IBirthdaysBubbleVm, IBirthdaysHeatmapCell, IBirthdaysHeatmapVm, IBirthdaysLineVm } from '@interfaces/charts/chart-birthdate.interface';
 
 // Services
 import { FormatService } from '@shared/services/format.service';
@@ -52,11 +52,25 @@ export class GuestBirthdaysChartComponent extends StatsChartContainer {
     this.buildView();
   }
 
+  private readonly rowHeight = 25;
+
+  get heatmapHeight(): number {
+    const rows = this.heatmapVm?.yLabels.length ?? 31;
+    return rows * this.rowHeight + this.chartPadding.top + this.chartPadding.bottom + 60;
+  }
+
+  // Taller containers for the day/month scatter views.
+  readonly bubbleHeight = 600;
+  readonly lineHeight = 600;
+
   // FORMATTERS
   monthTickFormatter = (value: number | string): string => this.months[Number(value) - 1] ?? '';
 
   // Hides the ticks 0 and 32 of the line chart.
   dayTickFormatter = (value: number | string): string | number => (value === 0 || value === 32 ? '' : value);
+
+  // February has 29 days to support leap-day birthdays.
+  DAYS_IN_MONTH = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
   calendarCellColor = (total: number): string => {
     if (total === 0) return BIRTHDAYS_COLORS.calendar.empty;
@@ -69,10 +83,7 @@ export class GuestBirthdaysChartComponent extends StatsChartContainer {
   onCalendarClick(index: number): void {
     const cell = this.heatmapVm?.cells[index];
 
-    if (cell && cell.v > 0) {
-      const { month, day } = this.getCalendarPosition(index);
-      this.navigateToBirthday(month, day);
-    }
+    if (cell && cell.v > 0) this.navigateToBirthday(cell.month, cell.day);
   }
 
   onRepeatedClick(index: number): void {
@@ -92,13 +103,13 @@ export class GuestBirthdaysChartComponent extends StatsChartContainer {
     const vm = this.heatmapVm;
     const cell = vm?.cells[index];
 
-    if (!vm || !cell) return null;
+    // No guests on that date, no tooltip.
+    if (!vm || !cell || cell.v === 0) return null;
 
-    const { month, day } = this.getCalendarPosition(index);
-    const item = vm.birthdayMap.get(`${month}-${day}`);
+    const item = vm.birthdayMap.get(`${cell.month}-${cell.day}`);
 
     return {
-      title: this._format.formatBirthday(month, day),
+      title: this._format.formatBirthday(cell.month, cell.day),
       rows: [{ value: this.t('STATS.BIRTHDAYS.TOOLTIPS.GUESTS', { count: cell.v }) }, ...(item ? this._labels.guestRows(item.guests) : [])],
     };
   };
@@ -164,13 +175,14 @@ export class GuestBirthdaysChartComponent extends StatsChartContainer {
     // Birthday information by month and day.
     const birthdayMap = new Map(calendar.map(item => [`${item.month}-${item.day}`, item]));
 
-    // All 12 × 31 cells. The order matters: see getCalendarPosition.
-    const cells = this.months.flatMap((month, monthIndex) =>
-      days.map(day => ({
-        x: month,
-        y: day,
-        v: birthdayMap.get(`${monthIndex + 1}-${Number(day)}`)?.total ?? 0,
-      }))
+    // Only the days that exist in each month.
+    const cells: IBirthdaysHeatmapCell[] = this.months.flatMap((monthName, monthIndex) =>
+      Array.from({ length: this.DAYS_IN_MONTH[monthIndex] }, (_, dayIndex) => {
+        const month = monthIndex + 1;
+        const day = dayIndex + 1;
+
+        return { x: monthName, y: String(day), v: birthdayMap.get(`${month}-${day}`)?.total ?? 0, month, day };
+      })
     );
 
     return {

@@ -451,7 +451,15 @@
       "TITLE": "没有可用数据",
       "MESSAGE": "此图表没有可用的信息。"
     },
-
+    "COMMON": {
+      "GROUP_NAME": "{{name}} ({{group}})",
+      "GROUP_TYPES": {
+        "SOLO": "独自一人",
+        "COUPLE": "情侣",
+        "FRIENDS": "和朋友一起",
+        "FAMILY": "和家人一起"
+      }
+    },
     "SUMMARY": {
       "VIEWS": {
         "TOTAL": "总计",
@@ -482,6 +490,9 @@
       }
     },
     "DEMOGRAPHICS": {
+      "TOOLTIPS": {
+        "FIRST_LAST_WITH_GROUP": "{{type}}：{{name}}和{{group}}"
+      },
       "VIEWS": {
         "TOTALS": "总计",
         "OLDEST": "年龄最大",

@@ -446,7 +446,15 @@
       "TITLE": "אין נתונים זמינים",
       "MESSAGE": "אין מידע זמין עבור התרשים הזה."
     },
-
+    "COMMON": {
+      "GROUP_NAME": "{{name}} ({{group}})",
+      "GROUP_TYPES": {
+        "SOLO": "לבד",
+        "COUPLE": "זוג",
+        "FRIENDS": "חברים",
+        "FAMILY": "משפחה"
+      }
+    },
     "SUMMARY": {
       "VIEWS": {
         "TOTAL": "סה״כ",
@@ -477,6 +485,9 @@
       }
     },
     "DEMOGRAPHICS": {
+      "TOOLTIPS": {
+        "FIRST_LAST_WITH_GROUP": "{{type}}: {{name}} ו־{{group}}"
+      },
       "VIEWS": {
         "TOTALS": "סיכומים",
         "OLDEST": "המבוגרים ביותר",
