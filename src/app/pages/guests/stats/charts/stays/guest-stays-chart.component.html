@@ -1,109 +1,98 @@
 <div class="stays-charts">
-  <!-- Stays views -->
-  <div class="ctn-buttons">
-    <button
-      type="button"
-      *ngFor="let view of staysViews"
-      (click)="selectView(view)"
-      [class.active]="selectedView === view"
-      class="stats-nav-btns"
-    >
-      {{ 'STATS.STAYS.VIEWS.' + view.toUpperCase() | translate }}
-    </button>
-  </div>
+  <!-- Main views -->
+  <stats-view-switcher
+    [views]="staysViews"
+    [selected]="selectedView"
+    labelPrefix="STATS.STAYS.VIEWS."
+    (selectedChange)="selectView($event)"
+  />
 
-  <!-- Longest / Shortest views -->
-  <div class="ctn-buttons" *ngIf="selectedView === 'longest' || selectedView === 'shortest'">
-    <button
-      type="button"
-      *ngFor="let view of stayViews"
-      (click)="selectStayView(view)"
-      [class.active]="selectedStayView === view"
-      class="stats-nav-btns-small"
-    >
-      {{ 'STATS.STAYS.SUBVIEWS.' + view.toUpperCase() | translate }}
-    </button>
-  </div>
+  <!-- Longest / shortest subviews -->
+  <stats-view-switcher
+    *ngIf="selectedView === 'longest' || selectedView === 'shortest'"
+    size="small"
+    [views]="stayViews"
+    [labels]="{
+      overall: 'STATS.STAYS.LABELS.OVERALL',
+      solo: 'STATS.COMMON.GROUP_TYPES.SOLO',
+      couple: 'STATS.COMMON.GROUP_TYPES.COUPLE',
+      friends: 'STATS.COMMON.GROUP_TYPES.FRIENDS',
+      family: 'STATS.COMMON.GROUP_TYPES.FAMILY',
+    }"
+    [selected]="selectedStayView"
+    (selectedChange)="selectStayView($event)"
+  />
 
-  <!-- Same Dates groups -->
-  <div class="ctn-buttons" *ngIf="selectedView === 'sameDates' && stays?.sameDates?.length">
+  <!-- Same dates: one button per group -->
+  <div class="ctn-buttons group-buttons" *ngIf="selectedView === 'sameDates' && stays?.sameDates?.length">
     <button
       type="button"
       *ngFor="let group of stays.sameDates; let i = index"
-      (click)="selectSameDatesGroup(i)"
-      [class.active]="selectedSameDatesGroup === i"
       class="stats-nav-btns-small"
+      [class.active]="selectedSameDatesGroup === i"
+      (click)="selectSameDatesGroup(i)"
     >
-      {{ 'STATS.STAYS.GROUP' | translate }} {{ i + 1 }}
+      {{ i + 1 }}
     </button>
   </div>
 
-  <!-- Stays chart -->
-  <div class="stays-chart-row">
-    <div class="stays-chart-ctn">
-      <!-- Longest / Shortest -->
-      <polar-area-chart
-        *ngIf="polarVm as polar"
-        [maintainAspectRatio]="false"
-        [title]="polar.title"
-        [datasetLabel]="polar.title"
-        [labels]="polar.labels"
-        [values]="polar.values"
-        [colors]="polar.colors"
-        [tooltip]="getPolarTooltip"
-        (itemClick)="onPolarClick($event)"
-      ></polar-area-chart>
+  <div class="stays-chart-ctn">
+    <!-- Longest / shortest -->
+    <polar-area-chart
+      *ngIf="polarVm as vm"
+      [title]="vm.title"
+      [labels]="vm.labels"
+      [values]="vm.values"
+      [colors]="vm.colors"
+      [tooltip]="getPolarTooltip"
+      (itemClick)="onPolarClick($event)"
+    ></polar-area-chart>
 
-      <!-- Max people together -->
-      <bar-chart
-        *ngIf="maxPeopleVm as max"
-        [horizontal]="false"
-        [maintainAspectRatio]="false"
-        [showLegend]="false"
-        [title]="max.title"
-        [datasetLabel]="max.title"
-        [labels]="max.labels"
-        [values]="max.values"
-        [colors]="max.colors"
-        [valueAxisTitle]="max.valueAxisTitle"
-        [categoryAxisTitle]="max.categoryAxisTitle"
-        [valueStep]="1"
-        [valuePrecision]="0"
-        [tooltip]="getMaxPeopleTooltip"
-        (itemClick)="onMaxPeopleClick($event)"
-      ></bar-chart>
+    <!-- Maximum guests together -->
+    <bar-chart
+      *ngIf="maxPeopleVm as vm"
+      [title]="vm.title"
+      [labels]="vm.labels"
+      [values]="vm.values"
+      [colors]="vm.colors"
+      [horizontal]="false"
+      [showLegend]="false"
+      [valueMin]="0"
+      [valuePrecision]="0"
+      [valueAxisTitle]="vm.valueAxisTitle"
+      [categoryAxisTitle]="vm.categoryAxisTitle"
+      [tooltip]="getMaxPeopleTooltip"
+      (itemClick)="onMaxPeopleClick($event)"
+    ></bar-chart>
 
-      <!-- Same arrival -->
-      <bar-chart
-        *ngIf="arrivalVm as arrival"
-        [maintainAspectRatio]="false"
-        [title]="arrival.title"
-        [datasetLabel]="arrival.datasetLabel"
-        [labels]="arrival.labels"
-        [values]="arrival.values"
-        [colors]="arrival.colors"
-        [legend]="arrival.legend"
-        [valueAxisTitle]="arrival.valueAxisTitle"
-        [categoryAxisTitle]="arrival.categoryAxisTitle"
-        [valueStep]="1"
-        [valuePrecision]="0"
-        [tooltip]="getArrivalTooltip"
-        (itemClick)="onArrivalClick($event)"
-      ></bar-chart>
+    <!-- Same arrival -->
+    <bar-chart
+      *ngIf="arrivalVm as vm"
+      [title]="vm.title"
+      [datasetLabel]="vm.datasetLabel"
+      [labels]="vm.labels"
+      [values]="vm.values"
+      [colors]="vm.colors"
+      [legend]="vm.legend"
+      [horizontal]="false"
+      [valueMin]="0"
+      [valuePrecision]="0"
+      [valueAxisTitle]="vm.valueAxisTitle"
+      [categoryAxisTitle]="vm.categoryAxisTitle"
+      [tooltip]="getArrivalTooltip"
+      (itemClick)="onArrivalClick($event)"
+    ></bar-chart>
 
-      <!-- Same dates -->
-      <network-chart
-        *ngIf="networkVm as network"
-        [maintainAspectRatio]="false"
-        [title]="network.title"
-        [labels]="network.labels"
-        [edges]="network.edges"
-        [nodeColors]="network.colors"
-        [legend]="network.legend"
-        [pointRadius]="10"
-        [tooltip]="getNetworkTooltip"
-        (itemClick)="onNetworkClick($event)"
-      ></network-chart>
-    </div>
+    <!-- Same dates -->
+    <network-chart
+      *ngIf="networkVm as vm"
+      [title]="vm.title"
+      [labels]="vm.labels"
+      [edges]="vm.edges"
+      [nodeColors]="vm.colors"
+      [legend]="vm.legend"
+      [tooltip]="getNetworkTooltip"
+      (itemClick)="onNetworkClick($event)"
+    ></network-chart>
   </div>
 </div>

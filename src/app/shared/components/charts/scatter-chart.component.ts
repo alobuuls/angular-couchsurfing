@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ChartConfiguration, ScatterDataPoint } from 'chart.js/auto';
 import 'chartjs-adapter-date-fns';
 import type { Locale } from 'date-fns';
@@ -8,6 +8,7 @@ import { IChartPoint, IChartScatterSeries } from '@type/chart.types';
 
 @Component({
   selector: 'scatter-chart',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<canvas #canvas></canvas>`,
 })
 export class ScatterChartComponent extends BaseChartDirective {

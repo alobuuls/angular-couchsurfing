@@ -9,7 +9,9 @@ import { IState, ICity } from '@interfaces/guest-form.interface';
 // Config
 import { WORLD } from '@config/world';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class CityService {
   private endpoint: string = environment.endpointApiCities;
   private apiKeys: string[] = environment.apiKeysCities.filter((key): key is string => !!key);

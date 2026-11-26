@@ -4,9 +4,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
 
 // Services
-import { GuestsService } from '@services/guests.service';
+import { GuestsService } from '@pages/guests/services/guests.service';
 import { AlertsService } from '@core/services/alerts.service';
-import { FormDraftService } from '@services/form-draft.service';
+import { FormDraftService } from '@shared/services/form-draft.service';
 
 // Component
 import { GuestsFormComponent } from '@pages/guests/form/guest-visit/guest-visit-form.component';

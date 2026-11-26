@@ -23,7 +23,6 @@
     "paths": {
       "@env/*": ["src/environments/*"],
       "@config/*": ["src/app/config/*"],
-      "@services/*": ["src/app/services/*"],
       "@interceptors/*": ["src/app/interceptors/*"],
       "@core/*": ["src/app/core/*"],
       "@main/*": ["src/app/main/*"],

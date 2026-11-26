@@ -3,7 +3,7 @@ import { CanDeactivateFn } from '@angular/router';
 
 // Services
 import { AlertsService } from '@core/services/alerts.service';
-import { FormDraftService } from '@services/form-draft.service';
+import { FormDraftService } from '@shared/services/form-draft.service';
 
 export interface CanComponentDeactivate {
   hasPendingChanges: () => boolean;

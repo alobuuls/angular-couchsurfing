@@ -1,31 +1,22 @@
 <div class="gifts-charts">
-  <!-- Gifts views -->
-  <div class="ctn-buttons">
-    <button
-      type="button"
-      *ngFor="let view of giftsViews"
-      (click)="selectView(view)"
-      [class.active]="selectedView === view"
-      class="stats-nav-btns"
-    >
-      {{ giftsViewLabels[view] | translate }}
-    </button>
-  </div>
+  <stats-view-switcher
+    [views]="giftsViews"
+    [selected]="selectedView"
+    labelPrefix="STATS.GIFTS.VIEWS."
+    (selectedChange)="selectView($event)"
+  />
 
-  <!-- Gifts chart -->
-  <div class="gifts-chart-row">
-    <div class="gifts-chart-ctn">
-      <polar-area-chart
-        *ngIf="vm as chart"
-        [title]="chart.title"
-        [datasetLabel]="chart.title"
-        [labels]="chart.labels"
-        [values]="chart.values"
-        [colors]="chart.colors"
-        [height]="chart.height"
-        [tooltip]="getTooltip"
-        (itemClick)="onItemClick($event)"
-      />
-    </div>
+  <div class="gifts-chart-ctn">
+    <bar-chart
+      *ngIf="vm"
+      [title]="vm.title"
+      [labels]="vm.labels"
+      [values]="vm.values"
+      [colors]="vm.colors"
+      [height]="vm.height"
+      [showLegend]="false"
+      [tooltip]="getTooltip"
+      (itemClick)="onItemClick($event)"
+    ></bar-chart>
   </div>
 </div>

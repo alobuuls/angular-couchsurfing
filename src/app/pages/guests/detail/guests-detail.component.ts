@@ -2,13 +2,13 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // Services
-import { GuestsService } from '@services/guests.service';
-import { GeonameService } from '@services/geoname.service';
+import { GuestsService } from '@pages/guests/services/guests.service';
+import { GeonameService } from '@shared/services/geoname.service';
 
 // Interfaces
 import { IGroupMember, IGuestDetail } from '@interfaces/guests.interface';
 import { IErrResp, ReqStatus } from '@interfaces/data-structure-api';
-import { FormatService } from '@services/format.service';
+import { FormatService } from '@shared/services/format.service';
 import { Continents, Regions } from '@type/word.types';
 
 // Utils

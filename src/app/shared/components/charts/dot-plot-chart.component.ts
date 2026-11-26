@@ -1,10 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ChartConfiguration } from 'chart.js/auto';
 
 import { BaseChartDirective } from '@shared/directives/charts/base-chart.directive';
 
 @Component({
   selector: 'dot-plot-chart',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<canvas #canvas></canvas>`,
 })
 export class DotPlotChartComponent extends BaseChartDirective {

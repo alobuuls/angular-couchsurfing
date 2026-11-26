@@ -1,69 +1,52 @@
 <div class="summary-charts">
   <!-- Summary views -->
-  <div class="ctn-buttons">
+  <stats-view-switcher
+    [views]="summaryViews"
+    [selected]="selectedView"
+    labelPrefix="STATS.SUMMARY.VIEWS."
+    (selectedChange)="selectView($event)"
+  />
+
+  <!-- Total: summary cards -->
+  <div class="summary-cards" *ngIf="selectedView === 'total'">
     <button
       type="button"
-      *ngFor="let view of summaryViews"
-      (click)="selectView(view)"
-      [class.active]="selectedView === view"
-      class="stats-nav-btns"
+      class="summary-card"
+      *ngFor="let card of cards; trackBy: trackByKey"
+      (click)="navigateToCard(card)"
     >
-      {{ 'STATS.SUMMARY.VIEWS.' + view.toUpperCase() | translate }}
+      <mat-icon class="material-symbols-outlined">{{ card.icon }}</mat-icon>
+      <span class="summary-card-value">{{ card.value }}</span>
+      <span class="summary-card-label">{{ 'STATS.SUMMARY.CARDS.' + card.key | translate }}</span>
     </button>
   </div>
 
-  <!-- Total -->
-  <div *ngIf="selectedView === 'total'">
-    <div class="summary-cards">
-      <div class="summary-card" *ngFor="let card of cards; trackBy: trackById">
-        <button
-          mat-icon-button
-          [attr.aria-label]="getCardTranslationKey(card.label) | translate"
-          [matTooltip]="
-            ('STATS.SUMMARY.CARDS.VIEW' | translate) + ' ' + (getCardTranslationKey(card.label) | translate)
-          "
-          class="icon-summary-card"
-          (click)="navigateToCard(card.label)"
-        >
-          <mat-icon class="material-symbols-outlined">
-            {{ card.icon }}
-          </mat-icon>
-        </button>
-
-        <div class="ctn-summary-card">
-          <span class="value-summary-card">
-            {{ card.value }}
-          </span>
-
-          <span class="label-summary-card">
-            {{ getCardTranslationKey(card.label) | translate }}
-          </span>
-        </div>
-      </div>
-    </div>
+  <!-- Nights / rating: radar chart -->
+  <div class="summary-chart-ctn" *ngIf="radarVm as vm">
+    <radar-chart
+      [datasetLabel]="vm.datasetLabel"
+      [labels]="vm.labels"
+      [values]="vm.values"
+      [min]="0"
+      [max]="vm.max"
+      [step]="1"
+      [colors]="vm.colors"
+      [pointColors]="vm.pointColors"
+      [tooltip]="getRadarTooltip"
+    ></radar-chart>
   </div>
 
-  <!-- Charts -->
-  <radar-chart
-    *ngIf="radarVm as vm"
-    [labels]="vm.labels"
-    [values]="vm.values"
-    [datasetLabel]="vm.datasetLabel"
-    [colors]="vm.colors"
-    [pointColors]="vm.pointColors"
-    [max]="vm.max"
-    [showLegend]="false"
-    [tooltip]="getRadarTooltip"
-  />
-
-  <pie-chart
-    *ngIf="doughnutVm as vm"
-    [labels]="vm.labels"
-    [values]="vm.values"
-    [datasetLabel]="vm.datasetLabel"
-    [colors]="vm.colors"
-    variant="doughnut"
-    [tooltip]="getDoughnutTooltip"
-    (itemClick)="onGiftClick($event)"
-  />
+  <!-- Gifts: doughnut chart -->
+  <div class="summary-chart-ctn" *ngIf="doughnutVm as vm">
+    <pie-chart
+      variant="doughnut"
+      [padding]="20"
+      [datasetLabel]="vm.datasetLabel"
+      [labels]="vm.labels"
+      [values]="vm.values"
+      [colors]="vm.colors"
+      [tooltip]="getDoughnutTooltip"
+      (itemClick)="onGiftClick($event)"
+    ></pie-chart>
+  </div>
 </div>

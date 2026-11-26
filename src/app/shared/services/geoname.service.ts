@@ -4,7 +4,9 @@ import { Continents, Regions } from '@type/word.types';
 import { REGION_NAMES, CONTINENT_NAMES } from '@config/world';
 import { LanguageService } from '@core/services/language.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class GeonameService {
   private readonly _language = inject(LanguageService);
 

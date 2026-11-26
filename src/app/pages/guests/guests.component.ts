@@ -11,15 +11,15 @@ import { PageEvent } from '@angular/material/paginator';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 // Services
-import { GuestsService } from '@services/guests.service';
+import { GuestsService } from '@pages/guests/services/guests.service';
 import { DeleteConfirmationService } from '@core/services/delete-confirmation.service';
 import { ErrorHandlerService } from '@core/services/err-handler.service';
 import { AlertsService } from '@core/services/alerts.service';
-import { GuestSortService } from '@services/guest-sort.service';
-import { GeonameService } from '@services/geoname.service';
-import { FormatService } from '@services/format.service';
-import { StatsService } from '@services/stats.service';
-import { CountrySearchService } from '@services/country-search.service';
+import { GuestSortService } from '@shared/services/guest-sort.service';
+import { GeonameService } from '@shared/services/geoname.service';
+import { FormatService } from '@shared/services/format.service';
+import { StatsService } from '@shared/services/stats.service';
+import { CountrySearchService } from '@shared/services/country-search.service';
 
 // Interfaces
 import { IGuestListItem, IQueryParamsGuests, IYearlyStat } from '@interfaces/guests.interface';
@@ -638,8 +638,8 @@ export class GuestsComponent implements OnInit {
       to: str('to'),
 
       rating: num('rating'),
-      day: num('day'),
-      birthDate: num('birthDate'),
+      day: str('day'),
+      birthDate: str('birthDate'),
 
       gift: parseBooleanParam(params['gift']),
       gay: parseBooleanParam(params['gay']),

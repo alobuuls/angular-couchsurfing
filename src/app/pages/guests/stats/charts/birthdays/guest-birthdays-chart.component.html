@@ -1,77 +1,68 @@
 <div class="birthdays-charts">
-  <!-- Birthdays views -->
-  <div class="ctn-buttons">
-    <button
-      type="button"
-      *ngFor="let view of birthdaysViews"
-      (click)="selectView(view)"
-      [class.active]="selectedView === view"
-      class="stats-nav-btns"
-    >
-      {{ 'STATS.BIRTHDAYS.VIEWS.' + view.toUpperCase() | translate }}
-    </button>
-  </div>
+  <stats-view-switcher
+    [views]="birthdaysViews"
+    [selected]="selectedView"
+    labelPrefix="STATS.BIRTHDAYS.VIEWS."
+    (selectedChange)="selectView($event)"
+  />
 
-  <!-- Birthdays chart -->
-  <div class="birthdays-chart-row">
-    <div class="birthdays-chart-ctn">
-      <!-- Calendar -->
-      <heatmap-chart
-        *ngIf="heatmapVm as heatmap"
-        [maintainAspectRatio]="false"
-        [title]="heatmap.title"
-        [datasetLabel]="heatmap.datasetLabel"
-        [cells]="heatmap.cells"
-        [xLabels]="heatmap.xLabels"
-        [yLabels]="heatmap.yLabels"
-        [xTitle]="monthAxisTitle"
-        [yTitle]="dayAxisTitle"
-        [padding]="chartPadding"
-        [cellColor]="calendarCellColor"
-        [cellBorderColor]="'transparent'"
-        [tooltip]="getCalendarTooltip"
-        (itemClick)="onCalendarClick($event)"
-      />
+  <div class="birthdays-chart-ctn">
+    <!-- Calendar -->
+    <heatmap-chart
+      *ngIf="heatmapVm as vm"
+      [title]="vm.title"
+      [datasetLabel]="vm.datasetLabel"
+      [cells]="vm.cells"
+      [xLabels]="vm.xLabels"
+      [yLabels]="vm.yLabels"
+      [xTitle]="monthAxisTitle"
+      [yTitle]="dayAxisTitle"
+      [padding]="chartPadding"
+      [cellColor]="calendarCellColor"
+      [cellBorderColor]="cellBorderColor"
+      [height]="700"
+      [tooltip]="getCalendarTooltip"
+      (itemClick)="onCalendarClick($event)"
+    ></heatmap-chart>
 
-      <!-- Repeated -->
-      <bubble-chart
-        *ngIf="bubbleVm as bubble"
-        [maintainAspectRatio]="false"
-        [title]="bubble.title"
-        [datasetLabel]="bubble.datasetLabel"
-        [points]="bubble.points"
-        [colors]="bubble.colors"
-        [xTitle]="monthAxisTitle"
-        [yTitle]="dayAxisTitle"
-        [xMin]="0"
-        [xMax]="13"
-        [yMin]="1"
-        [yMax]="31"
-        [xTickFormatter]="monthTickFormatter"
-        [tooltip]="getRepeatedTooltip"
-        (itemClick)="onRepeatedClick($event)"
-      />
+    <!-- Repeated -->
+    <bubble-chart
+      *ngIf="bubbleVm as vm"
+      [title]="vm.title"
+      [datasetLabel]="vm.datasetLabel"
+      [points]="vm.points"
+      [colors]="vm.colors"
+      [xTitle]="monthAxisTitle"
+      [yTitle]="dayAxisTitle"
+      [xMin]="0"
+      [xMax]="13"
+      [yMin]="0"
+      [yMax]="32"
+      [xTickFormatter]="monthTickFormatter"
+      [yTickFormatter]="dayTickFormatter"
+      [padding]="chartPadding"
+      [tooltip]="getRepeatedTooltip"
+      (itemClick)="onRepeatedClick($event)"
+    ></bubble-chart>
 
-      <!-- Unusual -->
-      <line-chart
-        *ngIf="lineVm as line"
-        [maintainAspectRatio]="false"
-        [title]="line.title"
-        [datasetLabel]="line.datasetLabel"
-        [points]="line.points"
-        [colors]="line.colors"
-        [padding]="chartPadding"
-        [xTitle]="monthAxisTitle"
-        [yTitle]="dayAxisTitle"
-        [xMin]="0"
-        [xMax]="13"
-        [yMin]="0"
-        [yMax]="32"
-        [xTickFormatter]="monthTickFormatter"
-        [yTickFormatter]="dayTickFormatter"
-        [tooltip]="getUnusualTooltip"
-        (itemClick)="onUnusualClick($event)"
-      />
-    </div>
+    <!-- Unusual -->
+    <line-chart
+      *ngIf="lineVm as vm"
+      [title]="vm.title"
+      [datasetLabel]="vm.datasetLabel"
+      [points]="vm.points"
+      [colors]="vm.colors"
+      [xTitle]="monthAxisTitle"
+      [yTitle]="dayAxisTitle"
+      [xMin]="0"
+      [xMax]="13"
+      [yMin]="0"
+      [yMax]="32"
+      [xTickFormatter]="monthTickFormatter"
+      [yTickFormatter]="dayTickFormatter"
+      [padding]="chartPadding"
+      [tooltip]="getUnusualTooltip"
+      (itemClick)="onUnusualClick($event)"
+    ></line-chart>
   </div>
 </div>

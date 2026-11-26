@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ChartConfiguration } from 'chart.js/auto';
 
 import { BaseChartDirective } from '@shared/directives/charts/base-chart.directive';
@@ -6,6 +6,7 @@ import { IChartBarSeries } from '@type/chart.types';
 
 @Component({
   selector: 'bar-chart',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<canvas #canvas></canvas>`,
 })
 export class BarChartComponent extends BaseChartDirective {

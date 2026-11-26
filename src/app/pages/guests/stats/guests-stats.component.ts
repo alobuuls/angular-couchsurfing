@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 
 // Services
-import { StatsService } from '@services/stats.service';
+import { StatsService } from '@shared/services/stats.service';
 import { GuestsStatsStore } from './guests-stats.store';
 
 // Config

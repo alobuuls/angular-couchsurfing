@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 
 // Services
-import { FormatService } from '@services/format.service';
+import { FormatService } from '@shared/services/format.service';
 
 // Types
 import { ICountry, CountriesCodes } from '@type/word.types';
@@ -13,7 +13,9 @@ export type SearchableCountry = ICountry & {
   countryCode: CountriesCodes;
 };
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class CountrySearchService {
   private readonly format = inject(FormatService);
 

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import Chart, { ChartConfiguration } from 'chart.js/auto';
 import { MatrixController, MatrixElement } from 'chartjs-chart-matrix';
 
@@ -10,6 +10,7 @@ Chart.register(MatrixController, MatrixElement);
 
 @Component({
   selector: 'heatmap-chart',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<canvas #canvas></canvas>`,
 })
 export class HeatmapChartComponent extends BaseChartDirective {
@@ -22,7 +23,6 @@ export class HeatmapChartComponent extends BaseChartDirective {
   @Input() padding: number | IChartPadding = 0;
   @Input() cellBorderColor = 'transparent';
   @Input() cellGap = 2;
-
   // Returns the color of a cell based on its value.
   @Input() cellColor: (value: number) => string = () => 'transparent';
 

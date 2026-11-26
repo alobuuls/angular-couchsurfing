@@ -1,57 +1,21 @@
 <div class="geography-charts">
   <!-- Geography views -->
-  <div class="ctn-buttons">
-    <button
-      type="button"
-      *ngFor="let view of geographyViews"
-      (click)="selectView(view)"
-      [class.active]="selectedView === view"
-      class="stats-nav-btns"
-    >
-      {{ geographyViewLabels[view] | translate }}
-    </button>
-  </div>
+  <stats-view-switcher
+    [views]="geographyViews"
+    [labels]="geographyViewLabels"
+    [selected]="selectedView"
+    (selectedChange)="selectView($event)"
+  />
 
-  <!-- Ranking views -->
-  <div class="ctn-ranking-buttons">
-    <!-- General rankings -->
-    <ng-container *ngIf="selectedView !== 'continents' && selectedView !== 'livingIn' && selectedView !== 'hometown'">
-      <button
-        type="button"
-        *ngFor="let ranking of rankingViews"
-        (click)="selectRanking(ranking)"
-        [class.active]="selectedRanking === ranking"
-        class="stats-nav-btns-small"
-      >
-        {{
-          ranking === 'all'
-            ? ('STATS.GEOGRAPHY.RANKINGS.ALL' | translate)
-            : ranking === 'top'
-              ? ('STATS.GEOGRAPHY.RANKINGS.TOP' | translate)
-              : ('STATS.GEOGRAPHY.RANKINGS.BOTTOM' | translate)
-        }}
-      </button>
-    </ng-container>
-
-    <!-- Country-specific rankings -->
-    <ng-container *ngIf="selectedView === 'countries'">
-      <button
-        type="button"
-        *ngFor="let ranking of countryRankingViews"
-        (click)="selectRanking(ranking)"
-        [class.active]="selectedRanking === ranking"
-        class="stats-nav-btns-small"
-      >
-        {{
-          ranking === 'topFemale'
-            ? ('STATS.GEOGRAPHY.RANKINGS.TOP_FEMALE' | translate)
-            : ranking === 'topMale'
-              ? ('STATS.GEOGRAPHY.RANKINGS.TOP_MALE' | translate)
-              : ('STATS.GEOGRAPHY.RANKINGS.MOST_CONSECUTIVE' | translate)
-        }}
-      </button>
-    </ng-container>
-  </div>
+  <!-- Ranking views: each geography view has its own buttons -->
+  <stats-view-switcher
+    size="small"
+    containerClass="ctn-buttons"
+    [views]="rankingButtons[selectedView] ?? []"
+    [labels]="rankingLabels"
+    [selected]="selectedRanking"
+    (selectedChange)="selectRanking($event)"
+  />
 
   <!-- Geography chart -->
   <div class="geography-chart-row">
@@ -67,7 +31,7 @@
           [colors]="vm.colors"
           [legend]="vm.legend"
           (itemClick)="onChartClick($event)"
-        />
+        ></pie-chart>
 
         <bar-chart
           *ngSwitchCase="'bar'"
@@ -80,7 +44,7 @@
           [height]="vm.height"
           [valueAxisTitle]="'STATS.GEOGRAPHY.LABELS.NUMBER_OF_GUESTS' | translate"
           (itemClick)="onChartClick($event)"
-        />
+        ></bar-chart>
       </ng-container>
 
       <!-- Most consecutive -->
@@ -98,7 +62,7 @@
         [xTickFormatter]="consecutiveTickFormatter"
         [tooltip]="consecutiveTooltip"
         (itemClick)="onConsecutiveClick($event)"
-      />
+      ></scatter-chart>
     </div>
 
     <!-- Country labels with flags -->

@@ -8,8 +8,8 @@ import { IGuestTableRow } from '@interfaces/data-structure-api';
 import { Continents } from '@type/word.types';
 
 // Services
-import { FormatService } from '@services/format.service';
-import { GeonameService } from '@services/geoname.service';
+import { FormatService } from '@shared/services/format.service';
+import { GeonameService } from '@shared/services/geoname.service';
 
 // Helpers
 import { isGroup } from '@utils';
