@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 
 // Services
-import { StatsService } from '@services/stats.service';
+import { StatsService } from '@shared/services/stats.service';
 import { ErrorHandlerService } from '@core/services/err-handler.service';
 
 // Interfaces

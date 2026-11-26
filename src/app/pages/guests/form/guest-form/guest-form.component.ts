@@ -14,9 +14,9 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 // Services
 import { AlertsService } from '@core/services/alerts.service';
-import { CityService } from '@services/city.service';
-import { FormatService } from '@services/format.service';
-import { CountrySearchService } from '@services/country-search.service';
+import { CityService } from '@shared/services/city.service';
+import { FormatService } from '@shared/services/format.service';
+import { CountrySearchService } from '@shared/services/country-search.service';
 
 // Interfaces
 import { IBodyGuest, IGuestDetail, IGuestFormPayload } from '@interfaces/guests.interface';
@@ -33,7 +33,6 @@ import { getCountryLocation, WORLD } from '@config/world';
 import { OCCUPATIONS_BY_AREA, OCCUPATION_AREA_TRANSLATIONS, OCCUPATION_TRANSLATIONS } from '@config/occupations/occupations';
 
 @Component({
-  providers: [CityService],
   selector: 'app-guest-form',
   templateUrl: './guest-form.component.html',
   styleUrls: ['./guest-form.component.css'],

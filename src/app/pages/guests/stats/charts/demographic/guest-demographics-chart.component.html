@@ -1,152 +1,126 @@
 <div class="demographics-charts">
-  <!-- Demographics views -->
-  <div class="ctn-buttons">
-    <button
-      type="button"
-      *ngFor="let view of demographicsViews"
-      (click)="selectView(view)"
-      [class.active]="selectedView === view"
-      class="stats-nav-btns"
-    >
-      {{ demographicsViewLabels[view] | translate }}
-    </button>
-  </div>
+  <!-- Main views -->
+  <stats-view-switcher
+    [views]="demographicsViews"
+    [labels]="demographicsViewLabels"
+    [selected]="selectedView"
+    (selectedChange)="selectView($event)"
+  />
 
-  <!-- Totals views -->
-  <div class="ctn-buttons" *ngIf="selectedView === 'totals'">
-    <button
-      type="button"
-      *ngFor="let view of demographicTotalsViews"
-      (click)="selectTotalsView(view)"
-      [class.active]="selectedTotalsView === view"
-      class="stats-nav-btns-small"
-    >
-      {{ getSubViewLabel(view) }}
-    </button>
-  </div>
+  <!-- Totals subviews -->
+  <stats-view-switcher
+    *ngIf="selectedView === 'totals'"
+    size="small"
+    [views]="demographicTotalsViews"
+    [selected]="selectedTotalsView"
+    labelPrefix="STATS.DEMOGRAPHICS.SUBVIEWS."
+    (selectedChange)="selectTotalsView($event)"
+  />
 
-  <!-- Age-based views -->
-  <div class="ctn-buttons" *ngIf="selectedView === 'oldest' || selectedView === 'youngest'">
-    <button
-      type="button"
-      *ngFor="let view of demographicAgeViews"
-      (click)="selectAgeView(view)"
-      [class.active]="selectedAgeView === view"
-      class="stats-nav-btns-small"
-    >
-      {{ getSubViewLabel(view) }}
-    </button>
-  </div>
+  <!-- Oldest / youngest subviews -->
+  <stats-view-switcher
+    *ngIf="selectedView === 'oldest' || selectedView === 'youngest'"
+    size="small"
+    [views]="demographicAgeViews"
+    [selected]="selectedAgeView"
+    labelPrefix="STATS.DEMOGRAPHICS.SUBVIEWS."
+    (selectedChange)="selectAgeView($event)"
+  />
 
-  <!-- First/Last views -->
-  <div class="ctn-buttons" *ngIf="selectedView === 'firstLast'">
-    <button
-      type="button"
-      *ngFor="let view of demographicFirstLastViews"
-      (click)="selectFirstLastView(view)"
-      [class.active]="selectedFirstLastView === view"
-      class="stats-nav-btns-small"
-    >
-      {{ getSubViewLabel(view) }}
-    </button>
-  </div>
+  <!-- First / last subviews -->
+  <stats-view-switcher
+    *ngIf="selectedView === 'firstLast'"
+    size="small"
+    [views]="demographicFirstLastViews"
+    [selected]="selectedFirstLastView"
+    labelPrefix="STATS.DEMOGRAPHICS.SUBVIEWS."
+    (selectedChange)="selectFirstLastView($event)"
+  />
 
-  <!-- Chart -->
-  <div class="demographics-chart-row">
-    <div class="demographics-chart-ctn">
-      <!-- Totals · overall -->
-      <pie-chart
-        *ngIf="pieVm as pie"
-        [maintainAspectRatio]="false"
-        variant="doughnut"
-        [datasetLabel]="pie.datasetLabel"
-        [labels]="pie.labels"
-        [values]="pie.values"
-        [colors]="pie.colors"
-        (itemClick)="onPieClick($event)"
-      />
+  <div class="demographics-chart-ctn">
+    <!-- Totals: overall -->
+    <pie-chart
+      *ngIf="pieVm as vm"
+      [datasetLabel]="vm.datasetLabel"
+      [labels]="vm.labels"
+      [values]="vm.values"
+      [colors]="vm.colors"
+      (itemClick)="onPieClick($event)"
+    ></pie-chart>
 
-      <!-- Totals · groups -->
-      <bar-chart
-        *ngIf="groupsBarVm as bar"
-        [maintainAspectRatio]="false"
-        [horizontal]="true"
-        [stacked]="true"
-        [labels]="bar.labels"
-        [series]="bar.series"
-        (elementClick)="onGroupsBarClick($event)"
-      />
+    <!-- Totals: groups -->
+    <bar-chart
+      *ngIf="groupsBarVm as vm"
+      [labels]="vm.labels"
+      [series]="vm.series"
+      [horizontal]="false"
+      [valuePrecision]="0"
+      [categoryAxisTitle]="groupTitle"
+      (elementClick)="onGroupsBarClick($event)"
+    ></bar-chart>
 
-      <!-- Oldest / Youngest · overall -->
-      <bar-chart
-        *ngIf="rankingBarVm as bar"
-        [maintainAspectRatio]="false"
-        [horizontal]="true"
-        [datasetLabel]="bar.datasetLabel"
-        [labels]="bar.labels"
-        [values]="bar.values"
-        [colors]="bar.colors"
-        [legend]="bar.legend"
-        [valueAxisTitle]="ageTitle"
-        [tooltip]="getRankingTooltip"
-        (itemClick)="onRankingClick($event)"
-      />
+    <!-- Oldest / youngest: overall -->
+    <bar-chart
+      *ngIf="rankingBarVm as vm"
+      [datasetLabel]="vm.datasetLabel"
+      [labels]="vm.labels"
+      [values]="vm.values"
+      [colors]="vm.colors"
+      [legend]="vm.legend"
+      [valueAxisTitle]="ageTitle"
+      [tooltip]="getRankingTooltip"
+      (itemClick)="onRankingClick($event)"
+    ></bar-chart>
 
-      <!-- Oldest / Youngest · solo -->
-      <scatter-chart
-        *ngIf="scatterVm as scatter"
-        [maintainAspectRatio]="false"
-        [datasetLabel]="scatter.datasetLabel"
-        [points]="scatter.points"
-        [colors]="scatter.colors"
-        [legend]="scatter.legend"
-        xType="time"
-        yType="linear"
-        [dateLocale]="dateLocale"
-        [xTitle]="visitDateTitle"
-        [yTitle]="ageTitle"
-        [yMin]="0"
-        [pointRadius]="6"
-        [pointHoverRadius]="9"
-        [tooltip]="getScatterTooltip"
-        (itemClick)="onScatterClick($event)"
-      />
+    <!-- Oldest / youngest: solo -->
+    <scatter-chart
+      *ngIf="scatterVm as vm"
+      xType="time"
+      yType="linear"
+      [dateLocale]="dateLocale"
+      [datasetLabel]="vm.datasetLabel"
+      [points]="vm.points"
+      [colors]="vm.colors"
+      [legend]="vm.legend"
+      [xTitle]="visitDateTitle"
+      [yTitle]="ageTitle"
+      [pointRadius]="8"
+      [pointHoverRadius]="11"
+      [tooltip]="getScatterTooltip"
+      (itemClick)="onScatterClick($event)"
+    ></scatter-chart>
 
-      <!-- Oldest / Youngest · groups -->
-      <bubble-chart
-        *ngIf="bubbleVm as bubble"
-        [maintainAspectRatio]="false"
-        [datasetLabel]="bubble.datasetLabel"
-        [points]="bubble.points"
-        [colors]="bubble.colors"
-        [legend]="bubble.legend"
-        [xTitle]="ageTitle"
-        [yTitle]="groupTitle"
-        [xMin]="0"
-        [yMin]="0.5"
-        [yMax]="3.5"
-        [yTickFormatter]="groupTickFormatter"
-        [tooltip]="getBubbleTooltip"
-        (itemClick)="onBubbleClick($event)"
-      />
+    <!-- Oldest / youngest: groups -->
+    <bubble-chart
+      *ngIf="bubbleVm as vm"
+      [datasetLabel]="vm.datasetLabel"
+      [points]="vm.points"
+      [colors]="vm.colors"
+      [legend]="vm.legend"
+      [xTitle]="ageTitle"
+      [yTitle]="groupTitle"
+      [xStep]="5"
+      [yMin]="0"
+      [yMax]="4"
+      [yTickFormatter]="groupTickFormatter"
+      [padding]="20"
+      [tooltip]="getBubbleTooltip"
+      (itemClick)="onBubbleClick($event)"
+    ></bubble-chart>
 
-      <!-- First / Last -->
-      <scatter-chart
-        *ngIf="firstLastVm as firstLast"
-        [maintainAspectRatio]="false"
-        [series]="firstLast.series"
-        [legend]="firstLast.legend"
-        xType="time"
-        yType="category"
-        [yLabels]="firstLast.yLabels"
-        [dateLocale]="dateLocale"
-        [xTitle]="visitDateTitle"
-        [yTitle]="firstLast.yTitle"
-        [pointRadius]="8"
-        [pointHoverRadius]="11"
-        [tooltip]="getFirstLastTooltip"
-        (elementClick)="onFirstLastClick($event)"
-      />
-    </div>
+    <!-- First / last -->
+    <scatter-chart
+      *ngIf="firstLastVm as vm"
+      xType="time"
+      yType="category"
+      [dateLocale]="dateLocale"
+      [series]="vm.series"
+      [yLabels]="vm.yLabels"
+      [legend]="vm.legend"
+      [xTitle]="visitDateTitle"
+      [yTitle]="vm.yTitle"
+      [tooltip]="getFirstLastTooltip"
+      (elementClick)="onFirstLastClick($event)"
+    ></scatter-chart>
   </div>
 </div>

@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ChartConfiguration } from 'chart.js/auto';
 
 import { BaseChartDirective } from '@shared/directives/charts/base-chart.directive';
 
 @Component({
   selector: 'polar-area-chart',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<canvas #canvas></canvas>`,
 })
 export class PolarAreaChartComponent extends BaseChartDirective {

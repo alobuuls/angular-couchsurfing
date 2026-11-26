@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import Chart, { ChartConfiguration, LinearScale, PointElement } from 'chart.js/auto';
 import { ForceDirectedGraphController, EdgeLine } from 'chartjs-chart-graph';
 
@@ -10,6 +10,7 @@ Chart.register(ForceDirectedGraphController, EdgeLine, LinearScale, PointElement
 
 @Component({
   selector: 'network-chart',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<canvas #canvas></canvas>`,
 })
 export class NetworkChartComponent extends BaseChartDirective {

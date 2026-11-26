@@ -1,42 +1,34 @@
 <div class="timeline-charts">
-  <!-- Timeline views -->
-  <div class="ctn-buttons">
-    <button
-      type="button"
-      *ngFor="let view of timelineViews"
-      (click)="selectView(view)"
-      [class.active]="selectedView === view"
-      class="stats-nav-btns"
-    >
-      {{ 'STATS.TIMELINE.VIEWS.' + view.toUpperCase() | translate }}
-    </button>
-  </div>
+  <stats-view-switcher
+    [views]="timelineViews"
+    [selected]="selectedView"
+    labelPrefix="STATS.TIMELINE.VIEWS."
+    (selectedChange)="selectView($event)"
+  />
 
-  <!-- Timeline chart -->
-  <div class="timeline-chart-row">
-    <div class="timeline-chart-ctn">
-      <bar-chart
-        *ngIf="barVm as bar"
-        [title]="bar.title"
-        [datasetLabel]="bar.title"
-        [labels]="bar.labels"
-        [values]="bar.values"
-        [colors]="bar.colors"
-        [legend]="bar.legend"
-        [height]="bar.height"
-        [valueAxisTitle]="bar.valueAxisTitle"
-        (itemClick)="onBarClick($event)"
-      />
+  <div class="timeline-chart-ctn">
+    <!-- Years / months / days / same arrival day -->
+    <bar-chart
+      *ngIf="barVm as vm"
+      [title]="vm.title"
+      [labels]="vm.labels"
+      [values]="vm.values"
+      [colors]="vm.colors"
+      [legend]="vm.legend"
+      [height]="vm.height"
+      [valueAxisTitle]="vm.valueAxisTitle"
+      (itemClick)="onBarClick($event)"
+    ></bar-chart>
 
-      <network-chart
-        *ngIf="networkVm as network"
-        [title]="network.title"
-        [labels]="network.labels"
-        [edges]="network.edges"
-        [nodeColors]="network.colors"
-        [tooltip]="getNetworkTooltip"
-        (itemClick)="onNetworkClick($event)"
-      />
-    </div>
+    <!-- Same stay -->
+    <network-chart
+      *ngIf="networkVm as vm"
+      [title]="vm.title"
+      [labels]="vm.labels"
+      [edges]="vm.edges"
+      [nodeColors]="vm.colors"
+      [tooltip]="getNetworkTooltip"
+      (itemClick)="onNetworkClick($event)"
+    ></network-chart>
   </div>
 </div>

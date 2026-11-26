@@ -1,3 +1,5 @@
+import type { IChartColors } from '@type/chart.types';
+
 export interface IChartColor {
   background: string;
   border: string;
@@ -89,19 +91,38 @@ export const RANKING_PALETTE: IChartColor[] = [
   createColor(120, 180, 220, 0.2), // Light blue
 ];
 
-export const getCyclicRankingColors = (
-  total: number
-): {
-  background: string[];
-  border: string[];
-} => {
-  const colors = Array.from({ length: total }, (_, index) => RANKING_PALETTE[index % RANKING_PALETTE.length]);
+export const getCyclicRankingColors = (total: number): IChartColors =>
+  paletteToColors(Array.from({ length: total }, (_, index) => RANKING_PALETTE[index % RANKING_PALETTE.length]));
 
-  return {
-    background: colors.map(color => color.background),
-    border: colors.map(color => color.border),
-  };
+// Background and border arrays from a palette.
+// Pass `alpha` to override the opacity of the background.
+export const paletteToColors = (palette: readonly IChartColor[], alpha?: number): IChartColors => ({
+  background: palette.map(color => getColorWithOpacity(color, alpha)),
+  border: palette.map(color => color.border),
+});
+
+const PODIUM: IChartColor[] = [RANKING_COLORS.gold, RANKING_COLORS.silver, RANKING_COLORS.bronze];
+
+// Gold, silver and bronze for the `winners` (item indexes); everything else is neutral.
+// By default the winners are the first three items.
+export const getPodiumColors = (count: number, winners: number[] = [0, 1, 2]): IChartColors => {
+  const colors: IChartColor[] = Array.from({ length: count }, () => RANKING_COLORS.neutral);
+
+  winners
+    .filter(index => index < count)
+    .slice(0, PODIUM.length)
+    .forEach((itemIndex, medal) => (colors[itemIndex] = PODIUM[medal]));
+
+  return paletteToColors(colors);
 };
+
+// Indexes of the three highest totals. A tie is won by the earliest date.
+export const getTopIndexes = <T>(items: T[], getTotal: (item: T) => number, getTime: (item: T) => number): number[] =>
+  items
+    .map((item, index) => ({ index, total: getTotal(item), time: getTime(item) }))
+    .sort((a, b) => b.total - a.total || a.time - b.time)
+    .slice(0, 3)
+    .map(entry => entry.index);
 
 // CONTINENTS
 export const CONTINENT_COLORS = {

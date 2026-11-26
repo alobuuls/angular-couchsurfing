@@ -1,68 +1,21 @@
 <div class="ranking-charts">
   <!-- Ranking views -->
-  <div class="ctn-buttons">
-    <button
-      type="button"
-      *ngFor="let view of rankingViews"
-      (click)="selectView(view)"
-      [class.active]="selectedView === view"
-      class="stats-nav-btns"
-    >
-      {{ 'STATS.RANKINGS.VIEWS.' + view.toUpperCase() | translate }}
-    </button>
-  </div>
+  <stats-view-switcher
+    [views]="rankingViews"
+    [selected]="selectedView"
+    labelPrefix="STATS.RANKINGS.VIEWS."
+    (selectedChange)="selectView($event)"
+  />
 
-  <!-- People ranking views -->
-  <div class="ctn-buttons group-buttons" *ngIf="selectedView === 'people'">
-    <button
-      type="button"
-      *ngFor="let view of peopleRankingViews"
-      (click)="selectPeopleView(view)"
-      [class.active]="selectedPeopleView === view"
-      class="stats-nav-btns-small"
-    >
-      {{ 'STATS.RANKINGS.SUBVIEWS.' + view.toUpperCase() | translate }}
-    </button>
-  </div>
-
-  <!-- Women ranking views -->
-  <div class="ctn-buttons group-buttons" *ngIf="selectedView === 'women'">
-    <button
-      type="button"
-      *ngFor="let view of womenRankingViews"
-      (click)="selectWomenView(view)"
-      [class.active]="selectedWomenView === view"
-      class="stats-nav-btns-small"
-    >
-      {{ 'STATS.RANKINGS.SUBVIEWS.' + view.toUpperCase() | translate }}
-    </button>
-  </div>
-
-  <!-- Men ranking views -->
-  <div class="ctn-buttons group-buttons" *ngIf="selectedView === 'men'">
-    <button
-      type="button"
-      *ngFor="let view of menRankingViews"
-      (click)="selectMenView(view)"
-      [class.active]="selectedMenView === view"
-      class="stats-nav-btns-small"
-    >
-      {{ 'STATS.RANKINGS.SUBVIEWS.' + view.toUpperCase() | translate }}
-    </button>
-  </div>
-
-  <!-- Group ranking views -->
-  <div class="ctn-buttons group-buttons" *ngIf="selectedView === 'groups'">
-    <button
-      type="button"
-      *ngFor="let view of groupRankingViews"
-      (click)="selectGroupView(view)"
-      [class.active]="selectedGroupView === view"
-      class="stats-nav-btns-small"
-    >
-      {{ 'STATS.RANKINGS.GROUP_TYPES.' + view.toUpperCase() | translate }}
-    </button>
-  </div>
+  <!-- Subviews: overall / solo, or the group types -->
+  <stats-view-switcher
+    size="small"
+    containerClass="ctn-buttons group-buttons"
+    [views]="viewConfig[selectedView].subviews"
+    [selected]="selectedSubview"
+    [labelPrefix]="viewConfig[selectedView].subviewKeyPrefix"
+    (selectedChange)="selectSubview($event)"
+  />
 
   <!-- Ranking chart -->
   <div class="ranking-chart-row">
@@ -79,7 +32,7 @@
         [valueAxisTitle]="'STATS.RANKINGS.LABELS.RANKING_POSITION' | translate"
         [tooltip]="rankingTooltip"
         (itemClick)="onChartClick($event)"
-      />
+      ></bar-chart>
     </div>
   </div>
 </div>

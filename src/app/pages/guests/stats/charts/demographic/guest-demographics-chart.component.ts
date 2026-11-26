@@ -1,23 +1,18 @@
-import { Component, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Component, inject, Input } from '@angular/core';
 
 // Services
-import { FormatService } from '@services/format.service';
+import { FormatService } from '@shared/services/format.service';
 import { LanguageService } from '@core/services/language.service';
-
-// Pipes
-import { FlagPipe } from '@shared/pipes/two-code-letters-flag.pipe';
+import { GuestsNavigationService } from '@pages/guests/services/guests-navigation.service';
+import { StatsLabelsService } from '@pages/guests/services/stats-labels.service';
+import { StatsChartContainer } from '@pages/guests/directives/stats-chart-container.directive';
 
 // Interfaces
 import { IDemographicsDistribution, IDemographicsView, IDemographicsTotalsView, IDemographicsOldestView } from '@interfaces/stats-interface';
 import { IQueryParamsGuests } from '@interfaces/guests.interface';
-import { IFirstLastRow, TColor, TGroupRow } from '@interfaces/charts/chart-demographics.interface';
-import { IChartColors, IChartLegendItem, TChartTooltipContent } from '@type/chart.types';
+import { IChartLegendItem, TChartTooltipContent } from '@type/chart.types';
 import {
   IDemographicsBubbleVm,
-  IDemographicsFirstLastItem,
   IDemographicsFirstLastVm,
   IDemographicsGroupsBarVm,
   IDemographicsPerson,
@@ -25,13 +20,26 @@ import {
   IDemographicsPieVm,
   IDemographicsRankingBarVm,
   IDemographicsScatterVm,
+  IFirstLastRow,
   TAgeMode,
+  TColor,
   TDemographicKey,
   TGroupKey,
+  TGroupRow,
 } from '@interfaces/charts/chart-demographics.interface';
 
 // Helpers
-import { CHART_NEUTRAL_COLOR, GENDER_COLORS, getApproximateAge, getBirthYear, getColorWithOpacity, GROUP_COLORS, RANKING_COLORS } from '@utils';
+import {
+  CHART_NEUTRAL_COLOR,
+  GENDER_COLORS,
+  getApproximateAge,
+  getBirthYear,
+  getColorWithOpacity,
+  getPodiumColors,
+  GROUP_COLORS,
+  paletteToColors,
+  RANKING_COLORS,
+} from '@utils';
 
 const DEMOGRAPHIC_KEYS: TDemographicKey[] = ['male', 'female', 'trans', 'isGay'];
 const GROUP_KEYS: TGroupKey[] = ['couple', 'friends', 'family'];
@@ -79,16 +87,12 @@ const GROUP_NAVIGATION: Record<TGroupRow, IQueryParamsGuests['groupType']> = {
   templateUrl: './guest-demographics-chart.component.html',
   styleUrls: ['./guest-demographics-chart.component.css'],
 })
-export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDestroy {
-  private _format = inject(FormatService);
-  private _router = inject(Router);
-  private _translate = inject(TranslateService);
-  private _language = inject(LanguageService);
-  private readonly _flag = inject(FlagPipe);
+export class GuestDemographicsChartComponent extends StatsChartContainer {
+  private readonly _format = inject(FormatService);
+  private readonly _language = inject(LanguageService);
+  private readonly _nav = inject(GuestsNavigationService);
+  private readonly _labels = inject(StatsLabelsService);
 
-  private langChangeSubscription?: Subscription;
-
-  // Demographic data received from the parent component.
   @Input() demographics!: IDemographicsDistribution;
 
   // Main views.
@@ -128,33 +132,9 @@ export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDes
     return this._language.dateFnsLocale;
   }
 
-  // Translated group labels used in chart tooltips.
-  get groupLabels(): Record<string, string> {
-    return {
-      couple: this.translate('STATS.DEMOGRAPHICS.GROUPS.COUPLE'),
-      friends: this.translate('STATS.DEMOGRAPHICS.GROUPS.FRIENDS'),
-      family: this.translate('STATS.DEMOGRAPHICS.GROUPS.FAMILY'),
-    };
-  }
-
-  ngOnInit(): void {
-    // Rebuild the texts when the language changes.
-    this.langChangeSubscription = this._translate.onLangChange.subscribe(() => this.buildView());
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['demographics']) {
-      this.buildView();
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.langChangeSubscription?.unsubscribe();
-  }
-
-  getSubViewLabel(view: string): string {
-    return this.translate(`STATS.DEMOGRAPHICS.SUBVIEWS.${view.toUpperCase()}`);
-  }
+  // ─────────────────────────────────────────────
+  // Template actions
+  // ─────────────────────────────────────────────
 
   selectView(view: IDemographicsView): void {
     this.selectedView = view;
@@ -176,31 +156,25 @@ export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDes
     this.buildView();
   }
 
-  // FORMATTERS (arrow functions: stable references that keep `this`)
   // Y axis of the groups bubble chart: 1 = couple, 2 = friends, 3 = family.
   groupTickFormatter = (value: number | string): string => {
     const key = GROUP_KEYS[Number(value) - 1];
-    return key ? this.translate(`STATS.DEMOGRAPHICS.GROUPS.${key.toUpperCase()}`) : '';
+
+    return key ? this._labels.groupType(key) : '';
   };
 
   // CLICKS
   onPieClick(index: number): void {
     const filters = GENDER_NAVIGATION[DEMOGRAPHIC_KEYS[index]];
 
-    if (filters) {
-      this._router.navigate(['/guests'], { queryParams: { view: 'cards', ...filters } });
-    }
+    if (filters) this._nav.toList(filters);
   }
 
   onGroupsBarClick({ datasetIndex, index }: { datasetIndex: number; index: number }): void {
     const gender = GENDER_NAVIGATION[DEMOGRAPHIC_KEYS[datasetIndex]];
     const groupType = GROUP_NAVIGATION[GROUP_ROWS[index]];
 
-    if (!gender || !groupType) {
-      return;
-    }
-
-    this._router.navigate(['/guests'], { queryParams: { view: 'cards', ...gender, groupType } });
+    if (gender && groupType) this._nav.toList({ ...gender, groupType });
   }
 
   onRankingClick(index: number): void {
@@ -216,11 +190,9 @@ export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDes
   }
 
   onFirstLastClick({ datasetIndex, index }: { datasetIndex: number; index: number }): void {
-    const entry = this.firstLastVm?.items[datasetIndex]?.[index];
+    const person = this.firstLastVm?.items[datasetIndex]?.[index]?.person;
 
-    if (entry) {
-      this.navigateToGuest(entry.person.guestId, entry.person.groupType, entry.person.groupId);
-    }
+    if (person) this._nav.toGuest(person.guestId, person.groupType, person.groupId);
   }
 
   // TOOLTIPS
@@ -228,6 +200,7 @@ export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDes
 
   getScatterTooltip = (index: number): TChartTooltipContent | null => {
     const item = this.scatterVm?.items[index];
+
     // The gender is only shown when it is not obvious from the color.
     return this.personTooltip(item, { gender: item?.demographic === 'isGay' || item?.demographic === 'trans' });
   };
@@ -238,36 +211,41 @@ export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDes
     const vm = this.firstLastVm;
     const entry = vm?.items[datasetIndex]?.[index];
 
-    if (!vm || !entry) {
-      return null;
-    }
+    if (!vm || !entry) return null;
 
     const { person, type } = entry;
-    const typeLabel = this.translate(type === 'first' ? 'STATS.DEMOGRAPHICS.RANKING.FIRST' : 'STATS.DEMOGRAPHICS.RANKING.LAST');
-    const groupLabel = person.groupType && person.groupType !== 'solo' ? ` and ${this.groupLabels[person.groupType]}` : '';
+    const typeLabel = this.t(type === 'first' ? 'STATS.DEMOGRAPHICS.RANKING.FIRST' : 'STATS.DEMOGRAPHICS.RANKING.LAST');
+    const hasGroup = !!person.groupType && person.groupType !== 'solo';
 
     return {
-      title: `${typeLabel}: ${person.fullName}${groupLabel}`,
+      title: hasGroup
+        ? this.t('STATS.DEMOGRAPHICS.TOOLTIPS.FIRST_LAST_WITH_GROUP', {
+            type: typeLabel,
+            name: person.fullName,
+            group: this._labels.groupType(person.groupType),
+          })
+        : `${typeLabel}: ${person.fullName}`,
       rows: [
-        ...(vm.showGender ? [{ label: this.translate('GENDER.TXT'), value: this._format.formatGender(person.gender) }] : []),
+        ...(vm.showGender ? [{ label: this.t('GENDER.TXT'), value: this._format.formatGender(person.gender) }] : []),
         ...(vm.yTitle ? [{ label: vm.yTitle, value: vm.yLabels[datasetIndex] }] : []),
-        { label: this.translate('STATS.DEMOGRAPHICS.LABELS.VISIT'), value: this._format.formatDate(person.visitedDate) },
+        { label: this.t('STATS.DEMOGRAPHICS.LABELS.VISIT'), value: this._format.formatDate(person.visitedDate) },
       ],
-      country: this.country(person.hometownCode),
+      country: this._labels.country(person.hometownCode),
     };
   };
 
-  // VIEW MODELS
-  private buildView(): void {
-    this.pieVm = this.groupsBarVm = this.rankingBarVm = this.scatterVm = this.bubbleVm = this.firstLastVm = undefined;
+  // ─────────────────────────────────────────────
+  // View models
+  // ─────────────────────────────────────────────
 
-    if (!this.demographics) {
-      return;
-    }
+  protected buildView(): void {
+    this.resetVms();
 
-    this.ageTitle = this.translate('STATS.DEMOGRAPHICS.LABELS.AGE');
-    this.visitDateTitle = this.translate('STATS.DEMOGRAPHICS.LABELS.VISIT_DATE');
-    this.groupTitle = this.translate('STATS.DEMOGRAPHICS.LABELS.GROUP');
+    if (!this.demographics) return;
+
+    this.ageTitle = this.t('STATS.DEMOGRAPHICS.LABELS.AGE');
+    this.visitDateTitle = this.t('STATS.DEMOGRAPHICS.LABELS.VISIT_DATE');
+    this.groupTitle = this.t('STATS.DEMOGRAPHICS.LABELS.GROUP');
 
     switch (this.selectedView) {
       case 'totals':
@@ -277,16 +255,23 @@ export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDes
           this.groupsBarVm = this.buildGroupsBarVm();
         }
         break;
-
       case 'oldest':
       case 'youngest':
         this.buildAgeView(this.selectedView);
         break;
-
       case 'firstLast':
         this.firstLastVm = this.buildFirstLastVm();
         break;
     }
+  }
+
+  private resetVms(): void {
+    this.pieVm = undefined;
+    this.groupsBarVm = undefined;
+    this.rankingBarVm = undefined;
+    this.scatterVm = undefined;
+    this.bubbleVm = undefined;
+    this.firstLastVm = undefined;
   }
 
   private buildAgeView(mode: TAgeMode): void {
@@ -306,13 +291,12 @@ export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDes
   // TOTALS
   private buildPieVm(): IDemographicsPieVm {
     const overall = this.demographics.totals.overall;
-    const palette = DEMOGRAPHIC_KEYS.map(key => GENDER_PALETTE[key]);
 
     return {
-      datasetLabel: this.translate('GENDER.TXT'),
-      labels: DEMOGRAPHIC_KEYS.map(key => this.translate(GENDER_LABELS[key])),
+      datasetLabel: this.t('GENDER.TXT'),
+      labels: DEMOGRAPHIC_KEYS.map(key => this.t(GENDER_LABELS[key])),
       values: DEMOGRAPHIC_KEYS.map(key => overall[key]),
-      colors: { background: palette.map(color => getColorWithOpacity(color)), border: palette.map(color => color.border) },
+      colors: paletteToColors(DEMOGRAPHIC_KEYS.map(key => GENDER_PALETTE[key])),
     };
   }
 
@@ -320,12 +304,12 @@ export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDes
     const groups = this.demographics.totals.groups;
 
     return {
-      labels: [this.translate('STATS.DEMOGRAPHICS.SUBVIEWS.SOLO'), ...GROUP_KEYS.map(key => this.translate(`STATS.DEMOGRAPHICS.GROUPS.${key.toUpperCase()}`))],
+      labels: GROUP_ROWS.map(row => this._labels.groupType(row)),
       // One series per demographic, one value per group (solo, couple, friends, family).
       series: DEMOGRAPHIC_KEYS.map(key => ({
-        label: this.translate(GENDER_LABELS[key]),
+        label: this.t(GENDER_LABELS[key]),
         values: GROUP_ROWS.map(row => groups[row][key]),
-        colors: this.uniformColors(GENDER_PALETTE[key], GROUP_ROWS.length),
+        colors: paletteToColors(GROUP_ROWS.map(() => GENDER_PALETTE[key])),
       })),
     };
   }
@@ -337,11 +321,8 @@ export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDes
       .sort((a, b) => {
         const birthComparison = this.compareBirthDates(a.birthDate!, b.birthDate!);
 
-        // Oldest: earlier birth dates first.
-        // Youngest: later birth dates first.
-        if (birthComparison !== 0) {
-          return mode === 'oldest' ? birthComparison : -birthComparison;
-        }
+        // Oldest: earlier birth dates first. Youngest: later birth dates first.
+        if (birthComparison !== 0) return mode === 'oldest' ? birthComparison : -birthComparison;
 
         // Tie-breaker: the guest who was hosted first wins.
         return new Date(a.visitedDate).getTime() - new Date(b.visitedDate).getTime();
@@ -349,9 +330,7 @@ export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDes
 
     const items = people.map(person => this.toItem(person));
 
-    if (!items.length) {
-      return undefined;
-    }
+    if (!items.length) return undefined;
 
     const podium = [
       { key: `RANKING.${mode.toUpperCase()}`, color: RANKING_COLORS.gold },
@@ -361,70 +340,29 @@ export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDes
 
     const legend: IChartLegendItem[] = [
       ...podium.map(({ key, color }) => ({
-        text: this.translate(`STATS.DEMOGRAPHICS.${key}`),
+        text: this.t(`STATS.DEMOGRAPHICS.${key}`),
         background: getColorWithOpacity(color),
         border: color.border,
       })),
-      {
-        text: this.translate('STATS.DEMOGRAPHICS.RANKING.OTHER'),
-        background: RANKING_COLORS.neutral.background,
-        border: RANKING_COLORS.neutral.border,
-      },
+      { text: this.t('STATS.DEMOGRAPHICS.RANKING.OTHER'), background: RANKING_COLORS.neutral.background, border: RANKING_COLORS.neutral.border },
     ];
-
-    // Each position gets a different medal. Everyone else is neutral.
-    const colors = items.map((_, index) => {
-      if (index === 0) return RANKING_COLORS.gold;
-      if (index === 1) return RANKING_COLORS.silver;
-      if (index === 2) return RANKING_COLORS.bronze;
-
-      return RANKING_COLORS.neutral;
-    });
 
     return {
       datasetLabel: this.ageTitle,
       labels: items.map(item => item.name),
       values: items.map(item => item.age),
-      colors: {
-        background: colors.map(color => color.background),
-        border: colors.map(color => color.border),
-      },
+      colors: getPodiumColors(items.length),
       legend,
       items,
     };
   }
 
+  // Month and day are compared only when both dates have them.
   private compareBirthDates(a: string, b: string): number {
-    const parse = (date: string) => {
-      const [year, month, day] = date.split('-').map(Number);
+    const [ay, am, ad] = a.split('-').map(Number);
+    const [by, bm, bd] = b.split('-').map(Number);
 
-      return {
-        year,
-        month: date.split('-').length >= 2 ? month : null,
-        day: date.split('-').length === 3 ? day : null,
-      };
-    };
-
-    const first = parse(a);
-    const second = parse(b);
-
-    if (first.year !== second.year) {
-      return first.year - second.year;
-    }
-
-    // Compare months only when both are available.
-    if (first.month !== null && second.month !== null) {
-      if (first.month !== second.month) {
-        return first.month - second.month;
-      }
-    }
-
-    // Compare days only when both are available.
-    if (first.day !== null && second.day !== null) {
-      return first.day - second.day;
-    }
-
-    return 0;
+    return ay - by || (am && bm ? am - bm : 0) || (ad && bd ? ad - bd : 0);
   }
 
   // OLDEST / YOUNGEST - SOLO
@@ -433,17 +371,12 @@ export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDes
       .filter(person => getBirthYear(person.birthDate) !== null)
       .map(person => this.toItem(person, person.demographic));
 
-    if (!items.length) {
-      return undefined;
-    }
+    if (!items.length) return undefined;
 
     return {
-      datasetLabel: this.translate('STATS.DEMOGRAPHICS.LABELS.SOLO_GUESTS'),
+      datasetLabel: this.t('STATS.DEMOGRAPHICS.LABELS.SOLO_GUESTS'),
       points: items.map(item => ({ x: new Date(item.visitedDate).getTime(), y: item.age })),
-      colors: {
-        background: items.map(item => GENDER_PALETTE[item.demographic].background),
-        border: items.map(item => GENDER_PALETTE[item.demographic].border),
-      },
+      colors: paletteToColors(items.map(item => GENDER_PALETTE[item.demographic])),
       legend: this.buildGenderLegend(items.map(item => item.demographic)),
       items,
     };
@@ -454,26 +387,16 @@ export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDes
     const data = this.demographics[mode];
 
     const items = GROUP_KEYS.flatMap(group =>
-      (data[group] as IDemographicsPerson[])
-        .filter(person => getBirthYear(person.birthDate) !== null)
-        .map(person => ({
-          ...this.toItem(person),
-          group,
-        }))
+      (data[group] as IDemographicsPerson[]).filter(person => getBirthYear(person.birthDate) !== null).map(person => ({ ...this.toItem(person), group }))
     );
 
-    if (!items.length) {
-      return undefined;
-    }
+    if (!items.length) return undefined;
 
     return {
-      datasetLabel: this.translate('STATS.DEMOGRAPHICS.LABELS.GROUPS'),
+      datasetLabel: this.t('STATS.DEMOGRAPHICS.LABELS.GROUPS'),
       // Y axis: 1 = couple, 2 = friends, 3 = family (see groupTickFormatter).
       points: items.map(item => ({ x: item.age, y: GROUP_KEYS.indexOf(item.group) + 1, r: 20 })),
-      colors: {
-        background: items.map(item => getColorWithOpacity(GROUP_PALETTE[item.group])),
-        border: items.map(item => GROUP_PALETTE[item.group].border),
-      },
+      colors: paletteToColors(items.map(item => GROUP_PALETTE[item.group])),
       legend: this.buildGroupLegend(items.map(item => item.group)),
       items,
     };
@@ -496,7 +419,7 @@ export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDes
     const entries = this.toEntries(first, last, person => GENDER_PALETTE[person.gender as TDemographicKey]);
 
     return this.toFirstLastVm({
-      rows: entries.length ? [{ label: this.translate('STATS.DEMOGRAPHICS.LABELS.OVERALL_DEMOGRAPHICS'), entries, lineColor: CHART_NEUTRAL_COLOR }] : [],
+      rows: entries.length ? [{ label: this.t('STATS.DEMOGRAPHICS.LABELS.OVERALL_DEMOGRAPHICS'), entries, lineColor: CHART_NEUTRAL_COLOR }] : [],
       yTitle: '',
       showGender: true,
       legend: this.buildGenderLegend(entries.map(entry => entry.person.gender as TDemographicKey)),
@@ -510,11 +433,11 @@ export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDes
 
     return this.toFirstLastVm({
       rows: keys.map(key => ({
-        label: `${this.translate(GENDER_LABELS[key])} (${this.translate('STATS.DEMOGRAPHICS.LABELS.SOLO_GUESTS')})`,
+        label: `${this.t(GENDER_LABELS[key])} (${this.t('STATS.DEMOGRAPHICS.LABELS.SOLO_GUESTS')})`,
         entries: this.toEntries(solo[key].first, solo[key].last, () => GENDER_PALETTE[key]),
         lineColor: GENDER_PALETTE[key].border,
       })),
-      yTitle: this.translate('STATS.DEMOGRAPHICS.LABELS.CATEGORY'),
+      yTitle: this.t('STATS.DEMOGRAPHICS.LABELS.CATEGORY'),
       showGender: false,
       legend: this.buildGenderLegend(keys),
     });
@@ -526,7 +449,7 @@ export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDes
 
     return this.toFirstLastVm({
       rows: keys.map(key => ({
-        label: this.translate(`STATS.DEMOGRAPHICS.GROUPS.${key.toUpperCase()}`),
+        label: this._labels.groupType(key),
         entries: this.toEntries(firstLast[key].first, firstLast[key].last, () => GROUP_PALETTE[key]),
         lineColor: GROUP_PALETTE[key].border,
       })),
@@ -539,9 +462,7 @@ export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDes
   private toFirstLastVm(config: { rows: IFirstLastRow[]; yTitle: string; showGender: boolean; legend: IChartLegendItem[] }): IDemographicsFirstLastVm | undefined {
     const { rows, yTitle, showGender, legend } = config;
 
-    if (!rows.length) {
-      return undefined;
-    }
+    if (!rows.length) return undefined;
 
     return {
       yLabels: rows.map(row => row.label),
@@ -552,24 +473,16 @@ export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDes
         label: row.label,
         // Each row is a category of the Y axis; first and last share the same Y.
         points: row.entries.map(entry => ({ x: new Date(entry.person.visitedDate).getTime(), y: row.label })),
-        colors: {
-          background: row.entries.map(entry => entry.color.background),
-          border: row.entries.map(entry => entry.color.border),
-        },
+        colors: paletteToColors(row.entries.map(entry => entry.color)),
         lineColor: row.lineColor,
       })),
       items: rows.map(row => row.entries.map(({ type, person }) => ({ type, person }))),
     };
   }
 
-  // HELPERS
-  private translate(key: string, params?: Record<string, unknown>): string {
-    return this._translate.instant(key, params);
-  }
-
-  private calculateAge(birthDate: string): number {
-    return getApproximateAge(birthDate) ?? 0;
-  }
+  // ─────────────────────────────────────────────
+  // Helpers
+  // ─────────────────────────────────────────────
 
   // Only call with people that have a birth date.
   private toItem(person: IDemographicsPerson, demographic: TDemographicKey = person.gender as TDemographicKey): IDemographicsPersonItem {
@@ -613,63 +526,35 @@ export class GuestDemographicsChartComponent implements OnInit, OnChanges, OnDes
     ];
   }
 
-  private uniformColors(color: TColor, count: number): IChartColors {
-    return {
-      background: Array(count).fill(getColorWithOpacity(color)),
-      border: Array(count).fill(color.border),
-    };
+  // Legend with the `present` keys, always in the order of `all`.
+  private buildLegend<K extends string>(present: K[], all: K[], palette: Record<K, TColor>, label: (key: K) => string): IChartLegendItem[] {
+    return all.filter(key => present.includes(key)).map(key => ({ text: label(key), background: getColorWithOpacity(palette[key]), border: palette[key].border }));
   }
 
   private buildGenderLegend(keys: TDemographicKey[]): IChartLegendItem[] {
-    return DEMOGRAPHIC_KEYS.filter(key => keys.includes(key)).map(key => ({
-      text: this.translate(GENDER_LABELS[key]),
-      background: getColorWithOpacity(GENDER_PALETTE[key]),
-      border: GENDER_PALETTE[key].border,
-    }));
+    return this.buildLegend(keys, DEMOGRAPHIC_KEYS, GENDER_PALETTE, key => this.t(GENDER_LABELS[key]));
   }
 
   private buildGroupLegend(keys: TGroupKey[]): IChartLegendItem[] {
-    return GROUP_KEYS.filter(key => keys.includes(key)).map(key => ({
-      text: this.translate(`STATS.DEMOGRAPHICS.GROUPS.${key.toUpperCase()}`),
-      background: getColorWithOpacity(GROUP_PALETTE[key]),
-      border: GROUP_PALETTE[key].border,
-    }));
-  }
-
-  private country(code: string) {
-    return { name: this._format.formatCountry(code), flagClass: this._flag.transform(code) };
+    return this.buildLegend(keys, GROUP_KEYS, GROUP_PALETTE, key => this._labels.groupType(key));
   }
 
   private personTooltip(item: IDemographicsPersonItem | undefined, options: { gender?: boolean; group?: boolean } = {}): TChartTooltipContent | null {
-    if (!item) {
-      return null;
-    }
+    if (!item) return null;
 
     return {
       title: item.name,
       rows: [
         { label: this.ageTitle, value: String(item.age) },
-        ...(options.gender ? [{ label: this.translate('GENDER.TXT'), value: this._format.formatGender(item.gender) }] : []),
-        ...(options.group && item.group ? [{ label: this.groupTitle, value: this.groupLabels[item.group] }] : []),
-        { label: this.translate('STATS.DEMOGRAPHICS.LABELS.VISIT'), value: this._format.formatDate(item.visitedDate) },
+        ...(options.gender ? [{ label: this.t('GENDER.TXT'), value: this._format.formatGender(item.gender) }] : []),
+        ...(options.group && item.group ? [{ label: this.groupTitle, value: this._labels.groupType(item.group) }] : []),
+        { label: this.t('STATS.DEMOGRAPHICS.LABELS.VISIT'), value: this._format.formatDate(item.visitedDate) },
       ],
-      country: this.country(item.country),
+      country: this._labels.country(item.country),
     };
   }
 
-  // NAVIGATION
   private navigateToItem(item?: IDemographicsPersonItem): void {
-    if (item) {
-      this.navigateToGuest(item.guestId);
-    }
-  }
-
-  private navigateToGuest(guestId: string, groupType?: string, groupId?: string | null): void {
-    if (groupType !== 'solo' && groupId) {
-      this._router.navigate(['/guests/groups', groupId]);
-      return;
-    }
-
-    this._router.navigate(['/guests', guestId]);
+    if (item) this._nav.toGuest(item.guestId);
   }
 }

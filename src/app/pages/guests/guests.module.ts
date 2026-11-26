@@ -4,6 +4,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 // Modules
 import { GuestsRoutingModule } from '@pages/guests/guests.routing.module';
 import { SharedModule } from '@shared/shared.module';
+import { ChartsModule } from '@shared/components/charts/charts.module';
 import { MaterialModule } from '@material/material.module';
 
 // Material
@@ -24,10 +25,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Services
-import { GuestsService } from '@services/guests.service';
-import { GeonameService } from '@services/geoname.service';
-import { FormatService } from '@services/format.service';
-import { CountrySearchService } from '@services/country-search.service';
+import { GuestsService } from '@pages/guests/services/guests.service';
 
 // Components
 import { GuestsComponent } from '@pages/guests/guests.component';
@@ -94,7 +92,7 @@ const MATERIAL_MODULES = [
     GuestStaysChartComponent,
     GuestBirthdaysChartComponent,
   ],
-  imports: [GuestsRoutingModule, SharedModule, MaterialModule, NgxSkeletonLoaderModule, ...MATERIAL_MODULES],
-  providers: [GuestsService, CountrySearchService, GeonameService, FormatService],
+  imports: [GuestsRoutingModule, SharedModule, MaterialModule, ChartsModule, NgxSkeletonLoaderModule, ...MATERIAL_MODULES],
+  providers: [GuestsService],
 })
 export class GuestsModule {}

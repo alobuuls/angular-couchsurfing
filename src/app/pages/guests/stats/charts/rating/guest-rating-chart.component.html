@@ -1,33 +1,23 @@
 <div class="rating-charts">
   <!-- Main Rating views -->
-  <div class="ctn-buttons">
-    <button
-      type="button"
-      *ngFor="let view of ratingMainViews"
-      (click)="selectMainView(view)"
-      [class.active]="selectedMainView === view"
-      class="stats-nav-btns"
-    >
-      {{ 'STATS.RATINGS.VIEWS.' + view.toUpperCase() | translate }}
-    </button>
-  </div>
+  <stats-view-switcher
+    [views]="ratingMainViews"
+    [selected]="selectedMainView"
+    labelPrefix="STATS.RATINGS.VIEWS."
+    (selectedChange)="selectMainView($event)"
+  />
 
   <!-- Rating group views -->
-  <div class="ctn-buttons">
-    <button
-      type="button"
-      *ngFor="let view of ratingViews"
-      (click)="selectView(view)"
-      [class.active]="selectedView === view"
-      class="stats-nav-btns-small"
-    >
-      {{ 'STATS.RATINGS.GROUP_TYPES.' + view.toUpperCase() | translate }}
-    </button>
-  </div>
+  <stats-view-switcher
+    size="small"
+    [views]="ratingViews"
+    [selected]="selectedView"
+    labelPrefix="STATS.RATINGS.GROUP_TYPES."
+    (selectedChange)="selectView($event)"
+  />
 
   <!-- Chart + type buttons -->
   <div class="chart-row" [class.pie-chart-row]="selectedChart === 'doughnut' && selectedMainView === 'distribution'">
-    <!-- Rating chart -->
     <!-- Rating chart -->
     <div
       class="rating-charts-ctn"
@@ -45,7 +35,7 @@
           [maintainAspectRatio]="false"
           [datasetLabelInTooltip]="true"
           (itemClick)="onDistributionClick($event)"
-        />
+        ></bar-chart>
 
         <pie-chart
           *ngIf="selectedChart === 'doughnut'"
@@ -58,7 +48,7 @@
           [maintainAspectRatio]="false"
           [datasetLabelInTooltip]="true"
           (itemClick)="onDistributionClick($event)"
-        />
+        ></pie-chart>
       </ng-container>
 
       <!-- Lowest / Highest -->
@@ -77,31 +67,20 @@
         [maintainAspectRatio]="false"
         [tooltip]="dotTooltip"
         (itemClick)="onDotClick($event)"
-      />
+      ></dot-plot-chart>
     </div>
 
     <!-- Distribution chart type buttons -->
     <div class="ctn-chart-types" *ngIf="selectedMainView === 'distribution'">
-      <!-- Bar chart -->
       <button
+        *ngFor="let chart of chartTypes"
         mat-icon-button
         class="btn-type-chart"
         type="button"
-        (click)="selectChartType('bar')"
-        [class.active]="selectedChart === 'bar'"
+        [class.active]="selectedChart === chart.type"
+        (click)="selectChartType(chart.type)"
       >
-        <mat-icon class="material-symbols-outlined">bar_chart</mat-icon>
-      </button>
-
-      <!-- Doughnut chart -->
-      <button
-        mat-icon-button
-        class="btn-type-chart"
-        type="button"
-        (click)="selectChartType('doughnut')"
-        [class.active]="selectedChart === 'doughnut'"
-      >
-        <mat-icon class="material-symbols-outlined">pie_chart</mat-icon>
+        <mat-icon class="material-symbols-outlined">{{ chart.icon }}</mat-icon>
       </button>
     </div>
   </div>

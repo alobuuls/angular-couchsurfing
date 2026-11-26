@@ -31,7 +31,7 @@ import { GuestFormComponent } from '@pages/guests/form/guest-form/guest-form.com
 
 // Services
 import { AlertsService } from '@core/services/alerts.service';
-import { FormDraftService } from '@services/form-draft.service';
+import { FormDraftService } from '@shared/services/form-draft.service';
 
 @Component({
   selector: 'guest-visit-form',

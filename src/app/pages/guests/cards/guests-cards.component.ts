@@ -4,9 +4,9 @@ import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 // Services
-import { GuestsService } from '@services/guests.service';
-import { FormatService } from '@services/format.service';
-import { GeonameService } from '@services/geoname.service';
+import { GuestsService } from '@pages/guests/services/guests.service';
+import { FormatService } from '@shared/services/format.service';
+import { GeonameService } from '@shared/services/geoname.service';
 import { LanguageService } from '@core/services/language.service';
 import { AlertsService } from '@core/services/alerts.service';
 import { ErrorHandlerService } from '@core/services/err-handler.service';

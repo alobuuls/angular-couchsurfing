@@ -4,7 +4,7 @@ import { Component, Input, inject } from '@angular/core';
 import { Continents } from '@type/word.types';
 
 // Services
-import { GeonameService } from '@services/geoname.service';
+import { GeonameService } from '@shared/services/geoname.service';
 
 @Component({
   selector: 'sh-progress-bar',

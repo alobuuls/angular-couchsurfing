@@ -5,9 +5,9 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 // Services
-import { MapService } from '@services/map.service';
+import { MapService } from '@shared/services/map.service';
 import { LanguageService } from '@core/services/language.service';
-import { GeonameService } from '@services/geoname.service';
+import { GeonameService } from '@shared/services/geoname.service';
 
 // Interfaces
 import { IGuestTableMember, IGuestTableRow } from '@interfaces/data-structure-api';

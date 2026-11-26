@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ChartConfiguration } from 'chart.js/auto';
 
 import { BaseXyChartDirective } from '@shared/directives/charts/base-xy-chart.directive';
@@ -6,6 +6,7 @@ import { IChartBubblePoint } from '@type/chart.types';
 
 @Component({
   selector: 'bubble-chart',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<canvas #canvas></canvas>`,
 })
 export class BubbleChartComponent extends BaseXyChartDirective {

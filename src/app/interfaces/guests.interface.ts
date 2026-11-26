@@ -20,7 +20,7 @@ export interface IGuestDetail extends ITripDetail {
   guestId: string;
   livingInState?: string;
   livingInCity?: string;
-  countryCodeWeMet?: CountriesCodes;
+  countryCodeWeMet: CountriesCodes;
   cityWeMet?: string;
   stateWeMet?: string;
   locationWeMet?: string;
@@ -177,8 +177,8 @@ export interface IQueryParamsGuests {
   hometownState?: string;
   livingInState?: string;
   year?: number;
-  day?: number;
-  birthDate?: number;
+  day?: string;
+  birthDate?: string;
 }
 
 // Get All

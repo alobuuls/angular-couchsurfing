@@ -7,16 +7,12 @@ import { Language, CountriesCodes } from '@type/word.types';
 import { WORLD } from '@config/world';
 import { OCCUPATION_TRANSLATIONS } from '@config/occupations/occupations';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class FormatService {
   private readonly _language = inject(LanguageService);
   private readonly _translate = inject(TranslateService);
-
-  private readonly genderKeys: Record<string, string> = {
-    male: 'GENDER.MALE',
-    female: 'GENDER.FEMALE',
-    trans: 'GENDER.TRANS',
-  };
 
   private readonly dateFormats: Record<Language, string> = {
     en: 'MMMM d, y',
@@ -71,9 +67,12 @@ export class FormatService {
     return country.name[this._language.currentLanguage] || country.name.en;
   }
 
-  formatGender(gender: string): string {
-    const key = this.genderKeys[gender.toLowerCase()];
-    return key ? this._translate.instant(key) : gender;
+  formatGender(gender?: string | null): string {
+    if (!gender) return '';
+    const key = `GENDER.${gender.toUpperCase()}`;
+    const translated = this._translate.instant(key);
+
+    return translated === key ? gender.charAt(0).toUpperCase() + gender.slice(1) : translated;
   }
 
   formatOccupation(occupation: string): string {

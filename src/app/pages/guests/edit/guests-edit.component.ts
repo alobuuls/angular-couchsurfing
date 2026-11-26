@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 import { finalize, switchMap } from 'rxjs';
 
 // Services
-import { GuestsService } from '@services/guests.service';
+import { GuestsService } from '@pages/guests/services/guests.service';
 import { AlertsService } from '@core/services/alerts.service';
 import { TranslateService } from '@ngx-translate/core';
 
