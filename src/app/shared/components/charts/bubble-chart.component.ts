@@ -33,7 +33,7 @@ export class BubbleChartComponent extends BaseXyChartDirective {
       },
       options: {
         responsive: true,
-        maintainAspectRatio: this.maintainAspectRatio,
+        maintainAspectRatio: this.maintainAspectRatio && !this.height,
         layout: { padding: this.padding },
         onClick: this.handleClick,
         plugins: {

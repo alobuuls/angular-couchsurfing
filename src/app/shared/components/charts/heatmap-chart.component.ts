@@ -33,6 +33,10 @@ export class HeatmapChartComponent extends BaseChartDirective {
   protected buildConfig(): ChartConfiguration<'matrix'> {
     const gap = this.cellGap;
 
+    // Every row/column needs its label: skipping ticks changes the chart area
+    // (and therefore the cell size) depending on the available space.
+    const ticks = { autoSkip: false };
+
     return {
       type: 'matrix',
       data: {
@@ -56,7 +60,8 @@ export class HeatmapChartComponent extends BaseChartDirective {
       },
       options: {
         responsive: true,
-        maintainAspectRatio: this.maintainAspectRatio,
+        // With a fixed height the aspect ratio must not drive the size.
+        maintainAspectRatio: this.maintainAspectRatio && !this.height,
         layout: { padding: this.padding },
         onClick: this.handleClick,
         plugins: {
@@ -70,6 +75,7 @@ export class HeatmapChartComponent extends BaseChartDirective {
             labels: this.xLabels,
             offset: true,
             grid: { display: false },
+            ticks,
             title: { display: !!this.xTitle, text: this.xTitle },
           },
           y: {
@@ -78,6 +84,7 @@ export class HeatmapChartComponent extends BaseChartDirective {
             reverse: true,
             offset: true,
             grid: { display: false },
+            ticks,
             title: { display: !!this.yTitle, text: this.yTitle },
           },
         },

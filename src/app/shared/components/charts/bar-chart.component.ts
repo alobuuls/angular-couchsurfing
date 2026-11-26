@@ -48,6 +48,8 @@ export class BarChartComponent extends BaseChartDirective {
     const categoryAxis = {
       stacked: this.stacked,
       title: { display: !!this.categoryAxisTitle, text: this.categoryAxisTitle },
+      // With a fixed height every row has room, so show all the labels.
+      ticks: { autoSkip: !this.height },
     };
 
     const series: IChartBarSeries[] = this.series ?? [{ label: this.datasetLabel, values: this.values, colors: this.colors }];
@@ -66,7 +68,7 @@ export class BarChartComponent extends BaseChartDirective {
       },
       options: {
         responsive: true,
-        maintainAspectRatio: this.maintainAspectRatio,
+        maintainAspectRatio: this.maintainAspectRatio && !this.height,
         indexAxis: this.horizontal ? 'y' : 'x',
         onClick: this.handleClick,
         plugins: {

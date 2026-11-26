@@ -217,7 +217,7 @@ export const STAYS_COLORS = {
 export const BIRTHDAYS_COLORS = {
   repeated: {
     ...createColor(102, 204, 255, 0.2),
-    border: rgb(102, 222, 255),
+    border: rgb(78, 185, 214),
   },
   unusual: {
     ...createColor(37, 162, 83, 0.2),

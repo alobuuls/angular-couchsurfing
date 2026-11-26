@@ -24,8 +24,6 @@ export abstract class StatsChartContainer implements OnChanges {
     const vms = Object.entries(this)
       .filter(([key]) => /Vm$|^vm$/.test(key))
       .map(([key, value]) => [key, !!value]);
-
-    console.log('[vm]', this.constructor.name, Object.fromEntries(vms));
   }
 
   protected abstract buildView(): void;

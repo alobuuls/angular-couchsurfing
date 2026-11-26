@@ -66,6 +66,11 @@ export class GuestGeographyChartComponent extends StatsChartContainer {
 
   @Input() geography!: IGeographyDistribution;
 
+  // Must match `.country-label { height }` and `.country-labels { padding-top }` in the CSS.
+  private static readonly ROW_HEIGHT = 25.5;
+  private static readonly CHART_TOP = 64; // title + legend (4rem)
+  private static readonly CHART_BOTTOM = 60; // x axis ticks + axis title
+
   // Only one of these two is defined at a time.
   chartVm: IGeographyChartVm | null = null;
   consecutiveVm: IConsecutiveChartVm | null = null;
@@ -296,9 +301,12 @@ export class GuestGeographyChartComponent extends StatsChartContainer {
     return this.selectedRanking === 'all' ? title : `${title} - ${this.t(this.rankingLabels[this.selectedRanking])}`;
   }
 
-  // Countries can contain many entries, so each item needs enough vertical space.
+  // Countries can contain many entries, so each row needs the same height as its flag.
   private getChartHeight(dataLength: number): number | undefined {
-    return this.selectedView === 'countries' && this.selectedRanking === 'all' ? Math.max(500, dataLength * 10) : undefined;
+    if (this.selectedView !== 'countries' || this.selectedRanking !== 'all') return undefined;
+
+    const { ROW_HEIGHT, CHART_TOP, CHART_BOTTOM } = GuestGeographyChartComponent;
+    return Math.ceil(dataLength * ROW_HEIGHT + CHART_TOP + CHART_BOTTOM);
   }
 
   // ─────────────────────────────────────────────

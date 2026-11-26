@@ -1,16 +1,19 @@
 import { AfterViewInit, Directive, ElementRef, EventEmitter, HostBinding, inject, Input, NgZone, OnChanges, OnDestroy, Output, ViewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import Chart, { ActiveElement, ChartConfiguration, ChartEvent, ChartType, LegendItem, TooltipModel } from 'chart.js/auto';
 
-import { createExternalTooltip, destroyExternalTooltip, hideExternalTooltip } from '@utils';
+import { createExternalTooltip, destroyExternalTooltip, getChartTheme, hideExternalTooltip, IChartTheme } from '@utils';
 import { IChartColors, IChartElementClick, IChartLegendItem, TChartTooltipContent } from '@type/chart.types';
 import { ChartThemeService } from '@shared/services/chart-theme.service';
+import { ThemeService } from '@core/services/theme.service';
 
 @Directive()
 export abstract class BaseChartDirective implements AfterViewInit, OnChanges, OnDestroy {
   private readonly zone = inject(NgZone);
 
   // Injecting it applies the current theme to Chart.js before the first chart is created.
-  private readonly _theme = inject(ChartThemeService);
+  private readonly chartTheme = inject(ChartThemeService);
+  private readonly themeService = inject(ThemeService);
 
   @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
 
@@ -46,6 +49,16 @@ export abstract class BaseChartDirective implements AfterViewInit, OnChanges, On
   protected chart?: Chart;
   private viewReady = false;
 
+  // Re-renders on theme change (Chart.js defaults are already updated at this point).
+  private readonly themeSub = this.chartTheme.applied$.pipe(takeUntilDestroyed()).subscribe(() => {
+    if (this.viewReady) this.render();
+  });
+
+  // Subclasses use this inside buildConfig(). It is read on every render.
+  protected get theme(): IChartTheme {
+    return getChartTheme(this.themeService.theme);
+  }
+
   // Each chart type defines its own Chart.js configuration.
   protected abstract buildConfig(): ChartConfiguration<any>;
 
@@ -71,10 +84,7 @@ export abstract class BaseChartDirective implements AfterViewInit, OnChanges, On
   private render(): void {
     this.destroy();
 
-    const hasData = this.hasData();
-    console.log('[chart]', this.constructor.name, { hasData });
-
-    if (!hasData) return;
+    if (!this.hasData()) return;
 
     this.canvas.nativeElement.style.height = this.height ? `${this.height}px` : '';
 
@@ -99,13 +109,13 @@ export abstract class BaseChartDirective implements AfterViewInit, OnChanges, On
     return { display: !!this.title, text: this.title };
   }
 
-  protected get legendLabels(): { generateLabels: () => LegendItem[] } | undefined {
+  protected get legendLabels(): { generateLabels: (chart: Chart) => LegendItem[] } | undefined {
     if (!this.legend) return undefined;
 
     const items = this.legend;
 
     return {
-      generateLabels: () =>
+      generateLabels: chart =>
         items.map(
           (item, index) =>
             ({
@@ -113,6 +123,8 @@ export abstract class BaseChartDirective implements AfterViewInit, OnChanges, On
               fillStyle: item.background,
               strokeStyle: item.border,
               lineWidth: 1,
+              // Custom legend items do not inherit `labels.color`: without this the text is black.
+              fontColor: chart.options.color as string,
               datasetIndex: index,
             }) as LegendItem
         ),
