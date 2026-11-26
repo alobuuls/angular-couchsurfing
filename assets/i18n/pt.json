@@ -447,7 +447,15 @@
       "TITLE": "Nenhum dado disponível",
       "MESSAGE": "Não há informações disponíveis para este gráfico."
     },
-
+    "COMMON": {
+      "GROUP_NAME": "{{name}} ({{group}})",
+      "GROUP_TYPES": {
+        "SOLO": "Sozinho",
+        "COUPLE": "Em casal",
+        "FRIENDS": "Entre amigos",
+        "FAMILY": "Em família"
+      }
+    },
     "SUMMARY": {
       "VIEWS": {
         "TOTAL": "Total",
@@ -478,6 +486,9 @@
       }
     },
     "DEMOGRAPHICS": {
+      "TOOLTIPS": {
+        "FIRST_LAST_WITH_GROUP": "{{type}}: {{name}} e {{group}}"
+      },
       "VIEWS": {
         "TOTALS": "Totais",
         "OLDEST": "Mais velhos",

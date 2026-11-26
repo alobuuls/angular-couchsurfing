@@ -446,8 +446,7 @@
         "COUPLE": "Couple",
         "FRIENDS": "Friends",
         "FAMILY": "Family"
-      },
-      "RANKING": { "FIRST": "…", "SECOND": "…", "THIRD": "…", "OTHERS": "…" }
+      }
     },
     "SUMMARY": {
       "VIEWS": {

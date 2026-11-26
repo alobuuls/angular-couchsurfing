@@ -447,6 +447,15 @@
       "TITLE": "कोई डेटा उपलब्ध नहीं है",
       "MESSAGE": "इस चार्ट के लिए कोई जानकारी उपलब्ध नहीं है।"
     },
+    "COMMON": {
+      "GROUP_NAME": "{{name}} ({{group}})",
+      "GROUP_TYPES": {
+        "SOLO": "अकेले",
+        "COUPLE": "जोड़े में",
+        "FRIENDS": "दोस्तों के साथ",
+        "FAMILY": "परिवार के साथ"
+      }
+    },
     "SUMMARY": {
       "VIEWS": {
         "TOTAL": "कुल",
@@ -477,6 +486,9 @@
       }
     },
     "DEMOGRAPHICS": {
+      "TOOLTIPS": {
+        "FIRST_LAST_WITH_GROUP": "{{type}}: {{name}} और {{group}}"
+      },
       "VIEWS": {
         "TOTALS": "कुल योग",
         "OLDEST": "सबसे अधिक उम्र",

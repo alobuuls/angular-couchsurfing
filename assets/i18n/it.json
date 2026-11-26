@@ -448,6 +448,15 @@
       "TITLE": "Nessun dato disponibile",
       "MESSAGE": "Non ci sono informazioni disponibili per questo grafico."
     },
+    "COMMON": {
+      "GROUP_NAME": "{{name}} ({{group}})",
+      "GROUP_TYPES": {
+        "SOLO": "Da solo",
+        "COUPLE": "In coppia",
+        "FRIENDS": "Con amici",
+        "FAMILY": "In famiglia"
+      }
+    },
     "SUMMARY": {
       "VIEWS": {
         "TOTAL": "Totale",
@@ -478,6 +487,9 @@
       }
     },
     "DEMOGRAPHICS": {
+      "TOOLTIPS": {
+        "FIRST_LAST_WITH_GROUP": "{{type}}: {{name}} e {{group}}"
+      },
       "VIEWS": {
         "TOTALS": "Totali",
         "OLDEST": "Più anziani",

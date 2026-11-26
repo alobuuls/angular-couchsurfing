@@ -447,6 +447,15 @@
       "TITLE": "データがありません",
       "MESSAGE": "このグラフに利用できる情報はありません。"
     },
+    "COMMON": {
+      "GROUP_NAME": "{{name}} ({{group}})",
+      "GROUP_TYPES": {
+        "SOLO": "一人",
+        "COUPLE": "カップル",
+        "FRIENDS": "友人同士",
+        "FAMILY": "家族"
+      }
+    },
     "SUMMARY": {
       "VIEWS": {
         "TOTAL": "合計",
@@ -477,6 +486,9 @@
       }
     },
     "DEMOGRAPHICS": {
+      "TOOLTIPS": {
+        "FIRST_LAST_WITH_GROUP": "{{type}}：{{name}}と{{group}}"
+      },
       "VIEWS": {
         "TOTALS": "合計",
         "OLDEST": "最年長",
