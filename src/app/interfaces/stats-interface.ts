@@ -1,12 +1,9 @@
-import { CountriesCodes } from '@type/word.types';
-import { IApiCsOkResp } from './guests.interface';
+import type { CountriesCodes } from '@type/word.types';
+import type { IApiCsOkResp, TGroupType, TGuestGender, TGuestGroupType } from './guests.interface';
 
-// View Chart
-export type ICurrentChart = 'summary' | 'rankings' | 'demographics' | 'geography' | 'timeline' | 'ratings' | 'gifts' | 'stays' | 'birthdays';
-export type IChartType = 'bar' | 'doughnut' | 'pie';
-
-// Summary
-export type ISummaryView = 'total' | 'nights' | 'gifts' | 'rating';
+// ─────────────────────────────────────────────
+// API response
+// ─────────────────────────────────────────────
 
 export interface IGuestsStats {
   birthdays: IBirthdaysDistribution;
@@ -21,6 +18,57 @@ export interface IGuestsStats {
 }
 
 export type IGuestsStatsResp = IApiCsOkResp<IGuestsStats>;
+
+// Every slice of the response is a chart (a button and a route) of the stats page.
+export type ICurrentChart = keyof IGuestsStats;
+
+export type IChartType = 'bar' | 'doughnut' | 'pie';
+
+// ─────────────────────────────────────────────
+// Shared building blocks
+// ─────────────────────────────────────────────
+
+// All the guests or one type of guest.
+export type TStatsGroup = 'overall' | TGuestGroupType;
+
+// One value per group filter.
+export type TByStatsGroup<T> = Record<TStatsGroup, T>;
+
+// One value per demographic.
+export type TByDemographic<T> = Record<IDemographicGender, T>;
+
+// Guest that appears in the stats lists.
+export interface IStatsGuest {
+  guestId: string;
+  fullName: string;
+  gender: string;
+  groupId: string | null;
+  groupType: string;
+  hometownCode: string;
+  continent: string;
+  region: string;
+  visitedDate: string;
+}
+
+export interface IStatsGuestWithBirth extends IStatsGuest {
+  birthDate: string | null;
+}
+
+// A total and the guests behind it.
+export interface IGuestsGroup<TGuest = IStayGuest> {
+  total: number;
+  guests: TGuest[];
+}
+
+export interface IDatedGuestsGroup<TGuest = IStayGuest> extends IGuestsGroup<TGuest> {
+  date: string;
+}
+
+// ─────────────────────────────────────────────
+// Summary
+// ─────────────────────────────────────────────
+
+export type ISummaryView = 'total' | 'nights' | 'gifts' | 'rating';
 
 export interface ISummaryDistribution {
   totalGuests: number;
@@ -38,27 +86,16 @@ export interface ISummaryDistribution {
   averageRatingGroup: number;
 }
 
-export interface ISummaryCard {
-  label: string;
-  value: number;
-  icon: string;
-}
-
+// ─────────────────────────────────────────────
 // Rankings
+// ─────────────────────────────────────────────
+
 export type IRankingView = 'people' | 'women' | 'men' | 'groups';
-export type IRankingGroupView = 'overall' | 'couple' | 'family' | 'friends';
+export type IRankingGroupView = 'overall' | TGroupType;
 export type IRankingGenderView = 'overall' | 'solo';
 
-export interface IRankingGuest {
-  guestId: string;
-  fullName: string;
-  gender: 'male' | 'female' | 'trans';
-  groupId: string | null;
-  groupType: string;
-  hometownCode: string;
-  continent: string;
-  region: string;
-  visitedDate: string;
+export interface IRankingGuest extends IStatsGuestWithBirth {
+  gender: TGuestGender;
   birthDate: string;
 }
 
@@ -67,99 +104,57 @@ export interface IRankingItem {
   guest: IRankingGuest;
 }
 
-export interface IRankingCategory {
-  solo?: IRankingItem[];
+export interface IRankingCategory extends Partial<Record<TGuestGroupType, IRankingItem[]>> {
   overall: IRankingItem[];
-  couple?: IRankingItem[];
-  friends?: IRankingItem[];
-  family?: IRankingItem[];
 }
 
-export interface IRankingsDistribution {
-  women: IRankingCategory;
-  men: IRankingCategory;
-  people: IRankingCategory;
-  groups: IRankingCategory;
-}
+export type IRankingsDistribution = Record<IRankingView, IRankingCategory>;
 
+// ─────────────────────────────────────────────
 // Demographics
+// ─────────────────────────────────────────────
+
 export type IDemographicsView = 'totals' | 'oldest' | 'youngest' | 'firstLast';
-export type IDemographicsGroup = 'overall' | 'solo' | 'couple' | 'friends' | 'family';
+export type IDemographicsGroup = TStatsGroup;
 export type IDemographicGender = 'male' | 'female' | 'trans' | 'isGay';
 export type IDemographicsTotalsView = 'groups' | 'overall';
 export type IDemographicsOldestView = 'overall' | 'solo' | 'groups';
-export type IDemographicGroups = Record<Exclude<IDemographicsGroup, 'overall'>, IDemographicGroup>;
-export interface IDemographicPerson {
-  guestId: string;
-  fullName: string;
+
+export interface IDemographicPerson extends IStatsGuestWithBirth {
   gender: IDemographicGender;
-  groupId: string | null;
   groupType: IDemographicsGroup;
-  hometownCode: string;
-  continent: string;
-  region: string;
-  visitedDate: string;
-  birthDate: string | null;
 }
 
 export interface IDemographicRatedPerson extends IDemographicPerson {
   rating: number;
 }
 
-export interface IDemographicGroup {
-  male: number;
-  female: number;
-  trans: number;
-  isGay: number;
-}
+// Total of guests per demographic.
+export type IDemographicGroup = TByDemographic<number>;
+export type IDemographicGroups = Record<TGuestGroupType, IDemographicGroup>;
 
 export interface IDemographicsTotals {
   overall: IDemographicGroup;
   groups: IDemographicGroups;
 }
 
-export interface IDemographicGenderPeople {
-  male: IDemographicPerson[];
-  female: IDemographicPerson[];
-  trans: IDemographicPerson[];
-  isGay: IDemographicPerson[];
-}
+export type IDemographicGenderPeople = TByDemographic<IDemographicPerson[]>;
 
-export interface IDemographicAgeGroup {
+export interface IDemographicAgeGroup extends Record<TGroupType, IDemographicPerson[]> {
   solo: IDemographicGenderPeople;
-  overall: {
-    people: IDemographicPerson[];
-  };
-  couple: IDemographicPerson[];
-  friends: IDemographicPerson[];
-  family: IDemographicPerson[];
+  overall: { people: IDemographicPerson[] };
 }
 
-export interface IDemographicsMostVisitedGender {
-  overall: IDemographicGender;
-  solo: IDemographicGender;
-  couple: IDemographicGender;
-  friends: IDemographicGender;
-  family: IDemographicGender;
-}
+export type IDemographicsMostVisitedGender = TByStatsGroup<IDemographicGender>;
+
 export interface IDemographicFirstLast {
   first: IDemographicPerson | null;
   last: IDemographicPerson | null;
 }
 
-export interface IDemographicsFirstLast {
-  overall: {
-    people: IDemographicFirstLast;
-  };
-  solo: {
-    female: IDemographicFirstLast;
-    male: IDemographicFirstLast;
-    trans: IDemographicFirstLast;
-    isGay: IDemographicFirstLast;
-  };
-  couple: IDemographicFirstLast;
-  friends: IDemographicFirstLast;
-  family: IDemographicFirstLast;
+export interface IDemographicsFirstLast extends Record<TGroupType, IDemographicFirstLast> {
+  overall: { people: IDemographicFirstLast };
+  solo: TByDemographic<IDemographicFirstLast>;
 }
 
 export interface IDemographicsDistribution {
@@ -170,34 +165,24 @@ export interface IDemographicsDistribution {
   firstLast: IDemographicsFirstLast;
 }
 
+// ─────────────────────────────────────────────
 // Rating
-export type IRatingView = 'overall' | 'solo' | 'couple' | 'friends' | 'family';
+// ─────────────────────────────────────────────
+
+export type IRatingView = TStatsGroup;
 export type IRatingGroupType = Exclude<IRatingView, 'overall'>;
 export type IRatingMainView = 'distribution' | 'lowest' | 'highest';
-export type IRatingRankings = Record<IRatingView, IRatingGuest[]>;
+export type TRatingStar = '1' | '2' | '3' | '4' | '5';
 
-export interface IRatingsDistribution {
-  '1': number;
-  '2': number;
-  '3': number;
-  '4': number;
-  '5': number;
+export interface IRatingsDistribution extends Record<TRatingStar, number> {
   unrated: number;
 }
 
-export interface IRatingGuest {
-  guestId: string;
-  fullName: string;
-  gender: string;
-  groupId: string | null;
-  groupType: string;
-  hometownCode: string;
-  continent: string;
-  region: string;
-  visitedDate: string;
-  birthDate: string | null;
+export interface IRatingGuest extends IStatsGuestWithBirth {
   rating: number;
 }
+
+export type IRatingRankings = Record<IRatingView, IRatingGuest[]>;
 
 export interface IRatingsData {
   distribution: Record<IRatingView, IRatingsDistribution>;
@@ -205,28 +190,26 @@ export interface IRatingsData {
   lowest: IRatingRankings;
 }
 
+// ─────────────────────────────────────────────
 // Geography
+// ─────────────────────────────────────────────
+
 export type IGeographyView = 'continents' | 'regions' | 'countries' | 'livingIn' | 'hometown';
 export type ICountryRanking = 'all' | 'top' | 'bottom' | 'topFemale' | 'topMale' | 'mostConsecutive';
 
-export interface IGeographyContinent {
+export interface IGeographyEntry {
   code: string;
   total: number;
   firstVisit: string;
 }
 
-export interface IGeographyRegion {
-  code: string;
-  total: number;
-  firstVisit: string;
-}
+export type IGeographyContinent = IGeographyEntry;
+export type IGeographyRegion = IGeographyEntry;
 
-export interface IGeographyCountry {
+export interface IGeographyCountry extends IGeographyEntry {
   code: CountriesCodes;
-  total: number;
   male: number;
   female: number;
-  firstVisit: string;
 }
 
 export interface IGeographyLocation {
@@ -241,16 +224,12 @@ export interface IGeographyRanking<T> {
   bottom: T[];
 }
 
-export interface IGeographyDistribution {
-  continents: IGeographyRanking<IGeographyContinent>;
-  regions: IGeographyRanking<IGeographyRegion>;
-  countries: IGeographyCountryRanking;
-  livingInState: {
-    top: IGeographyLocation[];
-  };
-  hometownState: {
-    top: IGeographyLocation[];
-  };
+export interface IGeographyLocationRanking {
+  top: IGeographyLocation[];
+}
+
+export interface IGeographyConsecutiveGuest extends IStatsGuestWithBirth {
+  birthDate: string;
 }
 
 export interface IGeographyMostConsecutive {
@@ -258,93 +237,64 @@ export interface IGeographyMostConsecutive {
   streak: number;
   firstVisit: string;
   lastVisit: string;
-  guests: {
-    guestId: string;
-    fullName: string;
-    gender: string;
-    groupId: string | null;
-    groupType: string;
-    birthDate: string;
-    continent: string;
-    hometownCode: string;
-    region: string;
-    visitedDate: string;
-  }[];
+  guests: IGeographyConsecutiveGuest[];
 }
 
-export interface IGeographyCountryRanking {
-  all: IGeographyCountry[];
-  top: IGeographyCountry[];
-  bottom: IGeographyCountry[];
+export interface IGeographyCountryRanking extends IGeographyRanking<IGeographyCountry> {
   topFemale: IGeographyCountry[];
   topMale: IGeographyCountry[];
-  mostConsecutive: IGeographyMostConsecutive;
+  mostConsecutive: IGeographyMostConsecutive | null;
 }
 
+export interface IGeographyDistribution {
+  continents: IGeographyRanking<IGeographyContinent>;
+  regions: IGeographyRanking<IGeographyRegion>;
+  countries: IGeographyCountryRanking;
+  livingInState: IGeographyLocationRanking;
+  hometownState: IGeographyLocationRanking;
+}
+
+// ─────────────────────────────────────────────
 // Gifts
+// ─────────────────────────────────────────────
+
 export type IGiftsView = 'groups' | 'solo';
 
-export interface IGiftGuest {
-  guestId: string;
-  fullName: string;
-  gender: string;
-  groupId: string | null;
-  groupType: string;
+export interface IGiftGuest extends IStatsGuestWithBirth {
   birthDate: string;
-  continent: string;
-  hometownCode: string;
-  region: string;
   gifts: string[];
   total: number;
-  visitedDate: string;
 }
 
-export interface IGiftsDistribution {
-  groups: IGiftGuest[];
-  solo: IGiftGuest[];
-}
+export type IGiftsDistribution = Record<IGiftsView, IGiftGuest[]>;
 
+// ─────────────────────────────────────────────
 // Timeline
+// ─────────────────────────────────────────────
+
 export type ITimelineView = 'years' | 'months' | 'days' | 'sameArrivalDay' | 'sameStay';
+export type ITimelineChartType = 'bar' | 'network';
+
 export interface ITimelineItem {
   period: string;
   total: number;
 }
-export interface ISameArrivalDayGuest {
-  guestId: string;
-  fullName: string;
+
+export interface ITimelineGuest extends IStatsGuestWithBirth {
   gender: 'male' | 'female';
-  groupId: string | null;
-  groupType: string;
-  hometownCode: string;
-  continent: string;
-  region: string;
-  visitedDate: string;
-  birthDate: string | null;
-}
-export interface ISameArrivalDay {
-  date: string;
-  total: number;
-  guests: ISameArrivalDayGuest[];
 }
 
-export interface ISameStayGuest {
-  guestId: string;
-  fullName: string;
-  gender: 'male' | 'female';
-  groupId: string | null;
-  groupType: string;
-  hometownCode: string;
-  continent: string;
-  region: string;
-  visitedDate: string;
-  birthDate: string | null;
-}
+export type ISameArrivalDayGuest = ITimelineGuest;
+export type ISameStayGuest = ITimelineGuest;
+
+export type ISameArrivalDay = IDatedGuestsGroup<ITimelineGuest>;
+
 export interface ISameStay {
-  guest: ISameStayGuest;
+  guest: ITimelineGuest;
   overlap: number;
-  guests: ISameStayGuest[];
+  guests: ITimelineGuest[];
 }
+
 export interface ITimelineDistribution {
   years: ITimelineItem[];
   months: ITimelineItem[];
@@ -353,41 +303,27 @@ export interface ITimelineDistribution {
   sameStay: ISameStay[];
 }
 
+// ─────────────────────────────────────────────
 // Stays
-export type ITimelineChartType = 'bar' | 'network';
+// ─────────────────────────────────────────────
+
 export type IStaysView = 'longest' | 'shortest' | 'maxPeopleTogether' | 'sameArrival' | 'sameDates';
-export type ILongestView = 'overall' | 'solo' | 'couple' | 'friends' | 'family';
-export interface IStayGuest {
-  guestId: string;
-  fullName: string;
-  gender: string;
-  groupId: string | null;
-  groupType: string;
-  hometownCode: string;
-  continent: string;
-  region: string;
-  visitedDate: string;
-}
+export type ILongestView = TStatsGroup;
+
+export type IStayGuest = IStatsGuest;
+
 export interface ILongestItem {
   guest: IStayGuest;
   nights: number;
 }
-export interface ILongestDistribution {
-  overall: ILongestItem[];
-  solo: ILongestItem[];
-  couple: ILongestItem[];
-  friends: ILongestItem[];
-  family: ILongestItem[];
-}
-export interface ISameArrivalItem {
-  date: string;
-  total: number;
-  guests: IStayGuest[];
-}
-export interface ISameDatesItem {
-  total: number;
-  guests: IStayGuest[];
-}
+
+export type ILongestDistribution = TByStatsGroup<ILongestItem[]>;
+
+export type ISameArrivalItem = IDatedGuestsGroup<IStayGuest>;
+export type ISameDatesItem = IGuestsGroup<IStayGuest>;
+export type IMaxPeopleTogetherItem = IGuestsGroup<IStayGuest>;
+export type IMaxPeopleTogetherDistribution = Record<'overall' | 'solo', IMaxPeopleTogetherItem>;
+
 export interface IStaysDistribution {
   longest: ILongestDistribution;
   shortest: ILongestDistribution;
@@ -395,36 +331,20 @@ export interface IStaysDistribution {
   sameArrival: ISameArrivalItem[];
   sameDates: ISameDatesItem[];
 }
-export interface IMaxPeopleTogetherItem {
-  total: number;
-  guests: IStayGuest[];
-}
-export interface IMaxPeopleTogetherDistribution {
-  overall: IMaxPeopleTogetherItem;
-  solo: IMaxPeopleTogetherItem;
-}
 
+// ─────────────────────────────────────────────
 // Birthdays
+// ─────────────────────────────────────────────
+
 export type IBirthdaysView = 'calendar' | 'repeated' | 'unusual';
 
-export interface IBirthdayGuest {
-  guestId: string;
-  fullName: string;
-  gender: string;
-  groupId: string | null;
-  groupType: string;
-  hometownCode: string;
-  continent: string;
-  region: string;
-  visitedDate: string;
+export interface IBirthdayGuest extends IStatsGuestWithBirth {
   birthDate: string;
 }
 
-export interface IBirthdayItem {
+export interface IBirthdayItem extends IGuestsGroup<IBirthdayGuest> {
   month: number;
   day: number;
-  total: number;
-  guests: IBirthdayGuest[];
 }
 
 export interface IUnusualBirthday extends IBirthdayItem {

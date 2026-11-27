@@ -2,7 +2,7 @@ import { Component, inject, Input } from '@angular/core';
 
 // Interfaces
 import { IChartType, IRatingGuest, IRatingMainView, IRatingView, IRatingsData } from '@interfaces/stats-interface';
-import { IRatingDistributionVm, IRatingDotPlotVm } from '@interfaces/charts/chart.rating.interface';
+import { IRatingDistributionVm, IRatingDotPlotVm } from '@interfaces/charts/stats-chart-vm.interface';
 import { TChartTooltipContent } from '@type/chart.types';
 
 // Services

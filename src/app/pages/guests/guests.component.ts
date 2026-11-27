@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable, BehaviorSubject, combineLatest, timer, throwError } from 'rxjs';
 import { combineLatestWith, map, switchMap, tap, finalize, retry, distinctUntilChanged } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 
 // Material
@@ -34,8 +35,7 @@ import { LocationFilter } from '@type/guest.types';
 import { WORLD, REGION_NAMES, COUNTRY_REGION_INDEX, REGION_CONTINENT_INDEX, getCountryLocation } from '@config/world';
 
 // Utils
-import { withReqState, isGroup, mapGuestTable, parseBooleanParam, parseMultiParam } from '@utils';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { withReqState, isGroup, mapGuestTable, parseBooleanParam, parseMultiParam, toGroupFilterQuery } from '@utils';
 
 const GENDERS = ['female', 'male', 'trans'] as const;
 
@@ -213,7 +213,7 @@ export class GuestsComponent implements OnInit {
       country: this.formatMultiFilter(formValue.country),
       continent: this.formatMultiFilter(formValue.continent),
       region: this.formatMultiFilter(formValue.region),
-      groupType: this.formatMultiFilter(formValue.groupType),
+      groupType: toGroupFilterQuery(formValue.groupType),
       platform: this.formatMultiFilter(formValue.platform),
       from: this.formatDate(formValue.from),
       to: this.formatDate(formValue.to),
@@ -628,7 +628,7 @@ export class GuestsComponent implements OnInit {
       gender: GENDERS.find(g => g === params['gender']), // 'female' | 'male' | 'trans' | undefined
 
       platform: str('platform'),
-      groupType: str('groupType'),
+      groupType: toGroupFilterQuery(str('groupType')?.split(',')),
       continent: str('continent'),
       region: str('region'),
       country: str('country'),

@@ -3,7 +3,7 @@ import { Component, inject, Input } from '@angular/core';
 // Interfaces
 import { IGiftsDistribution, IGiftsView } from '@interfaces/stats-interface';
 import { TChartTooltipContent } from '@type/chart.types';
-import { IGiftsChartVm } from '@interfaces/charts/chart-gifts.interface';
+import { IGiftsChartVm } from '@interfaces/charts/stats-chart-vm.interface';
 
 // Services
 import { FormatService } from '@shared/services/format.service';

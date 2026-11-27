@@ -2,7 +2,6 @@ import { Component, inject, Input } from '@angular/core';
 
 // Interfaces
 import { ISummaryDistribution, ISummaryView } from '@interfaces/stats-interface';
-import { ISummaryDoughnutVm, ISummaryRadarVm } from '@interfaces/charts/chart-summary.interface';
 import { IQueryParamsGuests } from '@interfaces/guests.interface';
 import { TChartTooltipContent } from '@type/chart.types';
 
@@ -12,6 +11,7 @@ import { StatsChartContainer } from '@pages/guests/directives/stats-chart-contai
 
 // Helpers
 import { GIFTS_COLORS, paletteToColors, RATINGS_COLORS, SUMMARY_COLORS } from '@utils';
+import { ISummaryRadarVm, ISummaryDoughnutVm, ISummaryCardConfig } from '@interfaces/charts/stats-chart-vm.interface';
 
 interface ISummaryCardVm {
   key: string;
@@ -21,12 +21,7 @@ interface ISummaryCardVm {
 }
 
 // One entry per card: i18n key (STATS.SUMMARY.CARDS.<key>), icon, value and the guests filter it opens.
-const SUMMARY_CARDS: {
-  key: string;
-  icon: string;
-  value: (summary: ISummaryDistribution) => number;
-  groupType?: IQueryParamsGuests['groupType'];
-}[] = [
+const SUMMARY_CARDS: ISummaryCardConfig[] = [
   { key: 'TOTAL_GUESTS', icon: 'groups', value: s => s.totalGuests },
   { key: 'SOLO_GUESTS', icon: 'person', value: s => s.totalGuestsSolo, groupType: 'solo' },
   { key: 'GROUP_GUESTS', icon: 'group', value: s => s.totalGuestsGroups, groupType: 'all-groups' },

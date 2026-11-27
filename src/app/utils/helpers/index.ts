@@ -2,6 +2,7 @@ export * from './chart-colors';
 export * from './guests-table.utils';
 export * from './sort.utils';
 export * from './guest-routing.utils';
+export * from './guests-filter';
 export * from './date.helper';
 export * from './chart-external-tooltip';
 export * from './common.utils';
