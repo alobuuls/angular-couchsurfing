@@ -3,7 +3,7 @@ import { Component, inject, Input } from '@angular/core';
 // Interfaces
 import { ICountryRanking, IGeographyCountry, IGeographyDistribution, IGeographyLocation, IGeographyRegion, IGeographyView } from '@interfaces/stats-interface';
 import { IChartColors, IChartLegendItem, TChartTooltipContent } from '@type/chart.types';
-import { ConsecutiveGuest, GeographyItem, IConsecutiveChartVm, IGeographyChartVm } from '@interfaces/charts/chart-geography.interface';
+import { ConsecutiveGuest, GeographyItem, IConsecutiveChartVm, IGeographyChartVm, IGeographyViewConfig } from '@interfaces/charts/stats-chart-vm.interface';
 import { IQueryParamsGuests } from '@interfaces/guests.interface';
 
 // Services
@@ -21,32 +21,24 @@ import { Continents, Regions } from '@type/word.types';
 // Helpers
 import { CHART_UNKNOWN_COLOR, CONTINENT_COLORS, GENDER_COLORS, getColorWithOpacity, getGenderColor, getPodiumColors } from '@utils';
 
-interface IViewConfig {
-  label: string;
-  type: 'pie' | 'bar';
-  getAllData: (geography: IGeographyDistribution) => GeographyItem[];
-  getTopData?: (geography: IGeographyDistribution) => GeographyItem[];
-  getBottomData?: (geography: IGeographyDistribution) => GeographyItem[];
-}
-
-const VIEW_CONFIG: Record<IGeographyView, IViewConfig> = {
-  continents: { label: 'STATS.GEOGRAPHY.TITLES.GUESTS_BY_CONTINENT', type: 'pie', getAllData: g => g.continents.all },
+const VIEW_CONFIG: Record<IGeographyView, IGeographyViewConfig> = {
+  continents: { titleKey: 'STATS.GEOGRAPHY.TITLES.GUESTS_BY_CONTINENT', type: 'pie', getAllData: g => g.continents.all },
   regions: {
-    label: 'STATS.GEOGRAPHY.TITLES.GUESTS_BY_REGION',
+    titleKey: 'STATS.GEOGRAPHY.TITLES.GUESTS_BY_REGION',
     type: 'bar',
     getAllData: g => g.regions.all,
     getTopData: g => g.regions.top,
     getBottomData: g => g.regions.bottom,
   },
   countries: {
-    label: 'STATS.GEOGRAPHY.TITLES.GUESTS_BY_COUNTRY',
+    titleKey: 'STATS.GEOGRAPHY.TITLES.GUESTS_BY_COUNTRY',
     type: 'bar',
     getAllData: g => g.countries.all,
     getTopData: g => g.countries.top,
     getBottomData: g => g.countries.bottom,
   },
-  livingIn: { label: 'STATS.GEOGRAPHY.TITLES.GUESTS_LIVING_IN', type: 'bar', getAllData: g => g.livingInState.top },
-  hometown: { label: 'STATS.GEOGRAPHY.TITLES.GUESTS_HOMETOWN', type: 'bar', getAllData: g => g.hometownState.top },
+  livingIn: { titleKey: 'STATS.GEOGRAPHY.TITLES.GUESTS_LIVING_IN', type: 'bar', getAllData: g => g.livingInState.top },
+  hometown: { titleKey: 'STATS.GEOGRAPHY.TITLES.GUESTS_HOMETOWN', type: 'bar', getAllData: g => g.hometownState.top },
 };
 
 const ALL_RANKINGS: ICountryRanking[] = ['all', 'top', 'bottom'];
@@ -180,8 +172,8 @@ export class GuestGeographyChartComponent extends StatsChartContainer {
 
     return {
       type: config.type,
-      title: this.getChartTitle(config.label),
-      datasetLabel: this.getDatasetLabel(config.label),
+      title: this.getChartTitle(config.titleKey),
+      datasetLabel: this.getDatasetLabel(config.titleKey),
       labels: items.map(item => this.getItemLabel(item)),
       values: items.map(item => this.getItemValue(item)),
       colors: this.getColors(items),
@@ -324,7 +316,7 @@ export class GuestGeographyChartComponent extends StatsChartContainer {
     return getCountryLocation(code)?.continent ?? '';
   }
 
-  private getSelectedData(config: IViewConfig): GeographyItem[] {
+  private getSelectedData(config: IGeographyViewConfig): GeographyItem[] {
     const { countries } = this.geography;
     const isCountries = this.selectedView === 'countries';
 

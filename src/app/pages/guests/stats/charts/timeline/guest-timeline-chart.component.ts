@@ -3,7 +3,7 @@ import { Component, inject, Input } from '@angular/core';
 // Interfaces
 import { ISameStay, ITimelineDistribution, ITimelineItem, ITimelineView } from '@interfaces/stats-interface';
 import { IChartEdge, TChartTooltipContent } from '@type/chart.types';
-import { INetworkNode, ITimelineBarVm, ITimelineNetworkVm, TBarItem } from '@interfaces/charts/chart-timeline.interface';
+import { INetworkNode, ITimelineBarVm, ITimelineNetworkVm, TBarItem } from '@interfaces/charts/stats-chart-vm.interface';
 import { IQueryParamsGuests } from '@interfaces/guests.interface';
 
 // Services

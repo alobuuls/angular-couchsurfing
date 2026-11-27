@@ -26,7 +26,7 @@ import {
   TDemographicKey,
   TGroupKey,
   TGroupRow,
-} from '@interfaces/charts/chart-demographics.interface';
+} from '@interfaces/charts/stats-chart-vm.interface';
 
 // Helpers
 import {

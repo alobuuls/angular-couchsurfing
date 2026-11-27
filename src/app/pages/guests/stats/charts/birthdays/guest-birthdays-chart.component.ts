@@ -3,7 +3,7 @@ import { Component, inject, Input } from '@angular/core';
 // Interfaces
 import { IBirthdaysDistribution, IBirthdaysView } from '@interfaces/stats-interface';
 import { IChartPadding, TChartTooltipContent } from '@type/chart.types';
-import { IBirthdaysBubbleVm, IBirthdaysHeatmapCell, IBirthdaysHeatmapVm, IBirthdaysLineVm } from '@interfaces/charts/chart-birthdate.interface';
+import { IBirthdaysBubbleVm, IBirthdaysHeatmapCell, IBirthdaysHeatmapVm, IBirthdaysLineVm } from '@interfaces/charts/stats-chart-vm.interface';
 
 // Services
 import { FormatService } from '@shared/services/format.service';

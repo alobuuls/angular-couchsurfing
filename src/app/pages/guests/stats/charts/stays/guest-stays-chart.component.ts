@@ -3,7 +3,7 @@ import { Component, inject, Input } from '@angular/core';
 // Interfaces
 import { ILongestView, IStaysDistribution, IStaysView } from '@interfaces/stats-interface';
 import { IChartColors, IChartEdge, TChartTooltipContent } from '@type/chart.types';
-import { IStaysArrivalVm, IStaysMaxPeopleVm, IStaysNetworkVm, IStaysPolarVm } from '@interfaces/charts/chart-stays.interface';
+import { IStaysArrivalVm, IStaysMaxPeopleVm, IStaysNetworkVm, IStaysPolarVm } from '@interfaces/charts/stats-chart-vm.interface';
 
 // Services
 import { FormatService } from '@shared/services/format.service';

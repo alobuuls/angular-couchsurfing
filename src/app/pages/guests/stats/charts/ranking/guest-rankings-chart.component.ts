@@ -3,7 +3,7 @@ import { Component, inject, Input } from '@angular/core';
 // Interfaces
 import { IRankingCategory, IRankingItem, IRankingView, IRankingsDistribution } from '@interfaces/stats-interface';
 import { TChartTooltipContent } from '@type/chart.types';
-import { IRankingChartVm } from '@interfaces/charts/chart-rankings.interface';
+import { IRankingChartVm } from '@interfaces/charts/stats-chart-vm.interface';
 
 // Services
 import { FormatService } from '@shared/services/format.service';

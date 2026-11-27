@@ -1,91 +1,113 @@
-import { CountriesCodes } from '@type/word.types';
-import { Continents, Regions } from '@type/word.types';
-import { IGuestTableRow } from '@interfaces/data-structure-api';
+import type { Continents, CountriesCodes, Regions } from '@type/word.types';
+import type { IGuestTableRow } from '@interfaces/data-structure-api';
 
-// Guest with all information
-export interface IGuestDetail extends ITripDetail {
-  platform: string;
-  _id: string;
-  groupType: TGuestGroupType;
-  birthDate?: string;
-  age: number;
-  continent: Continents;
-  hometownCode: CountriesCodes;
-  hometownState?: string;
-  hometownCity?: string;
-  livingInCode: CountriesCodes;
-  hangOut: boolean;
-  fullName: string;
-  gender: 'female' | 'male' | 'trans';
-  guestId: string;
-  livingInState?: string;
-  livingInCity?: string;
-  countryCodeWeMet: CountriesCodes;
-  cityWeMet?: string;
-  stateWeMet?: string;
-  locationWeMet?: string;
-  nights: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15;
-  prefixCode: string;
-  rating?: 1 | 2 | 3 | 4 | 5;
-  visitedDate: string;
-  whatsapp: string;
-  comments: string;
-  instagram: string;
-  occupation: string[];
-  occupationArea: string[];
-  region: Regions;
-  stayed: boolean;
-  isFirstTime: boolean;
-  gift: string[];
-  urlProfileCs: string;
-  isGay?: boolean | null;
-  theirReference: string | null;
-  myReference: string | null;
-  groupId?: string;
-  ambassador?: boolean;
-  didTheyReq?: boolean;
+// ─────────────────────────────────────────────
+// Shared primitives
+// ─────────────────────────────────────────────
+
+export type TGuestGender = 'female' | 'male' | 'trans';
+
+// A guest that travels with others. A solo guest is not part of a group.
+export type TGroupType = 'couple' | 'friends' | 'family';
+export type TGuestGroupType = 'solo' | TGroupType;
+
+export type TNights = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15;
+export type TRating = 1 | 2 | 3 | 4 | 5;
+
+// Place of a guest (hometown or living in).
+export interface IGuestPlace {
+  code?: string | null;
+  city?: string | null;
+  state?: string | null;
 }
 
-// Guest data shared by solo guests and group members
-export type IGuestFormPayload = Omit<IGuestDetail, '_id' | 'guestId' | 'groupId' | 'groupType' | 'age' | 'visitedDate' | 'stayed' | 'nights'>;
-export type ICardGuest = IGuestDetail | IBodyGuest;
+// ─────────────────────────────────────────────
+// Guests and groups
+// ─────────────────────────────────────────────
 
 export interface ITripDetail {
   visitedDate: string;
   stayed: boolean;
-  nights: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15;
+  nights: TNights;
+}
+
+// Guest with all the information.
+export interface IGuestDetail extends ITripDetail {
+  // Identity
+  _id: string;
+  guestId: string;
+  platform: string;
+  fullName: string;
+  gender: TGuestGender;
+  isGay?: boolean | null;
+  birthDate?: string;
+  age: number;
+  occupation: string[];
+  occupationArea: string[];
+
+  // Group
+  groupType: TGuestGroupType;
+  groupId?: string;
+
+  // Where they are from and where they live
+  continent: Continents;
+  region: Regions;
+  hometownCode: CountriesCodes;
+  hometownState?: string;
+  hometownCity?: string;
+  livingInCode: CountriesCodes;
+  livingInState?: string;
+  livingInCity?: string;
+
+  // Where we met
+  countryCodeWeMet: CountriesCodes;
+  stateWeMet?: string;
+  cityWeMet?: string;
+  locationWeMet?: string;
+
+  // Visit
+  isFirstTime: boolean;
+  hangOut: boolean;
+  rating?: TRating;
+  gift: string[];
+  comments: string;
+  ambassador?: boolean;
+  didTheyReq?: boolean;
+  theirReference: string | null;
+  myReference: string | null;
+
+  // Contact
+  prefixCode: string;
+  whatsapp: string;
+  instagram: string;
+  urlProfileCs: string;
+}
+
+export interface IGroupMember extends IGuestDetail {
+  groupId: string;
 }
 
 export interface IGroupDetail extends ITripDetail {
   groupId: string;
-  groupType: 'couple' | 'friends' | 'family';
+  groupType: TGroupType;
   members: IGroupMember[];
 }
 
-export type IGroupMemberPayload = IGuestFormPayload & {
-  groupType: 'couple' | 'friends' | 'family';
-};
+export type IGroupEdit = IGroupMember[];
 
+// List items: all the guests (without the heavy fields) and groups.
+export type IGuest = Omit<IGuestDetail, 'comments' | 'instagram' | 'occupation' | 'region' | 'stayed' | 'gift'>;
+export type IGuestListItem = IGuestDetail | IGroupDetail;
+
+// Card of a group member in the table.
 export interface IGuestTableMemberCard {
   fullName: string;
-  gender: 'female' | 'male' | 'trans';
+  gender: TGuestGender;
   age: string | null;
   continent: string;
-
-  hometown: {
-    code?: string | null;
-    city?: string | null;
-    state?: string | null;
-  };
-
-  livingIn: {
-    code?: string | null;
-    city?: string | null;
-    state?: string | null;
-  };
-
+  hometown: IGuestPlace;
+  livingIn: IGuestPlace;
   rating: number;
-
   whatsapp: string | null;
   prefixCode: string;
   urlProfileCs: string | null;
@@ -94,22 +116,48 @@ export interface IGuestTableMemberCard {
   isFirstTime: boolean;
 }
 
-export type IGroupMember = IGuestDetail & {
-  groupId: string;
+/** @deprecated Use IGuestDetail. */
+export type IBodyGuest = IGuestDetail;
+/** @deprecated Use IGuestDetail. */
+export type ICardGuest = IGuestDetail;
+/** @deprecated Use IGuestListItem. */
+export type IDetailResp = IGuestListItem;
+
+// ─────────────────────────────────────────────
+// Payloads
+// ─────────────────────────────────────────────
+
+// Guest data shared by solo guests and group members.
+export type IGuestFormPayload = Omit<IGuestDetail, '_id' | 'guestId' | 'groupId' | 'groupType' | 'age' | 'visitedDate' | 'stayed' | 'nights'>;
+
+export type IGroupMemberPayload = IGuestFormPayload & { groupType: TGroupType };
+
+export type IGuestCreatePayload = IGuestFormPayload & { groupType: 'solo' };
+
+export type IGroupCreatePayload = Omit<IGroupDetail, 'groupId' | 'members'> & {
+  members: IGroupMemberPayload[];
 };
 
-export type IGroupEdit = IGroupMember[];
+export interface IGroupUpdatePayload extends ITripDetail {
+  groupId: string;
+  groupType: TGroupType;
+  members: IGroupMemberPayload[];
+}
 
-// Get All
-export type IGuest = Omit<IGuestDetail, 'comments' | 'instagram' | 'occupation' | 'region' | 'stayed' | 'gift'>;
+// ─────────────────────────────────────────────
+// API responses
+// ─────────────────────────────────────────────
 
-export type IGuestListItem = IGuestDetail | IGroupDetail;
-
-// Ok Data Resp
 export interface IApiCsOkResp<T> {
   data: T;
   success: boolean;
   message: string;
+}
+
+export interface IApiCsErrResp {
+  errors: string[];
+  message: string;
+  success: boolean;
 }
 
 export interface IApiCsPag {
@@ -121,102 +169,81 @@ export interface IApiCsPag {
   hasPrevPage: boolean;
 }
 
-export interface IMonthlyStat {
-  month: number;
+// Totals shared by the monthly / yearly stats and groups.
+export interface IVisitTotals {
   totalVisits: number;
   totalPeople: number;
 }
 
-export interface IYearlyStat {
+export interface IMonthlyStat extends IVisitTotals {
+  month: number;
+}
+
+export interface IYearlyStat extends IVisitTotals {
   year: number;
-  totalVisits: number;
-  totalPeople: number;
   months: IMonthlyStat[];
 }
 
-export interface IGuestMonthGroup {
+export interface IGuestMonthGroup extends IVisitTotals {
   month: number;
   monthName: string;
-  totalPeople: number;
-  totalVisits: number;
   guests: IGuestTableRow[];
 }
 
-export interface IGuestYearGroup {
+export interface IGuestYearGroup extends IVisitTotals {
   year: number;
-  totalVisits: number;
-  totalPeople: number;
   months: IGuestMonthGroup[];
 }
 
-// Error Data Resp
-interface IApiCsErrResp {
-  errors: string[];
-  message: string;
-  success: boolean;
+export interface IGuestsResp extends IApiCsOkResp<IGuestListItem[]> {
+  pagination: IApiCsPag;
+  monthlyStats: IYearlyStat[];
 }
 
+export type IGuestDetailResp = IApiCsOkResp<IGuestDetail>;
+export type IGroupDetailResp = IApiCsOkResp<IGroupEdit>;
+export type IGuestCreateResp = IApiCsOkResp<IGuestDetail>;
+export type IGuestDeleteResp = IApiCsOkResp<IGuestDetail>;
+
+// ─────────────────────────────────────────────
+// Query params of the guests list
+// ─────────────────────────────────────────────
+
 export interface IQueryParamsGuests {
-  limit?: number;
-  platform?: string;
+  // Pagination
   page?: number;
-  country?: string;
-  from?: string;
-  to?: string;
-  groupType?: string;
-  continent?: string;
+  limit?: number;
+
+  // Guest filters
+  platform?: string;
+  groupType?: TGroupFilterQuery;
+  gender?: TGuestGender;
+  gay?: boolean;
+  rating?: number;
+  gift?: boolean;
   isFirstTime?: boolean;
   hangOut?: boolean;
-  rating?: number;
-  region?: string;
   ambassador?: boolean;
   didTheyReq?: boolean;
-  gift?: boolean;
-  gender?: 'female' | 'male' | 'trans';
-  gay?: boolean;
+
+  // Location filters
+  continent?: string;
+  region?: string;
+  country?: string;
+  // Slugs, for example "new-york".
   hometownState?: string;
   livingInState?: string;
+
+  // Date filters
+  // ISO dates (yyyy-MM-dd) of the visit range.
+  from?: string;
+  to?: string;
   year?: number;
+  // Period of the "days" view of the timeline stats.
   day?: string;
+  // Month and day of the birthday, without the year ("MM-dd").
   birthDate?: string;
 }
 
-// Get All
-export type IGuestsResp = IApiCsOkResp<IGuestListItem[]> & {
-  pagination: IApiCsPag;
-  monthlyStats: IYearlyStat[];
-};
-
-// Get Guest By Id
-export type IGuestDetailResp = IApiCsOkResp<IGuestDetail>;
-// Get Group By Id
-export type IGroupDetailResp = IApiCsOkResp<IGroupEdit>;
-// Delete By Id
-export type IGuestDeleteResp = IApiCsOkResp<IGuestDetail>;
-// Post
-export type IGuestCreateResp = IApiCsOkResp<IGuestDetail>;
-// Post Body
-export type IBodyGuest = IGuestDetail;
-
-export type IDetailResp = IGuestDetail | IGroupDetail;
-
-// Guest types
-export type TGuestGroupType = 'solo' | 'couple' | 'friends' | 'family';
-
-// Payload for creating a guest
-export type IGuestCreatePayload = IGuestFormPayload & {
-  groupType: 'solo';
-};
-
-// Payload for creating a group
-export type IGroupCreatePayload = Omit<IGroupDetail, 'groupId' | 'members'> & {
-  members: (IGuestFormPayload & {
-    groupType: 'couple' | 'friends' | 'family';
-  })[];
-};
-
-export interface IGroupUpdatePayload extends ITripDetail {
-  groupId: string;
-  groupType: 'couple' | 'friends' | 'family';
-  members: IGroupMemberPayload[];
-}
+export type TGroupFilter = TGuestGroupType | 'all-groups';
+export type TGroupFilterQuery = TGroupFilter | `${TGroupFilter},${string}`;
